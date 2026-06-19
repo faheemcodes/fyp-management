@@ -292,5 +292,165 @@ class HodController extends BaseController {
         }
         redirect('/hod/students/verify');
     }
+
+    public function coordinators() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+        
+        $coordinators = $db->prepare("SELECT c.*, u.email, u.cnic FROM coordinators c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.name ASC");
+        $coordinators->execute([$dept]);
+        $coordinators = $coordinators->fetchAll();
+        
+        $this->render('hod/coordinators', [
+            'coordinators' => $coordinators,
+            'department' => $dept
+        ]);
+    }
+
+    public function createCoordinator() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            $password = $_POST['password'] ?? '';
+            
+            if (empty($name) || empty($email) || empty($cnic) || empty($password)) {
+                $this->flash('error', 'All fields are required.');
+                redirect('/hod/coordinators');
+            }
+            
+            $cnic = str_replace('-', '', $cnic);
+            
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            
+            // Check if email already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                $this->flash('error', 'Email is already registered.');
+                redirect('/hod/coordinators');
+            }
+            
+            // Check if CNIC already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+            $stmt->execute([$cnic]);
+            if ($stmt->fetch()) {
+                $this->flash('error', 'CNIC is already registered.');
+                redirect('/hod/coordinators');
+            }
+            
+            try {
+                $db->beginTransaction();
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                
+                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'coordinator', 'approved')");
+                $stmt->execute([$email, $cnic, $hashed]);
+                $userId = $db->lastInsertId();
+                
+                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
+                $stmt->execute([$userId, $name, $dept]);
+                
+                // Keep profiles table in sync
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', '0000000', 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $name, $cnic]);
+                
+                $db->commit();
+                $this->flash('success', "Coordinator $name created successfully under department $dept.");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error creating coordinator: ' . $e->getMessage());
+            }
+        }
+        redirect('/hod/coordinators');
+    }
+
+    public function editCoordinator() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_POST['user_id'] ?? null;
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            $password = $_POST['password'] ?? '';
+            
+            if (!$userId || empty($name) || empty($email) || empty($cnic)) {
+                $this->flash('error', 'Required fields are missing.');
+                redirect('/hod/coordinators');
+            }
+            
+            $cnic = str_replace('-', '', $cnic);
+            
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            
+            // Check that coordinator belongs to HOD's department
+            $stmtCheck = $db->prepare("SELECT department FROM coordinators WHERE user_id = ?");
+            $stmtCheck->execute([$userId]);
+            $coordDept = $stmtCheck->fetchColumn();
+            
+            if ($coordDept !== $dept) {
+                $this->flash('error', 'Unauthorized: Coordinator is not in your department.');
+                redirect('/hod/coordinators');
+            }
+            
+            try {
+                $db->beginTransaction();
+                
+                // Update users
+                if (!empty($password)) {
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ?, password = ? WHERE id = ?");
+                    $stmt->execute([$email, $cnic, $hashed, $userId]);
+                } else {
+                    $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ? WHERE id = ?");
+                    $stmt->execute([$email, $cnic, $userId]);
+                }
+                
+                // Update coordinators
+                $stmt = $db->prepare("UPDATE coordinators SET name = ? WHERE user_id = ?");
+                $stmt->execute([$name, $userId]);
+                
+                // Update profiles
+                $stmtP = $db->prepare("UPDATE profiles SET cnic = ?, surname = ? WHERE user_id = ?");
+                $stmtP->execute([$cnic, $name, $userId]);
+                
+                $db->commit();
+                $this->flash('success', "Coordinator details updated successfully.");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error updating coordinator: ' . $e->getMessage());
+            }
+        }
+        redirect('/hod/coordinators');
+    }
+
+    public function deleteCoordinator() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            
+            // Check that coordinator belongs to HOD's department
+            $stmtCheck = $db->prepare("SELECT department FROM coordinators WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            $coordDept = $stmtCheck->fetchColumn();
+            
+            if ($coordDept === $dept) {
+                try {
+                    $db->beginTransaction();
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $db->commit();
+                    $this->flash('success', "Coordinator deleted successfully.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Error deleting coordinator: ' . $e->getMessage());
+                }
+            } else {
+                $this->flash('error', 'Unauthorized: Coordinator is not in your department.');
+            }
+        }
+        redirect('/hod/coordinators');
+    }
 }
 
