@@ -151,6 +151,62 @@
             letter-spacing: 0.5px;
             color: #475569;
         }
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px !important;
+            }
+            .letterhead-container {
+                padding: 40px 25px !important;
+                min-height: auto !important;
+            }
+            .header-logo-section {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 12px !important;
+                margin-bottom: 25px !important;
+                padding-bottom: 15px !important;
+            }
+            .header-text {
+                text-align: center !important;
+            }
+            .uni-title {
+                font-size: 1.3rem !important;
+            }
+            .fac-title {
+                font-size: 0.95rem !important;
+            }
+            .dept-title {
+                font-size: 0.88rem !important;
+            }
+            .subject-line {
+                font-size: 1.05rem !important;
+                margin-bottom: 20px !important;
+            }
+            .body-content {
+                font-size: 0.98rem !important;
+                line-height: 1.75 !important;
+                margin-bottom: 40px !important;
+            }
+            .signatures-section {
+                flex-direction: column !important;
+                gap: 50px !important;
+                align-items: center !important;
+                padding-top: 20px !important;
+            }
+            .signatures-section .col-6 {
+                width: 100% !important;
+                text-align: center !important;
+            }
+            .signature-box {
+                display: inline-block !important;
+                text-align: left !important;
+            }
+            .signature-cursive {
+                left: 50% !important;
+                transform: translateX(-50%) rotate(-3deg) !important;
+                top: -34px !important;
+            }
+        }
         @media print {
             body {
                 background: #ffffff !important;
@@ -181,7 +237,7 @@
 <div class="container text-center mb-4 no-print" style="max-width: 820px;">
     <div class="d-flex justify-content-between align-items-center bg-dark bg-opacity-75 rounded-pill p-2 px-3 shadow-lg border border-secondary border-opacity-25">
         <a href="javascript:window.close();" class="btn btn-sm btn-outline-light rounded-pill px-3"><i class="bi bi-x-circle me-1"></i> Close Notice</a>
-        <span class="text-light small fw-bold"><i class="bi bi-file-earmark-text-fill text-warning me-1"></i> Official Notice Letterhead View</span>
+        <span class="text-light small fw-bold d-none d-sm-inline-block"><i class="bi bi-file-earmark-text-fill text-warning me-1"></i> Official Notice Letterhead</span>
         <button onclick="window.print()" class="btn btn-sm btn-primary rounded-pill px-4"><i class="bi bi-printer-fill me-1"></i> Print / Save PDF</button>
     </div>
 </div>
