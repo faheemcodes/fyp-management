@@ -265,16 +265,19 @@ class AdminController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stage = $_POST['stage'] ?? '';
             $date = $_POST['deadline_date'] ?? '';
+            $status = $_POST['status'] ?? 'Inactive';
             
             if ($stage && $date) {
-                $stmt = $db->prepare("INSERT INTO deadlines (stage, deadline_date) VALUES (?, ?) 
-                    ON DUPLICATE KEY UPDATE deadline_date = ?");
-                $stmt->execute([$stage, $date, $date]);
+                $stmt = $db->prepare("INSERT INTO deadlines (stage, deadline_date, status) VALUES (?, ?, ?) 
+                    ON DUPLICATE KEY UPDATE deadline_date = ?, status = ?");
+                $stmt->execute([$stage, $date, $status, $date, $status]);
                 
-                // Notify all students
-                $students = $db->query("SELECT user_id FROM students")->fetchAll();
-                foreach ($students as $s) {
-                    $this->addNotification($s['user_id'], 'Deadline Updated', "The deadline for $stage has been updated to $date.");
+                // Notify all students if active
+                if ($status === 'Active') {
+                    $students = $db->query("SELECT user_id FROM students")->fetchAll();
+                    foreach ($students as $s) {
+                        $this->addNotification($s['user_id'], 'Deadline Updated', "The deadline for $stage has been updated to $date.");
+                    }
                 }
                 
                 $this->flash('success', "$stage deadline updated.");

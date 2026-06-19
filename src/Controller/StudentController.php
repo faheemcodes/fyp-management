@@ -46,7 +46,7 @@ class StudentController extends BaseController {
         }
 
         // Get system deadlines
-        $deadlines = $db->query("SELECT * FROM deadlines ORDER BY id ASC")->fetchAll();
+        $deadlines = $db->query("SELECT * FROM deadlines WHERE status = 'Active' ORDER BY id ASC")->fetchAll();
 
         $this->render('student/dashboard', [
             'group' => $group,

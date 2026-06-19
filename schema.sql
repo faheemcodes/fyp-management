@@ -202,6 +202,7 @@ CREATE TABLE deadlines (
     id INT AUTO_INCREMENT PRIMARY KEY,
     stage ENUM('Proposal Submission', 'Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation') NOT NULL UNIQUE,
     deadline_date DATETIME NOT NULL,
+    status ENUM('Active', 'Inactive') DEFAULT 'Inactive',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -249,8 +250,8 @@ INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_n
 (7, 'Miss.', 'Bibi', '7777777777777', '2002-01-01', '+92', '3339876543', 'Not Provided Yet', 'Female');
 
 -- Seed initial deadlines
-INSERT INTO deadlines (stage, deadline_date) VALUES
-('Proposal Submission', '2026-09-30 23:59:59'),
-('Proposal Defence Presentation', '2026-10-30 23:59:59'),
-('FYP Progress Presentation', '2026-12-15 23:59:59'),
-('Final Presentation', '2027-05-15 23:59:59');
+INSERT INTO deadlines (stage, deadline_date, status) VALUES
+('Proposal Submission', '2026-09-30 23:59:59', 'Inactive'),
+('Proposal Defence Presentation', '2026-10-30 23:59:59', 'Inactive'),
+('FYP Progress Presentation', '2026-12-15 23:59:59', 'Inactive'),
+('Final Presentation', '2027-05-15 23:59:59', 'Inactive');

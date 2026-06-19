@@ -14,9 +14,17 @@
                     </select>
                 </div>
                 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label for="deadline_date" class="form-label small fw-semibold text-secondary">Deadline Date & Time</label>
                     <input type="datetime-local" class="form-control bg-light" id="deadline_date" name="deadline_date" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="status" class="form-label small fw-semibold text-secondary">Visibility Status</label>
+                    <select class="form-select bg-light" id="status" name="status" required>
+                        <option value="Active">Active (Publish to Students)</option>
+                        <option value="Inactive" selected>Inactive (Hidden/Unpublished)</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 rounded-pill">Update Deadline</button>
@@ -46,10 +54,10 @@
                                 <small class="text-muted">Last modified: <?php echo date('m/d/y', strtotime($dl['updated_at'])); ?></small>
                             </td>
                             <td>
-                                <?php if(strtotime($dl['deadline_date']) < time()): ?>
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">Closed</span>
+                                <?php if($dl['status'] === 'Active'): ?>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1.5 small">Active (Visible)</span>
                                 <?php else: ?>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">Active</span>
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2.5 py-1.5 small">Inactive (Hidden)</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-end">
@@ -70,3 +78,34 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deadlinesData = <?php echo json_encode($deadlines); ?>;
+    const stageSelect = document.getElementById('stage');
+    const dateInput = document.getElementById('deadline_date');
+    const statusSelect = document.getElementById('status');
+    
+    stageSelect.addEventListener('change', function() {
+        const selectedStage = this.value;
+        const dl = deadlinesData.find(d => d.stage === selectedStage);
+        if (dl) {
+            // Format date for datetime-local input (YYYY-MM-DDTHH:MM)
+            const dateObj = new Date(dl.deadline_date);
+            const yyyy = dateObj.getFullYear();
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const dd = String(dateObj.getDate()).padStart(2, '0');
+            const hh = String(dateObj.getHours()).padStart(2, '0');
+            const min = String(dateObj.getMinutes()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+            statusSelect.value = dl.status;
+        } else {
+            dateInput.value = '';
+            statusSelect.value = 'Inactive';
+        }
+    });
+    
+    // Trigger initial load check
+    stageSelect.dispatchEvent(new Event('change'));
+});
+</script>

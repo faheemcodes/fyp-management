@@ -70,6 +70,9 @@
                             </div>
                         </li>
                     <?php endforeach; ?>
+                    <?php if (empty($deadlines)): ?>
+                        <li class="text-muted small py-2">No deadlines have been published yet.</li>
+                    <?php endif; ?>
                 </ul>
             </div>
 
