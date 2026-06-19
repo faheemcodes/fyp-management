@@ -139,7 +139,12 @@
 
                     <div class="mb-3">
                         <label for="supPassword" class="form-label small fw-semibold text-secondary">Password</label>
-                        <input type="password" class="form-control bg-light" id="supPassword" name="password" required placeholder="••••••••">
+                        <div class="input-group">
+                            <input type="password" class="form-control bg-light" id="supPassword" name="password" required placeholder="••••••••">
+                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('supPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3">

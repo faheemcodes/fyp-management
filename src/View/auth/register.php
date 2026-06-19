@@ -313,11 +313,21 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="student_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control form-control-sm bg-light" id="student_password" name="password" placeholder="Min 8 characters/digits">
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-sm bg-light" id="student_password" name="password" placeholder="Min 8 characters/digits">
+                                <button class="btn btn-outline-secondary btn-sm bg-light text-muted border" type="button" onclick="const el = document.getElementById('student_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="confirm_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control form-control-sm bg-light" id="confirm_password" name="confirm_password" placeholder="Confirm your password">
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-sm bg-light" id="confirm_password" name="confirm_password" placeholder="Confirm your password">
+                                <button class="btn btn-outline-secondary btn-sm bg-light text-muted border" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -434,11 +444,21 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="staff_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control form-control-sm bg-light" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits">
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-sm bg-light" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits">
+                                <button class="btn btn-outline-secondary btn-sm bg-light text-muted border" type="button" onclick="const el = document.getElementById('staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="confirm_staff_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control form-control-sm bg-light" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password">
+                            <div class="input-group">
+                                <input type="password" class="form-control form-control-sm bg-light" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password">
+                                <button class="btn btn-outline-secondary btn-sm bg-light text-muted border" type="button" onclick="const el = document.getElementById('confirm_staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

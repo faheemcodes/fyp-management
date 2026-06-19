@@ -189,7 +189,12 @@
 
                     <div class="mb-3">
                         <label for="modalPassword" class="form-label small fw-semibold text-secondary">Password</label>
-                        <input type="password" class="form-control bg-light" id="modalPassword" name="password" required placeholder="••••••••">
+                        <div class="input-group">
+                            <input type="password" class="form-control bg-light" id="modalPassword" name="password" required placeholder="••••••••">
+                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -269,7 +274,12 @@
 
                     <div class="mb-3">
                         <label for="editModalPassword" class="form-label small fw-semibold text-secondary">New Password (leave blank to keep current)</label>
-                        <input type="password" class="form-control bg-light" id="editModalPassword" name="password" placeholder="••••••••">
+                        <div class="input-group">
+                            <input type="password" class="form-control bg-light" id="editModalPassword" name="password" placeholder="••••••••">
+                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3" id="editModalDeptGroup">

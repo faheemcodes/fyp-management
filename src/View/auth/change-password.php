@@ -21,7 +21,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <label for="current_password" class="form-label small fw-semibold text-secondary">Current Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control bg-light border-start-0" id="current_password" name="current_password" required placeholder="Enter current password">
+                        <input type="password" class="form-control bg-light border-start-0 border-end-0" id="current_password" name="current_password" required placeholder="Enter current password">
+                        <button class="btn btn-outline-light border bg-light text-muted border-start-0" type="button" onclick="const el = document.getElementById('current_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';" style="border-color: #dee2e6 !important;">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -30,7 +33,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <label for="new_password" class="form-label small fw-semibold text-secondary">New Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-lock"></i></span>
-                        <input type="password" class="form-control bg-light border-start-0" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50">
+                        <input type="password" class="form-control bg-light border-start-0 border-end-0" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50">
+                        <button class="btn btn-outline-light border bg-light text-muted border-start-0" type="button" onclick="const el = document.getElementById('new_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';" style="border-color: #dee2e6 !important;">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -39,7 +45,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <label for="confirm_password" class="form-label small fw-semibold text-secondary">Confirm New Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-lock-fill"></i></span>
-                        <input type="password" class="form-control bg-light border-start-0" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50">
+                        <input type="password" class="form-control bg-light border-start-0 border-end-0" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50">
+                        <button class="btn btn-outline-light border bg-light text-muted border-start-0" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';" style="border-color: #dee2e6 !important;">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
 
