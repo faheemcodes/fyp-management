@@ -31,7 +31,7 @@ $member2Val = isset($groupMembers[1]) ? $groupMembers[1]['student_id'] : '';
                         <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Your Team</small>
                         <h4 class="fw-bold text-dark m-0">Group Members Directory</h4>
                     </div>
-                    <span class="badge bg-primary rounded-pill px-3 py-1.5 font-monospace fs-6"><?php echo htmlspecialchars($group['group_code']); ?></span>
+                    <span class="badge bg-primary rounded-pill px-3 py-1.5 font-monospace fs-6"><?php echo htmlspecialchars($group['group_code'] ?? 'Group ID Pending'); ?></span>
                 </div>
 
                 <div class="table-responsive">

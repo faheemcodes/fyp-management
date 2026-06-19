@@ -15,7 +15,7 @@
         $basePath = '';
     }
     ?>
-    <link href="<?php echo $basePath; ?>/css/style.css" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark-theme');

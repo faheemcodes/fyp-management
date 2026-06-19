@@ -16,7 +16,7 @@
             <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
                     <div>
-                        <span class="badge bg-primary text-uppercase mb-2" style="font-size: 0.7rem;"><?php echo htmlspecialchars($group['group_code']); ?></span>
+                        <span class="badge bg-primary text-uppercase mb-2" style="font-size: 0.7rem;"><?php echo htmlspecialchars($group['group_code'] ?? 'Group ID Pending'); ?></span>
                         <h4 class="fw-bold text-dark m-0"><?php echo htmlspecialchars($group['project_title']); ?></h4>
                     </div>
                     <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 small fw-semibold">
@@ -40,57 +40,11 @@
                         <?php endif; ?>
                     </div>
                     <div class="col-sm-6">
-                        <h6 class="fw-bold text-secondary mb-1">Current Milestone Stage</h6>
+                        <h6 class="fw-bold text-secondary mb-1">Current Project Stage</h6>
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1.5 fw-semibold small">
                             <?php echo htmlspecialchars($group['progress_stage']); ?>
                         </span>
                     </div>
-                </div>
-            </div>
-
-            <!-- Recent Documents Uploaded -->
-            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h5 class="fw-bold m-0 text-dark">Recent Document Uploads</h5>
-                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/student/documents" class="btn btn-outline-primary btn-sm rounded-pill">Upload Files</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">
-                        <thead>
-                            <tr>
-                                <th>File Name</th>
-                                <th>Milestone</th>
-                                <th>Status / Feedback</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($recentDocs as $rd): ?>
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold text-dark text-truncate" style="max-width: 200px;"><?php echo htmlspecialchars($rd['original_name']); ?></div>
-                                    <small class="text-muted"><?php echo date('M d, Y h:i A', strtotime($rd['uploaded_at'])); ?></small>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary-subtle text-secondary small"><?php echo htmlspecialchars($rd['stage']); ?> - <?php echo htmlspecialchars($rd['doc_type']); ?></span>
-                                </td>
-                                <td>
-                                    <?php if($rd['feedback']): ?>
-                                        <div class="text-wrap small text-success bg-success-subtle p-2 rounded-2 border border-success-subtle" style="max-width: 220px;">
-                                            <strong>Feedback:</strong> <?php echo htmlspecialchars($rd['feedback']); ?>
-                                        </div>
-                                    <?php else: ?>
-                                        <span class="text-muted small"><i class="bi bi-clock me-1"></i>No feedback yet</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            <?php if(empty($recentDocs)): ?>
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted py-4">No documents uploaded yet.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -99,7 +53,7 @@
         <div class="col-lg-4">
             <!-- Deadlines Card -->
             <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
-                <h5 class="fw-bold text-dark mb-3">Milestone Deadlines</h5>
+                <h5 class="fw-bold text-dark mb-3">Upcoming Deadlines</h5>
                 <ul class="list-unstyled m-0 p-0">
                     <?php foreach($deadlines as $dl): ?>
                         <li class="pb-2.5 mb-2.5 border-bottom last-border-0">

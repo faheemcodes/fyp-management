@@ -34,7 +34,7 @@
     <div class="col-md-7">
         <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100 bg-gradient text-white" style="background: linear-gradient(135deg, #2E5BFF 0%, #1e293b 100%);">
             <h5 class="fw-bold mb-4"><i class="bi bi-info-circle me-1"></i> FYP Evaluation System Info</h5>
-            <p>The system calculates final marks and grading statistics automatically based on manual grading entries across various milestones:</p>
+            <p>The system calculates final marks and grading statistics automatically based on manual grading entries across various evaluation components:</p>
             <div class="table-responsive">
                 <table class="table table-dark table-borderless bg-transparent m-0 small" style="box-shadow: none;">
                     <tbody>
@@ -144,16 +144,16 @@
                 <?php foreach($studentGrades as $sg): ?>
                 <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>">
                     <td>
-                        <div class="fw-bold text-primary"><?php echo htmlspecialchars($sg['group_code']); ?></div>
+                        <div class="fw-bold text-primary"><?php echo htmlspecialchars($sg['group_code'] ?? 'Group ID Pending'); ?></div>
                         <div class="small text-truncate text-dark" style="max-width: 180px;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
                         <small class="text-muted">Supervisor: <?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></small>
                     </td>
-                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['proposal_marks'] ?? 0.0, 1); ?></td>
-                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['proposal_defense_marks'] ?? 0.0, 1); ?></td>
-                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['progress_presentation_marks'] ?? 0.0, 1); ?></td>
-                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['supervision_marks'] ?? 0.0, 1); ?></td>
-                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['final_presentation_marks'] ?? 0.0, 1); ?></td>
-                    <td class="font-monospace fw-bold text-dark fs-5"><?php echo number_format($sg['total_marks'] ?? 0.0, 1); ?></td>
+                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['proposal_marks'] ?? 0, 0); ?></td>
+                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
+                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
+                    <td class="font-monospace fw-semibold"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="font-monospace fw-bold text-dark fs-5"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
                     <td>
                         <span class="badge bg-dark text-white font-monospace rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>

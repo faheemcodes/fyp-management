@@ -26,6 +26,7 @@
                     <th>Designation</th>
                     <th>Department</th>
                     <th>Research Interest</th>
+                    <th>Committee Member</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -49,6 +50,14 @@
                         <div class="text-wrap small text-muted" style="max-width: 200px;">
                             <?php echo htmlspecialchars($s['research_interest'] ?? 'Not specified'); ?>
                         </div>
+                    </td>
+                    <td>
+                        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors/toggle-committee" method="POST" class="d-inline">
+                            <input type="hidden" name="user_id" value="<?php echo $s['user_id']; ?>">
+                            <div class="form-check form-switch d-inline-block">
+                                <input class="form-check-input shadow-sm" type="checkbox" role="switch" onchange="this.form.submit()" <?php echo $s['is_committee'] ? 'checked' : ''; ?> style="cursor: pointer;">
+                            </div>
+                        </form>
                     </td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $s['user_id']; ?>">Edit</button>

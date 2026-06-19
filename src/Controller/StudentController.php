@@ -26,7 +26,6 @@ class StudentController extends BaseController {
         
         $members = [];
         $proposal = null;
-        $recentDocs = [];
         $grades = null;
         
         if ($group) {
@@ -39,11 +38,6 @@ class StudentController extends BaseController {
             $stmt = $db->prepare("SELECT * FROM proposals WHERE group_id = ?");
             $stmt->execute([$group['id']]);
             $proposal = $stmt->fetch();
-
-            // Get recent documents
-            $stmt = $db->prepare("SELECT * FROM documents WHERE group_id = ? ORDER BY uploaded_at DESC LIMIT 5");
-            $stmt->execute([$group['id']]);
-            $recentDocs = $stmt->fetchAll();
 
             // Get grades
             $stmt = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
@@ -58,7 +52,6 @@ class StudentController extends BaseController {
             'group' => $group,
             'members' => $members,
             'proposal' => $proposal,
-            'recentDocs' => $recentDocs,
             'grades' => $grades,
             'deadlines' => $deadlines
         ]);
@@ -205,36 +198,9 @@ class StudentController extends BaseController {
             try {
                 $db->beginTransaction();
 
-                // Generate group code using format: Year-Dept+Shift-Number (e.g. 2k23-SWEM-1)
-                $stmt = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
-                $stmt->execute([$userId]);
-                $studentInfo = $stmt->fetch();
-                
-                $rollNo = $studentInfo['student_id'] ?? '';
-                $parts = explode('/', $rollNo);
-                $year = !empty($parts[0]) ? trim($parts[0]) : '2k23';
-                
-                $deptMap = [
-                    'Software Engineering' => 'SWE',
-                    'Information Technology' => 'IT',
-                    'Data Science' => 'DS',
-                    'Electronic Engineering' => 'EL',
-                    'Telecommunication Engineering' => 'TL'
-                ];
-                $deptCode = $deptMap[$studentInfo['department'] ?? ''] ?? 'GEN';
-                $shiftLetter = (($studentInfo['shift'] ?? '') === 'Evening') ? 'E' : 'M';
-                
-                $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
-                
-                $stmtCount = $db->prepare("SELECT COUNT(*) FROM groups WHERE group_code LIKE ?");
-                $stmtCount->execute([$prefix . '%']);
-                $count = (int)$stmtCount->fetchColumn();
-                $nextNumber = $count + 1;
-                $groupCode = $prefix . $nextNumber;
-
                 // Insert into groups
-                $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (?, ?, 'Group Created')");
-                $stmt->execute([$groupCode, $userId]);
+                $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (NULL, ?, 'Group Created')");
+                $stmt->execute([$userId]);
                 $groupId = $db->lastInsertId();
 
                 // Insert member
@@ -303,7 +269,7 @@ class StudentController extends BaseController {
                 $stmt = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
                 $stmt->execute([$group['id'], $targetId]);
 
-                $this->addNotification($targetId, 'Added to Group', "You have been added to group {$group['group_code']} by {$_SESSION['name']}.");
+                $this->addNotification($targetId, 'Added to Group', "You have been added to the project group by {$_SESSION['name']}.");
                 $this->flash('success', "Student {$targetStudent['name']} added to group successfully.");
             } catch (\Exception $e) {
                 $this->flash('error', 'Failed to add member: ' . $e->getMessage());
@@ -505,35 +471,8 @@ class StudentController extends BaseController {
 
                 $groupId = null;
                 if (!$group) {
-                    // Create new group automatically and make this user the leader
-                    $stmt = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
+                    $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (NULL, ?, 'Proposal Submitted')");
                     $stmt->execute([$userId]);
-                    $studentInfo = $stmt->fetch();
-                    
-                    $rollNo = $studentInfo['student_id'] ?? '';
-                    $parts = explode('/', $rollNo);
-                    $year = !empty($parts[0]) ? trim($parts[0]) : '2k23';
-                    
-                    $deptMap = [
-                        'Software Engineering' => 'SWE',
-                        'Information Technology' => 'IT',
-                        'Data Science' => 'DS',
-                        'Electronic Engineering' => 'EL',
-                        'Telecommunication Engineering' => 'TL'
-                    ];
-                    $deptCode = $deptMap[$studentInfo['department'] ?? ''] ?? 'GEN';
-                    $shiftLetter = (($studentInfo['shift'] ?? '') === 'Evening') ? 'E' : 'M';
-                    
-                    $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
-                    
-                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM groups WHERE group_code LIKE ?");
-                    $stmtCount->execute([$prefix . '%']);
-                    $count = (int)$stmtCount->fetchColumn();
-                    $nextNumber = $count + 1;
-                    $groupCode = $prefix . $nextNumber;
-
-                    $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (?, ?, 'Proposal Submitted')");
-                    $stmt->execute([$groupCode, $userId]);
                     $groupId = $db->lastInsertId();
 
                     // Insert leader into group members
@@ -578,13 +517,13 @@ class StudentController extends BaseController {
                 $db->commit();
 
                 // Get group code
-                $groupCode = $group['group_code'] ?? $groupCode;
+                $groupLabel = !empty($group['group_code']) ? "Group {$group['group_code']}" : "A new project group";
 
                 // Notify assigned supervisor
-                $this->addNotification($supervisor_id, 'Proposal Submitted', "Group $groupCode has submitted a project proposal selecting you as supervisor.");
+                $this->addNotification($supervisor_id, 'Proposal Submitted', "$groupLabel has submitted a project proposal selecting you as supervisor.");
                 // Notify system admin and dean
-                $this->addNotification(1, 'Proposal Submitted', "Group $groupCode has submitted a project proposal.");
-                $this->addNotification(2, 'Proposal Submitted', "Group $groupCode has submitted a project proposal.");
+                $this->addNotification(1, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
+                $this->addNotification(2, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
 
                 $this->flash('success', 'Project proposal submitted successfully!');
             } catch (\Exception $e) {
@@ -595,113 +534,6 @@ class StudentController extends BaseController {
         redirect('/student/proposal');
     }
 
-    public function documents() {
-        $userId = $_SESSION['user_id'];
-        $db = \Database::getInstance()->getConnection();
-
-        $group = $this->getStudentGroup($userId);
-        $documents = [];
-
-        if ($group) {
-            $stmt = $db->prepare("SELECT d.*, u.role as uploader_role, COALESCE(s.name, 'User') as uploader_name
-                FROM documents d 
-                JOIN users u ON d.uploaded_by = u.id
-                LEFT JOIN students s ON u.id = s.user_id
-                WHERE d.group_id = ? ORDER BY d.uploaded_at DESC");
-            $stmt->execute([$group['id']]);
-            $documents = $stmt->fetchAll();
-        }
-
-        $this->render('student/documents', [
-            'group' => $group,
-            'documents' => $documents
-        ]);
-    }
-
-    public function uploadDocument() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $userId = $_SESSION['user_id'];
-            $db = \Database::getInstance()->getConnection();
-
-            $group = $this->getStudentGroup($userId);
-            if (!$group) {
-                $this->flash('error', 'You must be in a group to upload files.');
-                redirect('/student/documents');
-            }
-
-            $stage = $_POST['stage'] ?? ''; // FYP-I, FYP-II, Defense
-            $docType = $_POST['doc_type'] ?? ''; // SRS, Literature Review, UML Diagrams, Prototype, Source Code, Final Report, User Manual, Test Cases, Deployment Guide, Presentation Slides, Demo Video, Other
-            
-            if (empty($stage) || empty($docType)) {
-                $this->flash('error', 'Stage and Document Type are required.');
-                redirect('/student/documents');
-            }
-
-            if (!isset($_FILES['doc_file']) || $_FILES['doc_file']['error'] !== UPLOAD_ERR_OK) {
-                $this->flash('error', 'Please select a valid file to upload.');
-                redirect('/student/documents');
-            }
-
-            $file = $_FILES['doc_file'];
-            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            
-            // Define allowable extensions depending on type
-            $allowed = ['pdf', 'doc', 'docx', 'zip', 'rar', 'ppt', 'pptx', 'mp4', 'avi'];
-            
-            if ($docType === 'Source Code' || $docType === 'Prototype') {
-                $allowed = ['zip', 'rar', 'tar.gz'];
-            }
-
-            if (!in_array($ext, $allowed)) {
-                $this->flash('error', 'Invalid file extension. Extension not allowed for this document type.');
-                redirect('/student/documents');
-            }
-
-            // Subdirectories based on stage
-            $folderMap = [
-                'Proposal Defence Presentation' => 'fyp1',
-                'FYP Progress Presentation' => 'fyp2',
-                'Final Presentation' => 'defense'
-            ];
-            $folder = $folderMap[$stage] ?? 'others';
-
-            $uploadDir = __DIR__ . '/../../public/uploads/' . $folder . '/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $file['name']);
-            $destPath = $uploadDir . $fileName;
-
-            if (move_uploaded_file($file['tmp_name'], $destPath)) {
-                $dbPath = '/uploads/' . $folder . '/' . $fileName;
-
-                try {
-                    $db->beginTransaction();
-
-                    // Insert document record
-                    $stmt = $db->prepare("INSERT INTO documents (group_id, stage, doc_type, file_path, original_name, uploaded_by) 
-                        VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$group['id'], $stage, $docType, $dbPath, $file['name'], $userId]);
-
-                    $db->commit();
-
-                    // Notify supervisor
-                    if ($group['supervisor_id']) {
-                        $this->addNotification($group['supervisor_id'], 'Document Uploaded', "Group {$group['group_code']} uploaded a new $docType under $stage.");
-                    }
-
-                    $this->flash('success', "Document '$docType' uploaded successfully.");
-                } catch (\Exception $e) {
-                    $db->rollBack();
-                    $this->flash('error', 'Error recording upload: ' . $e->getMessage());
-                }
-            } else {
-                $this->flash('error', 'Failed to save file on the server.');
-            }
-        }
-        redirect('/student/documents');
-    }
 
     public function grade() {
         $userId = $_SESSION['user_id'];
@@ -709,16 +541,27 @@ class StudentController extends BaseController {
 
         $group = $this->getStudentGroup($userId);
         $grade = null;
+        $evaluations = [];
 
         if ($group) {
             $stmt = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
             $stmt->execute([$group['id']]);
             $grade = $stmt->fetch();
+
+            // Fetch all evaluations with evaluator names
+            $stmtEvals = $db->prepare("SELECT e.*, c.name as evaluator_name 
+                                       FROM evaluations e
+                                       JOIN committees c ON e.evaluator_id = c.user_id
+                                       WHERE e.group_id = ? AND e.total_marks > 0
+                                       ORDER BY e.stage ASC, c.name ASC");
+            $stmtEvals->execute([$group['id']]);
+            $evaluations = $stmtEvals->fetchAll();
         }
 
         $this->render('student/grade', [
             'group' => $group,
-            'grade' => $grade
+            'grade' => $grade,
+            'evaluations' => $evaluations
         ]);
     }
 

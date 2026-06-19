@@ -1,5 +1,28 @@
 <?php
+// Define custom session save path for portability and isolation across setups
+$sessionPath = __DIR__ . '/../sessions';
+if (!is_dir($sessionPath)) {
+    mkdir($sessionPath, 0700, true);
+}
+session_save_path($sessionPath);
+
+// Set session cookie security parameters
+$cookieParams = session_get_cookie_params();
+session_set_cookie_params([
+    'lifetime' => 0, // Until browser is closed
+    'path' => $cookieParams['path'] ?? '/',
+    'domain' => $cookieParams['domain'] ?? '',
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
 session_start();
+
+// Load Composer Autoloader
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
 
 // Autoload config and src/ files
 spl_autoload_register(function ($class) {
@@ -52,6 +75,8 @@ $routes = [
     '/logout' => ['Controller\AuthController', 'logout'],
     '/register' => ['Controller\AuthController', 'register'],
     '/forgot-password' => ['Controller\AuthController', 'forgotPassword'],
+    '/reset-password' => ['Controller\AuthController', 'resetPassword'],
+    '/change-password' => ['Controller\AuthController', 'changePassword'],
     
     // Admin routes
     '/admin/dashboard' => ['Controller\AdminController', 'dashboard'],
@@ -63,6 +88,16 @@ $routes = [
     '/admin/groups/assign' => ['Controller\AdminController', 'assignSupervisor'],
     '/admin/deadlines' => ['Controller\AdminController', 'deadlines'],
     '/admin/reports' => ['Controller\AdminController', 'reports'],
+    '/admin/users/edit' => ['Controller\AdminController', 'editUser'],
+    '/admin/users/delete' => ['Controller\AdminController', 'deleteUser'],
+    '/admin/groups/create' => ['Controller\AdminController', 'createGroup'],
+    '/admin/groups/edit' => ['Controller\AdminController', 'editGroup'],
+    '/admin/groups/delete' => ['Controller\AdminController', 'deleteGroup'],
+    '/admin/groups/members/update' => ['Controller\AdminController', 'updateGroupMembers'],
+    '/admin/projects/edit' => ['Controller\AdminController', 'editProject'],
+    '/admin/projects/delete' => ['Controller\AdminController', 'deleteProject'],
+    '/admin/grades/edit' => ['Controller\AdminController', 'editGrades'],
+    '/admin/deadlines/delete' => ['Controller\AdminController', 'deleteDeadline'],
 
     // Dean routes
     '/dean/dashboard' => ['Controller\DeanController', 'dashboard'],
@@ -70,10 +105,7 @@ $routes = [
     '/dean/supervisors/create' => ['Controller\DeanController', 'createSupervisor'],
     '/dean/supervisors/edit' => ['Controller\DeanController', 'editSupervisor'],
     '/dean/supervisors/delete' => ['Controller\DeanController', 'deleteSupervisor'],
-    '/dean/committee' => ['Controller\DeanController', 'committee'],
-    '/dean/committee/create' => ['Controller\DeanController', 'createCommittee'],
-    '/dean/committee/edit' => ['Controller\DeanController', 'editCommittee'],
-    '/dean/committee/delete' => ['Controller\DeanController', 'deleteCommittee'],
+    '/dean/supervisors/toggle-committee' => ['Controller\DeanController', 'toggleCommitteeRole'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -84,8 +116,6 @@ $routes = [
     '/student/group/update-members' => ['Controller\StudentController', 'updateMembers'],
     '/student/proposal' => ['Controller\StudentController', 'proposal'],
     '/student/proposal/submit' => ['Controller\StudentController', 'submitProposal'],
-    '/student/documents' => ['Controller\StudentController', 'documents'],
-    '/student/documents/upload' => ['Controller\StudentController', 'uploadDocument'],
     '/student/grade' => ['Controller\StudentController', 'grade'],
     
     // Supervisor routes
@@ -93,15 +123,13 @@ $routes = [
     '/supervisor/profile' => ['Controller\SupervisorController', 'profile'],
     '/supervisor/groups' => ['Controller\SupervisorController', 'groups'],
     '/supervisor/groups/grade' => ['Controller\SupervisorController', 'gradeGroup'],
+    '/supervisor/groups/toggle-visibility' => ['Controller\SupervisorController', 'toggleVisibility'],
     '/supervisor/reviews' => ['Controller\SupervisorController', 'reviews'],
     '/supervisor/proposal/action' => ['Controller\SupervisorController', 'proposalAction'],
-    '/supervisor/document/feedback' => ['Controller\SupervisorController', 'documentFeedback'],
-
-    // Committee routes
-    '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
-    '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
-    '/committee/evaluations/schedule' => ['Controller\CommitteeController', 'scheduleEvaluation'],
-    '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
+    '/supervisor/committee/dashboard' => ['Controller\SupervisorController', 'committeeDashboard'],
+    '/supervisor/committee/evaluations' => ['Controller\SupervisorController', 'committeeEvaluations'],
+    '/supervisor/committee/evaluations/grade' => ['Controller\SupervisorController', 'gradeEvaluation'],
+    '/supervisor/committee/evaluations/toggle-visibility' => ['Controller\SupervisorController', 'toggleCommitteeVisibility'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
@@ -112,15 +140,57 @@ $routes = [
 if (array_key_exists($uri, $routes)) {
     list($controllerClass, $method) = $routes[$uri];
     
+    // Inactivity timeout: 15 minutes (900 seconds)
+    $timeout = 900;
+    $isApiRoute = (strpos($uri, '/api/') === 0);
+    
+    if (isset($_SESSION['user_id'])) {
+        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+            // Clear and destroy session
+            $_SESSION = [];
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+            session_destroy();
+            
+            if ($isApiRoute) {
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode(['error' => 'Session expired due to inactivity']);
+                exit;
+            } else {
+                session_start();
+                $_SESSION['flash']['error'] = 'Your session has expired due to 15 minutes of inactivity. Please log in again.';
+                redirect('/login');
+            }
+        }
+        
+        // Refresh activity time only for non-API requests (so background polling doesn't keep it alive)
+        if (!$isApiRoute) {
+            $_SESSION['last_activity'] = time();
+        }
+    }
+
     // Check login requirements (simple session validation)
-    $authRoutes = ['/', '/login', '/register', '/forgot-password'];
+    $authRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
     if (!in_array($uri, $authRoutes)) {
         if (!isset($_SESSION['user_id'])) {
-            redirect('/login');
+            if ($isApiRoute) {
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit;
+            } else {
+                redirect('/login');
+            }
         }
         
         // Role based access check
-        $role = $_SESSION['role'];
+        $role = $_SESSION['role'] ?? '';
         if (strpos($uri, '/admin') === 0 && $role !== 'admin') {
             die("Unauthorized access: Admin only.");
         }
@@ -130,11 +200,18 @@ if (array_key_exists($uri, $routes)) {
         if (strpos($uri, '/student') === 0 && $role !== 'student') {
             die("Unauthorized access: Student only.");
         }
-        if (strpos($uri, '/supervisor') === 0 && $role !== 'supervisor') {
-            die("Unauthorized access: Supervisor only.");
-        }
-        if (strpos($uri, '/committee') === 0 && $role !== 'committee') {
-            die("Unauthorized access: Committee only.");
+        if (strpos($uri, '/supervisor') === 0) {
+            if ($role !== 'supervisor') {
+                die("Unauthorized access: Supervisor only.");
+            }
+            if (strpos($uri, '/supervisor/committee') === 0) {
+                $db = \Database::getInstance()->getConnection();
+                $stmtC = $db->prepare("SELECT COUNT(*) FROM committees WHERE user_id = ?");
+                $stmtC->execute([$_SESSION['user_id']]);
+                if ((int)$stmtC->fetchColumn() === 0) {
+                    die("Unauthorized access: You are not assigned to the committee.");
+                }
+            }
         }
     } else {
         // Only redirect logged in users to their dashboard if they visit the root '/' URL.

@@ -6,11 +6,14 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom script app.js -->
 <?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']);
-if ($basePath === '\\' || $basePath === '/') {
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+if ($basePath === '/') {
     $basePath = '';
 }
 ?>
-<script src="<?php echo $basePath; ?>/js/app.js"></script>
+<script>
+    window.appBasePath = '<?php echo $basePath; ?>';
+</script>
+<script src="<?php echo $basePath; ?>/js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

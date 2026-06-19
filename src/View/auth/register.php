@@ -123,6 +123,33 @@
             background: #DC2626;
             transform: scale(1.1);
         }
+        .form-section-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: var(--form-bg);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        .form-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #2E5BFF;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-label-sm {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -165,210 +192,254 @@
 
             <!-- Student Form Fields -->
             <div id="studentFields">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <label for="student_id" class="form-label small fw-semibold text-secondary">Roll No. <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="student_id" name="student_id" placeholder="e.g. 2k23/SWE/001" pattern="[0-9]k[0-9]{2}/[A-Za-z]{2,5}/[0-9]{3,4}" title="Format must be like 2k23/SWE/001" value="<?php echo htmlspecialchars($old['student_id'] ?? ''); ?>">
+                <!-- Academic details card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-mortarboard-fill"></i> Academic Details
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="student_email" class="form-label small fw-semibold text-secondary">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control bg-light" id="student_email" name="email" placeholder="student@university.edu" value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="student_department" class="form-label small fw-semibold text-secondary">Department <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="student_department" name="student_department">
-                            <option value="" disabled <?php echo empty($old['student_department']) ? 'selected' : ''; ?>>Select Department</option>
-                            <option value="Information Technology" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
-                            <option value="Software Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Software Engineering') ? 'selected' : ''; ?>>Software Engineering</option>
-                            <option value="Data Science" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Data Science') ? 'selected' : ''; ?>>Data Science</option>
-                            <option value="Electronic Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Electronic Engineering') ? 'selected' : ''; ?>>Electronic Engineering</option>
-                            <option value="Telecommunication Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Telecommunication Engineering') ? 'selected' : ''; ?>>Telecommunication Engineering</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="student_shift" class="form-label small fw-semibold text-secondary">Shift <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="student_shift" name="shift" required>
-                            <option value="" disabled <?php echo empty($old['shift']) ? 'selected' : ''; ?>>Select Shift</option>
-                            <option value="Morning" <?php echo (isset($old['shift']) && $old['shift'] === 'Morning') ? 'selected' : ''; ?>>Morning</option>
-                            <option value="Evening" <?php echo (isset($old['shift']) && $old['shift'] === 'Evening') ? 'selected' : ''; ?>>Evening</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="cnic" class="form-label small fw-semibold text-secondary">CNIC No. / B-Form No. <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="cnic" name="cnic" placeholder="Must be entered without dashes (e.g. 3520112345671)" pattern="[0-9]+" title="Enter numbers only, without dashes" value="<?php echo htmlspecialchars($old['cnic'] ?? ''); ?>">
-                        <div class="form-text small text-muted">Cannot be changed after registration.</div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="confirm_cnic" class="form-label small fw-semibold text-secondary">Re-Type CNIC No. / B-Form No. <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="confirm_cnic" name="confirm_cnic" placeholder="Confirm your CNIC No." value="<?php echo htmlspecialchars($old['confirm_cnic'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="name" class="form-label small fw-semibold text-secondary">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="name" name="name" placeholder="Must match Matriculation Certificate" value="<?php echo htmlspecialchars($old['name'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="father_name" class="form-label small fw-semibold text-secondary">Father's Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="father_name" name="father_name" placeholder="Must match Matriculation Certificate" value="<?php echo htmlspecialchars($old['father_name'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="surname" class="form-label small fw-semibold text-secondary">Surname</label>
-                        <input type="text" class="form-control bg-light" id="surname" name="surname" placeholder="e.g. Khan (Must match Matriculation Certificate)" value="<?php echo htmlspecialchars($old['surname'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-2 mb-3">
-                        <label for="mobile_code" class="form-label small fw-semibold text-secondary">Code <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="mobile_code" name="mobile_code">
-                            <option value="+92" <?php echo (!isset($old['mobile_code']) || $old['mobile_code'] === '+92') ? 'selected' : ''; ?>>+92</option>
-                            <option value="+1" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+1') ? 'selected' : ''; ?>>+1</option>
-                            <option value="+44" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+44') ? 'selected' : ''; ?>>+44</option>
-                            <option value="+971" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+971') ? 'selected' : ''; ?>>+971</option>
-                        </select>
-                    </div>
-                    <div class="col-md-5 mb-3">
-                        <label for="mobile_no" class="form-label small fw-semibold text-secondary">Mobile Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control bg-light" id="mobile_no" name="mobile_no" placeholder="3001234567" value="<?php echo htmlspecialchars($old['mobile_no'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-5 mb-3">
-                        <label for="gender" class="form-label small fw-semibold text-secondary">Gender <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="gender" name="gender">
-                            <option value="" disabled <?php echo empty($old['gender']) ? 'selected' : ''; ?>>Select Gender</option>
-                            <option value="Male" <?php echo (isset($old['gender']) && $old['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo (isset($old['gender']) && $old['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo (isset($old['gender']) && $old['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="country" class="form-label small fw-semibold text-secondary">Country <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="country" name="country" placeholder="e.g. Pakistan" value="<?php echo htmlspecialchars($old['country'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="province_state" class="form-label small fw-semibold text-secondary">Domicile Province / State <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="province_state" name="province_state" placeholder="e.g. Punjab" value="<?php echo htmlspecialchars($old['province_state'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="district" class="form-label small fw-semibold text-secondary">Domicile District <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="district" name="district" placeholder="e.g. Lahore" value="<?php echo htmlspecialchars($old['district'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="student_password" class="form-label small fw-semibold text-secondary">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control bg-light" id="student_password" name="password" placeholder="Min 8 characters/digits">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="confirm_password" class="form-label small fw-semibold text-secondary">Re-Type Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control bg-light" id="confirm_password" name="confirm_password" placeholder="Confirm your password">
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label small fw-semibold text-secondary">Profile Image <span class="text-danger">*</span></label>
-                    <div id="avatar-dropzone" class="avatar-dropzone">
-                        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
-                        
-                        <!-- Default placeholder -->
-                        <div id="dropzone-placeholder" class="d-flex flex-column align-items-center">
-                            <i class="bi bi-cloud-arrow-up text-primary fs-1 mb-2"></i>
-                            <span class="fw-semibold small text-dark mb-1">Drag & drop your photo here, or <span class="text-primary text-decoration-underline">Browse</span></span>
-                            <span class="text-muted small" style="font-size: 0.75rem;">Supports JPG, JPEG, PNG (Max 500KB)</span>
-                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small mt-3" style="font-size: 0.65rem;"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <label for="student_id" class="form-label-sm">Roll No. <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="student_id" name="student_id" placeholder="e.g. 2k23/SWE/001" pattern="[0-9][Kk][0-9]{2}/[A-Za-z]{2,5}/[0-9]{1,4}" title="Format must match 2k23/SWE/001 or 2K23/SWE/001" value="<?php echo htmlspecialchars($old['student_id'] ?? ''); ?>">
                         </div>
-                        
-                        <!-- Preview State -->
-                        <div id="dropzone-preview" class="d-none flex-column align-items-center">
-                            <div class="position-relative d-inline-block">
-                                <img id="preview-image" src="#" class="avatar-preview-img" alt="Avatar Preview">
-                                <button type="button" id="btn-remove-avatar" class="btn-remove-preview" title="Remove photo">
-                                    <i class="bi bi-x fs-5"></i>
-                                </button>
+                        <div class="col-md-3">
+                            <label for="student_email" class="form-label-sm">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control form-control-sm bg-light" id="student_email" name="email" placeholder="student@university.edu" value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="student_department" class="form-label-sm">Department <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="student_department" name="student_department">
+                                <option value="" disabled <?php echo empty($old['student_department']) ? 'selected' : ''; ?>>Select Department</option>
+                                <option value="Information Technology" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
+                                <option value="Software Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Software Engineering') ? 'selected' : ''; ?>>Software Engineering</option>
+                                <option value="Data Science" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Data Science') ? 'selected' : ''; ?>>Data Science</option>
+                                <option value="Electronic Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Electronic Engineering') ? 'selected' : ''; ?>>Electronic Engineering</option>
+                                <option value="Telecommunication Engineering" <?php echo (isset($old['student_department']) && $old['student_department'] === 'Telecommunication Engineering') ? 'selected' : ''; ?>>Telecommunication Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="student_shift" class="form-label-sm">Shift <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="student_shift" name="shift" required>
+                                <option value="" disabled <?php echo empty($old['shift']) ? 'selected' : ''; ?>>Select Shift</option>
+                                <option value="Morning" <?php echo (isset($old['shift']) && $old['shift'] === 'Morning') ? 'selected' : ''; ?>>Morning</option>
+                                <option value="Evening" <?php echo (isset($old['shift']) && $old['shift'] === 'Evening') ? 'selected' : ''; ?>>Evening</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Identity card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-person-badge-fill"></i> Personal Identity
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                            <label for="cnic" class="form-label-sm">CNIC No. / B-Form No. <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="cnic" name="cnic" placeholder="Numbers only (e.g. 3520112345671)" pattern="[0-9]+" title="Enter numbers only, without dashes" value="<?php echo htmlspecialchars($old['cnic'] ?? ''); ?>">
+                            <div class="form-text small text-muted mt-0" style="font-size: 0.65rem;">Cannot be changed after registration.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirm_cnic" class="form-label-sm">Re-Type CNIC No. / B-Form No. <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="confirm_cnic" name="confirm_cnic" placeholder="Confirm your CNIC No." value="<?php echo htmlspecialchars($old['confirm_cnic'] ?? ''); ?>">
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label for="name" class="form-label-sm">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="name" name="name" placeholder="As in Matric Certificate" value="<?php echo htmlspecialchars($old['name'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="father_name" class="form-label-sm">Father's Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="father_name" name="father_name" placeholder="As in Matric Certificate" value="<?php echo htmlspecialchars($old['father_name'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="surname" class="form-label-sm">Surname</label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="surname" name="surname" placeholder="e.g. Khan" value="<?php echo htmlspecialchars($old['surname'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact & Location card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-geo-alt-fill"></i> Contact & Domicile Location
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2">
+                            <label for="mobile_code" class="form-label-sm">Code <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="mobile_code" name="mobile_code">
+                                <option value="+92" <?php echo (!isset($old['mobile_code']) || $old['mobile_code'] === '+92') ? 'selected' : ''; ?>>+92</option>
+                                <option value="+1" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+1') ? 'selected' : ''; ?>>+1</option>
+                                <option value="+44" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+44') ? 'selected' : ''; ?>>+44</option>
+                                <option value="+971" <?php echo (isset($old['mobile_code']) && $old['mobile_code'] === '+971') ? 'selected' : ''; ?>>+971</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="mobile_no" class="form-label-sm">Mobile Number <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control form-control-sm bg-light" id="mobile_no" name="mobile_no" placeholder="3001234567" value="<?php echo htmlspecialchars($old['mobile_no'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="gender" class="form-label-sm">Gender <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="gender" name="gender">
+                                <option value="" disabled <?php echo empty($old['gender']) ? 'selected' : ''; ?>>Select Gender</option>
+                                <option value="Male" <?php echo (isset($old['gender']) && $old['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="Female" <?php echo (isset($old['gender']) && $old['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
+                                <option value="Other" <?php echo (isset($old['gender']) && $old['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label for="country" class="form-label-sm">Country <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="country" name="country" placeholder="e.g. Pakistan" value="<?php echo htmlspecialchars($old['country'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="province_state" class="form-label-sm">Province / State <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="province_state" name="province_state" placeholder="e.g. Sindh" value="<?php echo htmlspecialchars($old['province_state'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="district" class="form-label-sm">Domicile District <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="district" name="district" placeholder="e.g. Jamshoro" value="<?php echo htmlspecialchars($old['district'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Security card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-shield-lock-fill"></i> Account Security
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="student_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm bg-light" id="student_password" name="password" placeholder="Min 8 characters/digits">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirm_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm bg-light" id="confirm_password" name="confirm_password" placeholder="Confirm your password">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Image card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi ::bi-image-fill"></i> Profile Image Upload
+                    </div>
+                    <div class="mb-2">
+                        <div id="avatar-dropzone" class="avatar-dropzone">
+                            <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
+                            
+                            <!-- Default placeholder -->
+                            <div id="dropzone-placeholder" class="d-flex flex-column align-items-center">
+                                <i class="bi bi-cloud-arrow-up text-primary fs-1 mb-2"></i>
+                                <span class="fw-semibold small text-dark mb-1">Drag & drop your photo here, or <span class="text-primary text-decoration-underline">Browse</span></span>
+                                <span class="text-muted small" style="font-size: 0.75rem;">Supports JPG, JPEG, PNG (Max 500KB)</span>
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle small mt-3" style="font-size: 0.65rem;"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
                             </div>
-                            <span id="preview-filename" class="d-block small text-success fw-semibold mt-2">filename.png</span>
+                            
+                            <!-- Preview State -->
+                            <div id="dropzone-preview" class="d-none flex-column align-items-center">
+                                <div class="position-relative d-inline-block">
+                                    <img id="preview-image" src="#" class="avatar-preview-img" alt="Avatar Preview">
+                                    <button type="button" id="btn-remove-avatar" class="btn-remove-preview" title="Remove photo">
+                                        <i class="bi bi-x fs-5"></i>
+                                    </button>
+                                </div>
+                                <span id="preview-filename" class="d-block small text-success fw-semibold mt-2">filename.png</span>
+                            </div>
                         </div>
+                        <div class="form-text small text-muted mt-1" style="font-size: 0.75rem;">Must be a passport-size photo with a **white background** in JPG, JPEG, or PNG format. Maximum size **500KB**. This **cannot be changed** after upload.</div>
                     </div>
-                    <div class="form-text small text-muted mt-1">Must be a passport-size photo with a **white background** in JPG, JPEG, or PNG format. Maximum size **500KB**. This **cannot be changed** after upload.</div>
                 </div>
 
                 <!-- Info Alert -->
-                <div class="p-3 mb-4 rounded-3 info-note border-0">
+                <div class="p-3 mb-3 rounded-3 info-note border-0">
                     <p class="small text-primary fw-medium mb-1"><i class="bi bi-info-circle-fill"></i> Important Note</p>
-                    <p class="small text-muted m-0">If you have already registered with your CNIC or B-Form number, you do not need to register again. You can simply log in to access your existing application form.</p>
+                    <p class="small text-muted m-0" style="font-size: 0.75rem;">If you have already registered with your CNIC or B-Form number, you do not need to register again. You can simply log in to access your existing application form.</p>
                 </div>
             </div>
 
             <!-- Staff/Faculty Form Fields (Supervisor, HOD/Dean, Admin) -->
             <div id="staffFields" class="d-none">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="staff_name" class="form-label small fw-semibold text-secondary">First Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="staff_name" name="staff_first_name" placeholder="John" value="<?php echo htmlspecialchars($old['staff_first_name'] ?? ''); ?>">
+                <!-- Personal details card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-person-fill"></i> Personal Details
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="staff_surname" class="form-label small fw-semibold text-secondary">Last Name / Surname <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="staff_surname" name="staff_last_name" placeholder="Doe" value="<?php echo htmlspecialchars($old['staff_last_name'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="staff_email" class="form-label small fw-semibold text-secondary">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control bg-light" id="staff_email" name="staff_email" placeholder="faculty@university.edu" value="<?php echo htmlspecialchars($old['staff_email'] ?? ''); ?>">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="staff_cnic" class="form-label small fw-semibold text-secondary">CNIC No. <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="staff_cnic" name="staff_cnic" placeholder="Must be entered without dashes" pattern="[0-9]+" title="Enter numbers only, without dashes" value="<?php echo htmlspecialchars($old['staff_cnic'] ?? ''); ?>">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="staff_name" class="form-label-sm">First Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="staff_name" name="staff_first_name" placeholder="John" value="<?php echo htmlspecialchars($old['staff_first_name'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="staff_surname" class="form-label-sm">Last Name / Surname <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="staff_surname" name="staff_last_name" placeholder="Doe" value="<?php echo htmlspecialchars($old['staff_last_name'] ?? ''); ?>">
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="department" class="form-label small fw-semibold text-secondary">Department <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="department" name="staff_department">
-                            <option value="" disabled <?php echo empty($old['staff_department']) ? 'selected' : ''; ?>>Select Department</option>
-                            <option value="Information Technology" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
-                            <option value="Software Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Software Engineering') ? 'selected' : ''; ?>>Software Engineering</option>
-                            <option value="Data Science" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Data Science') ? 'selected' : ''; ?>>Data Science</option>
-                            <option value="Electronic Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Electronic Engineering') ? 'selected' : ''; ?>>Electronic Engineering</option>
-                            <option value="Telecommunication Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Telecommunication Engineering') ? 'selected' : ''; ?>>Telecommunication Engineering</option>
-                        </select>
+                <!-- Professional info card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-briefcase-fill"></i> Professional Information
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="designation" class="form-label small fw-semibold text-secondary">Designation <span class="text-danger">*</span></label>
-                        <select class="form-select bg-light" id="designation" name="designation">
-                            <option value="" disabled <?php echo empty($old['designation']) ? 'selected' : ''; ?>>Select Designation</option>
-                            <option value="Lecturer" <?php echo (isset($old['designation']) && $old['designation'] === 'Lecturer') ? 'selected' : ''; ?>>Lecturer</option>
-                            <option value="Assistant Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Assistant Professor') ? 'selected' : ''; ?>>Assistant Professor</option>
-                            <option value="Associate Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Associate Professor') ? 'selected' : ''; ?>>Associate Professor</option>
-                            <option value="Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Professor') ? 'selected' : ''; ?>>Professor</option>
-                            <option value="HOD / Dean" <?php echo (isset($old['designation']) && $old['designation'] === 'HOD / Dean') ? 'selected' : ''; ?>>HOD / Dean</option>
-                            <option value="System Admin" <?php echo (isset($old['designation']) && $old['designation'] === 'System Admin') ? 'selected' : ''; ?>>System Admin</option>
-                        </select>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                            <label for="staff_email" class="form-label-sm">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control form-control-sm bg-light" id="staff_email" name="staff_email" placeholder="faculty@university.edu" value="<?php echo htmlspecialchars($old['staff_email'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="staff_cnic" class="form-label-sm">CNIC No. <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="staff_cnic" name="staff_cnic" placeholder="Must be entered without dashes" pattern="[0-9]+" title="Enter numbers only, without dashes" value="<?php echo htmlspecialchars($old['staff_cnic'] ?? ''); ?>">
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="phone" class="form-label small fw-semibold text-secondary">Contact Number <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light" id="phone" name="phone" placeholder="e.g. 03001234567" value="<?php echo htmlspecialchars($old['phone'] ?? ''); ?>">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label for="department" class="form-label-sm">Department <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="department" name="staff_department">
+                                <option value="" disabled <?php echo empty($old['staff_department']) ? 'selected' : ''; ?>>Select Department</option>
+                                <option value="Information Technology" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
+                                <option value="Software Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Software Engineering') ? 'selected' : ''; ?>>Software Engineering</option>
+                                <option value="Data Science" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Data Science') ? 'selected' : ''; ?>>Data Science</option>
+                                <option value="Electronic Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Electronic Engineering') ? 'selected' : ''; ?>>Electronic Engineering</option>
+                                <option value="Telecommunication Engineering" <?php echo (isset($old['staff_department']) && $old['staff_department'] === 'Telecommunication Engineering') ? 'selected' : ''; ?>>Telecommunication Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="designation" class="form-label-sm">Designation <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm bg-light" id="designation" name="designation">
+                                <option value="" disabled <?php echo empty($old['designation']) ? 'selected' : ''; ?>>Select Designation</option>
+                                <option value="Lecturer" <?php echo (isset($old['designation']) && $old['designation'] === 'Lecturer') ? 'selected' : ''; ?>>Lecturer</option>
+                                <option value="Assistant Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Assistant Professor') ? 'selected' : ''; ?>>Assistant Professor</option>
+                                <option value="Associate Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Associate Professor') ? 'selected' : ''; ?>>Associate Professor</option>
+                                <option value="Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Professor') ? 'selected' : ''; ?>>Professor</option>
+                                <option value="HOD / Dean" <?php echo (isset($old['designation']) && $old['designation'] === 'HOD / Dean') ? 'selected' : ''; ?>>HOD / Dean</option>
+                                <option value="System Admin" <?php echo (isset($old['designation']) && $old['designation'] === 'System Admin') ? 'selected' : ''; ?>>System Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="phone" class="form-label-sm">Contact Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm bg-light" id="phone" name="phone" placeholder="e.g. 03001234567" value="<?php echo htmlspecialchars($old['phone'] ?? ''); ?>">
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="staff_password" class="form-label small fw-semibold text-secondary">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control bg-light" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits">
+                <!-- Account Security card -->
+                <div class="form-section-card">
+                    <div class="form-section-title">
+                        <i class="bi bi-shield-lock-fill"></i> Account Security
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="confirm_staff_password" class="form-label small fw-semibold text-secondary">Re-Type Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control bg-light" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="staff_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm bg-light" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirm_staff_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm bg-light" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password">
+                        </div>
                     </div>
                 </div>
             </div>

@@ -61,7 +61,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1040;
     background: var(--sidebar-bg);
     color: #f8fafc;
     transition: all var(--transition-speed) ease;
@@ -106,6 +106,9 @@ body {
 
 /* Header */
 .top-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
     background-color: var(--navbar-bg);
     box-shadow: var(--card-shadow);
     padding: 15px 30px;
@@ -410,5 +413,99 @@ html.dark-theme .alert-warning {
     #content {
         margin-left: 0;
         width: 100%;
+    }
+}
+
+/* Accordion styling for Theme support */
+.accordion-item {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+.accordion-button {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    box-shadow: none !important;
+}
+.accordion-button:not(.collapsed) {
+    background-color: var(--table-hover-bg) !important;
+    color: var(--primary-color) !important;
+}
+.accordion-button::after {
+    filter: none;
+}
+html.dark-theme .accordion-button::after {
+    filter: invert(1) grayscale(1) brightness(2);
+}
+.accordion-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Responsive adjustments for extra small screens */
+@media (max-width: 575.98px) {
+    body {
+        font-size: 0.875rem;
+    }
+    .container-fluid {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    .card {
+        padding: 1rem !important;
+    }
+    .top-navbar {
+        padding: 10px 15px !important;
+    }
+    .stat-card {
+        padding: 1rem !important;
+    }
+    .stat-card h3 {
+        font-size: 1.5rem;
+    }
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-body {
+        padding: 1.25rem !important;
+    }
+    .btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+    .btn-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    .form-control, .form-select {
+        padding: 8px 12px;
+        font-size: 0.875rem;
+    }
+}
+
+/* Table Responsive style refinements */
+.table-responsive {
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) var(--table-header-bg);
+}
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+.table-responsive::-webkit-scrollbar-track {
+    background: var(--table-header-bg);
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+/* Notification dropdown adjustments on small viewports */
+@media (max-width: 575.98px) {
+    #notification-dropdown {
+        width: 290px !important;
+        max-width: calc(100vw - 32px) !important;
+        left: auto !important;
+        right: -60px !important;
     }
 }

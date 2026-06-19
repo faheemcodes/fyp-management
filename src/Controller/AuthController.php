@@ -1,6 +1,9 @@
 <?php
 namespace Controller;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class AuthController extends BaseController {
     
     public function index() {
@@ -55,6 +58,7 @@ class AuthController extends BaseController {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
+                $_SESSION['last_activity'] = time();
                 
                 // Fetch profile specific name
                 if ($user['role'] === 'student') {
@@ -389,13 +393,148 @@ class AuthController extends BaseController {
             $user = $stmt->fetch();
             
             if ($user) {
-                $this->flash('success', 'Password reset instructions have been simulated & sent to your email.');
+                $token = bin2hex(random_bytes(32));
+                $expiry = date('Y-m-d H:i:s', time() + 3600); // 1 hour validity
+                
+                $stmt = $db->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?");
+                $stmt->execute([$token, $expiry, $user['id']]);
+                
+                // Construct reset password link
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'];
+                $scriptName = $_SERVER['SCRIPT_NAME'];
+                $baseDir = dirname($scriptName);
+                if ($baseDir === '\\' || $baseDir === '/') {
+                    $baseDir = '';
+                }
+                $resetLink = $protocol . '://' . $host . $baseDir . '/reset-password?token=' . $token;
+                
+                // Log email to file
+                $logDir = __DIR__ . '/../../sessions';
+                if (!is_dir($logDir)) {
+                    mkdir($logDir, 0700, true);
+                }
+                $logFile = $logDir . '/reset_emails.log';
+                $logMessage = "[" . date('Y-m-d H:i:s') . "] Reset request for $email. Link: $resetLink\n";
+                file_put_contents($logFile, $logMessage, FILE_APPEND);
+                
+                $subject = "Password Reset Request - FYP Management Portal";
+                $message = "Hello,\n\n" .
+                           "We received a request to reset your password for your FYP Management Portal account.\n" .
+                           "Please click the link below to set a new password:\n\n" .
+                           $resetLink . "\n\n" .
+                           "This link is valid for 1 hour. If you did not make this request, you can safely ignore this email.\n\n" .
+                           "Regards,\nUniversity of Sindh FYP Portal Support";
+                $headers = "From: noreply@usindh.edu.pk\r\n" .
+                           "Reply-To: noreply@usindh.edu.pk\r\n" .
+                           "X-Mailer: PHP/" . phpversion();
+
+                // Load SMTP mail config
+                $mailConfig = require __DIR__ . '/../../config/mail.php';
+                $emailSent = false;
+
+                // Try PHPMailer if SMTP credentials are configured (not default placeholders)
+                if (isset($mailConfig['smtp_username']) && $mailConfig['smtp_username'] !== 'your_email@gmail.com' && !empty($mailConfig['smtp_password'])) {
+                    $mail = new PHPMailer(true);
+                    try {
+                        // Server settings
+                        $mail->isSMTP();
+                        $mail->Host       = $mailConfig['smtp_host'];
+                        $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+                        $mail->Username   = $mailConfig['smtp_username'];
+                        $mail->Password   = $mailConfig['smtp_password'];
+                        $mail->SMTPSecure = ($mailConfig['smtp_secure'] === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port       = $mailConfig['smtp_port'];
+
+                        // Recipients
+                        $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                        $mail->addAddress($email);
+
+                        // Content
+                        $mail->isHTML(false);
+                        $mail->Subject = $subject;
+                        $mail->Body    = $message;
+
+                        $mail->send();
+                        $emailSent = true;
+                    } catch (\Exception $e) {
+                        // Log failure and let it fall back
+                        error_log("PHPMailer failed: " . $mail->ErrorInfo);
+                    }
+                }
+
+                // Fallback to PHP built-in mail()
+                if (!$emailSent) {
+                    @mail($email, $subject, $message, $headers);
+                }
+                
+                $this->flash('success', 'Password reset instructions have been sent to your email address.');
             } else {
                 $this->flash('error', 'No account found with this email address.');
             }
             redirect('/forgot-password');
         }
         $this->render('auth/forgot-password');
+    }
+    
+    public function resetPassword() {
+        $db = \Database::getInstance()->getConnection();
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = trim($_POST['token'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+            
+            if (empty($token)) {
+                $this->flash('error', 'Invalid token.');
+                redirect('/forgot-password');
+            }
+            
+            if (strlen($password) < 8) {
+                $this->flash('error', 'Password must be at least 8 characters long.');
+                redirect('/reset-password?token=' . urlencode($token));
+            }
+            
+            if ($password !== $confirmPassword) {
+                $this->flash('error', 'Passwords do not match.');
+                redirect('/reset-password?token=' . urlencode($token));
+            }
+            
+            // Check token validity (make sure token is valid and not expired)
+            $stmt = $db->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > ?");
+            $stmt->execute([$token, date('Y-m-d H:i:s')]);
+            $user = $stmt->fetch();
+            
+            if (!$user) {
+                $this->flash('error', 'The password reset token is invalid or has expired.');
+                redirect('/forgot-password');
+            }
+            
+            // Hash and update the new password, and clear the token columns
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $db->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?");
+            $stmt->execute([$hashedPassword, $user['id']]);
+            
+            $this->flash('success', 'Your password has been reset successfully. You can now log in.');
+            redirect('/login');
+        } else {
+            $token = trim($_GET['token'] ?? '');
+            if (empty($token)) {
+                $this->flash('error', 'No token provided.');
+                redirect('/forgot-password');
+            }
+            
+            $stmt = $db->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > ?");
+            $stmt->execute([$token, date('Y-m-d H:i:s')]);
+            $user = $stmt->fetch();
+            
+            if (!$user) {
+                $this->flash('error', 'The password reset token is invalid or has expired.');
+                redirect('/forgot-password');
+            }
+            
+            $this->render('auth/reset-password', ['token' => $token]);
+        }
     }
     
     public function logout() {
@@ -444,6 +583,72 @@ class AuthController extends BaseController {
                 $stmt->execute([$userId]);
             }
             $this->json(['success' => true]);
+        }
+    }
+    
+    public function changePassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentPassword = $_POST['current_password'] ?? '';
+            $password = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+            
+            if (empty($currentPassword) || empty($password) || empty($confirmPassword)) {
+                $this->flash('error', 'All fields are required.');
+                redirect('/change-password');
+            }
+            
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'];
+            
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch();
+            
+            if (!$user || !password_verify($currentPassword, $user['password'])) {
+                $this->flash('error', 'Incorrect current password.');
+                redirect('/change-password');
+            }
+            
+            if ($currentPassword === $password) {
+                $this->flash('error', 'New password cannot be the same as your current password.');
+                redirect('/change-password');
+            }
+            
+            $len = strlen($password);
+            if ($len < 8 || $len > 50) {
+                $this->flash('error', 'New password must be between 8 and 50 characters in length.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[0-9]/', $password)) {
+                $this->flash('error', 'New password must contain at least one digit.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[a-z]/', $password)) {
+                $this->flash('error', 'New password must contain at least one lowercase character.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[A-Z]/', $password)) {
+                $this->flash('error', 'New password must contain at least one uppercase character.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[!@#\$%\^&\*\(\)\.]/', $password)) {
+                $this->flash('error', 'New password must contain at least one special character [!,@,#,$,%,^,&,*,(,),.].');
+                redirect('/change-password');
+            }
+            
+            if ($password !== $confirmPassword) {
+                $this->flash('error', 'New password and confirm password do not match.');
+                redirect('/change-password');
+            }
+            
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->execute([$hashedPassword, $userId]);
+            
+            $this->flash('success', 'Your password has been changed successfully.');
+            redirect('/' . $_SESSION['role'] . '/dashboard');
+        } else {
+            $this->render('auth/change-password');
         }
     }
 }

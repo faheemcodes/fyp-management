@@ -11,8 +11,8 @@ class BaseController {
         $viewFile = __DIR__ . '/../View/' . $viewName . '.php';
         
         if (file_exists($viewFile)) {
-            // Some views (like login/register/forgot-password) don't need header/sidebar/footer.
-            $noLayoutViews = ['auth/login', 'auth/register', 'auth/forgot-password'];
+            // Some views (like login/register/forgot-password/reset-password) don't need header/sidebar/footer.
+            $noLayoutViews = ['auth/login', 'auth/register', 'auth/forgot-password', 'auth/reset-password'];
             
             if (in_array($viewName, $noLayoutViews)) {
                 require $viewFile;

@@ -3,11 +3,31 @@
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
-<div class="mb-4 d-flex align-items-center justify-content-between">
+<div class="mb-4 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 border-bottom pb-3">
     <div>
         <h4 class="fw-bold text-dark m-0">Your Supervised FYP Groups</h4>
-        <p class="text-muted m-0 small">Monitor project descriptions, team details, and enter milestone marks manually</p>
+        <p class="text-muted m-0 small">Monitor project descriptions, team details, and enter supervision marks manually</p>
     </div>
+    <?php
+    $anySupervisionHidden = false;
+    $hasSupervisionGrades = false;
+    foreach ($groups as $g) {
+        if (isset($g['supervision_marks']) && $g['supervision_marks'] !== null) {
+            $hasSupervisionGrades = true;
+            if ($g['show_supervision_to_student'] == 0) {
+                $anySupervisionHidden = true;
+            }
+        }
+    }
+    $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades) ? 1 : 0;
+    ?>
+    <form action="<?php echo $basePath; ?>/supervisor/groups/toggle-visibility" method="POST" class="m-0">
+        <input type="hidden" name="show" value="<?php echo $globalSupervisionShowAction; ?>">
+        <button type="submit" class="btn btn-sm <?php echo $globalSupervisionShowAction ? 'btn-outline-primary' : 'btn-success text-white'; ?> rounded-pill px-4 py-2 fw-semibold shadow-sm">
+            <i class="bi <?php echo $globalSupervisionShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-2"></i>
+            <?php echo $globalSupervisionShowAction ? 'Show All Supervision Marks to Students' : 'Hide All Supervision Marks from Students'; ?>
+        </button>
+    </form>
 </div>
 
 <div class="row g-4">
@@ -16,7 +36,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100 d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
                     <div>
-                        <span class="badge bg-primary text-uppercase mb-1" style="font-size: 0.65rem;"><?php echo htmlspecialchars($g['group_code']); ?></span>
+                        <span class="badge bg-primary text-uppercase mb-1" style="font-size: 0.65rem;"><?php echo htmlspecialchars($g['group_code'] ?? 'Group ID Pending'); ?></span>
                         <h5 class="fw-bold text-dark m-0 leading-snug"><?php echo htmlspecialchars($g['project_title']); ?></h5>
                     </div>
                     <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 small">
@@ -34,14 +54,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <i class="bi bi-pencil-square me-1"></i> Edit Marks
                         </button>
                     </div>
-                    <div class="row g-2 text-center">
+                    <div class="row g-2 text-center mb-2">
                         <div class="col-6 border-end">
                             <small class="text-muted d-block" style="font-size: 0.65rem;">Supervision</small>
-                            <span class="fw-bold text-dark small"><?php echo number_format($g['supervision_marks'] ?? 0, 1); ?>/45</span>
+                            <span class="fw-bold text-dark small"><?php echo number_format($g['supervision_marks'] ?? 0, 0); ?>/45</span>
                         </div>
                         <div class="col-6">
                             <small class="text-muted d-block" style="font-size: 0.65rem;">Total base</small>
-                            <span class="fw-bold text-primary small"><?php echo number_format($g['total_marks'] ?? 0, 1); ?>/200</span>
+                            <span class="fw-bold text-primary small"><?php echo number_format($g['total_marks'] ?? 0, 0); ?>/200</span>
                         </div>
                     </div>
                 </div>
@@ -49,7 +69,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="border-top pt-3">
                     <h6 class="fw-bold text-secondary mb-2 small text-uppercase">Team Members</h6>
                     <div class="table-responsive">
-                        <table class="table table-sm border-0 align-middle m-0" style="box-shadow: none;">
+                        <table class="table table-sm table-borderless align-middle m-0">
                             <tbody>
                                 <?php foreach($g['members'] as $m): ?>
                                 <tr>
@@ -64,7 +84,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                                         <span class="badge bg-secondary-subtle text-secondary small ms-1" style="font-size: 0.55rem;">Leader</span>
                                                     <?php endif; ?>
                                                 </div>
-                                                <small class="text-muted font-monospace" style="font-size: 0.7rem;"><?php echo htmlspecialchars($m['student_id']); ?></small>
+                                                <small class="text-muted d-block" style="font-size: 0.7rem;">Roll: <?php echo htmlspecialchars($m['student_id']); ?></small>
                                             </div>
                                         </div>
                                     </td>
@@ -94,7 +114,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             
                             <div class="mb-3">
                                 <label for="supervision_marks_<?php echo $g['id']; ?>" class="form-label small text-secondary fw-semibold">Supervision Marks (Max 45)</label>
-                                <input type="number" class="form-control bg-light" id="supervision_marks_<?php echo $g['id']; ?>" name="supervision_marks" min="0" max="45" step="0.5" value="<?php echo htmlspecialchars($g['supervision_marks'] ?? '0.0'); ?>" required>
+                                <input type="number" class="form-control bg-light" id="supervision_marks_<?php echo $g['id']; ?>" name="supervision_marks" min="0" max="45" step="1" value="<?php echo htmlspecialchars(number_format($g['supervision_marks'] ?? 0, 0)); ?>" required>
                             </div>
                         </div>
                         <div class="modal-footer border-0 p-2 bg-light rounded-bottom text-end">

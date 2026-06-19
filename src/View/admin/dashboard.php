@@ -118,7 +118,7 @@
                     <tbody>
                         <?php foreach($recentGroups as $rg): ?>
                         <tr>
-                            <td class="fw-bold text-primary"><?php echo htmlspecialchars($rg['group_code']); ?></td>
+                            <td class="fw-bold text-primary"><?php echo htmlspecialchars($rg['group_code'] ?? 'Pending'); ?></td>
                             <td>
                                 <div class="text-truncate" style="max-width: 200px;" title="<?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>">
                                     <?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>

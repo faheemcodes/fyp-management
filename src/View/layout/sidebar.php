@@ -81,11 +81,7 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-person-badge-fill"></i> Supervisors
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/dean/committee" class="nav-link <?php echo isActive('/dean/committee', $currentUri); ?>">
-                    <i class="bi bi-shield-lock-fill"></i> Committee Members
-                </a>
-            </li>
+
 
         <?php elseif ($role === 'student'): ?>
             <li class="nav-item">
@@ -132,24 +128,39 @@ if ($urlPrefix === '/') {
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?>">
-                    <i class="bi bi-clipboard-check-fill"></i> Review Documents
+                    <i class="bi bi-clipboard-check-fill"></i> Review Proposals
                 </a>
             </li>
+            
+            <?php
+            $db = \Database::getInstance()->getConnection();
+            $stmtC = $db->prepare("SELECT COUNT(*) FROM committees WHERE user_id = ?");
+            $stmtC->execute([$_SESSION['user_id'] ?? 0]);
+            $isCommittee = ((int)$stmtC->fetchColumn() > 0);
+            if ($isCommittee):
+            ?>
+                <li class="nav-item-header text-muted small text-uppercase px-3 mt-3 mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; opacity: 0.6;">Committee Member Role</li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/supervisor/committee/dashboard" class="nav-link <?php echo isActive('/supervisor/committee/dashboard', $currentUri); ?>">
+                        <i class="bi bi-grid-1x2-fill"></i> Committee Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/supervisor/committee/evaluations" class="nav-link <?php echo isActive('/supervisor/committee/evaluations', $currentUri); ?>">
+                        <i class="bi bi-calendar-check-fill"></i> FYP Evaluations
+                    </a>
+                </li>
+            <?php endif; ?>
 
-        <?php elseif ($role === 'committee'): ?>
-            <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/committee/dashboard" class="nav-link <?php echo isActive('/committee/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/committee/evaluations" class="nav-link <?php echo isActive('/committee/evaluations', $currentUri); ?>">
-                    <i class="bi bi-calendar-check-fill"></i> FYP Evaluations
-                </a>
-            </li>
+
         <?php endif; ?>
         
         <li class="nav-item mt-auto border-top border-secondary border-opacity-10">
+            <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">
+                <i class="bi bi-shield-lock-fill text-warning"></i> Change Password
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link text-danger">
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
@@ -162,10 +173,8 @@ if ($urlPrefix === '/') {
     <!-- Navbar / Header Actions -->
     <nav class="navbar navbar-expand-lg top-navbar navbar-light">
         <div class="container-fluid p-0">
-            <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary d-lg-none">
-                <i class="bi bi-justify"></i>
-            </button>
             <h6 class="fw-bold m-0 d-none d-sm-inline-block text-dark"><i class="bi bi-mortarboard-fill text-primary me-2"></i>UNIVERSITY OF SINDH - FACULTY OF ENGINEERING AND TECHNOLOGY</h6>
+            <h6 class="fw-bold m-0 d-inline-block d-sm-none text-dark"><i class="bi bi-mortarboard-fill text-primary me-1"></i>SU FYP PORTAL</h6>
             
             <div class="ms-auto d-flex align-items-center gap-3">
                 <!-- Dark Theme Toggle -->
@@ -192,18 +201,23 @@ if ($urlPrefix === '/') {
                     </ul>
                 </div>
 
-                <div class="vr bg-secondary opacity-25" style="height: 20px;"></div>
+                <div class="vr bg-secondary opacity-25 d-none d-md-block" style="height: 20px;"></div>
 
                 <div class="d-flex align-items-center gap-2">
                     <?php if ($role === 'student'): ?>
                         <?php $avatarFile = !empty($_SESSION['avatar']) ? $_SESSION['avatar'] : 'default_avatar.svg'; ?>
-                        <img src="<?php echo $urlPrefix; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle border border-1 border-primary" style="width: 32px; height: 32px; object-fit: cover;" alt="Profile photo">
+                        <img src="<?php echo $urlPrefix; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle border border-1 border-primary d-none d-md-inline-block" style="width: 32px; height: 32px; object-fit: cover;" alt="Profile photo">
                     <?php endif; ?>
                     <div class="text-end d-none d-md-block">
                         <div class="fw-semibold small text-dark"><?php echo htmlspecialchars($name); ?></div>
                         <div class="x-small text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($email); ?></div>
                     </div>
                 </div>
+
+                <!-- Three-line hamburger menu button placed on the right on mobile -->
+                <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary d-lg-none ms-1">
+                    <i class="bi bi-justify"></i>
+                </button>
             </div>
         </div>
     </nav>

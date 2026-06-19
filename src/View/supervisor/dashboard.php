@@ -1,7 +1,7 @@
 <!-- Supervisor Dashboard View -->
 <div class="row g-4 mb-4">
     <!-- Stat card 1 -->
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="stat-card p-4 d-flex align-items-center justify-content-between">
             <div>
                 <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Assigned Groups</h6>
@@ -14,7 +14,7 @@
     </div>
     
     <!-- Stat card 2 -->
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="stat-card p-4 d-flex align-items-center justify-content-between">
             <div>
                 <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Pending Proposals</h6>
@@ -22,19 +22,6 @@
             </div>
             <div class="card-icon icon-warning">
                 <i class="bi bi-file-earmark-exclamation-fill"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stat card 3 -->
-    <div class="col-md-4">
-        <div class="stat-card p-4 d-flex align-items-center justify-content-between">
-            <div>
-                <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Pending File Reviews</h6>
-                <h3 class="m-0 fw-bold text-danger"><?php echo $pendingDocs; ?></h3>
-            </div>
-            <div class="card-icon icon-danger">
-                <i class="bi bi-cloud-arrow-down-fill"></i>
             </div>
         </div>
     </div>
@@ -49,14 +36,14 @@
                     <th>Group Code</th>
                     <th>Project Title</th>
                     <th>Project Status</th>
-                    <th>Milestone Stage</th>
+                    <th>Current FYP Stage</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($groups as $g): ?>
                 <tr>
-                    <td class="fw-bold text-primary"><?php echo htmlspecialchars($g['group_code']); ?></td>
+                    <td class="fw-bold text-primary"><?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></td>
                     <td>
                         <div class="fw-semibold text-dark text-truncate" style="max-width: 350px;" title="<?php echo htmlspecialchars($g['project_title']); ?>">
                             <?php echo htmlspecialchars($g['project_title']); ?>

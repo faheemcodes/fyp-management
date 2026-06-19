@@ -55,7 +55,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <h6 class="fw-bold text-secondary mb-1 small text-uppercase">Group Code</h6>
                         <div class="fw-semibold text-primary font-monospace">
                             <i class="bi bi-folder-fill me-1"></i>
-                            <?php echo htmlspecialchars($group['group_code']); ?>
+                            <?php echo htmlspecialchars($group['group_code'] ?? 'Group ID Pending'); ?>
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
                     <div>
-                        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Milestone 1</small>
+                        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Phase 1</small>
                         <h4 class="fw-bold text-dark m-0">Project Proposal Submission</h4>
                     </div>
                     <?php if($proposal): ?>

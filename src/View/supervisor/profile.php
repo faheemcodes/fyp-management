@@ -66,7 +66,7 @@ if ($basePath === '/') {
                 <!-- Section 1: Basic Identity (Registration Permanent Fields + Editable Prefix/DOB/CNIC Expiry/Father's Name/Gender) -->
                 <h5 class="fw-bold text-primary mb-3"><i class="bi bi-person-badge me-2"></i>Personal Information</h5>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-2">
+                    <div class="col-4 col-md-2">
                         <label class="form-label small fw-semibold text-secondary">Prefix <span class="text-danger">*</span></label>
                         <select class="form-select bg-light" name="prefix" required <?php echo $isLocked ? 'disabled' : ''; ?>>
                             <option value="" disabled <?php echo empty($prefixVal) ? 'selected' : ''; ?>>Select</option>
@@ -78,29 +78,29 @@ if ($basePath === '/') {
                         </select>
                     </div>
                     
-                    <div class="col-md-5">
+                    <div class="col-8 col-md-5">
                         <label class="form-label small fw-semibold text-secondary">Full Name</label>
                         <input type="text" class="form-control" value="<?php echo htmlspecialchars($supervisor['name']); ?>" disabled readonly>
                         <div class="form-text small text-muted">Permanent (Registration-locked).</div>
                     </div>
                     
-                    <div class="col-md-5">
+                    <div class="col-12 col-md-5">
                         <label class="form-label small fw-semibold text-secondary">Surname</label>
                         <input type="text" class="form-control" value="<?php echo htmlspecialchars($surnameVal); ?>" disabled readonly>
                         <div class="form-text small text-muted">Permanent (Registration-locked).</div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="father_name" class="form-label small fw-semibold text-secondary">Father's Name</label>
                         <input type="text" class="form-control bg-light" id="father_name" name="father_name" value="<?php echo htmlspecialchars($fatherNameVal); ?>" placeholder="e.g. John Doe" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="dob" class="form-label small fw-semibold text-secondary">Date of Birth <span class="text-danger">*</span></label>
                         <input type="date" class="form-control bg-light" id="dob" name="dob" value="<?php echo htmlspecialchars($dobVal !== '1980-01-01' ? $dobVal : ''); ?>" required <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4">
                         <label for="gender" class="form-label small fw-semibold text-secondary">Gender <span class="text-danger">*</span></label>
                         <select class="form-select bg-light" id="gender" name="gender" required <?php echo $isLocked ? 'disabled' : ''; ?>>
                             <option value="" disabled <?php echo empty($genderVal) ? 'selected' : ''; ?>>Select Gender</option>
@@ -116,7 +116,7 @@ if ($basePath === '/') {
                         <div class="form-text small text-muted">Permanent (Registration-locked).</div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="cnic_expiry" class="form-label small fw-semibold text-secondary">CNIC Expiry Date</label>
                         <input type="date" class="form-control bg-light" id="cnic_expiry" name="cnic_expiry" value="<?php echo htmlspecialchars($cnicExpiryVal); ?>" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
@@ -148,43 +148,43 @@ if ($basePath === '/') {
                         <div class="form-text small text-muted">Permanent (Registration-locked).</div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-3 col-md-2">
                         <label class="form-label small fw-semibold text-secondary">Code</label>
                         <input type="text" class="form-control" value="<?php echo htmlspecialchars($mobileCodeVal); ?>" disabled readonly>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-9 col-md-4">
                         <label class="form-label small fw-semibold text-secondary">Contact Number</label>
                         <input type="text" class="form-control" value="<?php echo htmlspecialchars($mobileNoVal); ?>" disabled readonly>
                         <div class="form-text small text-muted">Permanent (Registration-locked).</div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="place_of_birth" class="form-label small fw-semibold text-secondary">Place of Birth</label>
                         <input type="text" class="form-control bg-light" id="place_of_birth" name="place_of_birth" value="<?php echo htmlspecialchars($placeOfBirthVal); ?>" placeholder="e.g. Lahore" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="country" class="form-label small fw-semibold text-secondary">Country</label>
                         <input type="text" class="form-control bg-light" id="country" name="country" value="<?php echo htmlspecialchars($countryVal); ?>" placeholder="e.g. Pakistan" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="province_state" class="form-label small fw-semibold text-secondary">Province / State</label>
                         <input type="text" class="form-control bg-light" id="province_state" name="province_state" value="<?php echo htmlspecialchars($provinceStateVal); ?>" placeholder="e.g. Punjab" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="district" class="form-label small fw-semibold text-secondary">District</label>
                         <input type="text" class="form-control bg-light" id="district" name="district" value="<?php echo htmlspecialchars($districtVal); ?>" placeholder="e.g. Lahore" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="city" class="form-label small fw-semibold text-secondary">City</label>
                         <input type="text" class="form-control bg-light" id="city" name="city" value="<?php echo htmlspecialchars($cityVal); ?>" placeholder="e.g. Lahore" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-6 col-md-4">
                         <label for="zip_code" class="form-label small fw-semibold text-secondary">Zip / Postal Code</label>
                         <input type="text" class="form-control bg-light" id="zip_code" name="zip_code" value="<?php echo htmlspecialchars($zipCodeVal); ?>" placeholder="e.g. 54000" <?php echo $isLocked ? 'disabled' : ''; ?>>
                     </div>

@@ -7,7 +7,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS grades;
 DROP TABLE IF EXISTS evaluations;
-DROP TABLE IF EXISTS documents;
 DROP TABLE IF EXISTS proposals;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS group_members;
@@ -28,6 +27,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role ENUM('admin', 'dean', 'student', 'supervisor', 'committee') NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_token_expiry DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -150,36 +151,6 @@ CREATE TABLE proposals (
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Documents Table (Milestone Deliverable Uploads)
-CREATE TABLE documents (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    group_id INT NOT NULL,
-    stage ENUM('Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation') NOT NULL,
-    doc_type ENUM(
-        'SRS', 
-        'Literature Review', 
-        'UML Diagrams', 
-        'Prototype', 
-        'Source Code', 
-        'Final Report', 
-        'User Manual', 
-        'Test Cases', 
-        'Deployment Guide', 
-        'Presentation Slides', 
-        'Demo Video', 
-        'Other'
-    ) NOT NULL,
-    file_path VARCHAR(255) NOT NULL,
-    original_name VARCHAR(255) NOT NULL,
-    uploaded_by INT NOT NULL,
-    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    feedback TEXT DEFAULT NULL,
-    feedback_by INT DEFAULT NULL,
-    feedback_at TIMESTAMP NULL DEFAULT NULL,
-    FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
-    FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (feedback_by) REFERENCES users(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Evaluations Table (Proposal Defence, FYP Progress & Final Presentation)
 CREATE TABLE evaluations (
@@ -191,6 +162,7 @@ CREATE TABLE evaluations (
     total_marks DECIMAL(5,2) NOT NULL,
     remarks TEXT DEFAULT NULL,
     scheduled_date DATETIME DEFAULT NULL,
+    show_to_student TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_group_evaluator_stage (group_id, evaluator_id, stage),
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
@@ -205,6 +177,7 @@ CREATE TABLE grades (
     progress_presentation_marks DECIMAL(5,2) DEFAULT NULL,
     final_presentation_marks DECIMAL(5,2) DEFAULT NULL,
     supervision_marks DECIMAL(5,2) DEFAULT NULL,
+    show_supervision_to_student TINYINT(1) DEFAULT 0,
     total_marks DECIMAL(5,2) DEFAULT 0.00,
     percentage DECIMAL(5,2) DEFAULT 0.00,
     grade VARCHAR(5) DEFAULT 'F',

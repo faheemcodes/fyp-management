@@ -16,16 +16,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Toggle Sidebar on Mobile
     const sidebarCollapse = document.getElementById('sidebarCollapse');
-    if (sidebarCollapse) {
-        sidebarCollapse.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('show');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    
+    if (sidebarCollapse && sidebar) {
+        sidebarCollapse.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('show');
+        });
+
+        if (content) {
+            content.addEventListener('click', function() {
+                if (window.innerWidth < 992 && sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                }
+            });
+        }
+
+        sidebar.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992 && sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                }
+            });
         });
     }
 
     // Setup Client-side table filter/search helper (Search + Select Filters)
     function filterTable(tableId) {
         const table = document.getElementById(tableId);
-        if (!table) return;
+        const mobileContainer = document.getElementById(tableId + '-mobile');
+        
+        if (!table && !mobileContainer) return;
 
         const searchInput = document.querySelector(`.table-search[data-target="${tableId}"]`);
         const filters = document.querySelectorAll(`.table-filter[data-target="${tableId}"]`);
@@ -41,33 +63,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        const rows = table.querySelectorAll('tbody tr');
-        rows.forEach(row => {
-            // Text Search Check
-            const textMatch = searchValue === '' || row.textContent.toLowerCase().indexOf(searchValue) > -1;
-            
-            // Select Filters Check
-            let filterMatch = true;
-            for (let i = 0; i < activeFilters.length; i++) {
-                const f = activeFilters[i];
-                const rowVal = row.dataset[f.column];
-                if (rowVal !== f.value) {
-                    filterMatch = false;
-                    break;
+        // 1. Filter Desktop Table Rows if table exists
+        if (table) {
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                // Text Search Check
+                const textMatch = searchValue === '' || row.textContent.toLowerCase().indexOf(searchValue) > -1;
+                
+                // Select Filters Check
+                let filterMatch = true;
+                for (let i = 0; i < activeFilters.length; i++) {
+                    const f = activeFilters[i];
+                    const rowVal = row.dataset[f.column];
+                    if (rowVal !== f.value) {
+                        filterMatch = false;
+                        break;
+                    }
                 }
-            }
 
-            if (textMatch && filterMatch) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+                if (textMatch && filterMatch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // 2. Filter Mobile Cards if container exists
+        if (mobileContainer) {
+            const cards = mobileContainer.querySelectorAll('.card');
+            cards.forEach(card => {
+                // Text Search Check
+                const textMatch = searchValue === '' || card.textContent.toLowerCase().indexOf(searchValue) > -1;
+                
+                // Select Filters Check
+                let filterMatch = true;
+                for (let i = 0; i < activeFilters.length; i++) {
+                    const f = activeFilters[i];
+                    const cardVal = card.dataset[f.column];
+                    if (cardVal !== f.value) {
+                        filterMatch = false;
+                        break;
+                    }
+                }
+
+                if (textMatch && filterMatch) {
+                    card.style.removeProperty('display');
+                } else {
+                    card.style.setProperty('display', 'none', 'important');
+                }
+            });
+        }
     }
 
     // Attach event listeners to all search fields
     document.querySelectorAll('.table-search').forEach(input => {
         const target = input.dataset.target;
+        input.addEventListener('input', () => filterTable(target));
         input.addEventListener('keyup', () => filterTable(target));
         input.addEventListener('search', () => filterTable(target));
     });
@@ -112,6 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Helper to resolve the correct basePath for AJAX requests
+function getBasePath() {
+    if (typeof window.appBasePath !== 'undefined') {
+        return window.appBasePath;
+    }
+    const idx = window.location.pathname.indexOf('/public');
+    if (idx > -1) {
+        return window.location.pathname.substring(0, idx + 7);
+    }
+    return '';
+}
+
 // Fetch Notifications from API
 function fetchNotifications() {
     const listContainer = document.getElementById('notification-list');
@@ -119,7 +183,7 @@ function fetchNotifications() {
     if (!listContainer) return;
 
     // Get Base path to build absolute API endpoints
-    const basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/public') + 7);
+    const basePath = getBasePath();
     
     fetch(`${basePath}/api/notifications`)
         .then(response => response.json())
@@ -159,7 +223,7 @@ function fetchNotifications() {
 
 // Mark All Notifications as Read
 function markNotificationsRead() {
-    const basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/public') + 7);
+    const basePath = getBasePath();
     
     fetch(`${basePath}/api/notifications/read`, {
         method: 'POST',
@@ -176,7 +240,7 @@ function markNotificationsRead() {
 
 // Mark Single Notification as Read
 function markNotificationSingle(id) {
-    const basePath = window.location.pathname.substring(0, window.location.pathname.indexOf('/public') + 7);
+    const basePath = getBasePath();
     
     fetch(`${basePath}/api/notifications/read`, {
         method: 'POST',
