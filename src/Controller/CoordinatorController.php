@@ -181,7 +181,7 @@ class CoordinatorController extends BaseController {
                 $recipients = array_unique($recipients);
                 
                 foreach ($recipients as $recId) {
-                    $this->addNotification($recId, 'New Department Notice', "Notice: $subject. Click to view.");
+                    $this->addNotification($recId, 'New Department Notice', "Notice: $subject. Click to view.", '/notice/view?id=' . $noticeId);
                 }
 
                 $db->commit();

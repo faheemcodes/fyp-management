@@ -207,9 +207,11 @@ function fetchNotifications() {
 
             data.notifications.forEach(notif => {
                 const isUnread = notif.is_read == 0 ? 'bg-light font-weight-bold' : '';
+                const href = notif.redirect_url ? `${basePath}${notif.redirect_url}` : '#';
+                const target = notif.redirect_url ? 'target="_blank"' : '';
                 const item = document.createElement('li');
                 item.innerHTML = `
-                    <a class="dropdown-item py-2 border-bottom ${isUnread}" href="#" onclick="markNotificationSingle(${notif.id})">
+                    <a class="dropdown-item py-2 border-bottom ${isUnread}" href="${href}" ${target} onclick="markNotificationSingle(${notif.id})">
                         <div class="small text-primary">${escapeHtml(notif.title)}</div>
                         <div class="text-wrap small text-dark">${escapeHtml(notif.message)}</div>
                         <div class="x-small text-muted" style="font-size: 0.7rem;">${formatDate(notif.created_at)}</div>

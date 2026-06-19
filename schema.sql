@@ -193,6 +193,7 @@ CREATE TABLE notifications (
     title VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     is_read TINYINT(1) DEFAULT 0,
+    redirect_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

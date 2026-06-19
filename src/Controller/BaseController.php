@@ -62,9 +62,9 @@ class BaseController {
     }
 
     // Add notification helper
-    protected function addNotification($userId, $title, $message) {
+    protected function addNotification($userId, $title, $message, $redirectUrl = null) {
         $db = \Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
-        $stmt->execute([$userId, $title, $message]);
+        $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$userId, $title, $message, $redirectUrl]);
     }
 }
