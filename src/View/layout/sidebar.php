@@ -81,6 +81,11 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-person-badge-fill"></i> Supervisors
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/hod/committee" class="nav-link <?php echo isActive('/hod/committee', $currentUri); ?>">
+                    <i class="bi bi-shield-fill"></i> Committee Members
+                </a>
+            </li>
 
 
         <?php elseif ($role === 'student'): ?>
@@ -131,26 +136,18 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-clipboard-check-fill"></i> Review Proposals
                 </a>
             </li>
-            
-            <?php
-            $db = \Database::getInstance()->getConnection();
-            $stmtC = $db->prepare("SELECT COUNT(*) FROM committees WHERE user_id = ?");
-            $stmtC->execute([$_SESSION['user_id'] ?? 0]);
-            $isCommittee = ((int)$stmtC->fetchColumn() > 0);
-            if ($isCommittee):
-            ?>
-                <li class="nav-item-header text-muted small text-uppercase px-3 mt-3 mb-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; opacity: 0.6;">Committee Member Role</li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/supervisor/committee/dashboard" class="nav-link <?php echo isActive('/supervisor/committee/dashboard', $currentUri); ?>">
-                        <i class="bi bi-grid-1x2-fill"></i> Committee Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/supervisor/committee/evaluations" class="nav-link <?php echo isActive('/supervisor/committee/evaluations', $currentUri); ?>">
-                        <i class="bi bi-calendar-check-fill"></i> FYP Evaluations
-                    </a>
-                </li>
-            <?php endif; ?>
+
+        <?php elseif ($role === 'committee'): ?>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/dashboard" class="nav-link <?php echo isActive('/committee/dashboard', $currentUri); ?>">
+                    <i class="bi bi-grid-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/evaluations" class="nav-link <?php echo isActive('/committee/evaluations', $currentUri); ?>">
+                    <i class="bi bi-calendar-check-fill"></i> Evaluations
+                </a>
+            </li>
 
 
         <?php endif; ?>

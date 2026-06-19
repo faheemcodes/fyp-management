@@ -105,7 +105,10 @@ $routes = [
     '/hod/supervisors/create' => ['Controller\HodController', 'createSupervisor'],
     '/hod/supervisors/edit' => ['Controller\HodController', 'editSupervisor'],
     '/hod/supervisors/delete' => ['Controller\HodController', 'deleteSupervisor'],
-    '/hod/supervisors/toggle-committee' => ['Controller\HodController', 'toggleCommitteeRole'],
+    '/hod/committee' => ['Controller\HodController', 'committee'],
+    '/hod/committee/create' => ['Controller\HodController', 'createCommittee'],
+    '/hod/committee/edit' => ['Controller\HodController', 'editCommittee'],
+    '/hod/committee/delete' => ['Controller\HodController', 'deleteCommittee'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -126,10 +129,11 @@ $routes = [
     '/supervisor/groups/toggle-visibility' => ['Controller\SupervisorController', 'toggleVisibility'],
     '/supervisor/reviews' => ['Controller\SupervisorController', 'reviews'],
     '/supervisor/proposal/action' => ['Controller\SupervisorController', 'proposalAction'],
-    '/supervisor/committee/dashboard' => ['Controller\SupervisorController', 'committeeDashboard'],
-    '/supervisor/committee/evaluations' => ['Controller\SupervisorController', 'committeeEvaluations'],
-    '/supervisor/committee/evaluations/grade' => ['Controller\SupervisorController', 'gradeEvaluation'],
-    '/supervisor/committee/evaluations/toggle-visibility' => ['Controller\SupervisorController', 'toggleCommitteeVisibility'],
+    // Committee routes
+    '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
+    '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
+    '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
+    '/committee/evaluations/toggle-visibility' => ['Controller\CommitteeController', 'toggleCommitteeVisibility'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
@@ -200,18 +204,11 @@ if (array_key_exists($uri, $routes)) {
         if (strpos($uri, '/student') === 0 && $role !== 'student') {
             die("Unauthorized access: Student only.");
         }
-        if (strpos($uri, '/supervisor') === 0) {
-            if ($role !== 'supervisor') {
-                die("Unauthorized access: Supervisor only.");
-            }
-            if (strpos($uri, '/supervisor/committee') === 0) {
-                $db = \Database::getInstance()->getConnection();
-                $stmtC = $db->prepare("SELECT COUNT(*) FROM committees WHERE user_id = ?");
-                $stmtC->execute([$_SESSION['user_id']]);
-                if ((int)$stmtC->fetchColumn() === 0) {
-                    die("Unauthorized access: You are not assigned to the committee.");
-                }
-            }
+        if (strpos($uri, '/supervisor') === 0 && $role !== 'supervisor') {
+            die("Unauthorized access: Supervisor only.");
+        }
+        if (strpos($uri, '/committee') === 0 && $role !== 'committee') {
+            die("Unauthorized access: Committee only.");
         }
     } else {
         // Only redirect logged in users to their dashboard if they visit the root '/' URL.

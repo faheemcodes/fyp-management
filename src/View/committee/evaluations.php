@@ -31,7 +31,7 @@
         }
         $globalShowAction = ($anyHidden || !$hasEvaluations) ? 1 : 0;
         ?>
-        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations/toggle-visibility" method="POST" class="m-0">
+        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
             <input type="hidden" name="show" value="<?php echo $globalShowAction; ?>">
             <button type="submit" class="btn btn-sm <?php echo $globalShowAction ? 'btn-outline-primary' : 'btn-success text-white'; ?> rounded-pill px-4 py-2 fw-semibold shadow-sm">
                 <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-2"></i>
@@ -212,7 +212,7 @@
                     <h5 class="modal-title fw-bold">Proposal Defence Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations/grade" method="POST">
+                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Proposal Defence Presentation">
                     <div class="modal-body p-4 text-start">
@@ -264,7 +264,7 @@
                     <h5 class="modal-title fw-bold">FYP Progress Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations/grade" method="POST">
+                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="FYP Progress Presentation">
                     <div class="modal-body p-4 text-start">
@@ -339,7 +339,7 @@
                     <h5 class="modal-title fw-bold">Final Presentation Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations/grade" method="POST">
+                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Final Presentation">
                     <div class="modal-body p-4 text-start">

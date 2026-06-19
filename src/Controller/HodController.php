@@ -25,7 +25,7 @@ class HodController extends BaseController {
 
     public function supervisors() {
         $db = \Database::getInstance()->getConnection();
-        $supervisors = $db->query("SELECT s.*, u.email, (CASE WHEN c.user_id IS NOT NULL THEN 1 ELSE 0 END) as is_committee FROM supervisors s JOIN users u ON s.user_id = u.id LEFT JOIN committees c ON s.user_id = c.user_id ORDER BY s.name ASC")->fetchAll();
+        $supervisors = $db->query("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id ORDER BY s.name ASC")->fetchAll();
         
         $this->render('hod/supervisors', [
             'supervisors' => $supervisors
@@ -116,62 +116,91 @@ class HodController extends BaseController {
         redirect('/hod/supervisors');
     }
 
-    public function toggleCommitteeRole() {
+    public function committee() {
+        $db = \Database::getInstance()->getConnection();
+        $committees = $db->query("SELECT c.*, u.email FROM committees c JOIN users u ON c.user_id = u.id ORDER BY c.name ASC")->fetchAll();
+        
+        $this->render('hod/committee', [
+            'committees' => $committees
+        ]);
+    }
+
+    public function createCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $userId = $_POST['user_id'] ?? null;
-            if ($userId) {
-                $db = \Database::getInstance()->getConnection();
-                
-                // Get supervisor details
-                $stmt = $db->prepare("SELECT * FROM supervisors WHERE user_id = ?");
-                $stmt->execute([$userId]);
-                $supervisor = $stmt->fetch();
-                
-                if ($supervisor) {
-                    // Check if already in committees
-                    $stmtCheck = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
-                    $stmtCheck->execute([$userId]);
-                    $isCommittee = $stmtCheck->fetch();
-                    
-                    if ($isCommittee) {
-                        // Toggle OFF: remove from committees
-                        try {
-                            $db->beginTransaction();
-                            $stmtDel = $db->prepare("DELETE FROM committees WHERE user_id = ?");
-                            $stmtDel->execute([$userId]);
-                            $db->commit();
-                            $this->flash('success', "Supervisor {$supervisor['name']} removed from the committee.");
-                        } catch (\Exception $e) {
-                            $db->rollBack();
-                            $this->flash('error', "Failed to remove committee role: " . $e->getMessage());
-                        }
-                    } else {
-                        // Toggle ON: assign to committee. Check limit first!
-                        $department = $supervisor['department'];
-                        
-                        $stmtCount = $db->prepare("SELECT COUNT(*) FROM committees WHERE department = ?");
-                        $stmtCount->execute([$department]);
-                        $currentCount = (int)$stmtCount->fetchColumn();
-                        
-                        if ($currentCount >= 5) {
-                            $this->flash('error', "Cannot assign. The '{$department}' department already has the maximum limit of 5 committee members.");
-                            redirect('/hod/supervisors');
-                        }
-                        
-                        try {
-                            $db->beginTransaction();
-                            $stmtIns = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
-                            $stmtIns->execute([$userId, $supervisor['name'], $department]);
-                            $db->commit();
-                            $this->flash('success', "Supervisor {$supervisor['name']} assigned as a committee member.");
-                        } catch (\Exception $e) {
-                            $db->rollBack();
-                            $this->flash('error', "Failed to assign committee role: " . $e->getMessage());
-                        }
-                    }
-                }
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $department = trim($_POST['department'] ?? '');
+
+            if (empty($name) || empty($email) || empty($password) || empty($department)) {
+                $this->flash('error', 'All fields are required.');
+                redirect('/hod/committee');
+            }
+
+            $db = \Database::getInstance()->getConnection();
+
+            // Check if email already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                $this->flash('error', 'Email is already registered.');
+                redirect('/hod/committee');
+            }
+
+            try {
+                $db->beginTransaction();
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("INSERT INTO users (email, password, role, status) VALUES (?, ?, 'committee', 'approved')");
+                $stmt->execute([$email, $hashed]);
+                $userId = $db->lastInsertId();
+
+                $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
+                $stmt->execute([$userId, $name, $department]);
+
+                $db->commit();
+                $this->flash('success', "Committee Member $name added successfully.");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error adding committee member: ' . $e->getMessage());
             }
         }
-        redirect('/hod/supervisors');
+        redirect('/hod/committee');
+    }
+
+    public function editCommittee() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_POST['user_id'] ?? null;
+            $name = trim($_POST['name'] ?? '');
+            $department = trim($_POST['department'] ?? '');
+
+            if ($userId && $name && $department) {
+                $db = \Database::getInstance()->getConnection();
+                $stmt = $db->prepare("UPDATE committees SET name = ?, department = ? WHERE user_id = ?");
+                $stmt->execute([$name, $department, $userId]);
+                
+                $this->flash('success', "Committee member details updated.");
+            } else {
+                $this->flash('error', "All fields are required.");
+            }
+        }
+        redirect('/hod/committee');
+    }
+
+    public function deleteCommittee() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            try {
+                $db->beginTransaction();
+                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                $stmt->execute([$id]);
+                $db->commit();
+                $this->flash('success', "Committee member deleted successfully.");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', "Failed to delete committee member: " . $e->getMessage());
+            }
+        }
+        redirect('/hod/committee');
     }
 }

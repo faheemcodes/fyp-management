@@ -79,7 +79,7 @@
                         </span>
                     </td>
                     <td class="text-end">
-                        <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations" class="btn btn-sm btn-outline-primary rounded-pill px-3">Evaluate</a>
+                        <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations" class="btn btn-sm btn-outline-primary rounded-pill px-3">Evaluate</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -108,7 +108,7 @@
                         <i class="bi bi-person-badge text-success me-1"></i>
                         <?php echo $g['supervisor_name'] ? htmlspecialchars($g['supervisor_name']) : 'Unassigned'; ?>
                     </small>
-                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/supervisor/committee/evaluations" class="btn btn-sm btn-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;">Evaluate</a>
+                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations" class="btn btn-sm btn-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;">Evaluate</a>
                 </div>
             </div>
         <?php endforeach; ?>
