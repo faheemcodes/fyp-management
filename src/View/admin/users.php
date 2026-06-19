@@ -26,6 +26,7 @@
                 <option value="student">Student</option>
                 <option value="supervisor">Supervisor</option>
                 <option value="hod">HOD</option>
+                <option value="coordinator">Coordinator</option>
             </select>
         </div>
         <!-- Department Filter -->
@@ -174,6 +175,7 @@
                             <option value="student">Student</option>
                             <option value="supervisor">Supervisor</option>
                             <option value="hod">HOD</option>
+                            <option value="coordinator">Coordinator</option>
                         </select>
                     </div>
                     

@@ -83,6 +83,11 @@ class AuthController extends BaseController {
                     $sStmt->execute([$user['id']]);
                     $hod = $sStmt->fetch();
                     $_SESSION['name'] = $hod['name'] ?? 'HOD';
+                } else if ($user['role'] === 'coordinator') {
+                    $sStmt = $db->prepare("SELECT name FROM coordinators WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $coord = $sStmt->fetch();
+                    $_SESSION['name'] = $coord['name'] ?? 'Coordinator';
                 } else {
                     $_SESSION['name'] = 'System Admin';
                 }

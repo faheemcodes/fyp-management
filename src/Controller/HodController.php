@@ -5,16 +5,34 @@ class HodController extends BaseController {
 
     public function dashboard() {
         $db = \Database::getInstance()->getConnection();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
         
         $stats = [];
-        $stats['supervisors'] = $db->query("SELECT COUNT(*) FROM supervisors")->fetchColumn();
-        $stats['committee'] = $db->query("SELECT COUNT(*) FROM committees")->fetchColumn();
-        $stats['pending_approvals'] = $db->query("SELECT COUNT(*) FROM users WHERE status = 'pending'")->fetchColumn();
-        $stats['total_groups'] = $db->query("SELECT COUNT(*) FROM groups")->fetchColumn();
         
-        // Fetch recent supervisors and committee members
-        $recentSupervisors = $db->query("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
-        $recentCommittee = $db->query("SELECT c.*, u.email FROM committees c JOIN users u ON c.user_id = u.id ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
+        $stmtSupCount = $db->prepare("SELECT COUNT(*) FROM supervisors WHERE department = ?");
+        $stmtSupCount->execute([$dept]);
+        $stats['supervisors'] = $stmtSupCount->fetchColumn();
+        
+        $stmtCommCount = $db->prepare("SELECT COUNT(*) FROM committees WHERE department = ?");
+        $stmtCommCount->execute([$dept]);
+        $stats['committee'] = $stmtCommCount->fetchColumn();
+        
+        $stmtPending = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?");
+        $stmtPending->execute([$dept]);
+        $stats['pending_approvals'] = $stmtPending->fetchColumn();
+        
+        $stmtGroupsCount = $db->prepare("SELECT COUNT(*) FROM groups g JOIN students s ON g.created_by = s.user_id WHERE s.department = ?");
+        $stmtGroupsCount->execute([$dept]);
+        $stats['total_groups'] = $stmtGroupsCount->fetchColumn();
+        
+        // Fetch recent supervisors and committee members scoped to this department
+        $stmtRecentSup = $db->prepare("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.department = ? ORDER BY u.created_at DESC LIMIT 5");
+        $stmtRecentSup->execute([$dept]);
+        $recentSupervisors = $stmtRecentSup->fetchAll();
+        
+        $stmtRecentComm = $db->prepare("SELECT c.*, u.email FROM committees c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY u.created_at DESC LIMIT 5");
+        $stmtRecentComm->execute([$dept]);
+        $recentCommittee = $stmtRecentComm->fetchAll();
 
         $this->render('hod/dashboard', [
             'stats' => $stats,
@@ -203,4 +221,76 @@ class HodController extends BaseController {
         }
         redirect('/hod/committee');
     }
+
+    private function getHodDepartment($db, $userId) {
+        $stmt = $db->prepare("SELECT department FROM hods WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn();
+    }
+
+    public function verifyStudents() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+        
+        $students = $db->prepare("SELECT s.*, u.email, u.status FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ? ORDER BY u.created_at DESC");
+        $students->execute([$dept]);
+        $pending = $students->fetchAll();
+        
+        $this->render('hod/verify_students', [
+            'students' => $pending
+        ]);
+    }
+
+    public function approveStudent() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            
+            $stmtCheck = $db->prepare("SELECT department FROM students WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            $studentDept = $stmtCheck->fetchColumn();
+            
+            if ($studentDept === $dept) {
+                $stmt = $db->prepare("UPDATE users SET status = 'approved' WHERE id = ?");
+                $stmt->execute([$id]);
+                
+                $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                $this->flash('success', 'Student account approved successfully.');
+            } else {
+                $this->flash('error', 'Unauthorized: Student is not in your department.');
+            }
+        }
+        redirect('/hod/students/verify');
+    }
+
+    public function rejectStudent() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            
+            $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            $student = $stmtCheck->fetch();
+            
+            if ($student && $student['department'] === $dept) {
+                $avatarFile = $student['avatar'];
+                if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
+                    $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+                
+                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                $stmt->execute([$id]);
+                $this->flash('success', 'Student registration rejected and deleted.');
+            } else {
+                $this->flash('error', 'Unauthorized: Student is not in your department.');
+            }
+        }
+        redirect('/hod/students/verify');
+    }
 }
+

@@ -86,6 +86,11 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-shield-fill"></i> Committee Members
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/hod/students/verify" class="nav-link <?php echo isActive('/hod/students/verify', $currentUri); ?>">
+                    <i class="bi bi-person-check-fill"></i> Verify Students
+                </a>
+            </li>
 
 
         <?php elseif ($role === 'student'): ?>
@@ -150,6 +155,22 @@ if ($urlPrefix === '/') {
             </li>
 
 
+        <?php elseif ($role === 'coordinator'): ?>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/dashboard" class="nav-link <?php echo isActive('/coordinator/dashboard', $currentUri); ?>">
+                    <i class="bi bi-grid-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/users" class="nav-link <?php echo isActive('/coordinator/users', $currentUri); ?>">
+                    <i class="bi bi-person-check-fill"></i> Verify Students
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
+                    <i class="bi bi-megaphone-fill"></i> Notice Generator
+                </a>
+            </li>
         <?php endif; ?>
         
         <li class="nav-item mt-auto border-top border-secondary border-opacity-10">

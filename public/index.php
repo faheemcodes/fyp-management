@@ -109,6 +109,9 @@ $routes = [
     '/hod/committee/create' => ['Controller\HodController', 'createCommittee'],
     '/hod/committee/edit' => ['Controller\HodController', 'editCommittee'],
     '/hod/committee/delete' => ['Controller\HodController', 'deleteCommittee'],
+    '/hod/students/verify' => ['Controller\HodController', 'verifyStudents'],
+    '/hod/students/approve' => ['Controller\HodController', 'approveStudent'],
+    '/hod/students/reject' => ['Controller\HodController', 'rejectStudent'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -134,6 +137,17 @@ $routes = [
     '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
     '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
     '/committee/evaluations/toggle-visibility' => ['Controller\CommitteeController', 'toggleCommitteeVisibility'],
+    
+    // Coordinator routes
+    '/coordinator/dashboard' => ['Controller\CoordinatorController', 'dashboard'],
+    '/coordinator/users' => ['Controller\CoordinatorController', 'verifyStudents'],
+    '/coordinator/users/approve' => ['Controller\CoordinatorController', 'approveStudent'],
+    '/coordinator/users/reject' => ['Controller\CoordinatorController', 'rejectStudent'],
+    '/coordinator/notice' => ['Controller\CoordinatorController', 'notice'],
+    '/coordinator/notice/create' => ['Controller\CoordinatorController', 'createNotice'],
+    '/coordinator/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
+    '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
+    '/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
@@ -209,6 +223,9 @@ if (array_key_exists($uri, $routes)) {
         }
         if (strpos($uri, '/committee') === 0 && $role !== 'committee') {
             die("Unauthorized access: Committee only.");
+        }
+        if (strpos($uri, '/coordinator') === 0 && $role !== 'coordinator') {
+            die("Unauthorized access: Coordinator only.");
         }
     } else {
         // Only redirect logged in users to their dashboard if they visit the root '/' URL.

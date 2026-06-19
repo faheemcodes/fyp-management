@@ -60,12 +60,12 @@ class AdminController extends BaseController {
         
         // Fetch all users with details
         $users = $db->query("SELECT u.*, 
-            COALESCE(s.name, sup.name, c.name, d.name, 'Administrator') as name,
+            COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Administrator') as name,
             s.student_id,
             s.avatar,
             s.shift,
             sup.designation,
-            COALESCE(s.department, sup.department, c.department, d.department, 'N/A') as department,
+            COALESCE(s.department, sup.department, c.department, d.department, coord.department, 'N/A') as department,
             prof.father_name,
             prof.dob,
             prof.mobile_code,
@@ -79,6 +79,7 @@ class AdminController extends BaseController {
             LEFT JOIN supervisors sup ON u.id = sup.user_id
             LEFT JOIN committees c ON u.id = c.user_id
             LEFT JOIN hods d ON u.id = d.user_id
+            LEFT JOIN coordinators coord ON u.id = coord.user_id
             LEFT JOIN profiles prof ON u.id = prof.user_id
             ORDER BY u.status DESC, u.created_at DESC")->fetchAll();
 
@@ -174,6 +175,9 @@ class AdminController extends BaseController {
                     $stmt->execute([$userId, $name, $designation, $department, $research_interest]);
                 } else if ($role === 'hod') {
                     $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
+                    $stmt->execute([$userId, $name, $department]);
+                } else if ($role === 'coordinator') {
+                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
                     $stmt->execute([$userId, $name, $department]);
                 }
                 
@@ -359,6 +363,10 @@ class AdminController extends BaseController {
                     $stmt->execute([$id, $name, $designation, $department, $research_interest, $name, $designation, $department, $research_interest]);
                 } else if ($role === 'hod') {
                     $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)
+                        ON DUPLICATE KEY UPDATE name = ?, department = ?");
+                    $stmt->execute([$id, $name, $department, $name, $department]);
+                } else if ($role === 'coordinator') {
+                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)
                         ON DUPLICATE KEY UPDATE name = ?, department = ?");
                     $stmt->execute([$id, $name, $department, $name, $department]);
                 }
