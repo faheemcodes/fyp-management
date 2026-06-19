@@ -1,4 +1,4 @@
-<!-- Dean Supervisor Management View -->
+<!-- HOD Supervisor Management View -->
 <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
     <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
         <div>
@@ -52,7 +52,7 @@
                         </div>
                     </td>
                     <td>
-                        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors/toggle-committee" method="POST" class="d-inline">
+                        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/toggle-committee" method="POST" class="d-inline">
                             <input type="hidden" name="user_id" value="<?php echo $s['user_id']; ?>">
                             <div class="form-check form-switch d-inline-block">
                                 <input class="form-check-input shadow-sm" type="checkbox" role="switch" onchange="this.form.submit()" <?php echo $s['is_committee'] ? 'checked' : ''; ?> style="cursor: pointer;">
@@ -61,7 +61,7 @@
                     </td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $s['user_id']; ?>">Edit</button>
-                        <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors/delete?id=<?php echo $s['user_id']; ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this supervisor? This will delete their user account permanently.')">Delete</a>
+                        <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/delete?id=<?php echo $s['user_id']; ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this supervisor? This will delete their user account permanently.')">Delete</a>
                     </td>
                 </tr>
 
@@ -73,7 +73,7 @@
                                 <h5 class="modal-title fw-bold">Edit Supervisor Profile</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors/edit" method="POST">
+                            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/edit" method="POST">
                                 <div class="modal-body p-4">
                                     <input type="hidden" name="user_id" value="<?php echo $s['user_id']; ?>">
                                     
@@ -118,7 +118,7 @@
                 <?php endforeach; ?>
                 <?php if (empty($supervisors)): ?>
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">No supervisors are registered yet.</td>
+                        <td colspan="6" class="text-center text-muted py-4">No supervisors are registered yet.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -134,7 +134,7 @@
                 <h5 class="modal-title fw-bold" id="createSupervisorModalLabel">Add New Faculty Supervisor</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors/create" method="POST">
+            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/create" method="POST">
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label for="supName" class="form-label small fw-semibold text-secondary">Full Name</label>

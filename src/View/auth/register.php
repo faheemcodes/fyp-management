@@ -185,7 +185,7 @@
                 <select class="form-select bg-light" id="role" name="role" required onchange="toggleFields()">
                     <option value="student" <?php echo (!isset($old['role']) || $old['role'] === 'student') ? 'selected' : ''; ?>>Student</option>
                     <option value="supervisor" <?php echo (isset($old['role']) && $old['role'] === 'supervisor') ? 'selected' : ''; ?>>Teacher / Supervisor</option>
-                    <option value="dean" <?php echo (isset($old['role']) && $old['role'] === 'dean') ? 'selected' : ''; ?>>HOD / Dean</option>
+                    <option value="hod" <?php echo (isset($old['role']) && $old['role'] === 'hod') ? 'selected' : ''; ?>>HOD</option>
                     <option value="admin" <?php echo (isset($old['role']) && $old['role'] === 'admin') ? 'selected' : ''; ?>>System Administrator</option>
                 </select>
             </div>
@@ -361,7 +361,7 @@
                 </div>
             </div>
 
-            <!-- Staff/Faculty Form Fields (Supervisor, HOD/Dean, Admin) -->
+            <!-- Staff/Faculty Form Fields (Supervisor, HOD, Admin) -->
             <div id="staffFields" class="d-none">
                 <!-- Personal details card -->
                 <div class="form-section-card">
@@ -415,7 +415,7 @@
                                 <option value="Assistant Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Assistant Professor') ? 'selected' : ''; ?>>Assistant Professor</option>
                                 <option value="Associate Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Associate Professor') ? 'selected' : ''; ?>>Associate Professor</option>
                                 <option value="Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Professor') ? 'selected' : ''; ?>>Professor</option>
-                                <option value="HOD / Dean" <?php echo (isset($old['designation']) && $old['designation'] === 'HOD / Dean') ? 'selected' : ''; ?>>HOD / Dean</option>
+                                <option value="HOD" <?php echo (isset($old['designation']) && $old['designation'] === 'HOD') ? 'selected' : ''; ?>>HOD</option>
                                 <option value="System Admin" <?php echo (isset($old['designation']) && $old['designation'] === 'System Admin') ? 'selected' : ''; ?>>System Admin</option>
                             </select>
                         </div>

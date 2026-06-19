@@ -78,11 +78,11 @@ class AuthController extends BaseController {
                     $sStmt->execute([$user['id']]);
                     $committee = $sStmt->fetch();
                     $_SESSION['name'] = $committee['name'] ?? 'Committee Member';
-                } else if ($user['role'] === 'dean') {
-                    $sStmt = $db->prepare("SELECT name FROM deans WHERE user_id = ?");
+                } else if ($user['role'] === 'hod') {
+                    $sStmt = $db->prepare("SELECT name FROM hods WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
-                    $dean = $sStmt->fetch();
-                    $_SESSION['name'] = $dean['name'] ?? 'Dean';
+                    $hod = $sStmt->fetch();
+                    $_SESSION['name'] = $hod['name'] ?? 'HOD';
                 } else {
                     $_SESSION['name'] = 'System Admin';
                 }
@@ -272,7 +272,7 @@ class AuthController extends BaseController {
                     $this->addNotification(1, 'New Student Registration', "Student {$name} ({$student_id}) registered and is pending approval.");
                     
                     unset($_SESSION['old']); // success, clear old inputs
-                    $this->flash('success', 'Registration successful! Your student account is pending review by Admin/Dean.');
+                    $this->flash('success', 'Registration successful! Your student account is pending review by Admin/HOD.');
                     redirect('/login');
                 } catch (\Exception $e) {
                     $db->rollBack();
@@ -352,8 +352,8 @@ class AuthController extends BaseController {
                     if ($role === 'supervisor') {
                         $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
                         $stmt->execute([$userId, $fullName, $designation, $department]);
-                    } else if ($role === 'dean') {
-                        $stmt = $db->prepare("INSERT INTO deans (user_id, name, department) VALUES (?, ?, ?)");
+                    } else if ($role === 'hod') {
+                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
                         $stmt->execute([$userId, $fullName, $department]);
                     }
                     

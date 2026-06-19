@@ -1,7 +1,7 @@
 <?php
 namespace Controller;
 
-class DeanController extends BaseController {
+class HodController extends BaseController {
 
     public function dashboard() {
         $db = \Database::getInstance()->getConnection();
@@ -16,7 +16,7 @@ class DeanController extends BaseController {
         $recentSupervisors = $db->query("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
         $recentCommittee = $db->query("SELECT c.*, u.email FROM committees c JOIN users u ON c.user_id = u.id ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
 
-        $this->render('dean/dashboard', [
+        $this->render('hod/dashboard', [
             'stats' => $stats,
             'recentSupervisors' => $recentSupervisors,
             'recentCommittee' => $recentCommittee
@@ -27,7 +27,7 @@ class DeanController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $supervisors = $db->query("SELECT s.*, u.email, (CASE WHEN c.user_id IS NOT NULL THEN 1 ELSE 0 END) as is_committee FROM supervisors s JOIN users u ON s.user_id = u.id LEFT JOIN committees c ON s.user_id = c.user_id ORDER BY s.name ASC")->fetchAll();
         
-        $this->render('dean/supervisors', [
+        $this->render('hod/supervisors', [
             'supervisors' => $supervisors
         ]);
     }
@@ -43,7 +43,7 @@ class DeanController extends BaseController {
 
             if (empty($name) || empty($email) || empty($password) || empty($designation) || empty($department)) {
                 $this->flash('error', 'Please fill in all required fields.');
-                redirect('/dean/supervisors');
+                redirect('/hod/supervisors');
             }
 
             $db = \Database::getInstance()->getConnection();
@@ -53,7 +53,7 @@ class DeanController extends BaseController {
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
                 $this->flash('error', 'Email is already registered.');
-                redirect('/dean/supervisors');
+                redirect('/hod/supervisors');
             }
 
             try {
@@ -73,7 +73,7 @@ class DeanController extends BaseController {
                 $this->flash('error', 'Error adding supervisor: ' . $e->getMessage());
             }
         }
-        redirect('/dean/supervisors');
+        redirect('/hod/supervisors');
     }
 
     public function editSupervisor() {
@@ -94,7 +94,7 @@ class DeanController extends BaseController {
                 $this->flash('error', "Failed to update supervisor profile. Fill all fields.");
             }
         }
-        redirect('/dean/supervisors');
+        redirect('/hod/supervisors');
     }
 
     public function deleteSupervisor() {
@@ -113,7 +113,7 @@ class DeanController extends BaseController {
                 $this->flash('error', "Failed to delete supervisor: " . $e->getMessage());
             }
         }
-        redirect('/dean/supervisors');
+        redirect('/hod/supervisors');
     }
 
     public function toggleCommitteeRole() {
@@ -155,7 +155,7 @@ class DeanController extends BaseController {
                         
                         if ($currentCount >= 5) {
                             $this->flash('error', "Cannot assign. The '{$department}' department already has the maximum limit of 5 committee members.");
-                            redirect('/dean/supervisors');
+                            redirect('/hod/supervisors');
                         }
                         
                         try {
@@ -172,6 +172,6 @@ class DeanController extends BaseController {
                 }
             }
         }
-        redirect('/dean/supervisors');
+        redirect('/hod/supervisors');
     }
 }

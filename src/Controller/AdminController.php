@@ -30,7 +30,7 @@ class AdminController extends BaseController {
             LEFT JOIN students s ON u.id = s.user_id
             LEFT JOIN supervisors sup ON u.id = sup.user_id
             LEFT JOIN committees c ON u.id = c.user_id
-            LEFT JOIN deans d ON u.id = d.user_id
+            LEFT JOIN hods d ON u.id = d.user_id
             ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
 
         $recentGroups = $db->query("SELECT g.*, p.title as project_title, s.name as creator_name 
@@ -78,7 +78,7 @@ class AdminController extends BaseController {
             LEFT JOIN students s ON u.id = s.user_id
             LEFT JOIN supervisors sup ON u.id = sup.user_id
             LEFT JOIN committees c ON u.id = c.user_id
-            LEFT JOIN deans d ON u.id = d.user_id
+            LEFT JOIN hods d ON u.id = d.user_id
             LEFT JOIN profiles prof ON u.id = prof.user_id
             ORDER BY u.status DESC, u.created_at DESC")->fetchAll();
 
@@ -172,8 +172,8 @@ class AdminController extends BaseController {
                 } else if ($role === 'supervisor') {
                     $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)");
                     $stmt->execute([$userId, $name, $designation, $department, $research_interest]);
-                } else if ($role === 'dean') {
-                    $stmt = $db->prepare("INSERT INTO deans (user_id, name, department) VALUES (?, ?, ?)");
+                } else if ($role === 'hod') {
+                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
                     $stmt->execute([$userId, $name, $department]);
                 }
                 
@@ -354,8 +354,8 @@ class AdminController extends BaseController {
                     $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)
                         ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?, research_interest = ?");
                     $stmt->execute([$id, $name, $designation, $department, $research_interest, $name, $designation, $department, $research_interest]);
-                } else if ($role === 'dean') {
-                    $stmt = $db->prepare("INSERT INTO deans (user_id, name, department) VALUES (?, ?, ?)
+                } else if ($role === 'hod') {
+                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)
                         ON DUPLICATE KEY UPDATE name = ?, department = ?");
                     $stmt->execute([$id, $name, $department, $name, $department]);
                 }

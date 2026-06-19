@@ -99,13 +99,13 @@ $routes = [
     '/admin/grades/edit' => ['Controller\AdminController', 'editGrades'],
     '/admin/deadlines/delete' => ['Controller\AdminController', 'deleteDeadline'],
 
-    // Dean routes
-    '/dean/dashboard' => ['Controller\DeanController', 'dashboard'],
-    '/dean/supervisors' => ['Controller\DeanController', 'supervisors'],
-    '/dean/supervisors/create' => ['Controller\DeanController', 'createSupervisor'],
-    '/dean/supervisors/edit' => ['Controller\DeanController', 'editSupervisor'],
-    '/dean/supervisors/delete' => ['Controller\DeanController', 'deleteSupervisor'],
-    '/dean/supervisors/toggle-committee' => ['Controller\DeanController', 'toggleCommitteeRole'],
+    // HOD routes
+    '/hod/dashboard' => ['Controller\HodController', 'dashboard'],
+    '/hod/supervisors' => ['Controller\HodController', 'supervisors'],
+    '/hod/supervisors/create' => ['Controller\HodController', 'createSupervisor'],
+    '/hod/supervisors/edit' => ['Controller\HodController', 'editSupervisor'],
+    '/hod/supervisors/delete' => ['Controller\HodController', 'deleteSupervisor'],
+    '/hod/supervisors/toggle-committee' => ['Controller\HodController', 'toggleCommitteeRole'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -194,8 +194,8 @@ if (array_key_exists($uri, $routes)) {
         if (strpos($uri, '/admin') === 0 && $role !== 'admin') {
             die("Unauthorized access: Admin only.");
         }
-        if (strpos($uri, '/dean') === 0 && $role !== 'dean') {
-            die("Unauthorized access: Dean only.");
+        if (strpos($uri, '/hod') === 0 && $role !== 'hod') {
+            die("Unauthorized access: HOD only.");
         }
         if (strpos($uri, '/student') === 0 && $role !== 'student') {
             die("Unauthorized access: Student only.");

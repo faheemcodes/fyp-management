@@ -1,4 +1,4 @@
-<!-- Dean Dashboard View -->
+<!-- HOD Dashboard View -->
 <div class="row g-4 mb-4">
     <!-- Stat card 1 -->
     <div class="col-md-6 col-lg-3">
@@ -59,7 +59,7 @@
         <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h5 class="fw-bold m-0 text-dark">Recently Added Supervisors</h5>
-                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors" class="btn btn-outline-primary btn-sm rounded-pill">Manage All</a>
+                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors" class="btn btn-outline-primary btn-sm rounded-pill">Manage All</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">
@@ -97,7 +97,7 @@
         <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h5 class="fw-bold m-0 text-dark">Active Committee Members</h5>
-                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/dean/supervisors" class="btn btn-outline-primary btn-sm rounded-pill">Manage All</a>
+                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors" class="btn btn-outline-primary btn-sm rounded-pill">Manage All</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">

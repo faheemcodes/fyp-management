@@ -70,14 +70,14 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
 
-        <?php elseif ($role === 'dean'): ?>
+        <?php elseif ($role === 'hod'): ?>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/dean/dashboard" class="nav-link <?php echo isActive('/dean/dashboard', $currentUri); ?>">
+                <a href="<?php echo $urlPrefix; ?>/hod/dashboard" class="nav-link <?php echo isActive('/hod/dashboard', $currentUri); ?>">
                     <i class="bi bi-grid-fill"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/dean/supervisors" class="nav-link <?php echo isActive('/dean/supervisors', $currentUri); ?>">
+                <a href="<?php echo $urlPrefix; ?>/hod/supervisors" class="nav-link <?php echo isActive('/hod/supervisors', $currentUri); ?>">
                     <i class="bi bi-person-badge-fill"></i> Supervisors
                 </a>
             </li>

@@ -25,7 +25,7 @@
                 <option value="all">All Roles</option>
                 <option value="student">Student</option>
                 <option value="supervisor">Supervisor</option>
-                <option value="dean">Dean</option>
+                <option value="hod">HOD</option>
             </select>
         </div>
         <!-- Department Filter -->
@@ -173,7 +173,7 @@
                         <select class="form-select bg-light" id="modalRole" name="role" required>
                             <option value="student">Student</option>
                             <option value="supervisor">Supervisor</option>
-                            <option value="dean">Dean</option>
+                            <option value="hod">HOD</option>
                         </select>
                     </div>
                     

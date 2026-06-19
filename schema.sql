@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS profiles;
 DROP TABLE IF EXISTS committees;
 DROP TABLE IF EXISTS supervisors;
 DROP TABLE IF EXISTS students;
-DROP TABLE IF EXISTS deans;
+DROP TABLE IF EXISTS hods;
 DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -25,15 +25,15 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     cnic VARCHAR(50) DEFAULT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'dean', 'student', 'supervisor', 'committee') NOT NULL,
+    role ENUM('admin', 'hod', 'student', 'supervisor', 'committee') NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     reset_token VARCHAR(255) DEFAULT NULL,
     reset_token_expiry DATETIME DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Deans Table
-CREATE TABLE deans (
+-- HODs Table
+CREATE TABLE hods (
     user_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     department VARCHAR(100) NOT NULL,
@@ -197,7 +197,7 @@ CREATE TABLE notifications (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- System Deadlines Table (Helper table for Admin/Dean to manage scheduling)
+-- System Deadlines Table (Helper table for Admin/HOD to manage scheduling)
 CREATE TABLE deadlines (
     id INT AUTO_INCREMENT PRIMARY KEY,
     stage ENUM('Proposal Submission', 'Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation') NOT NULL UNIQUE,
@@ -210,11 +210,11 @@ CREATE TABLE deadlines (
 INSERT INTO users (id, email, cnic, password, role, status) VALUES 
 (1, 'admin@fyp.com', '1111111111111', '$2y$12$R6aRPfeHg6u67TJswr.FieCt6g3eVLLPGxRK2WVK6dSHEjS/CyHR6', 'admin', 'approved');
 
--- Dean Account
+-- HOD Account
 INSERT INTO users (id, email, cnic, password, role, status) VALUES 
-(2, 'dean@fyp.com', '2222222222222', '$2y$12$R6aRPfeHg6u67TJswr.FieCt6g3eVLLPGxRK2WVK6dSHEjS/CyHR6', 'dean', 'approved');
-INSERT INTO deans (user_id, name, department) VALUES 
-(2, 'Dr. Dean Ahmed', 'Computer Science & Software Engineering');
+(2, 'hod@fyp.com', '2222222222222', '$2y$12$R6aRPfeHg6u67TJswr.FieCt6g3eVLLPGxRK2WVK6dSHEjS/CyHR6', 'hod', 'approved');
+INSERT INTO hods (user_id, name, department) VALUES 
+(2, 'Dr. HOD Ahmed', 'Computer Science & Software Engineering');
 
 -- Supervisor Account
 INSERT INTO users (id, email, cnic, password, role, status) VALUES 
@@ -239,7 +239,7 @@ INSERT INTO students (user_id, student_id, name, phone, department, shift) VALUE
 (6, '2k23/SWE/002', 'Saad Siddiqui', '0312-7654321', 'Software Engineering', 'Morning'),
 (7, '2k23/SWE/050', 'Amna Bibi', '0333-9876543', 'Software Engineering', 'Morning');
 
--- Seed Profiles for Deans, Supervisors, Committee Members, and Students
+-- Seed Profiles for HODs, Supervisors, Committee Members, and Students
 INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES 
 (2, 'Dr.', 'Ahmed', '2222222222222', '1970-01-01', '+92', '0000000', 'Not Provided Yet', 'Male'),
 (3, 'Dr.', 'Faheem', '3333333333333', '1980-01-01', '+92', '0000000', 'Not Provided Yet', 'Male'),

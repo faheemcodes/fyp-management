@@ -521,7 +521,7 @@ class StudentController extends BaseController {
 
                 // Notify assigned supervisor
                 $this->addNotification($supervisor_id, 'Proposal Submitted', "$groupLabel has submitted a project proposal selecting you as supervisor.");
-                // Notify system admin and dean
+                // Notify system admin and HOD
                 $this->addNotification(1, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
                 $this->addNotification(2, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
 
