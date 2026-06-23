@@ -1,13 +1,12 @@
-<!-- Supervisor Profile View -->
+<!-- Committee Member Profile View -->
 <?php
 $prefixVal = $profile['prefix'] ?? '';
 $surnameVal = $profile['surname'] ?? '';
-$cnicVal = $supervisor['cnic'] ?? $profile['cnic'] ?? '';
+$cnicVal = $committee['cnic'] ?? $profile['cnic'] ?? '';
 $mobileCodeVal = $profile['mobile_code'] ?? '';
 $mobileNoVal = $profile['mobile_no'] ?? '';
 $homeAddressVal = $profile['home_address'] ?? '';
-$designationVal = $supervisor['designation'] ?? '';
-$departmentVal = $supervisor['department'] ?? '';
+$departmentVal = $committee['department'] ?? '';
 
 $isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
 
@@ -295,7 +294,7 @@ if ($basePath === '/') {
         <!-- Avatar -->
         <div class="profile-avatar-ring">
             <div class="avatar-inner">
-                <?php echo strtoupper(substr($supervisor['name'], 0, 1)); ?>
+                <?php echo strtoupper(substr($committee['name'], 0, 1)); ?>
             </div>
         </div>
 
@@ -303,14 +302,14 @@ if ($basePath === '/') {
         <div class="flex-grow-1 text-center text-md-start">
             <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem; letter-spacing: -0.02em;">
-                    <?php echo htmlspecialchars(($prefixVal ? $prefixVal . ' ' : '') . $supervisor['name']); ?>
+                    <?php echo htmlspecialchars(($prefixVal ? $prefixVal . ' ' : '') . $committee['name']); ?>
                 </h4>
-                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Supervisor</span>
+                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Committee</span>
             </div>
-            <p class="mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">
-                <i class="bi bi-briefcase me-1"></i><?php echo htmlspecialchars($designationVal ?? 'Faculty Member'); ?>
+            <p class="mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.82rem;">
+                <i class="bi bi-shield-lock me-1"></i>Evaluation Committee Member
                 &nbsp;·&nbsp;
-                <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($supervisor['email']); ?>
+                <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($committee['email']); ?>
             </p>
 
             <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
@@ -359,7 +358,19 @@ if ($basePath === '/') {
 </div>
 <?php endif; ?>
 
-<form action="<?php echo $basePath; ?>/supervisor/profile" method="POST">
+<?php
+// Display flash messages
+if (isset($_SESSION['flash']['success'])) {
+    echo '<div class="profile-alert" style="background: rgba(16,185,129,0.06); color: #059669; border: 1px solid rgba(16,185,129,0.2);"><div class="profile-alert-icon" style="background: rgba(16,185,129,0.1); color: #10b981;"><i class="bi bi-check-circle-fill"></i></div><div><h6>Success</h6><p>' . htmlspecialchars($_SESSION['flash']['success']) . '</p></div></div>';
+    unset($_SESSION['flash']['success']);
+}
+if (isset($_SESSION['flash']['error'])) {
+    echo '<div class="profile-alert" style="background: rgba(239,68,68,0.06); color: #dc2626; border: 1px solid rgba(239,68,68,0.2);"><div class="profile-alert-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;"><i class="bi bi-x-circle-fill"></i></div><div><h6>Error</h6><p>' . htmlspecialchars($_SESSION['flash']['error']) . '</p></div></div>';
+    unset($_SESSION['flash']['error']);
+}
+?>
+
+<form action="<?php echo $basePath; ?>/committee/profile" method="POST">
     <div class="row g-4">
 
         <!-- ═══════════════ COLUMN 1: Professional Identity ═══════════════ -->
@@ -389,21 +400,31 @@ if ($basePath === '/') {
                         </div>
                         <div class="col-8 pf-group">
                             <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($supervisor['name']); ?>" disabled readonly>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($committee['name']); ?>" disabled readonly>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Surname</label>
-                            <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo !empty($surnameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
+                            <?php if (empty($surnameVal)): ?>
+                                <input type="text" class="form-control border border-warning" name="surname" placeholder="Enter Surname" required>
+                                <div class="form-text small text-warning"><i class="bi bi-exclamation-triangle-fill"></i> Missing data</div>
+                            <?php else: ?>
+                                <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo !empty($surnameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
                             <?php if(!empty($surnameVal)): ?>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                            <?php endif; ?>
                             <?php endif; ?>
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">CNIC</label>
-                            <input type="text" class="form-control" name="cnic" value="<?php echo htmlspecialchars($cnicVal); ?>" <?php echo !empty($cnicVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
+                            <?php if (empty($cnicVal)): ?>
+                                <input type="text" class="form-control border border-warning" name="cnic" placeholder="No dashes" required>
+                                <div class="form-text small text-warning"><i class="bi bi-exclamation-triangle-fill"></i> Missing data</div>
+                            <?php else: ?>
+                                <input type="text" class="form-control" name="cnic" value="<?php echo htmlspecialchars($cnicVal); ?>" <?php echo !empty($cnicVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
                             <?php if(!empty($cnicVal)): ?>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                            <?php endif; ?>
                             <?php endif; ?>
                         </div>
                         <div class="col-6 pf-group">
@@ -413,7 +434,7 @@ if ($basePath === '/') {
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Designation</label>
-                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($designationVal); ?>" disabled readonly>
+                            <input type="text" class="form-control" value="Committee Member" disabled readonly>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                         </div>
                     </div>
@@ -430,7 +451,7 @@ if ($basePath === '/') {
                     </div>
                     <div>
                         <h6>Contact &amp; Details</h6>
-                        <small>Email, phone, and research focus</small>
+                        <small>Email, phone, and office details</small>
                     </div>
                 </div>
                 <div class="profile-section-body">
@@ -441,7 +462,7 @@ if ($basePath === '/') {
                                 <span class="input-group-text" style="border-radius: 10px 0 0 10px; border: 1.5px solid var(--border-color); border-right: 0; background: var(--form-bg); color: var(--text-secondary); font-size: 0.85rem;">
                                     <i class="bi bi-envelope"></i>
                                 </span>
-                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($supervisor['email']); ?>" disabled readonly style="border-radius: 0 10px 10px 0;">
+                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($committee['email']); ?>" disabled readonly style="border-radius: 0 10px 10px 0;">
                             </div>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                         </div>
@@ -462,7 +483,7 @@ if ($basePath === '/') {
                         <div class="col-12">
                             <div class="address-card">
                                 <label><i class="bi bi-house-door-fill"></i> Office / Home Address <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="home_address" name="home_address" rows="2" required placeholder="Enter your office or mailing address..." <?php echo $isLocked ? 'disabled readonly' : ''; ?>><?php echo htmlspecialchars($homeAddressVal !== 'Not Provided Yet' ? $homeAddressVal : ''); ?></textarea>
+                                <textarea class="form-control" id="home_address" name="home_address" rows="3" required placeholder="Enter your office or mailing address..." <?php echo $isLocked ? 'disabled readonly' : ''; ?>><?php echo htmlspecialchars($homeAddressVal !== 'Not Provided Yet' ? $homeAddressVal : ''); ?></textarea>
                             </div>
                         </div>
                     </div>

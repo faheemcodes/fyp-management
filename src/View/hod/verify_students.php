@@ -1,27 +1,138 @@
 <!-- HOD Verify Students View -->
-<div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
-    <div class="mb-4">
-        <h4 class="fw-bold text-dark m-0">Verify Student Registrations</h4>
-        <p class="text-muted m-0 small">Review and approve self-registered student accounts in your department</p>
-    </div>
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+<style>
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #d97706, #f59e0b);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
 
-    <!-- Search Box -->
-    <div class="mb-3">
-        <div class="input-group" style="max-width: 380px;">
-            <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" class="form-control table-search" placeholder="Search pending students by name, roll no..." data-target="pending-students-table">
+/* ─── Section Panel ─── */
+.grp-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+    transition: box-shadow 0.25s ease;
+}
+.grp-section-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+    border-top-left-radius: calc(var(--border-radius-lg) - 1px);
+    border-top-right-radius: calc(var(--border-radius-lg) - 1px);
+}
+
+/* ─── Modern Table Styles ─── */
+.modern-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.modern-table thead th {
+    background: var(--form-bg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tbody td {
+    padding: 16px 24px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: background-color 0.2s ease;
+}
+.modern-table tbody tr:hover td {
+    background: var(--hover-bg);
+}
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+</style>
+
+<!-- Top Hero Banner -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #d97706, #f59e0b);">
+                <i class="bi bi-person-bounding-box"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">Verify Student Registrations</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Review and approve self-registered student accounts in your department</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grp-section">
+    <div class="grp-section-header">
+        <div class="row g-3 align-items-center w-100 m-0">
+            <!-- Search Input -->
+            <div class="col-md-6 ps-0">
+                <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search pending students by name, roll no..." data-target="pending-students-table">
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle border-0 m-0" id="pending-students-table">
+        <table class="table modern-table m-0" id="pending-students-table">
             <thead>
                 <tr>
-                    <th>Student Details</th>
+                    <th class="ps-4">Student Details</th>
                     <th>Roll Number</th>
                     <th>Shift</th>
                     <th>Status</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
             <tbody>

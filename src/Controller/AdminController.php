@@ -145,6 +145,22 @@ class AdminController extends BaseController {
             $student_id = trim($_POST['student_id'] ?? '');
             $research_interest = trim($_POST['research_interest'] ?? '');
             
+            // Common Profile
+            $surname = trim($_POST['surname'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            
+            // Student Profile
+            $father_name = trim($_POST['father_name'] ?? '');
+            $dob = trim($_POST['dob'] ?? '2000-01-01');
+            $gender = trim($_POST['gender'] ?? 'Male');
+            $mobile_code = trim($_POST['mobile_code'] ?? '+92');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $country = trim($_POST['country'] ?? 'Pakistan');
+            $province_state = trim($_POST['province_state'] ?? '');
+            $district = trim($_POST['district'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            $shift = trim($_POST['shift'] ?? 'Morning');
+            
             if (empty($email) || empty($password) || empty($role) || empty($name)) {
                 $this->flash('error', 'All core fields are required.');
                 redirect('/admin/users');
@@ -163,22 +179,35 @@ class AdminController extends BaseController {
             try {
                 $db->beginTransaction();
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO users (email, password, role, status) VALUES (?, ?, ?, 'approved')");
-                $stmt->execute([$email, $hashed, $role]);
+                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, ?, 'approved')");
+                $stmt->execute([$email, (empty($cnic) ? null : $cnic), $hashed, $role]);
                 $userId = $db->lastInsertId();
                 
                 if ($role === 'student') {
-                    $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, department) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$userId, $student_id, $name, $department]);
-                } else if ($role === 'supervisor') {
-                    $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$userId, $name, $designation, $department, $research_interest]);
-                } else if ($role === 'hod') {
-                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
-                    $stmt->execute([$userId, $name, $department]);
-                } else if ($role === 'coordinator') {
-                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
-                    $stmt->execute([$userId, $name, $department]);
+                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, father_name, dob, gender, mobile_code, mobile_no, country, province_state, district, home_address) VALUES (?, 'Mr.', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$userId, $surname, $cnic, $father_name, $dob, $gender, $mobile_code, $mobile_no, $country, $province_state, $district, $home_address]);
+                    
+                    $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, department, shift) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$userId, $student_id, $name, $department, $shift]);
+                } else {
+                    // For all staff
+                    $prefix = ($role === 'supervisor') ? 'Dr.' : 'Mr.';
+                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, gender, home_address) VALUES (?, ?, ?, ?, '1980-01-01', 'Male', 'Not Provided Yet')");
+                    $stmt->execute([$userId, $prefix, $surname, $cnic]);
+                    
+                    if ($role === 'supervisor') {
+                        $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $designation, $department]);
+                    } else if ($role === 'hod') {
+                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department]);
+                    } else if ($role === 'coordinator') {
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department]);
+                    } else if ($role === 'committee') {
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department]);
+                    }
                 }
                 
                 $db->commit();

@@ -1,15 +1,262 @@
-<!-- Committee Evaluations View -->
-<div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
-    <div class="mb-4">
-        <h4 class="fw-bold text-dark m-0">Group Presentations & Evaluations Panel</h4>
-        <p class="text-muted m-0 small">Enter presentation evaluation marks and manage student visibility</p>
-    </div>
+<!-- Student Portal Inspired Evaluations View -->
+<?php 
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
+?>
 
-    <!-- Search & Global Toggle -->
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 border-bottom pb-3">
-        <div class="input-group" style="max-width: 380px;">
-            <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" class="form-control table-search" placeholder="Search presentations by group code, supervisor..." data-target="evals-table">
+<style>
+/* ─── Hero Section ─── */
+.eval-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.eval-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.eval-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.eval-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+/* ─── Section Panel ─── */
+.eval-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease;
+}
+.eval-section:hover {
+    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+}
+.eval-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+}
+.eval-section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.eval-section-header h6 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.eval-section-header small {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ─── Table ─── */
+.eval-table th {
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+.eval-table td {
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+}
+.eval-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.eval-table tbody tr {
+    transition: background-color 0.2s;
+}
+.eval-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+/* ─── Badges & Status ─── */
+.group-code-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    font-family: monospace;
+    display: inline-block;
+}
+html.dark-theme .group-code-badge { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+.grade-box {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 3px solid #10b981;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+}
+.grade-box-score {
+    color: #059669;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+html.dark-theme .grade-box-score { color: #34d399; }
+.grade-box-remarks {
+    color: #047857;
+    font-size: 0.7rem;
+    margin-top: 2px;
+    max-width: 140px;
+}
+html.dark-theme .grade-box-remarks { color: #6ee7b7; }
+
+/* Mobile Row */
+.eval-mobile-card {
+    background: var(--form-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+.eval-mobile-grade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Modals Override - High z-index */
+.modal {
+    z-index: 99999 !important;
+}
+.modal-backdrop {
+    z-index: 99998 !important;
+}
+.eval-modal .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.eval-modal .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+    background: var(--form-bg);
+    color: var(--text-primary);
+}
+.eval-modal .modal-body {
+    padding: 1.5rem;
+    color: var(--text-primary);
+}
+.eval-modal .modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+.eval-modal .form-control {
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 10px;
+}
+.eval-modal .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Fix close button visibility in dark theme */
+html.dark-theme .modal .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+}
+html.dark-theme .modal .btn-close:hover {
+    opacity: 1;
+}
+
+/* Previous Remarks Alert */
+.previous-remarks-alert {
+    background: var(--form-bg);
+    border-left: 3px solid var(--primary-color);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+.previous-remarks-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+.previous-remarks-body {
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+</style>
+
+<!-- Hero Section -->
+<div class="eval-hero">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 position-relative" style="z-index: 1;">
+        <div class="d-flex align-items-center gap-3">
+            <div class="eval-hero-icon shadow-sm">
+                <i class="bi bi-clipboard-data"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.4rem; letter-spacing: -0.02em;">Group Evaluations</h4>
+                <p class="mb-0" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Review project abstracts and submit presentation grades.</p>
+            </div>
         </div>
         
         <?php
@@ -31,364 +278,342 @@
         }
         $globalShowAction = ($anyHidden || !$hasEvaluations) ? 1 : 0;
         ?>
-        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
-            <input type="hidden" name="show" value="<?php echo $globalShowAction; ?>">
-            <button type="submit" class="btn btn-sm <?php echo $globalShowAction ? 'btn-outline-primary' : 'btn-success text-white'; ?> rounded-pill px-4 py-2 fw-semibold shadow-sm">
-                <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-2"></i>
-                <?php echo $globalShowAction ? 'Show All Marks to Students' : 'Hide All Marks from Students'; ?>
-            </button>
-        </form>
+        <div class="d-flex gap-2">
+            <form action="<?php echo $bp; ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
+                <input type="hidden" name="show" value="<?php echo $globalShowAction; ?>">
+                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-dark' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;">
+                    <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-1"></i>
+                    <?php echo $globalShowAction ? 'Publish Marks' : 'Hide Marks'; ?>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Main Table Section -->
+<div class="eval-section">
+    <div class="eval-section-header flex-column flex-md-row gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <div class="eval-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                <i class="bi bi-card-list"></i>
+            </div>
+            <div>
+                <h6>Evaluation Roster</h6>
+                <small>Assigned FYP groups and grading status</small>
+            </div>
+        </div>
+        
+        <div class="input-group" style="width: 250px; max-width: 100%;">
+            <span class="input-group-text bg-transparent border-end-0 border-light-subtle text-muted" style="border-radius: 50rem 0 0 50rem; padding-left: 1rem;"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control bg-transparent border-start-0 border-light-subtle table-search shadow-none" placeholder="Search groups..." data-target="evals-table" style="border-radius: 0 50rem 50rem 0; font-size: 0.85rem; color: var(--text-primary);">
+        </div>
     </div>
 
     <!-- Desktop Table -->
     <div class="d-none d-md-block table-responsive">
-        <table class="table table-hover align-middle border-0 m-0" id="evals-table">
+        <table class="table eval-table m-0" id="evals-table">
             <thead>
                 <tr>
-                    <th>Group Code</th>
-                    <th>Project Details</th>
-                    <th>Proposal Defence Presentation</th>
-                    <th>FYP Progress Presentation</th>
-                    <th>Final Presentation</th>
+                    <th style="width: 15%;">Group</th>
+                    <th style="width: 25%;">Project Details</th>
+                    <th style="width: 20%;">Proposal Defence</th>
+                    <th style="width: 20%;">FYP Progress</th>
+                    <th style="width: 20%;">Final Presentation</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($groups as $g): ?>
                 <tr>
-                    <td class="fw-bold text-primary"><?php echo htmlspecialchars($g['group_code']); ?></td>
                     <td>
-                        <div class="fw-semibold text-dark text-wrap mb-1" style="max-width: 200px;"><?php echo htmlspecialchars($g['project_title'] ?? 'No Project Title'); ?></div>
-                        <small class="text-muted d-block" style="font-size: 0.75rem;">Supervisor: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?></small>
-                        <button class="btn btn-link btn-sm p-0 text-decoration-none mt-1 d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>" style="font-size: 0.72rem; font-weight: 600; color: #2E5BFF;">
-                            <i class="bi bi-file-text-fill"></i> View Abstract
+                        <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
+                    </td>
+                    <td>
+                        <div class="fw-bold mb-1" style="font-size: 0.9rem; line-height: 1.4; color: var(--text-primary);">
+                            <?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;">
+                            <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
+                        </div>
+                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>" style="font-size: 0.8rem;">
+                            View Abstract
                         </button>
                     </td>
                     
-                    <!-- 1. Proposal Defence Presentation -->
+                    <!-- 1. Proposal Defence -->
                     <td>
                         <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['proposal_defense']['total_marks'], 0); ?>/30</div>
-                                <div class="x-small text-muted text-wrap" style="max-width: 150px;">Remarks: <?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex flex-column gap-1.5">
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-0.5" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">Grade</button>
+                            <div class="grade-box">
+                                <div class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['proposal_defense']['total_marks'], 0); ?> / 30</div>
+                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? 'No remarks'); ?>
                                 </div>
                             </div>
+                        <?php else: ?>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">
+                                Evaluate (30)
+                            </button>
                         <?php endif; ?>
                     </td>
                     
-                    <!-- 2. FYP Progress Presentation -->
+                    <!-- 2. FYP Progress -->
                     <td>
                         <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['progress_eval']['total_marks'], 0); ?>/40</div>
-                                <div class="x-small text-muted text-wrap" style="max-width: 150px;">Remarks: <?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex flex-column gap-1.5">
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-0.5" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">Grade</button>
+                            <div class="grade-box">
+                                <div class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['progress_eval']['total_marks'], 0); ?> / 40</div>
+                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? 'No remarks'); ?>
                                 </div>
                             </div>
+                        <?php else: ?>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">
+                                Evaluate (40)
+                            </button>
                         <?php endif; ?>
                     </td>
 
                     <!-- 3. Final Presentation -->
                     <td>
                         <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['final_presentation']['total_marks'], 0); ?>/75</div>
-                                <div class="x-small text-muted text-wrap" style="max-width: 150px;">Remarks: <?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex flex-column gap-1.5">
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-0.5" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">Grade</button>
+                            <div class="grade-box">
+                                <div class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['final_presentation']['total_marks'], 0); ?> / 75</div>
+                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? ''); ?>">
+                                    <?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? 'No remarks'); ?>
                                 </div>
                             </div>
+                        <?php else: ?>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">
+                                Evaluate (75)
+                            </button>
                         <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if(empty($groups)): ?>
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">No project groups registered in the platform yet.</td>
+                        <td colspan="5" class="text-center py-5 text-muted" style="font-size: 0.9rem;">
+                            <i class="bi bi-inbox fs-2 mb-2 d-block"></i>No project groups available for evaluation yet.
+                        </td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 
-    <!-- Mobile Card List -->
-    <div class="d-block d-md-none" id="evals-table-mobile">
+    <!-- Mobile View -->
+    <div class="d-block d-md-none p-3" id="evals-table-mobile">
         <?php foreach($groups as $g): ?>
-            <div class="card border rounded-3 p-3 mb-3 bg-light-subtle shadow-xs border">
-                <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-                    <span class="fw-bold text-primary"><?php echo htmlspecialchars($g['group_code']); ?></span>
-                    <button class="btn btn-link btn-sm p-0 text-decoration-none" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>" style="font-size: 0.72rem; font-weight: 600; color: #2E5BFF;">
-                        <i class="bi bi-file-text-fill"></i> View Abstract
+            <div class="eval-mobile-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
+                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem;" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>">
+                        Abstract
                     </button>
                 </div>
-                
-                <div class="mb-3">
-                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;"><?php echo htmlspecialchars($g['project_title'] ?? 'No Project Title'); ?></h6>
-                    <small class="text-muted"><i class="bi bi-person-badge me-1"></i>Supervisor: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?></small>
+                <h6 class="fw-bold mb-1" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?></h6>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
                 </div>
-                
-                <div class="row g-2 pt-2 border-top">
-                    <!-- Proposal Defence -->
-                    <div class="col-12 mb-2">
-                        <span class="text-secondary fw-semibold d-block mb-1" style="font-size: 0.65rem; text-transform: uppercase;">Proposal Defence (30)</span>
-                        <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['proposal_defense']['total_marks'], 0); ?>/30</div>
-                                <div class="x-small text-muted text-wrap">Remarks: <?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-between bg-light p-2 rounded-3 border">
-                                <span class="x-small text-muted">Not graded</span>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-1" style="font-size: 0.65rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">Grade</button>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
 
-                    <!-- FYP Progress -->
-                    <div class="col-12 mb-2">
-                        <span class="text-secondary fw-semibold d-block mb-1" style="font-size: 0.65rem; text-transform: uppercase;">FYP Progress (40)</span>
-                        <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['progress_eval']['total_marks'], 0); ?>/40</div>
-                                <div class="x-small text-muted text-wrap">Remarks: <?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-between bg-light p-2 rounded-3 border">
-                                <span class="x-small text-muted">Not graded</span>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-1" style="font-size: 0.65rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">Grade</button>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Final Presentation -->
-                    <div class="col-12 mb-1">
-                        <span class="text-secondary fw-semibold d-block mb-1" style="font-size: 0.65rem; text-transform: uppercase;">Final Presentation (75)</span>
-                        <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                            <div class="p-2 bg-success-subtle text-success border border-success-subtle rounded-3 small">
-                                <div class="fw-bold"><i class="bi bi-patch-check-fill me-1"></i>Graded: <?php echo number_format($g['final_presentation']['total_marks'], 0); ?>/75</div>
-                                <div class="x-small text-muted text-wrap">Remarks: <?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? ''); ?></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-between bg-light p-2 rounded-3 border">
-                                <span class="x-small text-muted">Not graded</span>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-xs btn-primary rounded-pill px-3 py-1" style="font-size: 0.65rem;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">Grade</button>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Proposal (30)</span>
+                    <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
+                        <span class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['proposal_defense']['total_marks'], 0); ?></span>
+                    <?php else: ?>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">Evaluate</button>
+                    <?php endif; ?>
+                </div>
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progress (40)</span>
+                    <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
+                        <span class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['progress_eval']['total_marks'], 0); ?></span>
+                    <?php else: ?>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">Evaluate</button>
+                    <?php endif; ?>
+                </div>
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (75)</span>
+                    <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
+                        <span class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['final_presentation']['total_marks'], 0); ?></span>
+                    <?php else: ?>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">Evaluate</button>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>
         <?php if(empty($groups)): ?>
-            <div class="text-center text-muted py-4 bg-light rounded-3 small">No project groups registered in the platform yet.</div>
+            <div class="text-center py-4 text-muted" style="font-size: 0.9rem;">No projects assigned.</div>
         <?php endif; ?>
     </div>
 </div>
 
-<!-- GRADING & ABSTRACT MODALS FOR ALL GROUPS -->
+<!-- GRADING MODALS -->
 <?php foreach($groups as $g): ?>
     
-    <!-- 1. Proposal Defence Modal -->
-    <div class="modal fade" id="gradeModal<?php echo $g['id']; ?>Proposal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content border-0 rounded-3 shadow">
-                <div class="modal-header bg-dark text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold">Proposal Defence Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- 1. Proposal Defence -->
+    <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Proposal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-clipboard-data text-primary me-2"></i>Proposal Defence</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
+                <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Proposal Defence Presentation">
-                    <div class="modal-body p-4 text-start">
-                        <!-- Collapsible Project Abstract -->
-                        <div class="mb-3">
-                            <button class="btn btn-sm btn-outline-primary w-100 text-start d-flex justify-content-between align-items-center rounded-3 px-3 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#abstractCollapse<?php echo $g['id']; ?>Proposal" aria-expanded="false" style="font-size: 0.8rem; font-weight: 600;">
-                                <span><i class="bi bi-file-text-fill me-1"></i> View Project Abstract</span>
-                                <i class="bi bi-chevron-down"></i>
-                            </button>
-                            <div class="collapse mt-2" id="abstractCollapse<?php echo $g['id']; ?>Proposal">
-                                <div class="p-3 bg-light rounded border-start border-primary border-3 small text-justify text-muted" style="max-height: 180px; overflow-y: auto; font-size: 0.78rem; line-height: 1.45;">
-                                    <?php echo nl2br(htmlspecialchars($g['proposal_abstract'] ?? 'No abstract/summary submitted yet.')); ?>
-                                </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Problem & Solution (0-10)</label>
+                                <input type="number" class="form-control" name="problem_solution" min="0" max="10" step="1" required>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Problem Identification & Solution (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="problem_solution" min="0" max="10" step="1" required placeholder="8">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Literature & Feas (0-10)</label>
+                                <input type="number" class="form-control" name="literature_feasibility" min="0" max="10" step="1" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Literature & Feasibility (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="literature_feasibility" min="0" max="10" step="1" required placeholder="7.5">
+                            <div class="col-md-12">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation & Viva (0-10)</label>
+                                <input type="number" class="form-control" name="presentation_viva" min="0" max="10" step="1" required>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Presentation & Viva (0-10)</label>
-                            <input type="number" class="form-control bg-light" name="presentation_viva" min="0" max="10" step="1" required placeholder="8">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Remarks / Evaluator Notes</label>
-                            <textarea class="form-control bg-light" name="remarks" rows="3" placeholder="Enter session notes or specific suggestions..."></textarea>
+                            <div class="col-md-12">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
+                                <textarea class="form-control" name="remarks" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 p-3 bg-light rounded-bottom text-end">
-                        <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Submit Marks</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- 2. FYP Progress Modal -->
-    <div class="modal fade" id="gradeModal<?php echo $g['id']; ?>Progress" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content border-0 rounded-3 shadow">
-                <div class="modal-header bg-dark text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold">FYP Progress Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- 2. FYP Progress -->
+    <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Progress" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-graph-up text-primary me-2"></i>FYP Progress</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
+                <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="FYP Progress Presentation">
-                    <div class="modal-body p-4 text-start">
-                        <!-- Collapsible Project Abstract -->
-                        <div class="mb-3">
-                            <button class="btn btn-sm btn-outline-primary w-100 text-start d-flex justify-content-between align-items-center rounded-3 px-3 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#abstractCollapse<?php echo $g['id']; ?>Progress" aria-expanded="false" style="font-size: 0.8rem; font-weight: 600;">
-                                <span><i class="bi bi-file-text-fill me-1"></i> View Project Abstract</span>
-                                <i class="bi bi-chevron-down"></i>
-                            </button>
-                            <div class="collapse mt-2" id="abstractCollapse<?php echo $g['id']; ?>Progress">
-                                <div class="p-3 bg-light rounded border-start border-primary border-3 small text-justify text-muted" style="max-height: 180px; overflow-y: auto; font-size: 0.78rem; line-height: 1.45;">
-                                    <?php echo nl2br(htmlspecialchars($g['proposal_abstract'] ?? 'No abstract/summary submitted yet.')); ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Previous Proposal Defence Comments Card -->
-                        <div class="p-3 mb-3 bg-warning-subtle text-warning-emphasis rounded border-start border-warning border-3">
-                            <span class="fw-bold small text-warning-emphasis d-block mb-1"><i class="bi bi-chat-left-text-fill me-1"></i>Proposal Defence Comments</span>
-                            <?php if (!empty($g['proposal_defence_comments'])): ?>
-                                <div class="small" style="max-height: 150px; overflow-y: auto; font-size: 0.75rem;">
+                    <div class="modal-body">
+                        <?php if (!empty($g['proposal_defence_comments'])): ?>
+                            <div class="previous-remarks-alert">
+                                <div class="previous-remarks-title">Previous Remarks (Proposal)</div>
+                                <div class="previous-remarks-body">
                                     <?php foreach($g['proposal_defence_comments'] as $comment): ?>
-                                        <div class="mb-2 pb-2 border-bottom border-warning-subtle last-no-border" style="line-height: 1.3;">
-                                            <strong><?php echo htmlspecialchars($comment['evaluator_name']); ?>:</strong>
-                                            <span class="text-muted"><?php echo htmlspecialchars($comment['remarks']); ?></span>
+                                        <div style="margin-bottom: 0.5rem;">
+                                            <strong><?php echo htmlspecialchars($comment['evaluator_name']); ?>:</strong> <?php echo htmlspecialchars($comment['remarks']); ?>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                            <?php else: ?>
-                                <span class="small text-muted">No comments/remarks from Proposal Defence.</span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Project Understanding (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="understanding" min="0" max="10" step="1" required placeholder="8">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Technical Knowledge (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="technical_knowledge" min="0" max="10" step="1" required placeholder="7.5">
+                        <?php endif; ?>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Project Understanding (0-10)</label>
+                                <input type="number" class="form-control" name="understanding" min="0" max="10" step="1" required>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Implementation Progress (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="implementation_progress" min="0" max="10" step="1" required placeholder="8">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Technical Knowledge (0-10)</label>
+                                <input type="number" class="form-control" name="technical_knowledge" min="0" max="10" step="1" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Presentation & Q&A (0-10)</label>
-                                <input type="number" class="form-control bg-light" name="presentation_qa" min="0" max="10" step="1" required placeholder="8.5">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Implementation Prog (0-10)</label>
+                                <input type="number" class="form-control" name="implementation_progress" min="0" max="10" step="1" required>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Remarks / Evaluator Notes</label>
-                            <textarea class="form-control bg-light" name="remarks" rows="3" placeholder="Enter session notes or specific suggestions..."></textarea>
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation & Q&A (0-10)</label>
+                                <input type="number" class="form-control" name="presentation_qa" min="0" max="10" step="1" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
+                                <textarea class="form-control" name="remarks" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 p-3 bg-light rounded-bottom text-end">
-                        <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Submit Marks</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- 3. Final Presentation Modal -->
-    <div class="modal fade" id="gradeModal<?php echo $g['id']; ?>Final" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content border-0 rounded-3 shadow">
-                <div class="modal-header bg-dark text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold">Final Presentation Marks - <?php echo htmlspecialchars($g['group_code']); ?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- 3. Final Presentation -->
+    <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Final" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-journal-check text-primary me-2"></i>Final Presentation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/committee/evaluations/grade" method="POST">
+                <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Final Presentation">
-                    <div class="modal-body p-4 text-start">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Project Demo (0-25)</label>
-                                <input type="number" class="form-control bg-light" name="project_demo" min="0" max="25" step="1" required placeholder="20">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Project Demo (0-25)</label>
+                                <input type="number" class="form-control" name="project_demo" min="0" max="25" step="1" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label small fw-semibold text-secondary">Thesis (0-25)</label>
-                                <input type="number" class="form-control bg-light" name="thesis" min="0" max="25" step="1" required placeholder="19.5">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Thesis (0-25)</label>
+                                <input type="number" class="form-control" name="thesis" min="0" max="25" step="1" required>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Presentation (0-25)</label>
-                            <input type="number" class="form-control bg-light" name="presentation" min="0" max="25" step="1" required placeholder="21">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">Remarks / Evaluator Notes</label>
-                            <textarea class="form-control bg-light" name="remarks" rows="3" placeholder="Enter session notes..."></textarea>
+                            <div class="col-md-12">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation (0-25)</label>
+                                <input type="number" class="form-control" name="presentation" min="0" max="25" step="1" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
+                                <textarea class="form-control" name="remarks" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 p-3 bg-light rounded-bottom text-end">
-                        <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Submit Marks</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- 4. View Abstract Modal -->
-    <div class="modal fade" id="abstractModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true">
+    <!-- 4. View Abstract -->
+    <div class="modal fade eval-modal" id="abstractModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 rounded-3 shadow">
-                <div class="modal-header bg-dark text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold">Project Abstract - <?php echo htmlspecialchars($g['project_title'] ?? 'No Project Title'); ?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-file-earmark-text text-primary me-2"></i>Project Abstract</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4 text-start">
-                    <h6 class="fw-bold text-secondary mb-2 small text-uppercase" style="letter-spacing: 0.5px;">Project Description Summary</h6>
-                    <div class="bg-light p-3 rounded text-justify text-muted" style="font-size: 0.85rem; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                <div class="modal-body">
+                    <div style="font-size: 0.95rem; line-height: 1.7; max-height: 60vh; overflow-y: auto; background: var(--form-bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
                         <?php echo nl2br(htmlspecialchars($g['proposal_abstract'] ?? 'No abstract/summary submitted yet.')); ?>
                     </div>
                 </div>
-                <div class="modal-footer border-0 bg-light p-2 rounded-bottom text-end">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light rounded-pill w-100 fw-semibold" data-bs-dismiss="modal">Close Window</button>
                 </div>
             </div>
         </div>
     </div>
 <?php endforeach; ?>
+
+<!-- Fix for Bootstrap Modal Stacking Context Issue -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Move all modals to the body so they aren't trapped by #content's stacking context
+    var modals = document.querySelectorAll('.modal');
+    modals.forEach(function(modal) {
+        document.body.appendChild(modal);
+    });
+});
+</script>

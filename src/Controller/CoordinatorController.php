@@ -141,12 +141,19 @@ class CoordinatorController extends BaseController {
             $body = trim($_POST['body'] ?? '');
             $notice_date = $_POST['notice_date'] ?? date('Y-m-d');
             $ref_no = trim($_POST['ref_no'] ?? '');
-            $target_audience = $_POST['target_audience'] ?? 'all';
+            $target_audiences = $_POST['target_audiences'] ?? [];
 
             if (empty($subject) || empty($body) || empty($notice_date)) {
                 $this->flash('error', 'Subject, Date and Body are required.');
                 redirect('/coordinator/notice');
             }
+
+            if (empty($target_audiences)) {
+                $this->flash('error', 'Please select at least one Target Audience group.');
+                redirect('/coordinator/notice');
+            }
+
+            $target_audience = implode(',', $target_audiences);
 
             $db = \Database::getInstance()->getConnection();
             $userId = $_SESSION['user_id'] ?? 0;
@@ -161,22 +168,26 @@ class CoordinatorController extends BaseController {
 
                 // Send notifications to target audience in the department
                 $recipients = [];
-                if ($target_audience === 'students' || $target_audience === 'all') {
+                if (in_array('students', $target_audiences)) {
                     $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
                     $stmtStudents->execute([$dept]);
                     $recipients = array_merge($recipients, $stmtStudents->fetchAll(\PDO::FETCH_COLUMN));
                 }
-                if ($target_audience === 'supervisors' || $target_audience === 'all') {
+                if (in_array('supervisors', $target_audiences)) {
                     $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
                     $stmtSups->execute([$dept]);
                     $recipients = array_merge($recipients, $stmtSups->fetchAll(\PDO::FETCH_COLUMN));
                 }
-
-                // Add HOD to notifications
-                $stmtHod = $db->prepare("SELECT user_id FROM hods WHERE department LIKE ? OR ? LIKE CONCAT('%', department, '%')");
-                $stmtHod->execute(['%' . $dept . '%', $dept]);
-                $hodIds = $stmtHod->fetchAll(\PDO::FETCH_COLUMN);
-                $recipients = array_merge($recipients, $hodIds);
+                if (in_array('committee', $target_audiences)) {
+                    $stmtComm = $db->prepare("SELECT user_id FROM committees WHERE department = ?");
+                    $stmtComm->execute([$dept]);
+                    $recipients = array_merge($recipients, $stmtComm->fetchAll(\PDO::FETCH_COLUMN));
+                }
+                if (in_array('hod', $target_audiences)) {
+                    $stmtHod = $db->prepare("SELECT user_id FROM hods WHERE department LIKE ? OR ? LIKE CONCAT('%', department, '%')");
+                    $stmtHod->execute(['%' . $dept . '%', $dept]);
+                    $recipients = array_merge($recipients, $stmtHod->fetchAll(\PDO::FETCH_COLUMN));
+                }
 
                 $recipients = array_unique($recipients);
                 
@@ -234,5 +245,103 @@ class CoordinatorController extends BaseController {
             $this->flash('success', 'Notice deleted successfully.');
         }
         redirect('/coordinator/notice');
+    }
+
+    public function profile() {
+        $userId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch coordinator details
+        $stmt = $db->prepare("SELECT c.name, c.department, u.email, u.cnic FROM coordinators c JOIN users u ON c.user_id = u.id WHERE c.user_id = ?");
+        $stmt->execute([$userId]);
+        $coordinator = $stmt->fetch();
+        if (!$coordinator) {
+            die("Coordinator profile not found.");
+        }
+
+        // Get existing profile info
+        $stmt = $db->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $prefix = trim($_POST['prefix'] ?? '');
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($coordinator['cnic']);
+            $cnicToSave = $coordinator['cnic'];
+
+            if (empty($prefix)) $errors[] = "Prefix is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
+
+            if (empty($errors)) {
+                try {
+                    $db->beginTransaction();
+
+                    // Update profiles table
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
+                    $this->flash('success', 'Profile updated successfully.');
+                    redirect('/coordinator/profile');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                }
+            } else {
+                $this->flash('error', implode(" ", $errors));
+            }
+        }
+
+        $this->render('coordinator/profile', [
+            'coordinator' => $coordinator,
+            'profile' => $profile
+        ]);
     }
 }

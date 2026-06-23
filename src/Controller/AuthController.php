@@ -12,9 +12,14 @@ class AuthController extends BaseController {
     
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $loginType = $_POST['login_type'] ?? 'student';
+            $identifier = trim($_POST['identifier'] ?? '');
             $password = $_POST['password'] ?? '';
             
+            if (empty($identifier)) {
+                $this->flash('error', 'Roll No. or CNIC is required.');
+                redirect('/login');
+            }
+
             if (empty($password)) {
                 $this->flash('error', 'Password is required.');
                 redirect('/login');
@@ -23,27 +28,15 @@ class AuthController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $user = null;
             
-            if ($loginType === 'student') {
-                $studentId = trim($_POST['student_id'] ?? '');
-                if (empty($studentId)) {
-                    $this->flash('error', 'Roll Number is required.');
-                    redirect('/login');
-                }
-                // Retrieve user matching student registration ID
-                $stmt = $db->prepare("SELECT u.* FROM students s JOIN users u ON s.user_id = u.id WHERE s.student_id = ?");
-                $stmt->execute([$studentId]);
-                $user = $stmt->fetch();
-            } else {
-                $cnic = trim($_POST['cnic'] ?? '');
-                if (empty($cnic)) {
-                    $this->flash('error', 'CNIC is required.');
-                    redirect('/login');
-                }
-                // Retrieve user matching CNIC (or fallback to email for backwards compatibility with seeds)
-                $stmt = $db->prepare("SELECT * FROM users WHERE cnic = ? OR email = ?");
-                $stmt->execute([$cnic, $cnic]);
-                $user = $stmt->fetch();
-            }
+            // Retrieve user matching student registration ID, CNIC, or email
+            $stmt = $db->prepare("
+                SELECT u.* 
+                FROM users u 
+                LEFT JOIN students s ON s.user_id = u.id 
+                WHERE u.cnic = ? OR u.email = ? OR s.student_id = ?
+            ");
+            $stmt->execute([$identifier, $identifier, $identifier]);
+            $user = $stmt->fetch();
             
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['status'] === 'pending') {
@@ -588,6 +581,27 @@ class AuthController extends BaseController {
                 $stmt->execute([$userId]);
             }
             $this->json(['success' => true]);
+        }
+    }
+    
+    public function deleteNotification() {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            $this->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        $db = \Database::getInstance()->getConnection();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $notifId = $data['id'] ?? null;
+            
+            if ($notifId) {
+                $stmt = $db->prepare("DELETE FROM notifications WHERE id = ? AND user_id = ?");
+                $stmt->execute([$notifId, $userId]);
+                $this->json(['success' => true]);
+            } else {
+                $this->json(['error' => 'Invalid notification ID'], 400);
+            }
         }
     }
     

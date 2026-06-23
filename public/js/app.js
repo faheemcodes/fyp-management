@@ -1,6 +1,12 @@
 // Frontend JavaScript for FYP Management System
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Global fix for Bootstrap Modals Stacking Context Issue
+    // Moves all modals to the top level body to prevent dark unclickable overlay bugs
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        document.body.appendChild(modal);
+    });
+
     // Initialize Notifications
     fetchNotifications();
     setInterval(fetchNotifications, 20000); // Poll every 20 seconds
@@ -91,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 2. Filter Mobile Cards if container exists
         if (mobileContainer) {
-            const cards = mobileContainer.querySelectorAll('.card');
+            const cards = mobileContainer.querySelectorAll('.card, [class*="-card"]');
             cards.forEach(card => {
                 // Text Search Check
                 const textMatch = searchValue === '' || card.textContent.toLowerCase().indexOf(searchValue) > -1;
@@ -193,29 +199,78 @@ function fetchNotifications() {
             // Update Badge
             if (data.unreadCount > 0) {
                 badge.textContent = data.unreadCount;
-                badge.style.display = 'inline-block';
+                badge.classList.remove('d-none');
+                badge.classList.add('d-flex');
             } else {
-                badge.style.display = 'none';
+                badge.classList.remove('d-flex');
+                badge.classList.add('d-none');
             }
 
             // Build List
             listContainer.innerHTML = '';
             if (data.notifications.length === 0) {
-                listContainer.innerHTML = '<li><a class="dropdown-item text-muted text-center py-2" href="#">No notifications</a></li>';
+                listContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="mb-3" style="font-size: 2.5rem; color: var(--border-color);">
+                            <i class="bi bi-bell-slash"></i>
+                        </div>
+                        <h6 class="fw-bold" style="color: var(--text-primary); letter-spacing: -0.02em;">All caught up!</h6>
+                        <p class="small text-muted mb-0">You have no new notifications.</p>
+                    </div>
+                `;
                 return;
             }
 
             data.notifications.forEach(notif => {
-                const isUnread = notif.is_read == 0 ? 'bg-light font-weight-bold' : '';
+                const isUnread = notif.is_read == 0;
                 const href = notif.redirect_url ? `${basePath}${notif.redirect_url}` : '#';
                 const target = notif.redirect_url ? 'target="_blank"' : '';
+                
+                let iconClass = 'bi-bell-fill';
+                let iconColor = '#3b82f6';
+                let iconBg = 'rgba(59,130,246,0.15)';
+                
+                const titleLower = notif.title.toLowerCase();
+                if (titleLower.includes('success') || titleLower.includes('approved')) {
+                    iconClass = 'bi-check-circle-fill';
+                    iconColor = '#059669';
+                    iconBg = 'rgba(5,150,105,0.15)';
+                } else if (titleLower.includes('warning') || titleLower.includes('rejected')) {
+                    iconClass = 'bi-exclamation-triangle-fill';
+                    iconColor = '#dc2626';
+                    iconBg = 'rgba(239,68,68,0.15)';
+                } else if (titleLower.includes('group') || titleLower.includes('member') || titleLower.includes('student')) {
+                    iconClass = 'bi-people-fill';
+                    iconColor = '#8b5cf6';
+                    iconBg = 'rgba(139,92,246,0.15)';
+                } else if (titleLower.includes('grade') || titleLower.includes('score')) {
+                    iconClass = 'bi-star-fill';
+                    iconColor = '#f59e0b';
+                    iconBg = 'rgba(245,158,11,0.15)';
+                }
+
                 const item = document.createElement('li');
+                item.className = 'px-1 py-0';
                 item.innerHTML = `
-                    <a class="dropdown-item py-2 border-bottom ${isUnread}" href="${href}" ${target} onclick="markNotificationSingle(${notif.id})">
-                        <div class="small text-primary">${escapeHtml(notif.title)}</div>
-                        <div class="text-wrap small text-dark">${escapeHtml(notif.message)}</div>
-                        <div class="x-small text-muted" style="font-size: 0.7rem;">${formatDate(notif.created_at)}</div>
-                    </a>
+                    <div class="dropdown-item d-flex align-items-start gap-2 p-2 rounded-3 position-relative" style="background: ${isUnread ? 'var(--form-bg)' : 'transparent'}; transition: all 0.2s ease; margin-bottom: 2px;">
+                        ${isUnread ? '<div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 4px rgba(59,130,246,0.6);"></div>' : ''}
+                        
+                        <div style="width: 30px; height: 30px; background: ${iconBg}; color: ${iconColor}; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; ${isUnread ? 'margin-left: 6px;' : ''}">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        
+                        <a href="${href}" ${target} onclick="markNotificationSingle(${notif.id})" class="text-decoration-none flex-grow-1 pe-4" style="color: inherit; white-space: normal;">
+                            <div class="fw-bold mb-1" style="font-size: 0.78rem; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.2;">${escapeHtml(notif.title)}</div>
+                            <div class="text-secondary mb-1" style="font-size: 0.7rem; line-height: 1.3;">${escapeHtml(notif.message)}</div>
+                            <div class="d-flex align-items-center gap-1" style="font-size: 0.6rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <i class="bi bi-clock"></i> ${formatDate(notif.created_at)}
+                            </div>
+                        </a>
+                        
+                        <button type="button" class="btn p-0 position-absolute d-flex align-items-center justify-content-center" style="top: 8px; right: 8px; width: 20px; height: 20px; z-index: 10; border: none; background: transparent; color: #94a3b8; transition: color 0.2s ease;" onclick="event.stopPropagation(); deleteNotification(${notif.id})" title="Dismiss" onmouseover="this.style.color='#ef4444';" onmouseout="this.style.color='#94a3b8';">
+                            <i class="bi bi-x" style="font-size: 1.3rem;"></i>
+                        </button>
+                    </div>
                 `;
                 listContainer.appendChild(item);
             });
@@ -256,6 +311,27 @@ function markNotificationSingle(id) {
         }
     });
 }
+
+// Delete Notification
+window.deleteNotification = function(id) {
+    const basePath = getBasePath();
+    if (!confirm('Are you sure you want to delete this notification?')) return;
+    
+    fetch(`${basePath}/api/notifications/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            fetchNotifications();
+        } else {
+            alert('Error: ' + (data.error || 'Could not delete notification'));
+        }
+    })
+    .catch(err => console.log('Error deleting notification:', err));
+};
 
 // Helper: Escape HTML to prevent XSS
 function escapeHtml(text) {

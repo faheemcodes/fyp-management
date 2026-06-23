@@ -279,4 +279,113 @@ class CommitteeController extends BaseController {
         }
         redirect('/committee/evaluations');
     }
+
+    public function profile() {
+        $userId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch committee details
+        $stmt = $db->prepare("SELECT c.name, c.department, u.email, u.cnic FROM committees c JOIN users u ON c.user_id = u.id WHERE c.user_id = ?");
+        $stmt->execute([$userId]);
+        $committee = $stmt->fetch();
+        if (!$committee) {
+            die("Committee Member profile not found.");
+        }
+
+        // Get existing profile info
+        $stmt = $db->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $prefix = trim($_POST['prefix'] ?? '');
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($committee['cnic']);
+            $cnicToSave = $committee['cnic'];
+
+            if (empty($prefix)) $errors[] = "Prefix is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
+
+            if (empty($errors)) {
+                try {
+                    $db->beginTransaction();
+
+                    // Check if profile exists
+                    $stmtCheck = $db->prepare("SELECT user_id FROM profiles WHERE user_id = ?");
+                    $stmtCheck->execute([$userId]);
+                    $profileExists = $stmtCheck->fetch();
+
+                    if ($profileExists) {
+                        // Update profiles table
+                        $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                        $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+                    } else {
+                        // Insert profiles table
+                        $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, mobile_code, mobile_no, home_address, cnic, surname, dob, gender) VALUES (?, ?, ?, ?, ?, ?, ?, '1980-01-01', 'Male')");
+                        $stmt->execute([$userId, $prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave]);
+                    }
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
+                    $this->flash('success', 'Profile updated successfully.');
+                    redirect('/committee/profile');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                }
+            } else {
+                $this->flash('error', implode(" ", $errors));
+            }
+        }
+
+        $this->render('committee/profile', [
+            'committee' => $committee,
+            'profile' => $profile
+        ]);
+    }
 }

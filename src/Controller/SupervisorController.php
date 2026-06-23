@@ -301,7 +301,7 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch supervisor details
-        $stmt = $db->prepare("SELECT s.name, u.email FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
+        $stmt = $db->prepare("SELECT s.name, s.designation, s.department, s.research_interest, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
         $stmt->execute([$userId]);
         $supervisor = $stmt->fetch();
         if (!$supervisor) {
@@ -313,42 +313,74 @@ class SupervisorController extends BaseController {
         $stmt->execute([$userId]);
         $profile = $stmt->fetch();
 
-        $isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if ($isLocked) {
-                $this->flash('error', 'Your profile is locked and cannot be edited after submission.');
-                redirect('/supervisor/profile');
-            }
             $errors = [];
             $prefix = trim($_POST['prefix'] ?? '');
-            $father_name = !empty($_POST['father_name']) ? trim($_POST['father_name']) : null;
-            $dob = trim($_POST['dob'] ?? '');
-            $gender = trim($_POST['gender'] ?? '');
-            $cnic_expiry = !empty($_POST['cnic_expiry']) ? $_POST['cnic_expiry'] : null;
-            $blood_group = !empty($_POST['blood_group']) ? trim($_POST['blood_group']) : null;
-            $place_of_birth = !empty($_POST['place_of_birth']) ? trim($_POST['place_of_birth']) : null;
-            $country = !empty($_POST['country']) ? trim($_POST['country']) : null;
-            $province_state = !empty($_POST['province_state']) ? trim($_POST['province_state']) : null;
-            $district = !empty($_POST['district']) ? trim($_POST['district']) : null;
-            $city = !empty($_POST['city']) ? trim($_POST['city']) : null;
-            $zip_code = !empty($_POST['zip_code']) ? trim($_POST['zip_code']) : null;
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
             $home_address = trim($_POST['home_address'] ?? '');
-            $permanent_address = !empty($_POST['permanent_address']) ? trim($_POST['permanent_address']) : null;
+
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($supervisor['cnic']);
+            $cnicToSave = $supervisor['cnic'];
 
             if (empty($prefix)) $errors[] = "Prefix is required.";
-            if (empty($dob)) $errors[] = "Date Of Birth is required.";
-            if (empty($gender)) $errors[] = "Gender is required.";
-            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home Address is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
 
             if (empty($errors)) {
                 try {
-                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, father_name = ?, dob = ?, gender = ?, cnic_expiry = ?, blood_group = ?, place_of_birth = ?, country = ?, province_state = ?, district = ?, city = ?, zip_code = ?, home_address = ?, permanent_address = ? WHERE user_id = ?");
-                    $stmt->execute([$prefix, $father_name, $dob, $gender, $cnic_expiry, $blood_group, $place_of_birth, $country, $province_state, $district, $city, $zip_code, $home_address, $permanent_address, $userId]);
-                    
+                    $db->beginTransaction();
+
+                    // Update profiles table
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
                     $this->flash('success', 'Profile updated successfully.');
                     redirect('/supervisor/profile');
                 } catch (\Exception $e) {
+                    $db->rollBack();
                     $this->flash('error', 'Database error: ' . $e->getMessage());
                 }
             } else {

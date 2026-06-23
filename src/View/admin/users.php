@@ -1,156 +1,304 @@
 <!-- Admin User Management View -->
-<div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
-    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
-        <div>
-            <h4 class="fw-bold text-dark m-0">User Account Management</h4>
-            <p class="text-muted m-0 small">Approve self-registered accounts or add academic staff directly</p>
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+<style>
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+/* ─── Section Panel ─── */
+.grp-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+    transition: box-shadow 0.25s ease;
+}
+.grp-section-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+    border-top-left-radius: calc(var(--border-radius-lg) - 1px);
+    border-top-right-radius: calc(var(--border-radius-lg) - 1px);
+}
+
+@media (min-width: 769px) {
+    .table-responsive {
+        overflow: visible !important;
+    }
+}
+@media (max-width: 768px) {
+    .table-responsive {
+        padding-bottom: 120px; /* Space for dropdowns on mobile */
+    }
+}
+
+/* ─── Modern Table Styles ─── */
+.modern-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.modern-table thead th {
+    background: var(--form-bg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tbody td {
+    padding: 16px 24px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: background-color 0.2s ease;
+}
+.modern-table tbody tr:hover td {
+    background-color: rgba(59,130,246,0.02);
+}
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.status-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* Modern Modals */
+.modal { z-index: 99999 !important; }
+.modal-backdrop { z-index: 99998 !important; }
+.admin-modal .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.admin-modal .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+    color: var(--text-primary) !important;
+}
+
+@media (max-width: 768px) {
+    .modern-table { min-width: 800px; }
+}
+</style>
+
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="group-hero-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">User Account Management</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Approve self-registered accounts or add academic staff directly</p>
+            </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-start align-self-sm-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
+        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #3b82f6, #2563eb);" data-bs-toggle="modal" data-bs-target="#createUserModal">
             <i class="bi bi-person-plus-fill me-2"></i> Add New User
         </button>
     </div>
+</div>
 
+<div class="grp-section">
     <!-- Filters and Search Controls -->
-    <div class="row g-3 mb-4 align-items-center">
-        <!-- Search Input -->
-        <div class="col-md-4">
-            <div class="input-group shadow-sm rounded-3 overflow-hidden">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" class="form-control border-start-0 ps-0 table-search" placeholder="Search users by name, email, department..." data-target="users-table">
+    <div class="grp-section-header">
+        <div class="row g-3 align-items-center w-100 m-0">
+            <!-- Search Input -->
+            <div class="col-md-4 ps-0">
+                <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search users by name, email, department..." data-target="users-table">
+                </div>
             </div>
-        </div>
-        <!-- Role Filter -->
-        <div class="col-md-3">
-            <select class="form-select table-filter shadow-sm rounded-3 bg-light" data-column="role" data-target="users-table">
-                <option value="all">All Roles</option>
-                <option value="student">Student</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="hod">HOD</option>
-                <option value="coordinator">Coordinator</option>
-            </select>
-        </div>
-        <!-- Department Filter -->
-        <div class="col-md-3">
-            <select class="form-select table-filter shadow-sm rounded-3 bg-light" data-column="department" data-target="users-table">
-                <option value="all">All Departments</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Software Engineering">Software Engineering</option>
-                <option value="Information Technology">Information Technology</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Electronic Engineering">Electronic Engineering</option>
-                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
-            </select>
-        </div>
-        <!-- Status Filter -->
-        <div class="col-md-2">
-            <select class="form-select table-filter shadow-sm rounded-3 bg-light" data-column="status" data-target="users-table">
-                <option value="all">All Statuses</option>
-                <option value="approved">Approved</option>
-                <option value="pending">Pending</option>
-                <option value="rejected">Rejected</option>
-            </select>
+            <!-- Role Filter -->
+            <div class="col-md-3">
+                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="role" data-target="users-table">
+                    <option value="all">All Roles</option>
+                    <option value="student">Student</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="committee">Committee</option>
+                    <option value="hod">HOD</option>
+                    <option value="coordinator">Coordinator</option>
+                </select>
+            </div>
+            <!-- Department Filter -->
+            <div class="col-md-3">
+                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="department" data-target="users-table">
+                    <option value="all">All Departments</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Electronic Engineering">Electronic Engineering</option>
+                    <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                </select>
+            </div>
+            <!-- Status Filter -->
+            <div class="col-md-2 pe-0">
+                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="status" data-target="users-table">
+                    <option value="all">All Statuses</option>
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
         </div>
     </div>
 
+    <!-- Table -->
     <div class="table-responsive">
-        <table class="table table-hover align-middle border-0 m-0" id="users-table">
+        <table class="table modern-table m-0" id="users-table">
             <thead>
                 <tr>
-                    <th>User Details</th>
+                    <th class="ps-4">User Details</th>
                     <th>Role</th>
                     <th>Department</th>
                     <th>Status</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($users as $u): ?>
                 <tr data-role="<?php echo htmlspecialchars($u['role']); ?>" data-department="<?php echo htmlspecialchars($u['department']); ?>" data-status="<?php echo htmlspecialchars($u['status']); ?>">
-                    <td>
+                    <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
                             <?php if ($u['role'] === 'student'): ?>
                                 <?php $avatarFile = !empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle border border-primary border-opacity-25" style="width: 40px; height: 40px; object-fit: cover;" alt="Avatar">
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px; height: 42px; object-fit: cover; border: 2px solid var(--card-bg);" alt="Avatar">
                             <?php else: ?>
-                                <div class="avatar bg-light text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; font-weight: bold; background: rgba(59,130,246,0.1); color: #3b82f6; border: 2px solid var(--card-bg);">
                                     <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
                                 </div>
                             <?php endif; ?>
                             <div>
-                                <div class="fw-semibold text-dark"><?php echo htmlspecialchars($u['name']); ?></div>
-                                <div class="x-small text-muted"><?php echo htmlspecialchars($u['email']); ?></div>
+                                <div class="fw-semibold text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($u['name']); ?></div>
+                                <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
                                 <?php if($u['student_id']): ?>
-                                    <div class="badge bg-secondary-subtle text-secondary" style="font-size: 0.65rem;">ID: <?php echo htmlspecialchars($u['student_id']); ?></div>
+                                    <div class="mt-1 fw-bold" style="color: var(--primary-color); font-size: 0.75rem;"><?php echo htmlspecialchars($u['student_id']); ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <span class="badge bg-secondary text-uppercase" style="font-size: 0.65rem;">
+                        <span class="status-pill bg-light text-secondary border">
                             <?php echo htmlspecialchars($u['role']); ?>
                         </span>
                     </td>
                     <td>
-                        <div class="small"><?php echo htmlspecialchars($u['department']); ?></div>
+                        <div class="fw-medium text-dark" style="font-size: 0.85rem;"><?php echo htmlspecialchars($u['department']); ?></div>
                         <?php if($u['designation']): ?>
-                            <small class="text-muted"><?php echo htmlspecialchars($u['designation']); ?></small>
+                            <small class="text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($u['designation']); ?></small>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if($u['status'] === 'approved'): ?>
-                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small">Approved</span>
+                            <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Approved</span>
                         <?php elseif($u['status'] === 'pending'): ?>
-                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 small animate-pulse">Pending</span>
+                            <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15); color: #d97706;">Pending</span>
                         <?php else: ?>
-                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small">Rejected</span>
+                            <span class="status-pill" style="background: rgba(239,68,68,0.15); color: #dc2626;">Rejected</span>
                         <?php endif; ?>
                     </td>
-                    <td class="text-end">
-                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1 btn-view-user shadow-sm" 
-                            data-bs-toggle="modal" data-bs-target="#viewUserModal"
-                            data-id="<?php echo $u['id']; ?>"
-                            data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
-                            data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
-                            data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
-                            data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? 'N/A'); ?>"
-                            data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? 'N/A'); ?>"
-                            data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
-                            data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'N/A'); ?>"
-                            data-father="<?php echo htmlspecialchars($u['father_name'] ?? 'N/A'); ?>"
-                            data-phone="<?php echo htmlspecialchars(($u['mobile_code'] ?? '') . ($u['mobile_no'] ?? 'N/A')); ?>"
-                            data-gender="<?php echo htmlspecialchars($u['gender'] ?? 'N/A'); ?>"
-                            data-dob="<?php echo htmlspecialchars($u['dob'] ?? 'N/A'); ?>"
-                            data-domicile="<?php echo htmlspecialchars(($u['province_state'] ?? '') . ' / ' . ($u['district'] ?? 'N/A')); ?>"
-                            data-address="<?php echo htmlspecialchars($u['home_address'] ?? 'Not Provided Yet'); ?>"
-                            data-designation="<?php echo htmlspecialchars($u['designation'] ?? 'N/A'); ?>"
-                            data-status="<?php echo htmlspecialchars($u['status'] ?? ''); ?>"
-                            data-avatar="<?php echo htmlspecialchars($u['role'] === 'student' ? (!empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg') : ''); ?>">
-                            <i class="bi bi-eye-fill me-1"></i> Details
-                        </button>
-                        <?php if($u['status'] === 'pending'): ?>
-                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/approve?id=<?php echo $u['id']; ?>" class="btn btn-sm btn-success rounded-pill px-3 me-1 shadow-sm">Approve</a>
-                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/reject?id=<?php echo $u['id']; ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm">Reject</a>
-                        <?php else: ?>
-                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 me-1 btn-edit-user shadow-sm"
-                                data-bs-toggle="modal" data-bs-target="#editUserModal"
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-view-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='var(--border-color)';" onmouseout="this.style.background='var(--form-bg)';"
+                                data-bs-toggle="modal" data-bs-target="#viewUserModal"
                                 data-id="<?php echo $u['id']; ?>"
                                 data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
                                 data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
                                 data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
-                                data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? ''); ?>"
-                                data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? ''); ?>"
+                                data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? 'N/A'); ?>"
+                                data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? 'N/A'); ?>"
                                 data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
-                                data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'Morning'); ?>"
-                                data-designation="<?php echo htmlspecialchars($u['designation'] ?? ''); ?>"
-                                data-interests="<?php echo htmlspecialchars($u['research_interest'] ?? ''); ?>">
-                                <i class="bi bi-pencil-fill me-1"></i> Edit
+                                data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'N/A'); ?>"
+                                data-father="<?php echo htmlspecialchars($u['father_name'] ?? 'N/A'); ?>"
+                                data-phone="<?php echo htmlspecialchars(($u['mobile_code'] ?? '') . ($u['mobile_no'] ?? 'N/A')); ?>"
+                                data-gender="<?php echo htmlspecialchars($u['gender'] ?? 'N/A'); ?>"
+                                data-dob="<?php echo htmlspecialchars($u['dob'] ?? 'N/A'); ?>"
+                                data-domicile="<?php echo htmlspecialchars(($u['province_state'] ?? '') . ' / ' . ($u['district'] ?? 'N/A')); ?>"
+                                data-address="<?php echo htmlspecialchars($u['home_address'] ?? 'Not Provided Yet'); ?>"
+                                data-designation="<?php echo htmlspecialchars($u['designation'] ?? 'N/A'); ?>"
+                                data-status="<?php echo htmlspecialchars($u['status'] ?? ''); ?>"
+                                data-avatar="<?php echo htmlspecialchars($u['role'] === 'student' ? (!empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg') : ''); ?>">
+                                <i class="bi bi-eye"></i> Details
                             </button>
-                            <?php if($u['role'] !== 'admin'): ?>
-                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/delete?id=<?php echo $u['id']; ?>" class="btn btn-sm btn-danger rounded-pill px-3 shadow-sm" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
+                            <?php if($u['status'] === 'pending'): ?>
+                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 10px rgba(16,185,129,0.2);">Approve</a>
+                                <a href="<?php echo $basePath; ?>/admin/users/reject?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;">Reject</a>
+                            <?php else: ?>
+                                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-edit-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500;"
+                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    data-id="<?php echo $u['id']; ?>"
+                                    data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
+                                    data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
+                                    data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
+                                    data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? ''); ?>"
+                                    data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? ''); ?>"
+                                    data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
+                                    data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'Morning'); ?>"
+                                    data-designation="<?php echo htmlspecialchars($u['designation'] ?? ''); ?>"
+                                    data-interests="<?php echo htmlspecialchars($u['research_interest'] ?? ''); ?>">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <?php if($u['role'] !== 'admin'): ?>
+                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                <?php endif; ?>
                             <?php endif; ?>
-                        <?php endif; ?>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -158,6 +306,7 @@
         </table>
     </div>
 </div>
+
 
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
@@ -174,14 +323,26 @@
                         <select class="form-select bg-light" id="modalRole" name="role" required>
                             <option value="student">Student</option>
                             <option value="supervisor">Supervisor</option>
+                            <option value="committee">Committee</option>
                             <option value="hod">HOD</option>
                             <option value="coordinator">Coordinator</option>
                         </select>
                     </div>
                     
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalName" class="form-label small fw-semibold text-secondary">First Name</label>
+                            <input type="text" class="form-control bg-light" id="modalName" name="name" required placeholder="Ali">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modalSurname" class="form-label small fw-semibold text-secondary">Surname / Last Name</label>
+                            <input type="text" class="form-control bg-light" id="modalSurname" name="surname" required placeholder="Khan">
+                        </div>
+                    </div>
+
                     <div class="mb-3">
-                        <label for="modalName" class="form-label small fw-semibold text-secondary">Full Name</label>
-                        <input type="text" class="form-control bg-light" id="modalName" name="name" required placeholder="Dr. Ali Khan">
+                        <label for="modalCnic" class="form-label small fw-semibold text-secondary">CNIC (Without dashes)</label>
+                        <input type="text" class="form-control bg-light" id="modalCnic" name="cnic" required placeholder="4220112345671">
                     </div>
 
                     <div class="mb-3">
@@ -202,7 +363,6 @@
                     <div class="mb-3">
                         <label for="modalDepartment" class="form-label small fw-semibold text-secondary">Department</label>
                         <select class="form-select bg-light" id="modalDepartment" name="department" required>
-                            <option value="Computer Science">Computer Science</option>
                             <option value="Software Engineering">Software Engineering</option>
                             <option value="Information Technology">Information Technology</option>
                             <option value="Data Science">Data Science</option>
@@ -211,12 +371,80 @@
 
                     <!-- Student Specific -->
                     <div id="modalStudentFields" class="mb-3">
-                        <label for="modalStudentId" class="form-label small fw-semibold text-secondary">Student Registration ID</label>
-                        <input type="text" class="form-control bg-light" id="modalStudentId" name="student_id" placeholder="2023-CS-100">
+                        <hr class="text-muted opacity-25">
+                        <h6 class="fw-bold mb-3" style="font-size: 0.9rem; color: var(--primary-color);">Student Profile Details</h6>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="modalStudentId" class="form-label small fw-semibold text-secondary">Registration ID</label>
+                                <input type="text" class="form-control bg-light" id="modalStudentId" name="student_id" placeholder="2023-CS-100" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalShift" class="form-label small fw-semibold text-secondary">Shift</label>
+                                <select class="form-select bg-light" id="modalShift" name="shift">
+                                    <option value="Morning">Morning</option>
+                                    <option value="Evening">Evening</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalFather" class="form-label small fw-semibold text-secondary">Father's Name</label>
+                            <input type="text" class="form-control bg-light" id="modalFather" name="father_name" placeholder="Father's Full Name">
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="modalDob" class="form-label small fw-semibold text-secondary">Date of Birth</label>
+                                <input type="date" class="form-control bg-light" id="modalDob" name="dob">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="modalGender" class="form-label small fw-semibold text-secondary">Gender</label>
+                                <select class="form-select bg-light" id="modalGender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-4">
+                                <label for="modalMobileCode" class="form-label small fw-semibold text-secondary">Code</label>
+                                <input type="text" class="form-control bg-light" id="modalMobileCode" name="mobile_code" value="+92">
+                            </div>
+                            <div class="col-8">
+                                <label for="modalMobileNo" class="form-label small fw-semibold text-secondary">Mobile Number</label>
+                                <input type="text" class="form-control bg-light" id="modalMobileNo" name="mobile_no" placeholder="3001234567">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label for="modalCountry" class="form-label small fw-semibold text-secondary">Country</label>
+                                <input type="text" class="form-control bg-light" id="modalCountry" name="country" value="Pakistan">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="modalProvince" class="form-label small fw-semibold text-secondary">Province</label>
+                                <select class="form-select bg-light" id="modalProvince" name="province_state">
+                                    <option value="Sindh">Sindh</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="KPK">KPK</option>
+                                    <option value="Balochistan">Balochistan</option>
+                                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                                    <option value="AJK">AJK</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="modalDistrict" class="form-label small fw-semibold text-secondary">District</label>
+                                <input type="text" class="form-control bg-light" id="modalDistrict" name="district" placeholder="e.g. Jamshoro">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalAddress" class="form-label small fw-semibold text-secondary">Home Address</label>
+                            <input type="text" class="form-control bg-light" id="modalAddress" name="home_address" placeholder="Complete residential address">
+                        </div>
                     </div>
 
                     <!-- Supervisor Specific -->
                     <div id="modalSupervisorFields" class="d-none">
+                        <hr class="text-muted opacity-25">
+                        <h6 class="fw-bold mb-3" style="font-size: 0.9rem; color: var(--primary-color);">Supervisor Details</h6>
                         <div class="mb-3">
                             <label for="modalDesignation" class="form-label small fw-semibold text-secondary">Designation</label>
                             <select class="form-select bg-light" id="modalDesignation" name="designation">
@@ -225,10 +453,6 @@
                                 <option value="Associate Professor">Associate Professor</option>
                                 <option value="Professor">Professor</option>
                             </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modalInterests" class="form-label small fw-semibold text-secondary">Research Interests</label>
-                            <input type="text" class="form-control bg-light" id="modalInterests" name="research_interest" placeholder="e.g. AI, NLP, Security">
                         </div>
                     </div>
                 </div>
@@ -287,7 +511,6 @@
                     <div class="mb-3" id="editModalDeptGroup">
                         <label for="editModalDepartment" class="form-label small fw-semibold text-secondary">Department</label>
                         <select class="form-select bg-light" id="editModalDepartment" name="department">
-                            <option value="Computer Science">Computer Science</option>
                             <option value="Software Engineering">Software Engineering</option>
                             <option value="Information Technology">Information Technology</option>
                             <option value="Data Science">Data Science</option>
@@ -354,6 +577,7 @@
                             <div id="detailInitials" class="rounded-circle bg-light text-primary d-none align-items-center justify-content-center shadow mx-auto" style="width: 140px; height: 140px; font-size: 4rem; font-weight: bold;">
                                 X
                             </div>
+
                         </div>
                         <h5 id="detailName" class="fw-bold text-dark mb-1">Full Name</h5>
                         <p id="detailRoleBadge" class="mb-2"><span class="badge bg-secondary text-uppercase">Role</span></p>

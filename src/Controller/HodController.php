@@ -52,18 +52,22 @@ class HodController extends BaseController {
 
     public function createSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $designation = trim($_POST['designation'] ?? '');
             $department = trim($_POST['department'] ?? '');
             $research_interest = trim($_POST['research_interest'] ?? '');
 
-            if (empty($name) || empty($email) || empty($password) || empty($designation) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($contactNo) || empty($password) || empty($designation) || empty($department)) {
                 $this->flash('error', 'Please fill in all required fields.');
                 redirect('/hod/supervisors');
             }
 
+            $cnic = str_replace('-', '', $cnic);
             $db = \Database::getInstance()->getConnection();
 
             // Check if email already exists
@@ -74,18 +78,33 @@ class HodController extends BaseController {
                 redirect('/hod/supervisors');
             }
 
+            // Check if CNIC already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+            $stmt->execute([$cnic]);
+            if ($stmt->fetch()) {
+                $this->flash('error', 'CNIC is already registered.');
+                redirect('/hod/supervisors');
+            }
+
             try {
                 $db->beginTransaction();
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO users (email, password, role, status) VALUES (?, ?, 'supervisor', 'approved')");
-                $stmt->execute([$email, $hashed]);
+                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'supervisor', 'approved')");
+                $stmt->execute([$email, $cnic, $hashed]);
                 $userId = $db->lastInsertId();
 
+                $fullName = $firstName . ' ' . $lastName;
                 $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$userId, $name, $designation, $department, $research_interest]);
+                $stmt->execute([$userId, $fullName, $designation, $department, $research_interest]);
+
+                // Sync profiles table
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+
+                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Supervisor');
 
                 $db->commit();
-                $this->flash('success', "Supervisor $name added successfully.");
+                $this->flash('success', "Supervisor $fullName added successfully and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding supervisor: ' . $e->getMessage());
@@ -145,16 +164,21 @@ class HodController extends BaseController {
 
     public function createCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            $designation = trim($_POST['designation'] ?? '');
+            $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $department = trim($_POST['department'] ?? '');
 
-            if (empty($name) || empty($email) || empty($password) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($contactNo) || empty($password) || empty($department)) {
                 $this->flash('error', 'All fields are required.');
                 redirect('/hod/committee');
             }
 
+            $cnic = str_replace('-', '', $cnic);
             $db = \Database::getInstance()->getConnection();
 
             // Check if email already exists
@@ -165,18 +189,33 @@ class HodController extends BaseController {
                 redirect('/hod/committee');
             }
 
+            // Check if CNIC already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+            $stmt->execute([$cnic]);
+            if ($stmt->fetch()) {
+                $this->flash('error', 'CNIC is already registered.');
+                redirect('/hod/committee');
+            }
+
             try {
                 $db->beginTransaction();
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO users (email, password, role, status) VALUES (?, ?, 'committee', 'approved')");
-                $stmt->execute([$email, $hashed]);
+                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'committee', 'approved')");
+                $stmt->execute([$email, $cnic, $hashed]);
                 $userId = $db->lastInsertId();
 
-                $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
-                $stmt->execute([$userId, $name, $department]);
+                $fullName = $firstName . ' ' . $lastName;
+                $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$userId, $fullName, $designation, $department]);
+
+                // Sync profiles table
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+
+                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
                 $db->commit();
-                $this->flash('success', "Committee Member $name added successfully.");
+                $this->flash('success', "Committee Member $fullName added successfully and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding committee member: ' . $e->getMessage());
@@ -309,12 +348,15 @@ class HodController extends BaseController {
 
     public function createCoordinator() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
+            $designation = trim($_POST['designation'] ?? '');
+            $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             
-            if (empty($name) || empty($email) || empty($cnic) || empty($password)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($contactNo) || empty($password)) {
                 $this->flash('error', 'All fields are required.');
                 redirect('/hod/coordinators');
             }
@@ -348,15 +390,18 @@ class HodController extends BaseController {
                 $stmt->execute([$email, $cnic, $hashed]);
                 $userId = $db->lastInsertId();
                 
-                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
-                $stmt->execute([$userId, $name, $dept]);
+                $fullName = $firstName . ' ' . $lastName;
+                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$userId, $fullName, $designation, $dept]);
                 
                 // Keep profiles table in sync
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', '0000000', 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $name, $cnic]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+
+                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Coordinator');
                 
                 $db->commit();
-                $this->flash('success', "Coordinator $name created successfully under department $dept.");
+                $this->flash('success', "Coordinator $fullName created successfully under department $dept and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error creating coordinator: ' . $e->getMessage());
@@ -451,6 +496,155 @@ class HodController extends BaseController {
             }
         }
         redirect('/hod/coordinators');
+    }
+
+    public function profile() {
+        $userId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch HOD details
+        $stmt = $db->prepare("SELECT h.name, h.department, u.email, u.cnic FROM hods h JOIN users u ON h.user_id = u.id WHERE h.user_id = ?");
+        $stmt->execute([$userId]);
+        $hod = $stmt->fetch();
+        if (!$hod) {
+            die("HOD profile not found.");
+        }
+
+        // Get existing profile info
+        $stmt = $db->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $prefix = trim($_POST['prefix'] ?? '');
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($hod['cnic']);
+            $cnicToSave = $hod['cnic'];
+
+            if (empty($prefix)) $errors[] = "Prefix is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
+
+            if (empty($errors)) {
+                try {
+                    $db->beginTransaction();
+
+                    // Update profiles table
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
+                    $this->flash('success', 'Profile updated successfully.');
+                    redirect('/hod/profile');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                }
+            } else {
+                $this->flash('error', implode(" ", $errors));
+            }
+        }
+
+        $this->render('hod/profile', [
+            'hod' => $hod,
+            'profile' => $profile
+        ]);
+    }
+
+    private function sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, $portalType) {
+        $hodUserId = $_SESSION['user_id'] ?? 0;
+        $stmtH = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
+        $stmtH->execute([$hodUserId]);
+        $hodData = $stmtH->fetch();
+        $hodName = $hodData['name'] ?? 'HOD';
+        $deptName = $hodData['department'] ?? 'FET';
+
+        $fullName = $firstName . ' ' . $lastName;
+        
+        $subject = "Your Portal Credentials - Faculty of Engineering & Technology";
+        $messageBody = "Dear $firstName $lastName,\n\n"
+                     . "Your account has been created by HOD $hodName for the $portalType Portal (Department of $deptName).\n\n"
+                     . "Here are your login credentials:\n"
+                     . "Portal Type: $portalType Portal\n"
+                     . "CNIC (User ID): $cnic\n"
+                     . "Email Address: $email\n"
+                     . "Password: $password\n\n"
+                     . "Please use your CNIC and the password above to log in to the portal.\n\n"
+                     . "Sent by HOD $hodName\n"
+                     . "Faculty of Engineering & Technology\n"
+                     . "University of Sindh";
+
+        // 1. Log credentials locally to a simulated email inbox log
+        $logDir = __DIR__ . '/../../sessions';
+        if (!is_dir($logDir)) {
+            mkdir($logDir, 0700, true);
+        }
+        $logFile = $logDir . '/credentials_emails.log';
+        $logContent = "==================================================\n"
+                    . "Date: " . date('Y-m-d H:i:s') . "\n"
+                    . "To: $email ($fullName)\n"
+                    . "Subject: $subject\n"
+                    . "--------------------------------------------------\n"
+                    . $messageBody . "\n"
+                    . "==================================================\n\n";
+        file_put_contents($logFile, $logContent, FILE_APPEND);
+
+        // 2. Dispatch real email via PHP mail()
+        $headers = "From: no-reply@fypmanagement.com\r\n"
+                 . "Reply-To: no-reply@fypmanagement.com\r\n"
+                 . "X-Mailer: PHP/" . phpversion();
+        @mail($email, $subject, $messageBody, $headers);
+
+        // 3. Add system notification inside the database for welcome banner
+        $welcomeTitle = "Welcome to the $portalType Portal";
+        $welcomeMsg = "Welcome! Your account credentials have been generated by HOD $hodName. You can update your editable profile information under the My Profile menu.";
+        $stmtN = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url) VALUES (?, ?, ?, ?)");
+        $stmtN->execute([$userId, $welcomeTitle, $welcomeMsg, '/' . strtolower(str_replace(' Member', '', $portalType)) . '/profile']);
     }
 }
 

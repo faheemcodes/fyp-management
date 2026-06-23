@@ -23,26 +23,18 @@ if ($urlPrefix === '/') {
 ?>
 
 <!-- Sidebar -->
-<nav id="sidebar">
-    <div class="sidebar-header text-center">
-        <h5 class="m-0 text-white fw-bold"><i class="bi bi-mortarboard-fill text-primary"></i> University of Sindh</h5>
-        <small class="text-muted text-uppercase" style="font-size: 0.65rem; display: block; margin-top: 4px;">Faculty of Engineering & Tech</small>
+<nav id="sidebar" class="d-flex flex-column">
+    <div class="sidebar-header d-flex align-items-center gap-3">
+        <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #fff; flex-shrink: 0;">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div>
+            <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
+            <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
+        </div>
     </div>
 
-    <div class="p-3 text-center border-bottom border-secondary border-opacity-10">
-        <?php if ($role === 'student'): ?>
-            <?php $avatarFile = !empty($_SESSION['avatar']) ? $_SESSION['avatar'] : 'default_avatar.svg'; ?>
-            <img src="<?php echo $urlPrefix; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle border border-2 border-primary mb-2" style="width: 48px; height: 48px; object-fit: cover;" alt="Profile photo">
-        <?php else: ?>
-            <div class="avatar bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px; font-size: 1.35rem; font-weight: 600;">
-                <?php echo strtoupper(substr($name, 0, 1)); ?>
-            </div>
-        <?php endif; ?>
-        <div class="text-white fw-semibold small text-truncate" style="max-width: 220px;"><?php echo htmlspecialchars($name); ?></div>
-        <div class="badge bg-secondary text-white text-uppercase" style="font-size: 0.65rem;"><?php echo htmlspecialchars($role); ?></div>
-    </div>
-
-    <ul class="list-unstyled nav flex-column mt-3">
+    <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto;">
         <?php if ($role === 'admin'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/dashboard" class="nav-link <?php echo isActive('/admin/dashboard', $currentUri); ?>">
@@ -74,6 +66,11 @@ if ($urlPrefix === '/') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/dashboard" class="nav-link <?php echo isActive('/hod/dashboard', $currentUri); ?>">
                     <i class="bi bi-grid-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/hod/profile" class="nav-link <?php echo isActive('/hod/profile', $currentUri); ?>">
+                    <i class="bi bi-person-circle"></i> My Profile
                 </a>
             </li>
             <li class="nav-item">
@@ -154,6 +151,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/profile" class="nav-link <?php echo isActive('/committee/profile', $currentUri); ?>">
+                    <i class="bi bi-person-circle"></i> My Profile
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/committee/evaluations" class="nav-link <?php echo isActive('/committee/evaluations', $currentUri); ?>">
                     <i class="bi bi-calendar-check-fill"></i> Evaluations
                 </a>
@@ -164,6 +166,11 @@ if ($urlPrefix === '/') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/dashboard" class="nav-link <?php echo isActive('/coordinator/dashboard', $currentUri); ?>">
                     <i class="bi bi-grid-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/profile" class="nav-link <?php echo isActive('/coordinator/profile', $currentUri); ?>">
+                    <i class="bi bi-person-circle"></i> My Profile
                 </a>
             </li>
             <li class="nav-item">
@@ -178,68 +185,120 @@ if ($urlPrefix === '/') {
             </li>
         <?php endif; ?>
         
-        <li class="nav-item mt-auto border-top border-secondary border-opacity-10">
-            <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">
-                <i class="bi bi-shield-lock-fill text-warning"></i> Change Password
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link text-danger">
-                <i class="bi bi-box-arrow-right"></i> Log Out
-            </a>
-        </li>
+        <style>
+            .action-icon-pw {
+                background: rgba(245, 158, 11, 0.15) !important;
+                color: #fcd34d !important;
+                width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+                transition: all 0.2s ease;
+            }
+            .action-icon-logout {
+                background: rgba(239, 68, 68, 0.2) !important;
+                color: #f87171 !important;
+                width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+                transition: all 0.2s ease;
+            }
+            /* Protect custom icon colors from the global .active override */
+            #sidebar .nav-link.active .action-icon-pw i {
+                color: #fcd34d !important;
+            }
+            #sidebar .nav-link.active .action-icon-logout i {
+                color: #f87171 !important;
+            }
+        </style>
+        <div class="mt-auto">
+            <ul class="list-unstyled nav flex-column mb-0">
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?> d-flex align-items-center gap-2">
+                        <div class="action-icon-pw">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        Change Password
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link <?php echo isActive('/logout', $currentUri); ?> d-flex align-items-center gap-2">
+                        <div class="action-icon-logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </div>
+                        Log Out
+                    </a>
+                </li>
+            </ul>
+        </div>
     </ul>
 </nav>
 
 <!-- Page Content Wrappers -->
 <div id="content" class="bg-light">
     <!-- Navbar / Header Actions -->
-    <nav class="navbar navbar-expand-lg top-navbar navbar-light">
+    <nav class="navbar navbar-expand-lg top-navbar" style="border-bottom: 1px solid var(--border-color); padding-top: 14px; padding-bottom: 14px;">
         <div class="container-fluid p-0">
-            <h6 class="fw-bold m-0 d-none d-sm-inline-block text-dark"><i class="bi bi-mortarboard-fill text-primary me-2"></i>UNIVERSITY OF SINDH - FACULTY OF ENGINEERING AND TECHNOLOGY</h6>
-            <h6 class="fw-bold m-0 d-inline-block d-sm-none text-dark"><i class="bi bi-mortarboard-fill text-primary me-1"></i>SU FYP PORTAL</h6>
+            <!-- Desktop Branding -->
+            <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-none d-sm-flex align-items-center gap-3 text-decoration-none" style="cursor: pointer;">
+                <div style="width: 42px; height: 42px; background: rgba(59,130,246,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.3rem;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.95rem; letter-spacing: -0.01em;">Faculty of Engineering &amp; Technology</h6>
+                    <small style="color: var(--text-secondary); font-size: 0.72rem; letter-spacing: 0.02em; font-weight: 500;">University of Sindh, Jamshoro</small>
+                </div>
+            </a>
             
-            <div class="ms-auto d-flex align-items-center gap-3">
+            <!-- Mobile Branding -->
+            <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-flex align-items-center gap-2 d-sm-none text-decoration-none" style="cursor: pointer;">
+                <div style="width: 38px; height: 38px; background: rgba(59,130,246,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.2rem;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.85rem; letter-spacing: -0.01em;">University of Sindh</h6>
+                    <small style="color: var(--text-secondary); font-size: 0.65rem; letter-spacing: 0.02em;">FYP Portal</small>
+                </div>
+            </a>
+            
+            <div class="ms-auto d-flex align-items-center gap-2 gap-md-3">
                 <!-- Dark Theme Toggle -->
-                <button class="btn btn-link text-secondary p-1" id="theme-toggle" type="button" title="Toggle Theme" style="text-decoration: none; border: none; box-shadow: none;">
-                    <i class="bi bi-sun-fill fs-5 d-none" id="theme-sun" style="color: #F59E0B;"></i>
-                    <i class="bi bi-moon-fill fs-5" id="theme-moon"></i>
+                <button class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center" id="theme-toggle" type="button" title="Toggle Theme" style="width: 34px; height: 34px; border: 1px solid var(--border-color); background: var(--form-bg);">
+                    <i class="bi bi-sun-fill d-none" id="theme-sun" style="font-size: 1rem; color: #F59E0B;"></i>
+                    <i class="bi bi-moon-fill" id="theme-moon" style="font-size: 1rem; color: var(--text-secondary);"></i>
                 </button>
 
                 <!-- Notifications Dropdown -->
                 <div class="dropdown">
-                    <button class="btn btn-link text-secondary position-relative p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-bell-fill fs-5"></i>
-                        <span class="badge bg-danger notification-badge" id="notification-badge" style="display: none;">0</span>
+                    <button class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 34px; height: 34px; border: 1px solid var(--border-color); background: var(--form-bg);">
+                        <i class="bi bi-bell-fill" style="font-size: 1rem; color: var(--text-secondary);"></i>
+                        <span class="position-absolute bg-danger text-white fw-bold d-none align-items-center justify-content-center" id="notification-badge" style="top: -4px; right: -4px; font-size: 0.65rem; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 10px; border: 2px solid var(--navbar-bg); box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); z-index: 2;"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-0" style="width: 320px; max-height: 400px; overflow-y: auto;" id="notification-dropdown">
-                        <div class="p-2 border-bottom d-flex align-items-center justify-content-between bg-primary text-white rounded-top">
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 py-0" style="width: 320px; max-height: 440px; overflow-y: auto; border-radius: 14px; background: var(--card-bg);" id="notification-dropdown">
+                        <div class="p-3 border-bottom d-flex align-items-center justify-content-between rounded-top" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; border-color: var(--border-color) !important;">
                             <span class="small fw-semibold">Recent Alerts</span>
-                            <a href="#" class="text-white text-decoration-none x-small" id="mark-all-read" style="font-size: 0.75rem;">Mark all read</a>
+                            <a href="#" class="text-white text-decoration-none" id="mark-all-read" style="font-size: 0.75rem; opacity: 0.8;">Mark all read</a>
                         </div>
                         <div id="notification-list" class="py-1">
-                            <!-- Populated dynamically -->
-                            <li><a class="dropdown-item text-muted text-center py-2" href="#">Loading notifications...</a></li>
+                            <li><a class="dropdown-item text-center py-3 small" style="color: var(--text-secondary);" href="#">Loading notifications...</a></li>
                         </div>
                     </ul>
                 </div>
 
-                <div class="vr bg-secondary opacity-25 d-none d-md-block" style="height: 20px;"></div>
+                <div class="vr d-none d-md-block mx-1" style="height: 24px; background-color: var(--border-color); opacity: 1;"></div>
 
-                <div class="d-flex align-items-center gap-2">
-                    <?php if ($role === 'student'): ?>
-                        <?php $avatarFile = !empty($_SESSION['avatar']) ? $_SESSION['avatar'] : 'default_avatar.svg'; ?>
-                        <img src="<?php echo $urlPrefix; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle border border-1 border-primary d-none d-md-inline-block" style="width: 32px; height: 32px; object-fit: cover;" alt="Profile photo">
-                    <?php endif; ?>
+                <!-- User Profile Pill -->
+                <div class="d-flex align-items-center gap-2 pe-md-2 py-1" style="cursor: default;">
                     <div class="text-end d-none d-md-block">
-                        <div class="fw-semibold small text-dark"><?php echo htmlspecialchars($name); ?></div>
-                        <div class="x-small text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($email); ?></div>
+                        <div class="fw-bold" style="color: var(--text-primary); font-size: 0.85rem; letter-spacing: -0.01em;"><?php echo htmlspecialchars($name); ?></div>
+                        <div class="text-uppercase fw-semibold" style="color: var(--text-secondary); font-size: 0.65rem; letter-spacing: 0.05em;"><?php echo htmlspecialchars($role); ?></div>
                     </div>
+                    <?php if ($role === 'student'): ?>
+                        <?php 
+                        $avatarFile = !empty($_SESSION['avatar']) ? $_SESSION['avatar'] : 'default_avatar.svg'; 
+                        ?>
+                        <img src="<?php echo $urlPrefix; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm ms-1 d-none d-sm-inline-block" style="width: 36px; height: 36px; object-fit: cover; border: 2px solid var(--border-color);" alt="Profile photo">
+                    <?php endif; ?>
                 </div>
 
                 <!-- Three-line hamburger menu button placed on the right on mobile -->
-                <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary d-lg-none ms-1">
-                    <i class="bi bi-justify"></i>
+                <button type="button" id="sidebarCollapse" class="btn btn-light d-lg-none ms-1 rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border: 1px solid var(--border-color); background: var(--form-bg); color: var(--text-primary);">
+                    <i class="bi bi-list" style="font-size: 1.2rem;"></i>
                 </button>
             </div>
         </div>

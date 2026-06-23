@@ -600,14 +600,47 @@ class StudentController extends BaseController {
             $zip_code = !empty($_POST['zip_code']) ? trim($_POST['zip_code']) : null;
             $blood_group = !empty($_POST['blood_group']) ? trim($_POST['blood_group']) : null;
 
+            // Fields that might be missing and need to be saved
+            $surnameToSave = $profile['surname'] ?? '';
+            if (empty($surnameToSave)) $surnameToSave = trim($_POST['surname'] ?? '');
+            
+            $fatherNameToSave = $profile['father_name'] ?? '';
+            if (empty($fatherNameToSave)) $fatherNameToSave = trim($_POST['father_name'] ?? '');
+            
+            $genderToSave = $profile['gender'] ?? '';
+            if (empty($genderToSave)) $genderToSave = trim($_POST['gender'] ?? '');
+            
+            $mobileCodeToSave = $profile['mobile_code'] ?? '';
+            if (empty($mobileCodeToSave)) $mobileCodeToSave = trim($_POST['mobile_code'] ?? '');
+            
+            $mobileNoToSave = $profile['mobile_no'] ?? '';
+            if (empty($mobileNoToSave)) $mobileNoToSave = trim($_POST['mobile_no'] ?? '');
+            
+            $countryToSave = $profile['country'] ?? '';
+            if (empty($countryToSave)) $countryToSave = trim($_POST['country'] ?? '');
+            
+            $provinceStateToSave = $profile['province_state'] ?? '';
+            if (empty($provinceStateToSave)) $provinceStateToSave = trim($_POST['province_state'] ?? '');
+            
+            $districtToSave = $profile['district'] ?? '';
+            if (empty($districtToSave)) $districtToSave = trim($_POST['district'] ?? '');
+            
+            $cnicToSave = $profile['cnic'] ?? '';
+            if (empty($cnicToSave)) $cnicToSave = trim($_POST['cnic'] ?? '');
+
             if (empty($prefix)) $errors[] = "Prefix is required.";
             if (empty($dob)) $errors[] = "Date Of Birth is required.";
             if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home Address / Postal Address is required.";
 
             if (empty($errors)) {
                 try {
-                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, dob = ?, cnic_expiry = ?, place_of_birth = ?, city = ?, home_address = ?, permanent_address = ?, zip_code = ?, blood_group = ? WHERE user_id = ?");
-                    $stmt->execute([$prefix, $dob, $cnic_expiry, $place_of_birth, $city, $home_address, $permanent_address, $zip_code, $blood_group, $userId]);
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, dob = ?, cnic_expiry = ?, place_of_birth = ?, city = ?, home_address = ?, permanent_address = ?, zip_code = ?, blood_group = ?, surname = ?, father_name = ?, gender = ?, mobile_code = ?, mobile_no = ?, country = ?, province_state = ?, district = ?, cnic = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $dob, $cnic_expiry, $place_of_birth, $city, $home_address, $permanent_address, $zip_code, $blood_group, $surnameToSave, $fatherNameToSave, $genderToSave, $mobileCodeToSave, $mobileNoToSave, $countryToSave, $provinceStateToSave, $districtToSave, $cnicToSave, $userId]);
+                    
+                    if (empty($profile['cnic']) && !empty($cnicToSave)) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
                     
                     $this->flash('success', 'Profile updated successfully.');
                     redirect('/student/profile');

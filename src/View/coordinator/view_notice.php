@@ -1,3 +1,11 @@
+<?php
+if (!isset($basePath)) {
+    $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    if ($basePath === '/') {
+        $basePath = '';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,74 +159,99 @@
             letter-spacing: 0.5px;
             color: #475569;
         }
+
         @media (max-width: 768px) {
             body {
-                padding: 20px 10px !important;
+                padding: 15px 5px !important;
             }
             .letterhead-container {
-                padding: 40px 25px !important;
-                min-height: auto !important;
+                padding: 30px 18px !important;
+                min-height: auto !important; /* Manage height dynamically on mobile */
             }
             .header-logo-section {
-                flex-direction: column !important;
-                text-align: center !important;
-                gap: 12px !important;
-                margin-bottom: 25px !important;
-                padding-bottom: 15px !important;
+                gap: 8px !important;
+                margin-bottom: 18px !important;
+                padding-bottom: 10px !important;
             }
-            .header-text {
-                text-align: center !important;
+            .header-logo-section img {
+                width: 48px !important;
+                height: 48px !important;
             }
             .uni-title {
-                font-size: 1.3rem !important;
+                font-size: 0.98rem !important;
             }
             .fac-title {
-                font-size: 0.95rem !important;
+                font-size: 0.72rem !important;
             }
             .dept-title {
-                font-size: 0.88rem !important;
+                font-size: 0.68rem !important;
+            }
+            .meta-section {
+                font-size: 0.72rem !important;
+                margin-bottom: 18px !important;
+                padding-bottom: 6px !important;
             }
             .subject-line {
-                font-size: 1.05rem !important;
-                margin-bottom: 20px !important;
+                font-size: 0.82rem !important;
+                margin-bottom: 15px !important;
+                padding-left: 6px !important;
             }
             .body-content {
-                font-size: 0.98rem !important;
-                line-height: 1.75 !important;
-                margin-bottom: 40px !important;
+                font-size: 0.78rem !important;
+                line-height: 1.55 !important;
+                margin-bottom: 30px !important;
             }
-            .signatures-section {
-                flex-direction: column !important;
-                gap: 50px !important;
-                align-items: center !important;
-                padding-top: 20px !important;
+            .watermark {
+                width: 200px !important;
+                height: 200px !important;
             }
-            .signatures-section .col-6 {
+            /* Keep signatures side-by-side but scale them nicely */
+            .signature-line {
                 width: 100% !important;
-                text-align: center !important;
+                max-width: 130px !important;
+                font-size: 0.68rem !important;
             }
-            .signature-box {
-                display: inline-block !important;
-                text-align: left !important;
+            .signature-line .small {
+                font-size: 0.65rem !important;
+            }
+            .signature-line .x-small {
+                font-size: 0.58rem !important;
             }
             .signature-cursive {
-                left: 50% !important;
-                transform: translateX(-50%) rotate(-3deg) !important;
-                top: -34px !important;
+                font-size: 1.15rem !important;
+                top: -22px !important;
+                left: 5px !important;
+            }
+            .sign-title {
+                font-size: 0.58rem !important;
             }
         }
+
+        @page {
+            size: A4 portrait;
+            margin: 15mm 20mm;
+        }
         @media print {
-            body {
-                background: #ffffff !important;
+            html, body {
+                height: 100% !important;
+                margin: 0 !important;
                 padding: 0 !important;
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
             .letterhead-container {
                 box-shadow: none !important;
                 border: none !important;
                 padding: 0 !important;
+                margin: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                min-height: auto !important;
+                height: 100% !important;
+                min-height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
             }
             .no-print {
                 display: none !important;
@@ -236,7 +269,7 @@
 <!-- Floating Control Bar -->
 <div class="container text-center mb-4 no-print" style="max-width: 820px;">
     <div class="d-flex justify-content-between align-items-center bg-dark bg-opacity-75 rounded-pill p-2 px-3 shadow-lg border border-secondary border-opacity-25">
-        <a href="javascript:window.close();" class="btn btn-sm btn-outline-light rounded-pill px-3"><i class="bi bi-x-circle me-1"></i> Close Notice</a>
+        <a href="javascript:void(0);" onclick="closeNotice()" class="btn btn-sm btn-outline-light rounded-pill px-3"><i class="bi bi-x-circle me-1"></i> Close Notice</a>
         <span class="text-light small fw-bold d-none d-sm-inline-block"><i class="bi bi-file-earmark-text-fill text-warning me-1"></i> Official Notice Letterhead</span>
         <button onclick="window.print()" class="btn btn-sm btn-primary rounded-pill px-4"><i class="bi bi-printer-fill me-1"></i> Print / Save PDF</button>
     </div>
@@ -245,35 +278,14 @@
 <div class="letterhead-container">
     <!-- Watermark Seal -->
     <div class="watermark">
-        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="50" cy="50" r="46" />
-            <circle cx="50" cy="50" r="42" stroke-dasharray="2 2" />
-            <!-- Book Symbol -->
-            <path d="M35 55 C 42 51, 48 54, 50 57 C 52 54, 58 51, 65 55 L 65 42 C 58 38, 52 41, 50 44 C 48 41, 42 38, 35 42 Z" stroke-width="1.2" />
-            <!-- Rising Sun -->
-            <circle cx="50" cy="35" r="4" />
-            <path d="M50 25 V 29 M40 28 L 43 31 M60 28 L 57 31 M30 35 H 34 M70 35 H 66" />
-            <!-- Stars -->
-            <polygon points="50,68 51,71 54,71 52,73 53,76 50,74 47,76 48,73 46,71 49,71" />
-        </svg>
+        <img src="<?php echo $basePath; ?>/uploads/fet_logo.png" alt="FET Watermark" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%);">
     </div>
 
     <div class="letterhead-content">
         <!-- Faculty Header -->
         <div class="header-logo-section">
             <!-- Colored Crest Emblem -->
-            <svg viewBox="0 0 100 100" width="75" height="75">
-                <circle cx="50" cy="50" r="48" fill="none" stroke="#1e3a8a" stroke-width="2.5" />
-                <circle cx="50" cy="50" r="44" fill="none" stroke="#b45309" stroke-width="1" />
-                <circle cx="50" cy="50" r="40" fill="#1e3a8a" />
-                <!-- Book Symbol -->
-                <path d="M35 55 C 42 51, 48 54, 50 57 C 52 54, 58 51, 65 55 L 65 42 C 58 38, 52 41, 50 44 C 48 41, 42 38, 35 42 Z" fill="#ffffff" stroke="#b45309" stroke-width="0.8" />
-                <!-- Sun -->
-                <circle cx="50" cy="33" r="3" fill="#f59e0b" />
-                <path d="M50 24 V 28 M41 27 L 43 29 M59 27 L 57 29 M33 33 H 36 M67 33 H 64" stroke="#f59e0b" stroke-width="0.8" />
-                <!-- Stars -->
-                <polygon points="50,68 51,71 54,71 52,73 53,76 50,74 47,76 48,73 46,71 49,71" fill="#f59e0b" />
-            </svg>
+            <img src="<?php echo $basePath; ?>/uploads/fet_logo.png" alt="FET Logo" width="80" height="80" class="d-inline-block align-top" style="object-fit: contain;">
             <div class="header-text">
                 <h3 class="uni-title m-0">University of Sindh</h3>
                 <h5 class="fac-title m-0">Faculty of Engineering & Technology</h5>
@@ -286,7 +298,7 @@
         <div class="meta-section d-flex justify-content-between align-items-center">
             <div>
                 <strong>Ref No:</strong> 
-                <span class="font-monospace text-uppercase" style="letter-spacing: 0.5px;"><?php echo htmlspecialchars($notice['ref_no'] ?? 'SU/FET/FYP/' . date('Y', strtotime($notice['notice_date'])) . '/---'); ?></span>
+                <span class="font-monospace text-uppercase" style="letter-spacing: 0.5px;"><?php echo htmlspecialchars(!empty($notice['ref_no']) ? $notice['ref_no'] : '--'); ?></span>
             </div>
             <div>
                 <strong>Date:</strong> 
@@ -343,5 +355,17 @@
     </div>
 </div>
 
+<script>
+function closeNotice() {
+    window.close();
+    setTimeout(function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "<?php echo $basePath; ?>/<?php echo $_SESSION['role'] ?? ''; ?>/dashboard";
+        }
+    }, 150);
+}
+</script>
 </body>
 </html>

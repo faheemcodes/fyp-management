@@ -1,94 +1,253 @@
 <!-- Admin Dashboard View -->
-<div class="row g-4 mb-4">
-    <!-- Stat card 1 -->
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card p-4 d-flex align-items-center justify-content-between">
-            <div>
-                <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Total Users</h6>
-                <h3 class="m-0 fw-bold"><?php echo $stats['total_users']; ?></h3>
-            </div>
-            <div class="card-icon icon-primary">
-                <i class="bi bi-people-fill"></i>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Stat card 2 -->
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card p-4 d-flex align-items-center justify-content-between">
-            <div>
-                <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Active Projects</h6>
-                <h3 class="m-0 fw-bold text-success"><?php echo $stats['active_projects']; ?></h3>
-            </div>
-            <div class="card-icon icon-secondary">
-                <i class="bi bi-folder-check"></i>
-            </div>
-        </div>
-    </div>
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+<style>
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.group-stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    min-width: 90px;
+    margin-right: 12px;
+}
+.group-stat-pill .stat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+.group-stat-pill .stat-label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+}
 
-    <!-- Stat card 3 -->
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card p-4 d-flex align-items-center justify-content-between">
-            <div>
-                <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Pending Evals</h6>
-                <h3 class="m-0 fw-bold text-warning"><?php echo $stats['pending_evaluations']; ?></h3>
+/* ─── Section Panel ─── */
+.grp-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease;
+}
+.grp-section:hover {
+    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+}
+.grp-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+}
+.grp-section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.grp-section-header h6 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.grp-section-header small {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ─── Modern Table Styles ─── */
+.modern-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.modern-table thead th {
+    background: var(--form-bg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tbody td {
+    padding: 16px 24px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: background-color 0.2s ease;
+}
+.modern-table tbody tr:hover td {
+    background-color: rgba(59,130,246,0.02);
+}
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.status-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .group-hero { padding: 24px 16px; }
+    .group-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
+    .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .modern-table { min-width: 600px; }
+}
+</style>
+
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <!-- Icon -->
+            <div class="group-hero-icon">
+                <i class="bi bi-shield-lock-fill"></i>
             </div>
-            <div class="card-icon icon-warning">
-                <i class="bi bi-hourglass-split"></i>
+            <!-- Info -->
+            <div>
+                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                    System Administration
+                </p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                    Super Admin Portal
+                </h4>
             </div>
         </div>
-    </div>
 
-    <!-- Stat card 4 -->
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card p-4 d-flex align-items-center justify-content-between">
-            <div>
-                <h6 class="text-muted small text-uppercase mb-2 font-weight-bold">Avg Grades</h6>
-                <h3 class="m-0 fw-bold text-primary"><?php echo $stats['avg_marks']; ?></h3>
+        <!-- Stats -->
+        <div class="d-flex flex-wrap hero-stats-container">
+            <div class="group-stat-pill">
+                <span class="stat-num text-info"><?php echo $stats['total_users']; ?></span>
+                <span class="stat-label">Total Users</span>
             </div>
-            <div class="card-icon icon-primary">
-                <i class="bi bi-graph-up-arrow"></i>
+            <div class="group-stat-pill">
+                <span class="stat-num text-success"><?php echo $stats['active_projects']; ?></span>
+                <span class="stat-label">Active Projects</span>
+            </div>
+            <div class="group-stat-pill">
+                <span class="stat-num text-warning"><?php echo $stats['pending_evaluations']; ?></span>
+                <span class="stat-label">Pending Evals</span>
+            </div>
+            <div class="group-stat-pill" style="margin-right: 0;">
+                <span class="stat-num text-primary"><?php echo $stats['avg_marks']; ?></span>
+                <span class="stat-label">Avg Grades</span>
             </div>
         </div>
     </div>
 </div>
 
 <div class="row g-4">
-    <!-- Recent Users -->
+    <!-- ═══════════════ Recent Users ═══════════════ -->
     <div class="col-xl-6">
-        <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h5 class="fw-bold m-0 text-dark">Recent Signups / Users</h5>
-                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users" class="btn btn-outline-primary btn-sm rounded-pill">View All</a>
+        <div class="grp-section h-100 mb-0">
+            <div class="grp-section-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="grp-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Recent Users</h6>
+                        <small>Latest system signups</small>
+                    </div>
+                </div>
+                <a href="<?php echo $basePath; ?>/admin/users" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem; padding: 4px 12px;">View All</a>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">
+                <table class="table modern-table m-0">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th class="ps-4">User Details</th>
                             <th>Role</th>
-                            <th>Status</th>
+                            <th class="text-end pe-4">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($recentUsers as $ru): ?>
                         <tr>
-                            <td>
-                                <div class="fw-semibold text-dark"><?php echo htmlspecialchars($ru['name']); ?></div>
-                                <small class="text-muted"><?php echo htmlspecialchars($ru['email']); ?></small>
+                            <td class="ps-4">
+                                <div class="fw-semibold text-dark" style="font-size: 0.85rem;"><?php echo htmlspecialchars($ru['name']); ?></div>
+                                <div class="text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($ru['email']); ?></div>
                             </td>
                             <td>
-                                <span class="badge bg-secondary text-uppercase" style="font-size: 0.65rem;">
+                                <span class="status-pill bg-light text-secondary border">
                                     <?php echo htmlspecialchars($ru['role']); ?>
                                 </span>
                             </td>
-                            <td>
+                            <td class="text-end pe-4">
                                 <?php if($ru['status'] === 'approved'): ?>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">Approved</span>
+                                    <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Approved</span>
                                 <?php elseif($ru['status'] === 'pending'): ?>
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 small animate-pulse">Pending</span>
+                                    <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15); color: #d97706;">Pending</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">Rejected</span>
+                                    <span class="status-pill" style="background: rgba(239,68,68,0.15); color: #dc2626;">Rejected</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -99,34 +258,44 @@
         </div>
     </div>
 
-    <!-- Recent Groups -->
+    <!-- ═══════════════ Recent Groups ═══════════════ -->
     <div class="col-xl-6">
-        <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <h5 class="fw-bold m-0 text-dark">Recent Project Groups</h5>
-                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups" class="btn btn-outline-primary btn-sm rounded-pill">View All</a>
+        <div class="grp-section h-100 mb-0">
+            <div class="grp-section-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="grp-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Recent Project Groups</h6>
+                        <small>Newly formed teams</small>
+                    </div>
+                </div>
+                <a href="<?php echo $basePath; ?>/admin/groups" class="btn btn-outline-success btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem; padding: 4px 12px; color: #10b981; border-color: #10b981;">View All</a>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">
+                <table class="table modern-table m-0">
                     <thead>
                         <tr>
-                            <th>Group Code</th>
+                            <th class="ps-4">Group Code</th>
                             <th>Project Title</th>
-                            <th>Stage</th>
+                            <th class="text-end pe-4">Stage</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($recentGroups as $rg): ?>
                         <tr>
-                            <td class="fw-bold text-primary"><?php echo htmlspecialchars($rg['group_code'] ?? 'Pending'); ?></td>
-                            <td>
-                                <div class="text-truncate" style="max-width: 200px;" title="<?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>">
-                                    <?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>
-                                </div>
-                                <small class="text-muted">By: <?php echo htmlspecialchars($rg['creator_name']); ?></small>
+                            <td class="ps-4 fw-bold" style="color: #10b981; font-size: 0.85rem; font-family: monospace;">
+                                <?php echo htmlspecialchars($rg['group_code'] ?? 'Pending'); ?>
                             </td>
                             <td>
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 small">
+                                <div class="text-truncate fw-semibold text-dark" style="max-width: 200px; font-size: 0.85rem;" title="<?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>">
+                                    <?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>
+                                </div>
+                                <div class="text-muted" style="font-size: 0.75rem;">By: <?php echo htmlspecialchars($rg['creator_name']); ?></div>
+                            </td>
+                            <td class="text-end pe-4">
+                                <span class="status-pill" style="background: rgba(16,185,129,0.1); color: #10b981;">
                                     <?php echo htmlspecialchars($rg['progress_stage']); ?>
                                 </span>
                             </td>
@@ -144,23 +313,30 @@
     </div>
 </div>
 
-<div class="row g-4 mt-2">
-    <!-- Supervisor Slots Status -->
+<div class="row g-4 mt-0 mb-4">
+    <!-- ═══════════════ Supervisor Slots ═══════════════ -->
     <div class="col-12">
-        <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
-            <div class="border-bottom pb-3 mb-4">
-                <h5 class="fw-bold text-dark m-0"><i class="bi bi-person-badge-fill text-primary me-2"></i> Supervisor Slots Status</h5>
-                <p class="text-muted small m-0">Monitor approved project counts and capacity limits (maximum 8 groups per supervisor)</p>
+        <div class="grp-section mb-0">
+            <div class="grp-section-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="grp-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Supervisor Slots Status</h6>
+                        <small>Monitor assigned capacity limits (max 8 groups/supervisor)</small>
+                    </div>
+                </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover border-0 align-middle m-0" style="box-shadow: none;">
+                <table class="table modern-table m-0">
                     <thead>
                         <tr>
-                            <th>Supervisor Name</th>
+                            <th class="ps-4">Supervisor Name</th>
                             <th>Department</th>
-                            <th>Current Slots Assigned</th>
-                            <th>Remaining Slots</th>
-                            <th>Status</th>
+                            <th>Slot Allocation (Current/8)</th>
+                            <th class="text-center">Remaining Slots</th>
+                            <th class="text-end pe-4">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,22 +346,26 @@
                             $remaining = max(0, 8 - $current);
                             ?>
                             <tr>
-                                <td><strong class="text-dark"><?php echo htmlspecialchars($sup['name']); ?></strong></td>
-                                <td><span class="small text-muted"><?php echo htmlspecialchars($sup['department']); ?></span></td>
+                                <td class="ps-4 fw-bold text-dark" style="font-size: 0.85rem;"><?php echo htmlspecialchars($sup['name']); ?></td>
+                                <td><span class="text-muted" style="font-size: 0.8rem;"><?php echo htmlspecialchars($sup['department']); ?></span></td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="progress flex-grow-1" style="height: 8px; max-width: 150px; background-color: var(--border-color); border-radius: 4px; overflow: hidden;">
                                             <div class="progress-bar <?php echo $current >= 8 ? 'bg-danger' : ($current >= 6 ? 'bg-warning' : 'bg-success'); ?>" role="progressbar" style="width: <?php echo ($current / 8) * 100; ?>%"></div>
                                         </div>
-                                        <span class="fw-bold small text-dark"><?php echo $current; ?> / 8</span>
+                                        <span class="fw-bold text-dark" style="font-size: 0.75rem;"><?php echo $current; ?></span>
                                     </div>
                                 </td>
-                                <td><span class="fw-bold <?php echo $remaining === 0 ? 'text-danger' : 'text-success'; ?> small"><?php echo $remaining; ?></span></td>
-                                <td>
+                                <td class="text-center">
+                                    <span class="fw-bold <?php echo $remaining === 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.85rem;">
+                                        <?php echo $remaining; ?>
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
                                     <?php if($current >= 8): ?>
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 small">Full</span>
+                                        <span class="status-pill" style="background: rgba(239,68,68,0.15); color: #dc2626;">Full</span>
                                     <?php else: ?>
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small">Available</span>
+                                        <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Available</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

@@ -12,7 +12,13 @@ class BaseController {
         
         if (file_exists($viewFile)) {
             // Some views (like login/register/forgot-password/reset-password) don't need header/sidebar/footer.
-            $noLayoutViews = ['auth/login', 'auth/register', 'auth/forgot-password', 'auth/reset-password'];
+            $noLayoutViews = [
+                'auth/login', 
+                'auth/register', 
+                'auth/forgot-password', 
+                'auth/reset-password',
+                'coordinator/view_notice'
+            ];
             
             if (in_array($viewName, $noLayoutViews)) {
                 require $viewFile;

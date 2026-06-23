@@ -116,6 +116,7 @@ $routes = [
     '/hod/students/verify' => ['Controller\HodController', 'verifyStudents'],
     '/hod/students/approve' => ['Controller\HodController', 'approveStudent'],
     '/hod/students/reject' => ['Controller\HodController', 'rejectStudent'],
+    '/hod/profile' => ['Controller\HodController', 'profile'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -141,9 +142,11 @@ $routes = [
     '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
     '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
     '/committee/evaluations/toggle-visibility' => ['Controller\CommitteeController', 'toggleCommitteeVisibility'],
+    '/committee/profile' => ['Controller\CommitteeController', 'profile'],
     
     // Coordinator routes
     '/coordinator/dashboard' => ['Controller\CoordinatorController', 'dashboard'],
+    '/coordinator/profile' => ['Controller\CoordinatorController', 'profile'],
     '/coordinator/users' => ['Controller\CoordinatorController', 'verifyStudents'],
     '/coordinator/users/approve' => ['Controller\CoordinatorController', 'approveStudent'],
     '/coordinator/users/reject' => ['Controller\CoordinatorController', 'rejectStudent'],
@@ -155,7 +158,8 @@ $routes = [
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
-    '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead']
+    '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
+    '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification']
 ];
 
 // Dispatch route
