@@ -563,8 +563,9 @@
                     <select class="form-select" id="role" name="role" required onchange="toggleFields()">
                         <option value="student" <?php echo (!isset($old['role']) || $old['role'] === 'student') ? 'selected' : ''; ?>>Student</option>
                         <option value="supervisor" <?php echo (isset($old['role']) && $old['role'] === 'supervisor') ? 'selected' : ''; ?>>Teacher / Supervisor</option>
+                        <option value="coordinator" <?php echo (isset($old['role']) && $old['role'] === 'coordinator') ? 'selected' : ''; ?>>Coordinator</option>
+                        <option value="committee" <?php echo (isset($old['role']) && $old['role'] === 'committee') ? 'selected' : ''; ?>>Committee Member</option>
                         <option value="hod" <?php echo (isset($old['role']) && $old['role'] === 'hod') ? 'selected' : ''; ?>>HOD</option>
-                        <option value="admin" <?php echo (isset($old['role']) && $old['role'] === 'admin') ? 'selected' : ''; ?>>System Administrator</option>
                     </select>
                 </div>
 
@@ -625,7 +626,7 @@
                         <div class="row g-2">
                             <div class="col-md-4">
                                 <label for="name" class="form-label-sm">Full Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="As in Matric Certificate" value="<?php echo htmlspecialchars($old['name'] ?? ''); ?>">
+                                <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="e.g. Faheem" value="<?php echo htmlspecialchars($old['name'] ?? ''); ?>">
                             </div>
                             <div class="col-md-4">
                                 <label for="father_name" class="form-label-sm">Father's Name <span class="text-danger">*</span></label>
@@ -633,7 +634,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="surname" class="form-label-sm">Surname</label>
-                                <input type="text" class="form-control form-control-sm" id="surname" name="surname" placeholder="e.g. Khan" value="<?php echo htmlspecialchars($old['surname'] ?? ''); ?>">
+                                <input type="text" class="form-control form-control-sm" id="surname" name="surname" placeholder="e.g. Soomro" value="<?php echo htmlspecialchars($old['surname'] ?? ''); ?>">
                             </div>
                         </div>
                     </div>
@@ -691,20 +692,16 @@
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label for="student_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control form-control-sm" id="student_password" name="password" placeholder="Min 8 characters/digits" style="border-radius: 10px 0 0 10px;">
-                                    <button class="pw-toggle-btn" type="button" onclick="const el = document.getElementById('student_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control form-control-sm" id="student_password" name="password" placeholder="Min 8 characters/digits" style="padding-right: 56px;">
+                                    <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.75rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('student_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirm_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control form-control-sm" id="confirm_password" name="confirm_password" placeholder="Confirm your password" style="border-radius: 10px 0 0 10px;">
-                                    <button class="pw-toggle-btn" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control form-control-sm" id="confirm_password" name="confirm_password" placeholder="Confirm your password" style="padding-right: 56px;">
+                                    <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.75rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                         </div>
@@ -759,11 +756,11 @@
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label for="staff_name" class="form-label-sm">First Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-sm" id="staff_name" name="staff_first_name" placeholder="John" value="<?php echo htmlspecialchars($old['staff_first_name'] ?? ''); ?>">
+                                <input type="text" class="form-control form-control-sm" id="staff_name" name="staff_first_name" placeholder="e.g. Faheem" value="<?php echo htmlspecialchars($old['staff_first_name'] ?? ''); ?>">
                             </div>
                             <div class="col-md-6">
                                 <label for="staff_surname" class="form-label-sm">Last Name / Surname <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-sm" id="staff_surname" name="staff_last_name" placeholder="Doe" value="<?php echo htmlspecialchars($old['staff_last_name'] ?? ''); ?>">
+                                <input type="text" class="form-control form-control-sm" id="staff_surname" name="staff_last_name" placeholder="e.g. Soomro" value="<?php echo htmlspecialchars($old['staff_last_name'] ?? ''); ?>">
                             </div>
                         </div>
                     </div>
@@ -822,20 +819,16 @@
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label for="staff_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control form-control-sm" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits" style="border-radius: 10px 0 0 10px;">
-                                    <button class="pw-toggle-btn" type="button" onclick="const el = document.getElementById('staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control form-control-sm" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits" style="padding-right: 56px;">
+                                    <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.75rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirm_staff_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control form-control-sm" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password" style="border-radius: 10px 0 0 10px;">
-                                    <button class="pw-toggle-btn" type="button" onclick="const el = document.getElementById('confirm_staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                <div class="position-relative">
+                                    <input type="password" class="form-control form-control-sm" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password" style="padding-right: 56px;">
+                                    <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.75rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('confirm_staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                         </div>

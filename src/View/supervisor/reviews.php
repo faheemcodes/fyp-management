@@ -331,14 +331,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- DETAILS MODAL -->
 <div class="modal fade" id="proposalDetailsModal<?php echo $pr['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
                 <h6 class="modal-title fw-bold">Proposal Details - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
-                    <h5 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($pr['project_title']); ?></h5>
+                    <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($pr['project_title']); ?></h5>
                     <?php 
                     $st = $pr['status'];
                     $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
@@ -370,7 +370,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                                 <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
                                 <div>
-                                    <div class="fw-semibold text-dark" style="font-size: 0.9rem;">
+                                    <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
                                         <?php echo htmlspecialchars($m['name']); ?>
                                         <?php if($m['user_id'] == $pr['created_by']): ?>
                                             <span class="badge ms-1" style="background: rgba(59,130,246,0.15); color: #3b82f6; font-size: 0.6rem;">Leader</span>
@@ -384,8 +384,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 bg-light p-3 rounded-bottom-4">
-                <button type="button" class="btn btn-secondary rounded-3 px-4" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
             </div>
         </div>
     </div>
@@ -394,7 +394,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- REVIEW MODAL -->
 <div class="modal fade" id="proposalReviewModal<?php echo $pr['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
                 <h6 class="modal-title fw-bold">Submit Review - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -404,22 +404,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <input type="hidden" name="proposal_id" value="<?php echo $pr['id']; ?>">
                     
                     <div class="mb-4">
-                        <label class="form-label small fw-semibold text-secondary text-uppercase" style="letter-spacing: 0.04em;">Review Decision</label>
-                        <select class="form-select fw-medium" name="status" required>
-                            <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approve Proposal</option>
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Review Decision</label>
+                        <select class="form-select fw-medium" name="status" style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);" required>
+                            <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approve</option>
                             <option value="Revision Requested" <?php echo $pr['status'] === 'Revision Requested' ? 'selected' : ''; ?>>Request Revision</option>
-                            <option value="Rejected" <?php echo $pr['status'] === 'Rejected' ? 'selected' : ''; ?>>Reject Proposal</option>
+                            <option value="Rejected" <?php echo $pr['status'] === 'Rejected' ? 'selected' : ''; ?>>Reject</option>
                         </select>
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label small fw-semibold text-secondary text-uppercase" style="letter-spacing: 0.04em;">Feedback Remarks</label>
-                        <textarea class="form-control" name="feedback" rows="5" placeholder="Enter comments, suggestions, or revision notes here..." required><?php echo htmlspecialchars($pr['feedback'] ?? ''); ?></textarea>
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Feedback Remarks</label>
+                        <textarea class="form-control" name="feedback" rows="5" placeholder="Enter comments, suggestions, or revision notes here..." style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);" required><?php echo htmlspecialchars($pr['feedback'] ?? ''); ?></textarea>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light rounded-bottom-4 d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-secondary rounded-3 px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-3 px-4" style="background: #0d9488; border-color: #0d9488;">Submit Review</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Submit Review</button>
                 </div>
             </form>
         </div>

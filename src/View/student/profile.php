@@ -308,10 +308,19 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
             </h4>
             <p class="mb-2" style="color: rgba(255,255,255,0.5); font-size: 0.82rem;">
                 <i class="bi bi-mortarboard me-1"></i><?php echo htmlspecialchars($student['student_id'] ?? 'N/A'); ?>
-                &nbsp;·&nbsp;
-                <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($student['email']); ?>
+                <span class="d-none d-md-inline">
+                    &nbsp;·&nbsp;
+                    <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($student['email']); ?>
+                </span>
             </p>
 
+            <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 600;">PROFILE SETUP</span>
+                <div class="profile-completion">
+                    <div class="profile-completion-fill" style="width: <?php echo $completionPct; ?>%;"></div>
+                </div>
+                <span class="text-white fw-bold" style="font-size: 0.75rem;"><?php echo $completionPct; ?>%</span>
+            </div>
         </div>
 
         <!-- Quick Stats -->

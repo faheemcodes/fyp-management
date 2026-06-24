@@ -37,7 +37,7 @@ $firstName = explode(' ', $fullName)[0];
     
     <!-- Pending Proposals -->
     <div class="col-6 col-lg-3">
-        <a href="<?php echo $basePath; ?>/supervisor/proposals" class="text-decoration-none d-block stat-card-link" style="color: inherit;">
+        <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none d-block stat-card-link" style="color: inherit;">
             <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s; background: var(--card-bg); border-radius: 16px; padding: 1.25rem; box-shadow: var(--card-shadow);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
                 <div class="stat-mini-icon" style="width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; background: rgba(245,158,11,0.1); color: #f59e0b;">
                     <i class="bi bi-hourglass-split"></i>

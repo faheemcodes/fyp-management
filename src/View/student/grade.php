@@ -39,7 +39,7 @@ foreach ($proposalDefenseEvals as $e) {
     if ($e['show_to_student'] == 1) { $visibleDefenseCount++; $visibleDefenseSum += (float)$e['total_marks']; }
     else $hasHiddenMarks = true;
 }
-$showProposalDefenseMarks = count($proposalDefenseEvals) > 0 && $visibleDefenseCount > 0 ? ($visibleDefenseSum / count($proposalDefenseEvals)) : 0.00;
+$showProposalDefenseMarks = count($proposalDefenseEvals) > 0 && $visibleDefenseCount > 0 ? round($visibleDefenseSum / count($proposalDefenseEvals)) : 0.00;
 
 // 3. FYP Progress
 $visibleProgressCount = 0; $visibleProgressSum = 0;
@@ -47,7 +47,7 @@ foreach ($progressEvals as $e) {
     if ($e['show_to_student'] == 1) { $visibleProgressCount++; $visibleProgressSum += (float)$e['total_marks']; }
     else $hasHiddenMarks = true;
 }
-$showProgressPresentationMarks = count($progressEvals) > 0 && $visibleProgressCount > 0 ? ($visibleProgressSum / count($progressEvals)) : 0.00;
+$showProgressPresentationMarks = count($progressEvals) > 0 && $visibleProgressCount > 0 ? round($visibleProgressSum / count($progressEvals)) : 0.00;
 
 // 4. Supervision Marks
 if (isset($grade['supervision_marks']) && $grade['supervision_marks'] !== null) {
@@ -61,7 +61,7 @@ foreach ($finalEvals as $e) {
     if ($e['show_to_student'] == 1) { $visibleFinalCount++; $visibleFinalSum += (float)$e['total_marks']; }
     else $hasHiddenMarks = true;
 }
-$showFinalPresentationMarks = count($finalEvals) > 0 && $visibleFinalCount > 0 ? ($visibleFinalSum / count($finalEvals)) : 0.00;
+$showFinalPresentationMarks = count($finalEvals) > 0 && $visibleFinalCount > 0 ? round($visibleFinalSum / count($finalEvals)) : 0.00;
 
 // Cumulative
 $showTotalMarks = $showProposalMarks + $showProposalDefenseMarks + $showProgressPresentationMarks + $showSupervisionMarks + $showFinalPresentationMarks;
@@ -134,7 +134,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                             </td>
                             <td style="font-size: 0.875rem; color: var(--text-secondary);"><?php echo $r['max']; ?></td>
                             <td class="text-end">
-                                <span class="font-monospace fw-bold" style="font-size: 0.9rem;"><?php echo number_format($r['val'], 0); ?> / <?php echo $r['max']; ?></span>
+                                <span class="font-monospace fw-bold" style="font-size: 0.9rem;"><?php echo number_format($r['val'], 0); ?></span>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -142,7 +142,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                             <td><strong style="font-size: 0.9rem;">Cumulative Total</strong></td>
                             <td><strong style="font-size: 0.9rem;">200</strong></td>
                             <td class="text-end">
-                                <span class="font-monospace fw-bold" style="font-size: 1.15rem; color: <?php echo $gradeColor; ?>;"><?php echo number_format($showTotalMarks, 0); ?> / 200</span>
+                                <span class="font-monospace fw-bold" style="font-size: 1.15rem; color: <?php echo $gradeColor; ?>;"><?php echo number_format($showTotalMarks, 0); ?></span>
                             </td>
                         </tr>
                     </tbody>
@@ -154,11 +154,18 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
         <div class="card border-0 p-4">
             <div class="section-title"><i class="bi bi-chat-right-text-fill"></i> Committee Feedback &amp; Remarks</div>
 
-            <?php if (!empty($evaluations)): ?>
-                <?php
-                $groupedEvals = [];
-                foreach ($evaluations as $eval) { $groupedEvals[$eval['stage']][] = $eval; }
-                ?>
+            <?php
+            $groupedEvals = [];
+            if (!empty($evaluations)) {
+                foreach ($evaluations as $eval) { 
+                    // Only include evaluations that have actual remarks
+                    if (!empty(trim($eval['remarks']))) {
+                        $groupedEvals[$eval['stage']][] = $eval; 
+                    }
+                }
+            }
+            ?>
+            <?php if (!empty($groupedEvals)): ?>
                 <div class="accordion accordion-flush" id="evaluationsAccordion">
                     <?php
                     $accordionIndex = 0;
@@ -187,21 +194,14 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                                                             <i class="bi bi-person-fill text-muted"></i>
                                                             <?php echo htmlspecialchars($se['evaluator_name']); ?>
                                                         </div>
-                                                        <span class="badge font-monospace" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.75rem; padding: 5px 10px; border-radius: 10px;">
-                                                            <?php if ($se['show_to_student'] == 1): ?>
-                                                                <?php echo number_format($se['total_marks'], 0); ?> / <?php echo $stageMaxMarks; ?>
-                                                            <?php else: ?>
-                                                                Hidden
-                                                            <?php endif; ?>
-                                                        </span>
                                                     </div>
                                                     <div style="font-size: 0.82rem; color: var(--text-secondary);">
                                                         <strong style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;">Remarks:</strong>
                                                         <div class="mt-1 p-2 rounded-2" style="background: var(--card-bg); border: 1px solid var(--border-color); line-height: 1.6;">
                                                             <?php if ($se['show_to_student'] == 1): ?>
-                                                                <?php echo !empty($se['remarks']) ? nl2br(htmlspecialchars($se['remarks'])) : '<em class="text-muted">No specific remarks entered.</em>'; ?>
+                                                                <?php echo nl2br(htmlspecialchars(trim($se['remarks']))); ?>
                                                             <?php else: ?>
-                                                                <em style="color: var(--text-secondary);">Marks and remarks are hidden by the evaluator.</em>
+                                                                <em style="color: var(--text-secondary);">Feedback is hidden by the evaluator.</em>
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>

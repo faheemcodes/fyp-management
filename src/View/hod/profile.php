@@ -300,7 +300,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                             Head of <?php echo htmlspecialchars($departmentVal); ?>
                         </p>
                         
-                        <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+                        <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3">
                             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 600;">PROFILE SETUP</span>
                             <div class="profile-completion">
                                 <div class="profile-completion-fill" style="width: <?php echo $completionPct; ?>%;"></div>
@@ -310,7 +310,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                     </div>
                 </div>
                 
-                <div class="d-flex flex-wrap justify-content-center gap-2">
+                <div class="d-none d-md-flex flex-wrap justify-content-center gap-2">
                     <div class="profile-quick-stat">
                         <i class="bi bi-envelope-fill"></i>
                         <?php echo htmlspecialchars($hod['email'] ?? 'N/A'); ?>
@@ -359,7 +359,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                         </div>
                         <div class="profile-section-body">
                             <div class="row g-3">
-                                <div class="col-4 pf-group">
+                                <div class="col-md-4 col-12 pf-group">
                                     <label class="form-label">Prefix <span class="text-danger">*</span></label>
                                     <select class="form-select" name="prefix" required <?php echo $isLocked ? 'disabled' : ''; ?>>
                                         <option value="" disabled <?php echo empty($prefixVal) ? 'selected' : ''; ?>>Select</option>
@@ -370,12 +370,12 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                         <option value="Prof."<?php echo $prefixVal === 'Prof.' ? 'selected' : ''; ?>>Prof.</option>
                                     </select>
                                 </div>
-                                <div class="col-8 pf-group">
+                                <div class="col-md-8 col-12 pf-group">
                                     <label class="form-label">Full Name</label>
                                     <input type="text" class="form-control" value="<?php echo htmlspecialchars($hod['name']); ?>" disabled readonly>
                                     <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                                 </div>
-                                <div class="col-6 pf-group">
+                                <div class="col-md-6 col-12 pf-group">
                                     <label class="form-label">Surname</label>
                                     <?php if (empty($surnameVal)): ?>
                                         <input type="text" class="form-control border border-warning" name="surname" placeholder="Enter Surname" required>
@@ -387,7 +387,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                     <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
-                                <div class="col-6 pf-group">
+                                <div class="col-md-6 col-12 pf-group">
                                     <label class="form-label">CNIC</label>
                                     <?php if (empty($cnicVal)): ?>
                                         <input type="text" class="form-control border border-warning" name="cnic" placeholder="No dashes" required>
@@ -399,12 +399,12 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                     <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
-                                <div class="col-6 pf-group">
+                                <div class="col-md-6 col-12 pf-group">
                                     <label class="form-label">Department</label>
                                     <input type="text" class="form-control" value="<?php echo htmlspecialchars($departmentVal); ?>" disabled readonly>
                                     <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                                 </div>
-                                <div class="col-6 pf-group">
+                                <div class="col-md-6 col-12 pf-group">
                                     <label class="form-label">Designation</label>
                                     <input type="text" class="form-control" value="Head of Department" disabled readonly>
                                     <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
@@ -438,7 +438,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                     </div>
                                     <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                                 </div>
-                                <div class="col-4 pf-group">
+                                <div class="col-md-4 col-12 pf-group">
                                     <label class="form-label">Code <span class="text-danger">*</span></label>
                                     <select class="form-select" name="mobile_code" required <?php echo $isLocked ? 'disabled' : ''; ?>>
                                         <option value="+92" <?php echo $mobileCodeVal === '+92' || empty($mobileCodeVal) ? 'selected' : ''; ?>>+92</option>
@@ -447,7 +447,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                         <option value="+971" <?php echo $mobileCodeVal === '+971' ? 'selected' : ''; ?>>+971</option>
                                     </select>
                                 </div>
-                                <div class="col-8 pf-group">
+                                <div class="col-md-8 col-12 pf-group">
                                     <label class="form-label">Contact Number <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="mobile_no" value="<?php echo htmlspecialchars($mobileNoVal); ?>" placeholder="e.g. 3001234567" required <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                                 </div>

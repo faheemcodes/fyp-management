@@ -223,7 +223,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 </div>
                             <?php endif; ?>
                             <div>
-                                <div class="fw-semibold text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($u['name']); ?></div>
+                                <div class="fw-semibold" style="font-size: 0.9rem;"><?php echo htmlspecialchars($u['name']); ?></div>
                                 <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
                                 <?php if($u['student_id']): ?>
                                     <div class="mt-1 fw-bold" style="color: var(--primary-color); font-size: 0.75rem;"><?php echo htmlspecialchars($u['student_id']); ?></div>
@@ -237,7 +237,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td>
-                        <div class="fw-medium text-dark" style="font-size: 0.85rem;"><?php echo htmlspecialchars($u['department']); ?></div>
+                        <div class="fw-medium" style="font-size: 0.85rem;"><?php echo htmlspecialchars($u['department']); ?></div>
                         <?php if($u['designation']): ?>
                             <small class="text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($u['designation']); ?></small>
                         <?php endif; ?>
@@ -311,143 +311,78 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
-                <h5 class="modal-title fw-bold" id="createUserModalLabel">Add Academic / Student User</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
+                <h6 class="modal-title fw-semibold" id="createUserModalLabel" style="color: var(--text-primary);">Add Academic / Student User</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/create" method="POST">
                 <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label for="modalRole" class="form-label small fw-semibold text-secondary">Account Role</label>
-                        <select class="form-select bg-light" id="modalRole" name="role" required>
-                            <option value="student">Student</option>
-                            <option value="supervisor">Supervisor</option>
-                            <option value="committee">Committee</option>
-                            <option value="hod">HOD</option>
-                            <option value="coordinator">Coordinator</option>
-                        </select>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalRole" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Account Role</label>
+                            <select class="form-select" id="modalRole" name="role" required>
+                                <option value="student">Student</option>
+                                <option value="supervisor">Supervisor</option>
+                                <option value="committee">Committee</option>
+                                <option value="hod">HOD</option>
+                                <option value="coordinator">Coordinator</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Department</label>
+                            <select class="form-select" id="modalDepartment" name="department" required>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Electronic Engineering">Electronic Engineering</option>
+                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="modalName" class="form-label small fw-semibold text-secondary">First Name</label>
-                            <input type="text" class="form-control bg-light" id="modalName" name="name" required placeholder="Ali">
+                            <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">First Name</label>
+                            <input type="text" class="form-control" id="modalName" name="name" required placeholder="e.g. Faheem">
                         </div>
                         <div class="col-md-6">
-                            <label for="modalSurname" class="form-label small fw-semibold text-secondary">Surname / Last Name</label>
-                            <input type="text" class="form-control bg-light" id="modalSurname" name="surname" required placeholder="Khan">
+                            <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Surname / Last Name</label>
+                            <input type="text" class="form-control" id="modalSurname" name="surname" required placeholder="e.g. Soomro">
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="modalCnic" class="form-label small fw-semibold text-secondary">CNIC (Without dashes)</label>
-                        <input type="text" class="form-control bg-light" id="modalCnic" name="cnic" required placeholder="4220112345671">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="modalEmail" class="form-label small fw-semibold text-secondary">Email Address</label>
-                        <input type="email" class="form-control bg-light" id="modalEmail" name="email" required placeholder="ali.khan@university.edu">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="modalPassword" class="form-label small fw-semibold text-secondary">Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control bg-light" id="modalPassword" name="password" required placeholder="••••••••">
-                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                <i class="bi bi-eye"></i>
-                            </button>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Email Address</label>
+                            <input type="email" class="form-control" id="modalEmail" name="email" required placeholder="ali.khan@university.edu">
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="modalDepartment" class="form-label small fw-semibold text-secondary">Department</label>
-                        <select class="form-select bg-light" id="modalDepartment" name="department" required>
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Information Technology">Information Technology</option>
-                            <option value="Data Science">Data Science</option>
-                        </select>
+                        <div class="col-md-6">
+                            <label for="modalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">CNIC (Without dashes)</label>
+                            <input type="text" class="form-control" id="modalCnic" name="cnic" required placeholder="4220112345671">
+                        </div>
                     </div>
 
                     <!-- Student Specific -->
-                    <div id="modalStudentFields" class="mb-3">
-                        <hr class="text-muted opacity-25">
-                        <h6 class="fw-bold mb-3" style="font-size: 0.9rem; color: var(--primary-color);">Student Profile Details</h6>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="modalStudentId" class="form-label small fw-semibold text-secondary">Registration ID</label>
-                                <input type="text" class="form-control bg-light" id="modalStudentId" name="student_id" placeholder="2023-CS-100" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="modalShift" class="form-label small fw-semibold text-secondary">Shift</label>
-                                <select class="form-select bg-light" id="modalShift" name="shift">
-                                    <option value="Morning">Morning</option>
-                                    <option value="Evening">Evening</option>
-                                </select>
-                            </div>
+                    <div id="modalStudentFields" class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Registration ID</label>
+                            <input type="text" class="form-control" id="modalStudentId" name="student_id" placeholder="2023-CS-100" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="modalFather" class="form-label small fw-semibold text-secondary">Father's Name</label>
-                            <input type="text" class="form-control bg-light" id="modalFather" name="father_name" placeholder="Father's Full Name">
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="modalDob" class="form-label small fw-semibold text-secondary">Date of Birth</label>
-                                <input type="date" class="form-control bg-light" id="modalDob" name="dob">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="modalGender" class="form-label small fw-semibold text-secondary">Gender</label>
-                                <select class="form-select bg-light" id="modalGender" name="gender">
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-4">
-                                <label for="modalMobileCode" class="form-label small fw-semibold text-secondary">Code</label>
-                                <input type="text" class="form-control bg-light" id="modalMobileCode" name="mobile_code" value="+92">
-                            </div>
-                            <div class="col-8">
-                                <label for="modalMobileNo" class="form-label small fw-semibold text-secondary">Mobile Number</label>
-                                <input type="text" class="form-control bg-light" id="modalMobileNo" name="mobile_no" placeholder="3001234567">
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <label for="modalCountry" class="form-label small fw-semibold text-secondary">Country</label>
-                                <input type="text" class="form-control bg-light" id="modalCountry" name="country" value="Pakistan">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="modalProvince" class="form-label small fw-semibold text-secondary">Province</label>
-                                <select class="form-select bg-light" id="modalProvince" name="province_state">
-                                    <option value="Sindh">Sindh</option>
-                                    <option value="Punjab">Punjab</option>
-                                    <option value="KPK">KPK</option>
-                                    <option value="Balochistan">Balochistan</option>
-                                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
-                                    <option value="AJK">AJK</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="modalDistrict" class="form-label small fw-semibold text-secondary">District</label>
-                                <input type="text" class="form-control bg-light" id="modalDistrict" name="district" placeholder="e.g. Jamshoro">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modalAddress" class="form-label small fw-semibold text-secondary">Home Address</label>
-                            <input type="text" class="form-control bg-light" id="modalAddress" name="home_address" placeholder="Complete residential address">
+                        <div class="col-md-6">
+                            <label for="modalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Shift</label>
+                            <select class="form-select" id="modalShift" name="shift">
+                                <option value="Morning">Morning</option>
+                                <option value="Evening">Evening</option>
+                            </select>
                         </div>
                     </div>
 
                     <!-- Supervisor Specific -->
-                    <div id="modalSupervisorFields" class="d-none">
-                        <hr class="text-muted opacity-25">
-                        <h6 class="fw-bold mb-3" style="font-size: 0.9rem; color: var(--primary-color);">Supervisor Details</h6>
-                        <div class="mb-3">
-                            <label for="modalDesignation" class="form-label small fw-semibold text-secondary">Designation</label>
-                            <select class="form-select bg-light" id="modalDesignation" name="designation">
+                    <div id="modalSupervisorFields" class="row g-3 mb-3 d-none">
+                        <div class="col-md-12">
+                            <label for="modalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Designation</label>
+                            <select class="form-select" id="modalDesignation" name="designation">
                                 <option value="Lecturer">Lecturer</option>
                                 <option value="Assistant Professor">Assistant Professor</option>
                                 <option value="Associate Professor">Associate Professor</option>
@@ -455,10 +390,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </select>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="modalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="modalPassword" name="password" required placeholder="••••••••" style="padding-right: 56px;">
+                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light rounded-bottom">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Create Account</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Create Account</button>
                 </div>
             </form>
         </div>
@@ -468,66 +411,58 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Edit User Modal -->
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
-                <h5 class="modal-title fw-bold" id="editUserModalLabel">Edit User Account</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
+                <h6 class="modal-title fw-semibold" id="editUserModalLabel" style="color: var(--text-primary);">Edit User Account</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/edit" method="POST">
                 <div class="modal-body p-4">
                     <input type="hidden" id="editModalId" name="id">
                     <input type="hidden" id="editModalRole" name="role">
                     
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold text-secondary">Role</label>
-                        <input type="text" class="form-control bg-light" id="editModalRoleDisplay" readonly style="font-weight: bold; text-transform: uppercase;">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editModalName" class="form-label small fw-semibold text-secondary">Full Name</label>
-                        <input type="text" class="form-control bg-light" id="editModalName" name="name" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editModalEmail" class="form-label small fw-semibold text-secondary">Email Address</label>
-                        <input type="email" class="form-control bg-light" id="editModalEmail" name="email" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editModalCnic" class="form-label small fw-semibold text-secondary">CNIC / Passport (no dashes)</label>
-                        <input type="text" class="form-control bg-light" id="editModalCnic" name="cnic" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editModalPassword" class="form-label small fw-semibold text-secondary">New Password (leave blank to keep current)</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control bg-light" id="editModalPassword" name="password" placeholder="••••••••">
-                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                <i class="bi bi-eye"></i>
-                            </button>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Role</label>
+                            <input type="text" class="form-control" id="editModalRoleDisplay" readonly style="font-weight: bold; text-transform: uppercase;">
+                        </div>
+                        <div class="col-md-6" id="editModalDeptGroup">
+                            <label for="editModalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Department</label>
+                            <select class="form-select" id="editModalDepartment" name="department">
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Electronic Engineering">Electronic Engineering</option>
+                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="mb-3" id="editModalDeptGroup">
-                        <label for="editModalDepartment" class="form-label small fw-semibold text-secondary">Department</label>
-                        <select class="form-select bg-light" id="editModalDepartment" name="department">
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Information Technology">Information Technology</option>
-                            <option value="Data Science">Data Science</option>
-                            <option value="Electronic Engineering">Electronic Engineering</option>
-                            <option value="Telecommunication Engineering">Telecommunication Engineering</option>
-                        </select>
+                    <div class="mb-3">
+                        <label for="editModalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Full Name</label>
+                        <input type="text" class="form-control" id="editModalName" name="name" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Email Address</label>
+                            <input type="email" class="form-control" id="editModalEmail" name="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">CNIC (no dashes)</label>
+                            <input type="text" class="form-control" id="editModalCnic" name="cnic" required>
+                        </div>
                     </div>
 
                     <!-- Student Specific -->
-                    <div id="editModalStudentFields" class="d-none">
-                        <div class="mb-3">
-                            <label for="editModalStudentId" class="form-label small fw-semibold text-secondary">Student Registration ID</label>
-                            <input type="text" class="form-control bg-light" id="editModalStudentId" name="student_id">
+                    <div id="editModalStudentFields" class="row g-3 mb-3 d-none">
+                        <div class="col-md-6">
+                            <label for="editModalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Registration ID</label>
+                            <input type="text" class="form-control" id="editModalStudentId" name="student_id">
                         </div>
-                        <div class="mb-3">
-                            <label for="editModalShift" class="form-label small fw-semibold text-secondary">Shift</label>
-                            <select class="form-select bg-light" id="editModalShift" name="shift">
+                        <div class="col-md-6">
+                            <label for="editModalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Shift</label>
+                            <select class="form-select" id="editModalShift" name="shift">
                                 <option value="Morning">Morning</option>
                                 <option value="Evening">Evening</option>
                             </select>
@@ -535,25 +470,33 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
 
                     <!-- Supervisor Specific -->
-                    <div id="editModalSupervisorFields" class="d-none">
-                        <div class="mb-3">
-                            <label for="editModalDesignation" class="form-label small fw-semibold text-secondary">Designation</label>
-                            <select class="form-select bg-light" id="editModalDesignation" name="designation">
+                    <div id="editModalSupervisorFields" class="row g-3 mb-3 d-none">
+                        <div class="col-md-6">
+                            <label for="editModalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Designation</label>
+                            <select class="form-select" id="editModalDesignation" name="designation">
                                 <option value="Lecturer">Lecturer</option>
                                 <option value="Assistant Professor">Assistant Professor</option>
                                 <option value="Associate Professor">Associate Professor</option>
                                 <option value="Professor">Professor</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="editModalInterests" class="form-label small fw-semibold text-secondary">Research Interests</label>
-                            <input type="text" class="form-control bg-light" id="editModalInterests" name="research_interest">
+                        <div class="col-md-6">
+                            <label for="editModalInterests" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Research Interests</label>
+                            <input type="text" class="form-control" id="editModalInterests" name="research_interest">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editModalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">New Password (leave blank to keep current)</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="editModalPassword" name="password" placeholder="••••••••" style="padding-right: 56px;">
+                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light rounded-bottom">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Save Changes</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -563,10 +506,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- View User Details Modal -->
 <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-primary text-white border-0 py-3">
-                <h5 class="modal-title fw-bold" id="viewUserModalLabel"><i class="bi bi-person-lines-fill me-2"></i>User Account Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
+                <h6 class="modal-title fw-semibold" id="viewUserModalLabel" style="color: var(--text-primary);"><i class="bi bi-person-lines-fill me-2"></i>User Account Details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="row g-4">
@@ -579,14 +522,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
 
                         </div>
-                        <h5 id="detailName" class="fw-bold text-dark mb-1">Full Name</h5>
+                        <h5 id="detailName" class="fw-bold mb-1">Full Name</h5>
                         <p id="detailRoleBadge" class="mb-2"><span class="badge bg-secondary text-uppercase">Role</span></p>
                         <span id="detailStatusBadge" class="badge rounded-pill px-3 py-1.5 small mb-3">Status</span>
                         
-                        <div id="modalActionButtons" class="mt-4 pt-3 border-top d-none">
+                        <div id="modalActionButtonsDesktop" class="mt-4 pt-3 border-top d-none d-md-block">
                             <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
-                            <a id="modalApproveBtn" href="#" class="btn btn-success w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
-                            <a id="modalRejectBtn" href="#" class="btn btn-danger w-100 rounded-pill shadow-sm"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</a>
+                            <a id="modalApproveBtnDesktop" href="#" class="btn btn-success w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                            <a id="modalRejectBtnDesktop" href="#" class="btn btn-danger w-100 rounded-pill shadow-sm"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</a>
                         </div>
                     </div>
                     
@@ -595,32 +538,40 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="table-responsive">
                             <table class="table table-sm table-borderless align-middle m-0">
                                 <tbody>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="width: 35%; font-size: 0.8rem; font-weight: 600;">Email Address:</td><td id="detailEmail" class="fw-semibold text-dark py-2">email@domain.com</td></tr>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">CNIC / B-Form No:</td><td id="detailCnic" class="fw-semibold text-dark py-2">3520112345671</td></tr>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Department:</td><td id="detailDept" class="fw-semibold text-dark py-2">Software Engineering</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="width: 35%; font-size: 0.85rem;">Email Address:</td><td id="detailEmail" class="py-2">email@domain.com</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">CNIC / B-Form No:</td><td id="detailCnic" class="py-2">3520112345671</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Department:</td><td id="detailDept" class="py-2">Software Engineering</td></tr>
                                     
                                     <!-- Student details -->
-                                    <tr class="border-bottom student-detail-row"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Roll Number:</td><td id="detailStudentId" class="fw-semibold text-dark py-2">2k23/SWE/001</td></tr>
-                                    <tr class="border-bottom student-detail-row"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Shift:</td><td id="detailShift" class="fw-semibold text-dark py-2">Morning</td></tr>
-                                    <tr class="border-bottom student-detail-row"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Father's Name:</td><td id="detailFather" class="fw-semibold text-dark py-2">Father Name</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Roll Number:</td><td id="detailStudentId" class="py-2">2k23/SWE/001</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Shift:</td><td id="detailShift" class="py-2">Morning</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Father's Name:</td><td id="detailFather" class="py-2">Father Name</td></tr>
                                     
                                     <!-- Staff details -->
-                                    <tr class="border-bottom staff-detail-row"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Designation:</td><td id="detailDesignation" class="fw-semibold text-dark py-2">Assistant Professor</td></tr>
+                                    <tr class="border-bottom staff-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Designation:</td><td id="detailDesignation" class="py-2">Assistant Professor</td></tr>
                                     
                                     <!-- Common details -->
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Contact Number:</td><td id="detailPhone" class="fw-semibold text-dark py-2">+923001234567</td></tr>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Gender:</td><td id="detailGender" class="fw-semibold text-dark py-2">Male</td></tr>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Date of Birth:</td><td id="detailDob" class="fw-semibold text-dark py-2">2000-01-01</td></tr>
-                                    <tr class="border-bottom"><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Domicile Location:</td><td id="detailDomicile" class="fw-semibold text-dark py-2">Sindh / Jamshoro</td></tr>
-                                    <tr><td class="text-muted py-2" style="font-size: 0.8rem; font-weight: 600;">Home Address:</td><td id="detailAddress" class="text-wrap text-dark py-2">Not Provided Yet</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Contact Number:</td><td id="detailPhone" class="py-2">+923001234567</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Gender:</td><td id="detailGender" class="py-2">Male</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Date of Birth:</td><td id="detailDob" class="py-2">2000-01-01</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Domicile Location:</td><td id="detailDomicile" class="py-2">Sindh / Jamshoro</td></tr>
+                                    <tr><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Home Address:</td><td id="detailAddress" class="text-wrap py-2">Not Provided Yet</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+                        
+                        <div id="modalActionButtonsMobile" class="mt-4 pt-3 border-top d-block d-md-none d-none">
+                            <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
+                            <div class="d-flex flex-column gap-2">
+                                <a id="modalApproveBtnMobile" href="#" class="btn btn-success w-100 rounded-pill shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                                <a id="modalRejectBtnMobile" href="#" class="btn btn-danger w-100 rounded-pill shadow-sm"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 bg-light rounded-bottom">
-                <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
             </div>
         </div>
     </div>
@@ -733,15 +684,25 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 }
                 
                 // Pending modal action buttons
-                const actionContainer = document.getElementById('modalActionButtons');
+                const actionDesktop = document.getElementById('modalActionButtonsDesktop');
+                const actionMobile = document.getElementById('modalActionButtonsMobile');
+                
+                // Reset display classes
+                actionDesktop.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
+                actionMobile.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
+                
                 if (status === 'pending') {
-                    actionContainer.classList.remove('d-none');
+                    actionDesktop.classList.add('d-none', 'd-md-block');
+                    actionMobile.classList.add('d-block', 'd-md-none');
                     
                     const basePathClean = "<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>";
-                    document.getElementById('modalApproveBtn').href = `${basePathClean}/admin/users/approve?id=${userId}`;
-                    document.getElementById('modalRejectBtn').href = `${basePathClean}/admin/users/reject?id=${userId}`;
+                    document.getElementById('modalApproveBtnDesktop').href = `${basePathClean}/admin/users/approve?id=${userId}`;
+                    document.getElementById('modalRejectBtnDesktop').href = `${basePathClean}/admin/users/reject?id=${userId}`;
+                    document.getElementById('modalApproveBtnMobile').href = `${basePathClean}/admin/users/approve?id=${userId}`;
+                    document.getElementById('modalRejectBtnMobile').href = `${basePathClean}/admin/users/reject?id=${userId}`;
                 } else {
-                    actionContainer.classList.add('d-none');
+                    actionDesktop.classList.add('d-none');
+                    actionMobile.classList.add('d-none');
                 }
             });
         });

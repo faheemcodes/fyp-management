@@ -95,6 +95,7 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     box-shadow: 4px 0 24px rgba(0,0,0,0.18);
     overflow-y: auto;
     overflow-x: hidden;
+    border-right: 1px solid var(--border-color);
 }
 
 #sidebar::-webkit-scrollbar { width: 4px; }
@@ -666,3 +667,12 @@ html.dark-theme #content::before {
 }
 
 .container-fluid { position: relative; z-index: 1; }
+
+/* ─── Fix close button visibility in dark theme ─── */
+html.dark-theme .modal .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+}
+html.dark-theme .modal .btn-close:hover {
+    opacity: 1;
+}

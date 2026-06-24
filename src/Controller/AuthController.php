@@ -55,34 +55,40 @@ class AuthController extends BaseController {
                 
                 // Fetch profile specific name
                 if ($user['role'] === 'student') {
-                    $sStmt = $db->prepare("SELECT name, student_id, avatar FROM students WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, student_id, avatar, department FROM students WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $student = $sStmt->fetch();
                     $_SESSION['name'] = $student['name'] ?? 'Student';
                     $_SESSION['student_id'] = $student['student_id'] ?? '';
                     $_SESSION['avatar'] = $student['avatar'] ?? '';
+                    $_SESSION['department'] = $student['department'] ?? 'Software Engineering';
                 } else if ($user['role'] === 'supervisor') {
-                    $sStmt = $db->prepare("SELECT name FROM supervisors WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $supervisor = $sStmt->fetch();
                     $_SESSION['name'] = $supervisor['name'] ?? 'Supervisor';
+                    $_SESSION['department'] = $supervisor['department'] ?? 'Software Engineering';
                 } else if ($user['role'] === 'committee') {
-                    $sStmt = $db->prepare("SELECT name FROM committees WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $committee = $sStmt->fetch();
                     $_SESSION['name'] = $committee['name'] ?? 'Committee Member';
+                    $_SESSION['department'] = $committee['department'] ?? 'Software Engineering';
                 } else if ($user['role'] === 'hod') {
-                    $sStmt = $db->prepare("SELECT name FROM hods WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $hod = $sStmt->fetch();
                     $_SESSION['name'] = $hod['name'] ?? 'HOD';
+                    $_SESSION['department'] = $hod['department'] ?? 'Software Engineering';
                 } else if ($user['role'] === 'coordinator') {
-                    $sStmt = $db->prepare("SELECT name FROM coordinators WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $coord = $sStmt->fetch();
                     $_SESSION['name'] = $coord['name'] ?? 'Coordinator';
+                    $_SESSION['department'] = $coord['department'] ?? 'Software Engineering';
                 } else {
                     $_SESSION['name'] = 'System Admin';
+                    $_SESSION['department'] = 'All Departments';
                 }
                 
                 redirect('/' . $user['role'] . '/dashboard');
@@ -352,6 +358,12 @@ class AuthController extends BaseController {
                         $stmt->execute([$userId, $fullName, $designation, $department]);
                     } else if ($role === 'hod') {
                         $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $department]);
+                    } else if ($role === 'coordinator') {
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $department]);
+                    } else if ($role === 'committee') {
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
                         $stmt->execute([$userId, $fullName, $department]);
                     }
                     

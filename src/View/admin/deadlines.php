@@ -119,6 +119,22 @@
     </div>
 </div>
 
+<!-- Department Selector -->
+<div class="d-flex justify-content-end mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 gap-md-3 w-100 justify-content-md-end">
+        <label for="departmentFilter" class="fw-bold text-secondary m-0 text-nowrap" style="font-size: 0.9rem;">Select Department:</label>
+        <select class="form-select border-0 shadow-sm fw-semibold text-primary w-100 w-md-auto" style="background: var(--card-bg); max-width: 350px; border-radius: 12px; cursor: pointer;" id="departmentFilter" onchange="window.location.href='?department='+encodeURIComponent(this.value)">
+            <?php
+            $depts = ['Information Technology', 'Software Engineering', 'Data Science', 'Electronic Engineering', 'Telecommunication Engineering'];
+            foreach($depts as $d) {
+                $sel = (isset($department) && $department === $d) ? 'selected' : '';
+                echo "<option value=\"$d\" $sel>$d</option>";
+            }
+            ?>
+        </select>
+    </div>
+</div>
+
 <div class="row g-4">
     <div class="col-lg-5">
         <div class="grp-section h-100">
@@ -127,6 +143,7 @@
             </div>
             <div class="p-4">
                 <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines" method="POST">
+                    <input type="hidden" name="department" value="<?php echo htmlspecialchars($department ?? 'Software Engineering'); ?>">
                     <div class="mb-3">
                         <label for="stage" class="form-label small fw-semibold text-secondary">Project Submission Stage</label>
                         <select class="form-select bg-light" id="stage" name="stage" required>
@@ -187,7 +204,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="text-end pe-4">
-                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>" class="btn btn-sm d-inline-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; width: 32px; height: 32px;" onclick="return confirm('Are you sure you want to delete this deadline?');">
+                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>&department=<?php echo urlencode($dl['department'] ?? ($department ?? 'Software Engineering')); ?>" class="btn btn-sm d-inline-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; width: 32px; height: 32px;" onclick="return confirm('Are you sure you want to delete this deadline?');">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </td>

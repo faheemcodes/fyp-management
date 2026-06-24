@@ -62,7 +62,7 @@ class HodController extends BaseController {
             $department = trim($_POST['department'] ?? '');
             $research_interest = trim($_POST['research_interest'] ?? '');
 
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($contactNo) || empty($password) || empty($designation) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation) || empty($department)) {
                 $this->flash('error', 'Please fill in all required fields.');
                 redirect('/hod/supervisors');
             }
@@ -98,8 +98,8 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $department, $research_interest]);
 
                 // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic]);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Supervisor');
 
@@ -173,7 +173,7 @@ class HodController extends BaseController {
             $password = $_POST['password'] ?? '';
             $department = trim($_POST['department'] ?? '');
 
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($contactNo) || empty($password) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($password) || empty($department)) {
                 $this->flash('error', 'All fields are required.');
                 redirect('/hod/committee');
             }
@@ -209,8 +209,8 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $department]);
 
                 // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic]);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
@@ -356,7 +356,7 @@ class HodController extends BaseController {
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($contactNo) || empty($password)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation)) {
                 $this->flash('error', 'All fields are required.');
                 redirect('/hod/coordinators');
             }
@@ -395,8 +395,8 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $dept]);
                 
                 // Keep profiles table in sync
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic, $contactNo]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic]);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Coordinator');
                 

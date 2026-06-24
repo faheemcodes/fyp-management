@@ -348,14 +348,14 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <!-- DETAILS MODAL -->
 <div class="modal fade" id="detailsModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
                 <h6 class="modal-title fw-bold">Project Details - <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
-                    <h5 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($g['project_title']); ?></h5>
+                    <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></h5>
                     <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
                         Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
                     </span>
@@ -377,7 +377,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                 <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                                 <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
                                 <div>
-                                    <div class="fw-semibold text-dark" style="font-size: 0.9rem;">
+                                    <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
                                         <?php echo htmlspecialchars($m['name']); ?>
                                         <?php if($m['user_id'] == $g['created_by']): ?>
                                             <span class="badge ms-1" style="background: rgba(59,130,246,0.15); color: #3b82f6; font-size: 0.6rem;">Leader</span>
@@ -395,8 +395,8 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 bg-light p-3 rounded-bottom-4">
-                <button type="button" class="btn btn-secondary rounded-3 px-4" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
             </div>
         </div>
     </div>
@@ -405,7 +405,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <!-- MANUAL GRADING MODAL -->
 <div class="modal fade" id="gradeGroupModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">
                 <h6 class="modal-title fw-bold">Manual Group Grading</h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -413,19 +413,19 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
             <form action="<?php echo $basePath; ?>/supervisor/groups/grade" method="POST">
                 <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                 <div class="modal-body p-4 text-start">
-                    <p class="text-muted mb-4" style="font-size: 0.82rem; line-height: 1.5;">Review work manually and enter marks. Overall totals and grades will be updated automatically.</p>
+                    <p class="mb-4" style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary);">Review work manually and enter marks. Overall totals and grades will be updated automatically.</p>
                     
                     <div class="mb-2">
-                        <label for="supervision_marks_<?php echo $g['id']; ?>" class="form-label small fw-semibold text-secondary text-uppercase" style="letter-spacing: 0.04em;">Supervision Marks</label>
+                        <label for="supervision_marks_<?php echo $g['id']; ?>" class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Supervision Marks</label>
                         <div class="input-group">
-                            <input type="number" class="form-control fw-bold text-dark" id="supervision_marks_<?php echo $g['id']; ?>" name="supervision_marks" min="0" max="45" step="1" value="<?php echo htmlspecialchars(number_format($g['supervision_marks'] ?? 0, 0)); ?>" required>
-                            <span class="input-group-text bg-light text-muted fw-semibold">/ 45</span>
+                            <input type="number" class="form-control fw-bold" id="supervision_marks_<?php echo $g['id']; ?>" name="supervision_marks" min="0" max="45" step="1" value="<?php echo htmlspecialchars(number_format($g['supervision_marks'] ?? 0, 0)); ?>" style="color: var(--text-primary); background: var(--form-bg); border-color: var(--border-color);" required>
+                            <span class="input-group-text fw-semibold" style="background: var(--form-bg); border-color: var(--border-color); color: var(--text-secondary);">/ 45</span>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light rounded-bottom-4 text-end">
-                    <button type="button" class="btn btn-secondary rounded-3 px-3" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-3 px-4" style="background: #0d9488; border-color: #0d9488;">Save Marks</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Save Marks</button>
                 </div>
             </form>
         </div>

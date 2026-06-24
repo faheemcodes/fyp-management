@@ -79,9 +79,7 @@
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock text-muted"></i></span>
                     <input type="password" class="form-control bg-light border-start-0 border-end-0" id="password" name="password" minlength="8" placeholder="At least 8 characters" required>
-                    <button class="btn btn-outline-light border bg-light text-muted border-start-0" type="button" onclick="const el = document.getElementById('password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';" style="border-color: #dee2e6 !important;">
-                        <i class="bi bi-eye"></i>
-                    </button>
+                    <button class="btn bg-light border border-start-0" type="button" onclick="const el = document.getElementById('password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';" style="border-color: #dee2e6 !important; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0 14px; box-shadow: none;">Show</button>
                 </div>
             </div>
 
@@ -90,9 +88,7 @@
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill text-muted"></i></span>
                     <input type="password" class="form-control bg-light border-start-0 border-end-0" id="confirm_password" name="confirm_password" minlength="8" placeholder="Retype new password" required>
-                    <button class="btn btn-outline-light border bg-light text-muted border-start-0" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';" style="border-color: #dee2e6 !important;">
-                        <i class="bi bi-eye"></i>
-                    </button>
+                    <button class="btn bg-light border border-start-0" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';" style="border-color: #dee2e6 !important; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0 14px; box-shadow: none;">Show</button>
                 </div>
             </div>
 

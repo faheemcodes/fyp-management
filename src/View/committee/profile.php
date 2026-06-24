@@ -308,11 +308,13 @@ if ($basePath === '/') {
             </div>
             <p class="mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.82rem;">
                 <i class="bi bi-shield-lock me-1"></i>Evaluation Committee Member
-                &nbsp;·&nbsp;
-                <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($committee['email']); ?>
+                <span class="d-none d-md-inline">
+                    &nbsp;·&nbsp;
+                    <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($committee['email']); ?>
+                </span>
             </p>
 
-            <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
+            <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
                 <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 600;">PROFILE SETUP</span>
                 <div class="profile-completion">
                     <div class="profile-completion-fill" style="width: <?php echo $completionPct; ?>%;"></div>

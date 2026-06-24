@@ -46,7 +46,10 @@ class StudentController extends BaseController {
         }
 
         // Get system deadlines
-        $deadlines = $db->query("SELECT * FROM deadlines WHERE status = 'Active' ORDER BY id ASC")->fetchAll();
+        $department = $_SESSION['department'] ?? 'Software Engineering';
+        $stmtDl = $db->prepare("SELECT * FROM deadlines WHERE status = 'Active' AND department = ? ORDER BY id ASC");
+        $stmtDl->execute([$department]);
+        $deadlines = $stmtDl->fetchAll();
 
         $this->render('student/dashboard', [
             'group' => $group,

@@ -100,7 +100,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="group-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #8b5cf6, #6366f1, #3b82f6, #8b5cf6);">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #3b82f6, #60a5fa, #2563eb, #3b82f6);">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
@@ -154,41 +154,59 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <span class="badge bg-light text-dark border px-2 py-1"><?php echo htmlspecialchars($c['department']); ?></span>
                     </td>
                     <td class="text-end pe-4">
-                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $c['user_id']; ?>"><i class="bi bi-pencil-square me-1"></i>Edit</button>
-                        <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo $c['user_id']; ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this committee member? This will delete their user account permanently.')"><i class="bi bi-trash-fill me-1"></i>Delete</a>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1); color: #047fb0; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $c['user_id']; ?>">
+                                <i class="bi bi-pencil-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Edit</span>
+                            </button>
+                            <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo $c['user_id']; ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1); color: #a80a34; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="return confirm('Are you sure you want to delete this committee member? This will delete their user account permanently.')">
+                                <i class="bi bi-trash3-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Delete</span>
+                            </a>
+                        </div>
                     </td>
                 </tr>
 
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo $c['user_id']; ?>" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-sm">
-                        <div class="modal-content rounded-3 border-0">
-                            <div class="modal-header bg-dark text-white border-0 py-2.5">
-                                <h6 class="modal-title fw-bold">Edit Committee Member</h6>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0" style="border-radius: 1.5rem; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem; border-bottom: 1px solid var(--border-color) !important;">
+                                <div class="position-absolute top-0 end-0 p-3">
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="rounded-circle p-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg); border: 1px solid var(--border-color); width: 64px; height: 64px;">
+                                    <i class="bi bi-pencil-square text-primary" style="font-size: 1.75rem;"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;">Edit Committee Member</h5>
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(59, 130, 246, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
+                                    <?php echo htmlspecialchars($c['name']); ?>
+                                </div>
                             </div>
                             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/committee/edit" method="POST">
-                                <div class="modal-body p-3">
+                                <div class="modal-body p-4">
                                     <input type="hidden" name="user_id" value="<?php echo $c['user_id']; ?>">
                                     
                                     <div class="mb-3 text-start">
-                                        <label class="form-label small fw-semibold text-secondary">Full Name</label>
-                                        <input type="text" class="form-control bg-light" name="name" value="<?php echo htmlspecialchars($c['name']); ?>" required>
+                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Full Name</label>
+                                        <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="name" value="<?php echo htmlspecialchars($c['name']); ?>" required>
                                     </div>
 
                                     <div class="mb-3 text-start">
-                                        <label class="form-label small fw-semibold text-secondary">Department</label>
-                                        <select class="form-select bg-light" name="department" required>
+                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Department</label>
+                                        <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="department" required>
                                             <option value="Computer Science" <?php echo $c['department'] === 'Computer Science' ? 'selected' : ''; ?>>Computer Science</option>
                                             <option value="Software Engineering" <?php echo $c['department'] === 'Software Engineering' ? 'selected' : ''; ?>>Software Engineering</option>
                                             <option value="Information Technology" <?php echo $c['department'] === 'Information Technology' ? 'selected' : ''; ?>>Information Technology</option>
                                             <option value="Data Science" <?php echo $c['department'] === 'Data Science' ? 'selected' : ''; ?>>Data Science</option>
+                                            <option value="Telecommunication Engineering" <?php echo $c['department'] === 'Telecommunication Engineering' ? 'selected' : ''; ?>>Telecommunication Engineering</option>
+                                            <option value="Electronic Engineering" <?php echo $c['department'] === 'Electronic Engineering' ? 'selected' : ''; ?>>Electronic Engineering</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="modal-footer border-0 p-2 bg-light rounded-bottom text-end">
-                                    <button type="button" class="btn btn-secondary rounded-pill btn-xs px-3" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary rounded-pill btn-xs px-3">Save</button>
+                                <div class="modal-footer border-0 p-4 pt-0">
+                                    <div class="d-flex w-100 gap-2">
+                                        <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1); color: var(--text-primary); padding: 0.6rem 0;" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Save Changes</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -207,73 +225,78 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <!-- Create Committee Modal -->
 <div class="modal fade" id="createCommitteeModal" tabindex="-1" aria-labelledby="createCommitteeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
-                <h5 class="modal-title fw-bold" id="createCommitteeModalLabel">Add New Committee Member</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0" style="border-radius: 1.5rem; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem; border-bottom: 1px solid var(--border-color) !important;">
+                <div class="position-absolute top-0 end-0 p-3">
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="rounded-circle p-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg); border: 1px solid var(--border-color); width: 64px; height: 64px;">
+                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 1.75rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;" id="createCommitteeModalLabel">Add New Committee Member</h5>
+                <p class="text-muted small mb-0">Fill in the details to register a new committee member.</p>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/committee/create" method="POST">
                 <div class="modal-body p-4">
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label for="comFirstName" class="form-label small fw-semibold text-secondary">First Name</label>
-                            <input type="text" class="form-control bg-light" id="comFirstName" name="first_name" required placeholder="e.g. Zahid">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="comFirstName" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">First Name</label>
+                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comFirstName" name="first_name" required placeholder="e.g. Faheem">
                         </div>
-                        <div class="col-6">
-                            <label for="comLastName" class="form-label small fw-semibold text-secondary">Last Name</label>
-                            <input type="text" class="form-control bg-light" id="comLastName" name="last_name" required placeholder="e.g. Hussain">
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="comCnic" class="form-label small fw-semibold text-secondary">CNIC (no dashes)</label>
-                        <input type="text" class="form-control bg-light" id="comCnic" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="comDesignation" class="form-label small fw-semibold text-secondary">Designation</label>
-                        <select class="form-select bg-light" id="comDesignation" name="designation" required>
-                            <option value="Lecturer">Lecturer</option>
-                            <option value="Assistant Professor" selected>Assistant Professor</option>
-                            <option value="Associate Professor">Associate Professor</option>
-                            <option value="Professor">Professor</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="comContact" class="form-label small fw-semibold text-secondary">Contact No. (Phone)</label>
-                        <input type="text" class="form-control bg-light" id="comContact" name="contact_no" required placeholder="e.g. 03001234567">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="comEmail" class="form-label small fw-semibold text-secondary">Email Address</label>
-                        <input type="email" class="form-control bg-light" id="comEmail" name="email" required placeholder="name@university.edu">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="comPassword" class="form-label small fw-semibold text-secondary">Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control bg-light" id="comPassword" name="password" required placeholder="••••••••">
-                            <button class="btn btn-outline-secondary bg-light text-muted border" type="button" onclick="const el = document.getElementById('comPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.querySelector('i').className = el.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';">
-                                <i class="bi bi-eye"></i>
-                            </button>
+                        <div class="col-md-6">
+                            <label for="comLastName" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Last Name</label>
+                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comLastName" name="last_name" required placeholder="e.g. Soomro">
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="comDept" class="form-label small fw-semibold text-secondary">Department</label>
-                        <select class="form-select bg-light" id="comDept" name="department" required>
-                            <option value="Computer Science">Computer Science</option>
-                            <option value="Software Engineering" selected>Software Engineering</option>
-                            <option value="Information Technology">Information Technology</option>
-                            <option value="Data Science">Data Science</option>
-                        </select>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="comEmail" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Email Address</label>
+                            <input type="email" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comEmail" name="email" required placeholder="name@university.edu">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="comCnic" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">CNIC (no dashes)</label>
+                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comCnic" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="comDesignation" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Designation</label>
+                            <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comDesignation" name="designation" required>
+                                <option value="Lecturer">Lecturer</option>
+                                <option value="Assistant Professor" selected>Assistant Professor</option>
+                                <option value="Associate Professor">Associate Professor</option>
+                                <option value="Professor">Professor</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="comDept" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Department</label>
+                            <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comDept" name="department" required>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Software Engineering" selected>Software Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                                <option value="Electronic Engineering">Electronic Engineering</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label for="comPassword" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="comPassword" name="password" required placeholder="••••••••" style="padding-right: 56px;">
+                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('comPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light rounded-bottom">
-                    <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Add Member</button>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <div class="d-flex w-100 gap-2">
+                        <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1); color: var(--text-primary); padding: 0.6rem 0;" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Add Member</button>
+                    </div>
                 </div>
             </form>
         </div>

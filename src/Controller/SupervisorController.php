@@ -74,7 +74,7 @@ class SupervisorController extends BaseController {
                 $db = \Database::getInstance()->getConnection();
                 
                 // Inherit supervisor's global visibility status from other groups, defaulting to 0
-                $stmtVis = $db->prepare("SELECT show_supervision_to_student FROM grades g JOIN projects p ON g.group_id = p.group_id WHERE p.supervisor_id = ? ORDER BY g.id DESC LIMIT 1");
+                $stmtVis = $db->prepare("SELECT show_supervision_to_student FROM grades g JOIN projects p ON g.group_id = p.group_id WHERE p.supervisor_id = ? ORDER BY g.calculated_at DESC LIMIT 1");
                 $stmtVis->execute([$supervisorId]);
                 $lastVis = $stmtVis->fetchColumn();
                 $show_supervision_to_student = ($lastVis !== false) ? (int)$lastVis : 0;

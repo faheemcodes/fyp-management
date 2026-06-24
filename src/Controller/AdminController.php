@@ -16,11 +16,13 @@ class AdminController extends BaseController {
         $stats['active_projects'] = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
         $stats['completed_projects'] = $db->query("SELECT COUNT(*) FROM groups WHERE progress_stage = 'Final Grading Completed'")->fetchColumn();
         
-        // Pending evaluations (evaluations scheduled but not graded yet, or groups ready for evaluation)
-        $stats['pending_evaluations'] = $db->query("SELECT COUNT(*) FROM groups WHERE progress_stage IN ('Proposal Approved', 'Proposal Defence Presentation Completed', 'FYP Progress Presentation Completed')")->fetchColumn();
+        // Pending evaluations (evaluations scheduled but not graded yet, or pending proposals)
+        $pendingProposals = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Pending'")->fetchColumn();
+        $pendingPresentations = $db->query("SELECT COUNT(*) FROM evaluations WHERE total_marks = 0 OR total_marks IS NULL")->fetchColumn();
+        $stats['pending_evaluations'] = $pendingProposals + $pendingPresentations;
 
-        // Average marks calculation
-        $avgMarks = $db->query("SELECT AVG(total_marks) FROM grades WHERE total_marks > 0")->fetchColumn();
+        // Average percentage calculation
+        $avgMarks = $db->query("SELECT AVG(percentage) FROM grades WHERE percentage > 0")->fetchColumn();
         $stats['avg_marks'] = $avgMarks ? round($avgMarks, 2) . '%' : 'N/A';
 
         // Recent users and groups
@@ -81,7 +83,7 @@ class AdminController extends BaseController {
             LEFT JOIN hods d ON u.id = d.user_id
             LEFT JOIN coordinators coord ON u.id = coord.user_id
             LEFT JOIN profiles prof ON u.id = prof.user_id
-            ORDER BY u.status DESC, u.created_at DESC")->fetchAll();
+            ORDER BY CASE WHEN u.status = 'pending' THEN 1 ELSE 2 END ASC, u.created_at DESC")->fetchAll();
 
         $this->render('admin/users', [
             'users' => $users
@@ -149,17 +151,17 @@ class AdminController extends BaseController {
             $surname = trim($_POST['surname'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
             
-            // Student Profile
-            $father_name = trim($_POST['father_name'] ?? '');
-            $dob = trim($_POST['dob'] ?? '2000-01-01');
-            $gender = trim($_POST['gender'] ?? 'Male');
-            $mobile_code = trim($_POST['mobile_code'] ?? '+92');
-            $mobile_no = trim($_POST['mobile_no'] ?? '');
-            $country = trim($_POST['country'] ?? 'Pakistan');
-            $province_state = trim($_POST['province_state'] ?? '');
-            $district = trim($_POST['district'] ?? '');
-            $home_address = trim($_POST['home_address'] ?? '');
-            $shift = trim($_POST['shift'] ?? 'Morning');
+            // Student Profile Defaults (Since admin only inputs basic info now)
+            $father_name = !empty($_POST['father_name']) ? trim($_POST['father_name']) : '';
+            $dob = !empty($_POST['dob']) ? trim($_POST['dob']) : '2000-01-01';
+            $gender = !empty($_POST['gender']) ? trim($_POST['gender']) : 'Male';
+            $mobile_code = !empty($_POST['mobile_code']) ? trim($_POST['mobile_code']) : '+92';
+            $mobile_no = !empty($_POST['mobile_no']) ? trim($_POST['mobile_no']) : '0000000000';
+            $country = !empty($_POST['country']) ? trim($_POST['country']) : 'Pakistan';
+            $province_state = !empty($_POST['province_state']) ? trim($_POST['province_state']) : '';
+            $district = !empty($_POST['district']) ? trim($_POST['district']) : '';
+            $home_address = !empty($_POST['home_address']) ? trim($_POST['home_address']) : 'Not Provided Yet';
+            $shift = !empty($_POST['shift']) ? trim($_POST['shift']) : 'Morning';
             
             if (empty($email) || empty($password) || empty($role) || empty($name)) {
                 $this->flash('error', 'All core fields are required.');
@@ -295,31 +297,40 @@ class AdminController extends BaseController {
     public function deadlines() {
         $db = \Database::getInstance()->getConnection();
         
+        $department = $_GET['department'] ?? 'Software Engineering';
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stage = $_POST['stage'] ?? '';
             $date = $_POST['deadline_date'] ?? '';
             $status = $_POST['status'] ?? 'Inactive';
+            $formDepartment = $_POST['department'] ?? 'Software Engineering';
             
             if ($stage && $date) {
-                $stmt = $db->prepare("INSERT INTO deadlines (stage, deadline_date, status) VALUES (?, ?, ?) 
+                $stmt = $db->prepare("INSERT INTO deadlines (stage, deadline_date, status, department) VALUES (?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE deadline_date = ?, status = ?");
-                $stmt->execute([$stage, $date, $status, $date, $status]);
+                $stmt->execute([$stage, $date, $status, $formDepartment, $date, $status]);
                 
-                // Notify all students if active
+                // Notify students in that department if active
                 if ($status === 'Active') {
-                    $students = $db->query("SELECT user_id FROM students")->fetchAll();
+                    $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
+                    $stmtStudents->execute([$formDepartment]);
+                    $students = $stmtStudents->fetchAll();
                     foreach ($students as $s) {
                         $this->addNotification($s['user_id'], 'Deadline Updated', "The deadline for $stage has been updated to $date.");
                     }
                 }
                 
-                $this->flash('success', "$stage deadline updated.");
+                $this->flash('success', "$stage deadline updated for $formDepartment.");
+                redirect('/admin/deadlines?department=' . urlencode($formDepartment));
             }
         }
         
-        $deadlines = $db->query("SELECT * FROM deadlines ORDER BY id ASC")->fetchAll();
+        $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY id ASC");
+        $stmt->execute([$department]);
+        $deadlines = $stmt->fetchAll();
         $this->render('admin/deadlines', [
-            'deadlines' => $deadlines
+            'deadlines' => $deadlines,
+            'department' => $department
         ]);
     }
 
@@ -755,16 +766,17 @@ class AdminController extends BaseController {
 
     public function deleteDeadline() {
         $stage = $_GET['stage'] ?? '';
+        $department = $_GET['department'] ?? 'Software Engineering';
         if ($stage) {
             $db = \Database::getInstance()->getConnection();
             try {
-                $stmt = $db->prepare("DELETE FROM deadlines WHERE stage = ?");
-                $stmt->execute([$stage]);
+                $stmt = $db->prepare("DELETE FROM deadlines WHERE stage = ? AND department = ?");
+                $stmt->execute([$stage, $department]);
                 $this->flash('success', "Deadline for $stage deleted successfully.");
             } catch (\Exception $e) {
                 $this->flash('error', 'Error deleting deadline: ' . $e->getMessage());
             }
         }
-        redirect('/admin/deadlines');
+        redirect('/admin/deadlines?department=' . urlencode($department));
     }
 }
