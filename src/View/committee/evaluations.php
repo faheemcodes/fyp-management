@@ -375,14 +375,14 @@ html.dark-theme .modal .btn-close:hover {
                     <td>
                         <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
                             <div class="grade-box">
-                                <div class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['final_presentation']['total_marks'], 0); ?> / 75</div>
+                                <div class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['final_presentation']['total_marks'], 0); ?> / 25</div>
                                 <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? ''); ?>">
                                     <?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? 'No remarks'); ?>
                                 </div>
                             </div>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">
-                                Evaluate (75)
+                                Evaluate (25)
                             </button>
                         <?php endif; ?>
                     </td>
@@ -431,7 +431,7 @@ html.dark-theme .modal .btn-close:hover {
                     <?php endif; ?>
                 </div>
                 <div class="eval-mobile-grade">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (75)</span>
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (25)</span>
                     <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
                         <span class="grade-box-score"><i class="bi bi-check2-circle me-1"></i><?php echo number_format($g['final_presentation']['total_marks'], 0); ?></span>
                     <?php else: ?>
@@ -559,14 +559,6 @@ html.dark-theme .modal .btn-close:hover {
                     <input type="hidden" name="stage" value="Final Presentation">
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Project Demo (0-25)</label>
-                                <input type="number" class="form-control" name="project_demo" min="0" max="25" step="1" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Thesis (0-25)</label>
-                                <input type="number" class="form-control" name="thesis" min="0" max="25" step="1" required>
-                            </div>
                             <div class="col-md-12">
                                 <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation (0-25)</label>
                                 <input type="number" class="form-control" name="presentation" min="0" max="25" step="1" required>

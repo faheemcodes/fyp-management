@@ -247,6 +247,108 @@ class CoordinatorController extends BaseController {
         redirect('/coordinator/notice');
     }
 
+    public function externalAssessment() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        
+        $this->render('coordinator/external_assessment', [
+            'department' => $dept
+        ]);
+    }
+
+    public function generateExternalAssessment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $attrNames = $_POST['attr_names'] ?? [];
+            $attrMarks = $_POST['attr_marks'] ?? [];
+            
+            if (empty($attrNames) || count($attrNames) !== count($attrMarks)) {
+                $this->flash('error', 'Invalid attributes configuration.');
+                redirect('/coordinator/assessment');
+            }
+
+            $total = 0;
+            $attributes = [];
+            for ($i = 0; $i < count($attrNames); $i++) {
+                $name = trim($attrNames[$i]);
+                $marks = (int)$attrMarks[$i];
+                if (!empty($name) && $marks > 0) {
+                    $attributes[] = ['name' => $name, 'marks' => $marks];
+                    $total += $marks;
+                }
+            }
+
+            if ($total !== 50) {
+                $this->flash('error', "Total marks must exactly equal 50. Currently: $total");
+                redirect('/coordinator/assessment');
+            }
+
+            $shift = $_POST['shift'] ?? 'Combined';
+
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+            $query = "
+                SELECT g.group_code, p.title as project_title, u_stu.name as student_name
+                FROM groups g
+                LEFT JOIN projects p ON p.group_id = g.id
+                JOIN group_members gm ON gm.group_id = g.id
+                JOIN students u_stu ON gm.student_id = u_stu.user_id
+                LEFT JOIN students s ON s.user_id = g.created_by
+                WHERE s.department = ? AND p.status = 'Approved'
+            ";
+
+            $params = [$dept];
+            if ($shift === 'Morning' || $shift === 'Evening') {
+                $query .= " AND u_stu.shift = ?";
+                $params[] = $shift;
+            }
+
+            $query .= " ORDER BY g.group_code ASC, u_stu.name ASC";
+
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            $students = $stmt->fetchAll();
+
+            // Setup CSV Output
+            while (ob_get_level()) { ob_end_clean(); }
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename=External_Assessment_' . $shift . '_' . date('Ymd') . '.csv');
+            
+            $output = fopen('php://output', 'w');
+
+            // Header Row
+            $header = ['Group ID', 'Project Name', 'Student Name'];
+            foreach ($attributes as $attr) {
+                $header[] = $attr['name'] . ' (Max ' . $attr['marks'] . ')';
+            }
+            $header[] = 'Total Score (Max 50)';
+            $header[] = 'Evaluator Remarks';
+            
+            fputcsv($output, $header, ',', '"', '\\');
+
+            // Data Rows
+            foreach ($students as $s) {
+                $row = [
+                    $s['group_code'],
+                    $s['project_title'] ?: 'Untitled',
+                    $s['student_name']
+                ];
+                // Add empty columns for the evaluator to fill
+                foreach ($attributes as $attr) {
+                    $row[] = '';
+                }
+                $row[] = ''; // Total
+                $row[] = ''; // Remarks
+                
+                fputcsv($output, $row, ',', '"', '\\');
+            }
+
+            fclose($output);
+            exit;
+        }
+        redirect('/coordinator/assessment');
+    }
+
     public function profile() {
         $userId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();

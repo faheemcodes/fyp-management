@@ -154,6 +154,8 @@ $routes = [
     '/coordinator/notice/create' => ['Controller\CoordinatorController', 'createNotice'],
     '/coordinator/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
     '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
+    '/coordinator/assessment' => ['Controller\CoordinatorController', 'externalAssessment'],
+    '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
     '/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
     
     // Notifications API

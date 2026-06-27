@@ -1,7 +1,7 @@
 <?php
 // Database Configuration Settings
 // Change these parameters to match your local XAMPP/WAMP database credentials.
-define('DB_HOST', '127.0.0.1');
+define('DB_HOST', 'localhost');
 define('DB_PORT', '3306');
 define('DB_NAME', 'fyp_management');
 define('DB_USER', 'root');

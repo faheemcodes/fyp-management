@@ -179,6 +179,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/assessment" class="nav-link <?php echo isActive('/coordinator/assessment', $currentUri); ?>">
+                    <i class="bi bi-file-earmark-excel-fill"></i> External Assessment
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
                     <i class="bi bi-megaphone-fill"></i> Notice Generator
                 </a>

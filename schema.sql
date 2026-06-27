@@ -1,10 +1,7 @@
--- Create database
-CREATE DATABASE IF NOT EXISTS fyp_management;
-USE fyp_management;
-
+-- Import this file directly into your selected database in phpMyAdmin
 -- Drop tables if they exist to start fresh (in dependency order)
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS notices;
 DROP TABLE IF EXISTS grades;
 DROP TABLE IF EXISTS evaluations;
 DROP TABLE IF EXISTS proposals;
@@ -14,6 +11,7 @@ DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS profiles;
 DROP TABLE IF EXISTS committees;
 DROP TABLE IF EXISTS supervisors;
+DROP TABLE IF EXISTS coordinators;
 DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS hods;
 DROP TABLE IF EXISTS users;
@@ -64,6 +62,14 @@ CREATE TABLE supervisors (
 
 -- Committees Table
 CREATE TABLE committees (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Coordinators Table
+CREATE TABLE coordinators (
     user_id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     department VARCHAR(100) NOT NULL,
@@ -196,6 +202,19 @@ CREATE TABLE notifications (
     redirect_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Notices Table
+CREATE TABLE notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    notice_date DATE NOT NULL,
+    ref_no VARCHAR(100) DEFAULT NULL,
+    target_audience VARCHAR(100) DEFAULT 'All',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- System Deadlines Table (Helper table for Admin/HOD to manage scheduling)

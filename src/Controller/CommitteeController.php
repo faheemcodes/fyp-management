@@ -126,16 +126,12 @@ class CommitteeController extends BaseController {
                     $totalScore = $c1 + $c2 + $c3 + $c4; // Out of 40
 
                 } else if ($stage === 'Final Presentation') {
-                    $c1 = (float)($_POST['project_demo'] ?? 0);
-                    $c2 = (float)($_POST['thesis'] ?? 0);
                     $c3 = (float)($_POST['presentation'] ?? 0);
 
                     $details = [
-                        'project_demo' => $c1,
-                        'thesis' => $c2,
                         'presentation' => $c3
                     ];
-                    $totalScore = $c1 + $c2 + $c3; // Out of 75
+                    $totalScore = $c3; // Out of 25
                 }
 
                 try {
