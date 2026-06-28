@@ -57,7 +57,7 @@ foreach (($supervisors ?? []) as $s) {
 .prop-hero-icon {
     width: 56px;
     height: 56px;
-    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -347,7 +347,7 @@ foreach (($supervisors ?? []) as $s) {
                             <div class="d-flex flex-column gap-3">
                                 <!-- Leader -->
                                 <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 0.85rem; flex-shrink: 0;">L</div>
+                                    <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #60a5fa, #3b82f6); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 0.85rem; flex-shrink: 0;">L</div>
                                     <div>
                                         <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($group['creator_name'] ?? 'Group Leader'); ?> <span style="font-size: 0.6rem; background: rgba(59,130,246,0.12); color: #3b82f6; padding: 2px 7px; border-radius: 8px; font-weight: 700;">Leader</span></div>
                                         <div class="font-monospace text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($group['creator_student_id'] ?? '—'); ?></div>
