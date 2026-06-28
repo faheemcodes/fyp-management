@@ -6,50 +6,117 @@ $fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Pro
 $firstName = explode(' ', $fullName)[0];
 ?>
 
-<!-- Welcome Banner -->
-<div class="dash-banner mb-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; padding: 1.5rem 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; overflow: hidden;">
-    <div style="position: absolute; right: -5%; top: -20%; opacity: 0.1;">
-        <i class="bi bi-mortarboard-fill" style="font-size: 10rem;"></i>
-    </div>
-    <div style="z-index: 1;">
-        <h4 class="fw-bold mb-1" style="letter-spacing: -0.01em;">Welcome back, <?php echo htmlspecialchars($firstName); ?></h4>
-        <p class="mb-0" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Manage your assigned groups and track their progress</p>
-    </div>
-</div>
+<style>
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: conic-gradient(from 0deg, #3b82f6, #2563eb, #1d4ed8, #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.3);
+    flex-shrink: 0;
+}
+.group-stat-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    backdrop-filter: blur(10px);
+    margin-right: 12px;
+}
+.group-stat-pill .stat-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+.group-stat-pill .stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.6);
+    font-weight: 600;
+}
+@media (max-width: 768px) {
+    .group-hero { padding: 24px 16px; }
+    .group-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
+    .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+}
+</style>
 
-<div class="row g-3 mb-4">
-    <!-- Assigned Groups -->
-    <div class="col-6 col-lg-3">
-        <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none d-block stat-card-link" style="color: inherit;">
-            <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s; background: var(--card-bg); border-radius: 16px; padding: 1.25rem; box-shadow: var(--card-shadow);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                <div class="stat-mini-icon" style="width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; background: rgba(59,130,246,0.1); color: #3b82f6;">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-                <div>
-                    <div class="stat-mini-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 2px;">Assigned Groups</div>
-                    <div class="stat-mini-value" style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em;">
-                        <?php echo $groupCount; ?>
-                    </div>
-                </div>
+<!-- Top Hero Banner -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #3b82f6, #6366f1, #3b82f6);">
+                <i class="bi bi-mortarboard-fill"></i>
             </div>
-        </a>
-    </div>
-    
-    <!-- Pending Proposals -->
-    <div class="col-6 col-lg-3">
-        <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none d-block stat-card-link" style="color: inherit;">
-            <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s; background: var(--card-bg); border-radius: 16px; padding: 1.25rem; box-shadow: var(--card-shadow);" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                <div class="stat-mini-icon" style="width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; background: rgba(245,158,11,0.1); color: #f59e0b;">
-                    <i class="bi bi-hourglass-split"></i>
-                </div>
-                <div>
-                    <div class="stat-mini-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 2px;">Pending Proposals</div>
-                    <div class="stat-mini-value" style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em;">
-                        <?php echo $pendingProposals; ?>
-                    </div>
-                </div>
+            <div>
+                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                    Welcome Back
+                </p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                    <?php echo htmlspecialchars($fullName); ?>
+                </h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Manage your assigned groups and track their progress</p>
             </div>
-        </a>
+        </div>
+
+        <div class="d-flex flex-wrap hero-stats-container">
+            <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none">
+                <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-primary"><?php echo $groupCount; ?></span>
+                    <span class="stat-label text-white">Assigned Groups</span>
+                </div>
+            </a>
+            <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
+                <div class="group-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-warning"><?php echo $pendingProposals; ?></span>
+                    <span class="stat-label text-white">Pending Proposals</span>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
 

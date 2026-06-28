@@ -125,153 +125,135 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 .h-step.completed .h-step-label { color: #059669; font-weight: 600; }
 .h-step.active    .h-step-label { color: #3b82f6; font-weight: 700; }
 
-/* ── Welcome banner gradient ── */
-.dash-banner {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0f2a4a 100%);
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     border-radius: 16px;
-    padding: 28px 32px;
+    padding: 32px;
+    margin-bottom: 24px;
     position: relative;
     overflow: hidden;
-    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
-.dash-banner::before {
+.group-hero::before {
     content: '';
     position: absolute;
-    top: -60px; right: -60px;
-    width: 240px; height: 240px;
-    background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%);
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
-.dash-banner::after {
+.group-hero::after {
     content: '';
     position: absolute;
-    bottom: -40px; left: 20%;
-    width: 160px; height: 160px;
-    background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+    bottom: -20%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
-
-/* ── Stat mini cards ── */
-.stat-mini {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 16px 18px;
-    box-shadow: var(--card-shadow);
-    height: 100%;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.stat-mini:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(59,130,246,0.1);
-}
-.stat-mini-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
+.group-hero-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: conic-gradient(from 0deg, #3b82f6, #2563eb, #1d4ed8, #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.3);
     flex-shrink: 0;
 }
-.stat-mini-label {
-    font-size: 0.68rem;
+.group-stat-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    backdrop-filter: blur(10px);
+    margin-right: 12px;
+}
+.group-stat-pill .stat-num {
+    font-size: 1.4rem;
     font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+.group-stat-pill .stat-label {
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    margin-bottom: 3px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 600;
 }
-.stat-mini-value {
-    font-size: 0.88rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-primary);
+@media (max-width: 768px) {
+    .group-hero { padding: 24px 16px; }
+    .group-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
+    .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
 }
 </style>
 
-<!-- ── Welcome Banner ── -->
-<div class="dash-banner">
-    <div class="position-relative" style="z-index: 1;">
-        <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+<!-- ── Top Hero Banner ── -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #10b981, #059669, #047857, #10b981);">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
             <div>
-                <p class="mb-1" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.45);">
-                    <i class="bi bi-mortarboard me-1"></i>Final Year Project Portal
+                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                    Final Year Project Portal
                 </p>
-                <h4 class="fw-bold text-white mb-1" style="font-size: 1.25rem; letter-spacing: -0.02em; max-width: 500px;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
                     <?php echo htmlspecialchars($group['project_title']); ?>
                 </h4>
-                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
-                    <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); padding: 3px 10px; border-radius: 20px; font-weight: 600; font-family: monospace;">
-                        <?php echo htmlspecialchars($group['group_code'] ?? 'ID PENDING'); ?>
+                <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
+                    <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                        Group Code: <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                     </span>
-                    <span style="font-size: 0.75rem; background: <?php echo $sc[0]; ?>; color: <?php echo $sc[1]; ?>; padding: 3px 10px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem; background: <?php echo $sc[0]; ?>; color: <?php echo $sc[1]; ?>; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
                         <?php echo htmlspecialchars($st); ?>
                     </span>
                 </div>
             </div>
-            <div class="text-end d-none d-md-block">
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em;">Progress</div>
-                <div class="fw-bold text-white" style="font-size: 1.6rem; letter-spacing: -0.03em;"><?php echo $currentIdx + 1; ?> / <?php echo count($stagesList); ?></div>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">stages complete</div>
-            </div>
+        </div>
+
+        <div class="d-flex flex-wrap hero-stats-container">
+            <a href="#supervisor-section" class="text-decoration-none">
+                <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-info">
+                        <?php if($group['supervisor_name']): ?>
+                            <i class="bi bi-person-check-fill" style="font-size: 1.2rem;"></i>
+                        <?php else: ?>
+                            <i class="bi bi-person-x-fill" style="font-size: 1.2rem; color: var(--text-secondary);"></i>
+                        <?php endif; ?>
+                    </span>
+                    <span class="stat-label text-white">Supervisor</span>
+                </div>
+            </a>
+            <a href="#progress-section" class="text-decoration-none">
+                <div class="group-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-primary">
+                        <?php echo round((($currentIdx) / (count($stagesList) - 1)) * 100); ?>%
+                    </span>
+                    <span class="stat-label text-white">Progress</span>
+                </div>
+            </a>
         </div>
     </div>
 </div>
 
-<!-- ── Stat Mini Cards Row ── -->
 <?php $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>
-<div class="row g-3 mb-4">
-    <!-- Supervisor -->
-    <div class="col-6 col-lg-3">
-        <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <div class="stat-mini-icon" style="background: rgba(13,148,136,0.1);">
-                <i class="bi bi-person-badge-fill" style="color: #0d9488;"></i>
-            </div>
-            <div>
-                <div class="stat-mini-label">Supervisor</div>
-                <div class="stat-mini-value" style="font-size: 0.82rem;">
-                    <?php echo htmlspecialchars($group['supervisor_name'] ?? 'Not Assigned'); ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Current Stage -->
-    <div class="col-6 col-lg-3">
-        <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <div class="stat-mini-icon" style="background: rgba(59,130,246,0.1);">
-                <i class="bi bi-flag-fill" style="color: #3b82f6;"></i>
-            </div>
-            <div>
-                <div class="stat-mini-label">Current Stage</div>
-                <div class="stat-mini-value" style="font-size: 0.78rem;"><?php echo htmlspecialchars($group['progress_stage']); ?></div>
-            </div>
-        </div>
-    </div>
-    <!-- Deadlines count -->
-    <div class="col-6 col-lg-3">
-        <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <div class="stat-mini-icon" style="background: rgba(245,158,11,0.1);">
-                <i class="bi bi-calendar-event-fill" style="color: #f59e0b;"></i>
-            </div>
-            <div>
-                <div class="stat-mini-label">Active Deadlines</div>
-                <div class="stat-mini-value" style="font-size: 1.1rem;">
-                    <?php echo count(array_filter($deadlines, fn($d) => strtotime($d['deadline_date']) >= time())); ?>
-                    <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 500;"> remaining</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Status -->
-    <div class="col-6 col-lg-3">
-        <div class="stat-mini d-flex align-items-center gap-3" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-            <div class="stat-mini-icon" style="background: rgba(99,102,241,0.1);">
-                <i class="bi bi-shield-fill-check" style="color: #6366f1;"></i>
-            </div>
-            <div>
-                <div class="stat-mini-label">Project Status</div>
-                <div class="stat-mini-value" style="color: <?php echo $sc[1]; ?>;"><?php echo htmlspecialchars($st); ?></div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- ── Main Content Row ── -->
 <div class="row g-4 mb-4">
