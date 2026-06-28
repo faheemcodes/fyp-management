@@ -244,6 +244,142 @@ html.dark-theme .modal .btn-close:hover {
     color: var(--text-primary);
     line-height: 1.5;
 }
+
+/* Minimal Modal & Table Styles */
+.eval-modal .modal-content {
+    border: none !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.eval-modal-header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 16px 20px !important;
+}
+
+html.dark-theme .eval-modal-header {
+    background: #1e293b !important;
+}
+
+.eval-table-wrapper {
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.eval-table {
+    margin: 0;
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+}
+
+.eval-table thead th {
+    background: var(--form-bg);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.eval-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.eval-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.eval-table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+}
+
+.eval-student-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eval-student-avatar {
+    width: 32px;
+    height: 32px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+html.dark-theme .eval-student-avatar {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+.eval-student-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    line-height: 1.2;
+}
+
+.eval-student-roll {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.eval-input {
+    background-color: transparent !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 6px 8px !important;
+    text-align: center;
+    font-size: 0.85rem !important;
+    color: var(--text-primary) !important;
+    width: 100%;
+    max-width: 70px;
+    margin: 0 auto;
+}
+
+html.dark-theme .eval-input {
+    border-color: #334155 !important;
+}
+
+.eval-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.1) !important;
+    outline: none;
+}
+
+.eval-remarks-box {
+    margin-top: 16px;
+}
+
+.eval-remarks-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.eval-remarks-textarea {
+    border-radius: 8px !important;
+    border: 1px solid var(--border-color) !important;
+    background-color: var(--card-bg) !important;
+    padding: 10px 12px !important;
+    resize: vertical;
+    font-size: 0.85rem;
+}
 </style>
 
 <!-- Hero Section -->
@@ -281,7 +417,7 @@ html.dark-theme .modal .btn-close:hover {
         <div class="d-flex gap-2">
             <form action="<?php echo $bp; ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
                 <input type="hidden" name="show" value="<?php echo $globalShowAction; ?>">
-                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-dark' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;">
+                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-black' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;">
                     <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-1"></i>
                     <?php echo $globalShowAction ? 'Publish Marks' : 'Hide Marks'; ?>
                 </button>
@@ -451,33 +587,49 @@ html.dark-theme .modal .btn-close:hover {
     
     <!-- 1. Proposal Defence -->
     <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Proposal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-clipboard-data text-primary me-2"></i>Proposal Defence</h5>
+                <div class="modal-header eval-modal-header">
+                    <h5 class="modal-title fw-semibold text-primary" style="font-size: 1.05rem;"><i class="bi bi-clipboard-data me-2"></i>Proposal Defence</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Proposal Defence Presentation">
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Problem & Solution (0-10)</label>
-                                <input type="number" class="form-control" name="problem_solution" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Literature & Feas (0-10)</label>
-                                <input type="number" class="form-control" name="literature_feasibility" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation & Viva (0-10)</label>
-                                <input type="number" class="form-control" name="presentation_viva" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
-                                <textarea class="form-control" name="remarks" rows="3"></textarea>
-                            </div>
+                    <div class="modal-body p-3">
+                        <div class="eval-table-wrapper">
+                            <table class="eval-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-start ps-3">Student</th>
+                                        <th class="text-center">Problem & Sol (10)</th>
+                                        <th class="text-center">Lit & Feas (10)</th>
+                                        <th class="text-center">Pres & Viva (10)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($g['members'] as $m): ?>
+                                    <tr>
+                                        <td class="text-start ps-3">
+                                            <div class="eval-student-info">
+                                                <div class="eval-student-avatar"><?php echo strtoupper(substr($m['name'], 0, 1)); ?></div>
+                                                <div>
+                                                    <div class="eval-student-name"><?php echo htmlspecialchars($m['name']); ?></div>
+                                                    <div class="eval-student-roll"><?php echo htmlspecialchars($m['student_id']); ?></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][problem_solution]" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][literature_feasibility]" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_viva]" min="0" max="10" step="1" required></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="eval-remarks-box">
+                            <div class="eval-remarks-label">Group Evaluator Remarks</div>
+                            <textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -491,50 +643,60 @@ html.dark-theme .modal .btn-close:hover {
 
     <!-- 2. FYP Progress -->
     <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Progress" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-graph-up text-primary me-2"></i>FYP Progress</h5>
+                <div class="modal-header eval-modal-header">
+                    <h5 class="modal-title fw-semibold text-primary" style="font-size: 1.05rem;"><i class="bi bi-graph-up me-2"></i>FYP Progress</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="FYP Progress Presentation">
-                    <div class="modal-body">
+                    <div class="modal-body p-3">
                         <?php if (!empty($g['proposal_defence_comments'])): ?>
-                            <div class="previous-remarks-alert">
-                                <div class="previous-remarks-title">Previous Remarks (Proposal)</div>
-                                <div class="previous-remarks-body">
-                                    <?php foreach($g['proposal_defence_comments'] as $comment): ?>
-                                        <div style="margin-bottom: 0.5rem;">
-                                            <strong><?php echo htmlspecialchars($comment['evaluator_name']); ?>:</strong> <?php echo htmlspecialchars($comment['remarks']); ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
+                            <div class="alert alert-info py-2 px-3 mb-3" style="font-size: 0.8rem;">
+                                <div class="fw-semibold mb-1">Previous Remarks (Proposal)</div>
+                                <?php foreach($g['proposal_defence_comments'] as $comment): ?>
+                                    <div><strong><?php echo htmlspecialchars($comment['evaluator_name']); ?>:</strong> <?php echo htmlspecialchars($comment['remarks']); ?></div>
+                                <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Project Understanding (0-10)</label>
-                                <input type="number" class="form-control" name="understanding" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Technical Knowledge (0-10)</label>
-                                <input type="number" class="form-control" name="technical_knowledge" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Implementation Prog (0-10)</label>
-                                <input type="number" class="form-control" name="implementation_progress" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation & Q&A (0-10)</label>
-                                <input type="number" class="form-control" name="presentation_qa" min="0" max="10" step="1" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
-                                <textarea class="form-control" name="remarks" rows="3"></textarea>
-                            </div>
+                        <div class="eval-table-wrapper">
+                            <table class="eval-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-start ps-3">Student</th>
+                                        <th class="text-center">Understand (10)</th>
+                                        <th class="text-center">Tech Know (10)</th>
+                                        <th class="text-center">Prog (10)</th>
+                                        <th class="text-center">Pres & QA (10)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($g['members'] as $m): ?>
+                                    <tr>
+                                        <td class="text-start ps-3">
+                                            <div class="eval-student-info">
+                                                <div class="eval-student-avatar"><?php echo strtoupper(substr($m['name'], 0, 1)); ?></div>
+                                                <div>
+                                                    <div class="eval-student-name"><?php echo htmlspecialchars($m['name']); ?></div>
+                                                    <div class="eval-student-roll"><?php echo htmlspecialchars($m['student_id']); ?></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][understanding]" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][technical_knowledge]" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][implementation_progress]" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_qa]" min="0" max="10" step="1" required></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="eval-remarks-box">
+                            <div class="eval-remarks-label">Group Evaluator Remarks</div>
+                            <textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -548,25 +710,45 @@ html.dark-theme .modal .btn-close:hover {
 
     <!-- 3. Final Presentation -->
     <div class="modal fade eval-modal" id="gradeModal<?php echo $g['id']; ?>Final" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-journal-check text-primary me-2"></i>Final Presentation</h5>
+                <div class="modal-header eval-modal-header">
+                    <h5 class="modal-title fw-semibold text-primary" style="font-size: 1.05rem;"><i class="bi bi-journal-check me-2"></i>Final Presentation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="<?php echo $bp; ?>/committee/evaluations/grade" method="POST">
                     <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
                     <input type="hidden" name="stage" value="Final Presentation">
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Presentation (0-25)</label>
-                                <input type="number" class="form-control" name="presentation" min="0" max="25" step="1" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Evaluator Remarks</label>
-                                <textarea class="form-control" name="remarks" rows="3"></textarea>
-                            </div>
+                    <div class="modal-body p-3">
+                        <div class="eval-table-wrapper">
+                            <table class="eval-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-start ps-3">Student</th>
+                                        <th class="text-center">Presentation (25)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($g['members'] as $m): ?>
+                                    <tr>
+                                        <td class="text-start ps-3">
+                                            <div class="eval-student-info">
+                                                <div class="eval-student-avatar"><?php echo strtoupper(substr($m['name'], 0, 1)); ?></div>
+                                                <div>
+                                                    <div class="eval-student-name"><?php echo htmlspecialchars($m['name']); ?></div>
+                                                    <div class="eval-student-roll"><?php echo htmlspecialchars($m['student_id']); ?></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation]" min="0" max="25" step="1" required></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="eval-remarks-box">
+                            <div class="eval-remarks-label">Group Evaluator Remarks</div>
+                            <textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

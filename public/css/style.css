@@ -338,15 +338,39 @@ html.dark-theme .table-light th {
 }
 
 /* ─── Forms ─── */
-.form-control, .form-select {
+.form-control, .form-select, .form-check-input {
     padding: 10px 14px;
     border-radius: var(--border-radius-sm);
-    border: 1.5px solid var(--border-color);
-    background-color: var(--form-bg);
+    border: 1px solid #cbd5e1 !important; /* Soft, distinct grey border */
+    background-color: #ffffff !important; /* Pure white background to pop */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important; /* Subtle depth */
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.875rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+/* Force visible borders even when light-subtle utilities are used on inputs/groups */
+.input-group.border-light-subtle,
+.form-select.border-light-subtle,
+.form-control.border-light-subtle,
+.input-group-text.border-light-subtle {
+    border-color: #cbd5e1 !important;
+}
+
+html.dark-theme .form-control, 
+html.dark-theme .form-select,
+html.dark-theme .form-check-input {
+    border: 1px solid #3f3f46 !important; /* Visible soft grey border for dark theme */
+    background-color: #18181b !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+}
+
+html.dark-theme .input-group.border-light-subtle,
+html.dark-theme .form-select.border-light-subtle,
+html.dark-theme .form-control.border-light-subtle,
+html.dark-theme .input-group-text.border-light-subtle {
+    border-color: #3f3f46 !important;
 }
 
 .form-control:focus, .form-select:focus {

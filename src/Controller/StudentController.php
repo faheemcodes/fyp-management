@@ -40,8 +40,8 @@ class StudentController extends BaseController {
             $proposal = $stmt->fetch();
 
             // Get grades
-            $stmt = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
-            $stmt->execute([$group['id']]);
+            $stmt = $db->prepare("SELECT * FROM grades WHERE student_id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
             $grades = $stmt->fetch();
         }
 
@@ -547,8 +547,8 @@ class StudentController extends BaseController {
         $evaluations = [];
 
         if ($group) {
-            $stmt = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
-            $stmt->execute([$group['id']]);
+            $stmt = $db->prepare("SELECT * FROM grades WHERE student_id = ?");
+            $stmt->execute([$_SESSION['user_id']]);
             $grade = $stmt->fetch();
 
             // Fetch all evaluations with evaluator names

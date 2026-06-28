@@ -53,6 +53,11 @@ class CommitteeController extends BaseController {
             $stmt->execute([$group['id'], $evaluatorId]);
             $evals = $stmt->fetchAll();
             
+            // Fetch group members
+            $stmtM = $db->prepare("SELECT s.name, s.student_id, u.id as user_id FROM group_members gm JOIN students s ON gm.student_id = s.user_id JOIN users u ON s.user_id = u.id WHERE gm.group_id = ?");
+            $stmtM->execute([$group['id']]);
+            $group['members'] = $stmtM->fetchAll();
+
             $group['proposal_defense'] = null;
             $group['progress_eval'] = null;
             $group['final_presentation'] = null;
@@ -100,38 +105,56 @@ class CommitteeController extends BaseController {
                 $show_to_student = ($lastVis !== false) ? (int)$lastVis : 0;
 
                 if ($stage === 'Proposal Defence Presentation') {
-                    $c1 = (float)($_POST['problem_solution'] ?? 0);
-                    $c2 = (float)($_POST['literature_feasibility'] ?? 0);
-                    $c3 = (float)($_POST['presentation_viva'] ?? 0);
+                    $marksArr = $_POST['marks'] ?? [];
+                    
+                    foreach ($marksArr as $studentId => $studentMarks) {
+                        $c1 = (float)($studentMarks['problem_solution'] ?? 0);
+                        $c2 = (float)($studentMarks['literature_feasibility'] ?? 0);
+                        $c3 = (float)($studentMarks['presentation_viva'] ?? 0);
 
-                    $details = [
-                        'problem_solution' => $c1,
-                        'literature_feasibility' => $c2,
-                        'presentation_viva' => $c3
-                    ];
-                    $totalScore = $c1 + $c2 + $c3; // Out of 30
+                        $details[$studentId] = [
+                            'problem_solution' => $c1,
+                            'literature_feasibility' => $c2,
+                            'presentation_viva' => $c3
+                        ];
+                        // Out of 30
+                        $totalScore += ($c1 + $c2 + $c3); 
+                    }
+                    if (count($marksArr) > 0) $totalScore /= count($marksArr); // Store average in total_marks for group overview
 
                 } else if ($stage === 'FYP Progress Presentation') {
-                    $c1 = (float)($_POST['understanding'] ?? 0);
-                    $c2 = (float)($_POST['technical_knowledge'] ?? 0);
-                    $c3 = (float)($_POST['implementation_progress'] ?? 0);
-                    $c4 = (float)($_POST['presentation_qa'] ?? 0);
+                    $marksArr = $_POST['marks'] ?? [];
                     
-                    $details = [
-                        'understanding' => $c1,
-                        'technical_knowledge' => $c2,
-                        'implementation_progress' => $c3,
-                        'presentation_qa' => $c4
-                    ];
-                    $totalScore = $c1 + $c2 + $c3 + $c4; // Out of 40
+                    foreach ($marksArr as $studentId => $studentMarks) {
+                        $c1 = (float)($studentMarks['understanding'] ?? 0);
+                        $c2 = (float)($studentMarks['technical_knowledge'] ?? 0);
+                        $c3 = (float)($studentMarks['implementation_progress'] ?? 0);
+                        $c4 = (float)($studentMarks['presentation_qa'] ?? 0);
+                        
+                        $details[$studentId] = [
+                            'understanding' => $c1,
+                            'technical_knowledge' => $c2,
+                            'implementation_progress' => $c3,
+                            'presentation_qa' => $c4
+                        ];
+                        // Out of 40
+                        $totalScore += ($c1 + $c2 + $c3 + $c4);
+                    }
+                    if (count($marksArr) > 0) $totalScore /= count($marksArr);
 
                 } else if ($stage === 'Final Presentation') {
-                    $c3 = (float)($_POST['presentation'] ?? 0);
+                    $marksArr = $_POST['marks'] ?? [];
+                    
+                    foreach ($marksArr as $studentId => $studentMarks) {
+                        $c3 = (float)($studentMarks['presentation'] ?? 0);
 
-                    $details = [
-                        'presentation' => $c3
-                    ];
-                    $totalScore = $c3; // Out of 25
+                        $details[$studentId] = [
+                            'presentation' => $c3
+                        ];
+                        // Out of 25
+                        $totalScore += $c3;
+                    }
+                    if (count($marksArr) > 0) $totalScore /= count($marksArr);
                 }
 
                 try {
@@ -152,79 +175,96 @@ class CommitteeController extends BaseController {
                         $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks, $show_to_student]);
                     }
 
-                    // Recalculate average marks for this stage (or keep original behavior for Final Presentation)
-                    if ($stage === 'Proposal Defence Presentation' || $stage === 'FYP Progress Presentation') {
-                        $stmtAvg = $db->prepare("SELECT AVG(total_marks) FROM evaluations WHERE group_id = ? AND stage = ?");
-                        $stmtAvg->execute([$groupId, $stage]);
-                        $averageScore = round((float)$stmtAvg->fetchColumn());
+                    // Recalculate average marks for this stage PER STUDENT
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$groupId]);
+                    $members = $stmtM->fetchAll();
+
+                    foreach ($members as $m) {
+                        $sId = $m['student_id'];
+                        
+                        // Extract specific student marks from all evaluators for this stage
+                        // MySQL JSON_EXTRACT to get the student's marks_details, then sum/avg them.
+                        // Or we can fetch all evaluations and do it in PHP to be safe across databases.
+                        $stmtEvals = $db->prepare("SELECT marks_details FROM evaluations WHERE group_id = ? AND stage = ?");
+                        $stmtEvals->execute([$groupId, $stage]);
+                        $allEvals = $stmtEvals->fetchAll();
+
+                        $studentTotal = 0;
+                        $countEvals = 0;
+
+                        foreach ($allEvals as $ev) {
+                            $mDetails = json_decode($ev['marks_details'], true);
+                            if (isset($mDetails[$sId])) {
+                                $countEvals++;
+                                $evTotal = array_sum(array_values($mDetails[$sId]));
+                                $studentTotal += $evTotal;
+                            }
+                        }
+
+                        $averageScore = $countEvals > 0 ? round($studentTotal / $countEvals) : 0;
 
                         if ($stage === 'Proposal Defence Presentation') {
-                            $stmtGrade = $db->prepare("UPDATE grades SET proposal_defense_marks = ? WHERE group_id = ?");
-                            $stmtGrade->execute([$averageScore, $groupId]);
-                            
-                            // Update group progress stage
-                            $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'Proposal Defence Presentation Completed' WHERE id = ?");
-                            $stmtStage->execute([$groupId]);
-                        } else {
-                            $stmtGrade = $db->prepare("UPDATE grades SET progress_presentation_marks = ? WHERE group_id = ?");
-                            $stmtGrade->execute([$averageScore, $groupId]);
-                            
-                            // Update group progress stage
-                            $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'FYP Progress Presentation Completed' WHERE id = ?");
-                            $stmtStage->execute([$groupId]);
+                            $stmtGrade = $db->prepare("UPDATE grades SET proposal_defense_marks = ? WHERE student_id = ?");
+                            $stmtGrade->execute([$averageScore, $sId]);
+                        } else if ($stage === 'FYP Progress Presentation') {
+                            $stmtGrade = $db->prepare("UPDATE grades SET progress_presentation_marks = ? WHERE student_id = ?");
+                            $stmtGrade->execute([$averageScore, $sId]);
+                        } else if ($stage === 'Final Presentation') {
+                            $stmtGrade = $db->prepare("UPDATE grades SET final_presentation_marks = ? WHERE student_id = ?");
+                            $stmtGrade->execute([$averageScore, $sId]);
                         }
-                    } else if ($stage === 'Final Presentation') {
-                        $totalScore = round($totalScore);
-                        $stmtGrade = $db->prepare("UPDATE grades SET final_presentation_marks = ? WHERE group_id = ?");
-                        $stmtGrade->execute([$totalScore, $groupId]);
 
-                        // Check if supervision marks are assigned (not NULL)
-                        $stmtSupervision = $db->prepare("SELECT supervision_marks FROM grades WHERE group_id = ?");
+                        // Recalculate overall grades per student
+                        $stmtGrades = $db->prepare("SELECT * FROM grades WHERE student_id = ?");
+                        $stmtGrades->execute([$sId]);
+                        $gData = $stmtGrades->fetch();
+
+                        if ($gData) {
+                            $total = round(
+                                 (float)$gData['proposal_marks'] + 
+                                 (float)$gData['proposal_defense_marks'] + 
+                                 (float)$gData['progress_presentation_marks'] + 
+                                 (float)$gData['final_presentation_marks'] + 
+                                 (float)$gData['supervision_marks']
+                            );
+                            
+                            $percentage = round(($total / 200.0) * 100.0);
+                            
+                            // Grade scale
+                            $grade = 'F';
+                            if ($percentage >= 85) $grade = 'A+';
+                            else if ($percentage >= 80) $grade = 'A';
+                            else if ($percentage >= 75) $grade = 'B+';
+                            else if ($percentage >= 70) $grade = 'B';
+                            else if ($percentage >= 65) $grade = 'C+';
+                            else if ($percentage >= 60) $grade = 'C';
+                            else if ($percentage >= 55) $grade = 'D+';
+                            else if ($percentage >= 50) $grade = 'D';
+                            
+                            $status = ($percentage >= 50) ? 'Pass' : 'Fail';
+
+                            $stmtUpdateGrade = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE student_id = ?");
+                            $stmtUpdateGrade->execute([$total, $percentage, $grade, $status, $sId]);
+                        }
+                    }
+
+                    // Update group progress stage (done once per group)
+                    if ($stage === 'Proposal Defence Presentation') {
+                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'Proposal Defence Presentation Completed' WHERE id = ?");
+                        $stmtStage->execute([$groupId]);
+                    } else if ($stage === 'FYP Progress Presentation') {
+                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'FYP Progress Presentation Completed' WHERE id = ?");
+                        $stmtStage->execute([$groupId]);
+                    } else if ($stage === 'Final Presentation') {
+                        // Check if supervision marks are assigned for at least one student in the group
+                        $stmtSupervision = $db->prepare("SELECT supervision_marks FROM grades WHERE group_id = ? LIMIT 1");
                         $stmtSupervision->execute([$groupId]);
                         $supervisionMarks = $stmtSupervision->fetchColumn();
 
-                        if ($supervisionMarks !== null) {
-                            $targetStage = 'Final Grading Completed';
-                        } else {
-                            $targetStage = 'Final Presentation Completed';
-                        }
-
-                        // Update group progress stage
+                        $targetStage = ($supervisionMarks !== null) ? 'Final Grading Completed' : 'Final Presentation Completed';
                         $stmtStage = $db->prepare("UPDATE groups SET progress_stage = ? WHERE id = ?");
                         $stmtStage->execute([$targetStage, $groupId]);
-                    }
-
-                    // Recalculate overall grades
-                    $stmtGrades = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
-                    $stmtGrades->execute([$groupId]);
-                    $gData = $stmtGrades->fetch();
-
-                    if ($gData) {
-                        $total = round(
-                             (float)$gData['proposal_marks'] + 
-                             (float)$gData['proposal_defense_marks'] + 
-                             (float)$gData['progress_presentation_marks'] + 
-                             (float)$gData['final_presentation_marks'] + 
-                             (float)$gData['supervision_marks']
-                        );
-                        
-                        $percentage = round(($total / 200.0) * 100.0);
-                        
-                        // Grade scale (University of Sindh standard semester system)
-                        $grade = 'F';
-                        if ($percentage >= 85) $grade = 'A+';
-                        else if ($percentage >= 80) $grade = 'A';
-                        else if ($percentage >= 75) $grade = 'B+';
-                        else if ($percentage >= 70) $grade = 'B';
-                        else if ($percentage >= 65) $grade = 'C+';
-                        else if ($percentage >= 60) $grade = 'C';
-                        else if ($percentage >= 55) $grade = 'D+';
-                        else if ($percentage >= 50) $grade = 'D';
-                        
-                        $status = ($percentage >= 50) ? 'Pass' : 'Fail';
-
-                        $stmtUpdateGrades = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE group_id = ?");
-                        $stmtUpdateGrades->execute([$total, $percentage, $grade, $status, $groupId]);
                     }
 
                     $db->commit();

@@ -177,7 +177,8 @@ CREATE TABLE evaluations (
 
 -- Grades Table (Overall system results)
 CREATE TABLE grades (
-    group_id INT PRIMARY KEY,
+    student_id INT PRIMARY KEY,
+    group_id INT NOT NULL,
     proposal_marks DECIMAL(5,2) DEFAULT 0.00,
     proposal_defense_marks DECIMAL(5,2) DEFAULT NULL,
     progress_presentation_marks DECIMAL(5,2) DEFAULT NULL,
@@ -189,6 +190,7 @@ CREATE TABLE grades (
     grade VARCHAR(5) DEFAULT 'F',
     status ENUM('Pass', 'Fail') DEFAULT 'Fail',
     calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(user_id) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

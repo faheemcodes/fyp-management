@@ -39,11 +39,9 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch all supervised groups with grades
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status,
-            gr.supervision_marks, gr.total_marks, gr.show_supervision_to_student
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status
             FROM groups g
             JOIN projects p ON g.id = p.group_id
-            LEFT JOIN grades gr ON g.id = gr.group_id
             WHERE p.supervisor_id = ? ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
@@ -55,7 +53,31 @@ class SupervisorController extends BaseController {
                 JOIN users u ON s.user_id = u.id 
                 WHERE gm.group_id = ?");
             $stmt->execute([$group['id']]);
-            $group['members'] = $stmt->fetchAll();
+            $members = $stmt->fetchAll();
+            
+            $groupSupervisionMarks = null;
+            $groupShowSupervision = 0;
+            
+            foreach ($members as &$m) {
+                $stmtG = $db->prepare("SELECT supervision_marks, show_supervision_to_student FROM grades WHERE student_id = ?");
+                $stmtG->execute([$m['user_id']]);
+                $grade = $stmtG->fetch();
+                if ($grade) {
+                    $m['supervision_marks'] = $grade['supervision_marks'];
+                    if ($groupSupervisionMarks === null && $grade['supervision_marks'] !== null) {
+                        $groupSupervisionMarks = true;
+                    }
+                    if ($grade['show_supervision_to_student'] == 1) {
+                        $groupShowSupervision = 1;
+                    }
+                } else {
+                    $m['supervision_marks'] = null;
+                }
+            }
+            
+            $group['members'] = $members;
+            $group['supervision_marks'] = $groupSupervisionMarks;
+            $group['show_supervision_to_student'] = $groupShowSupervision;
         }
 
         $this->render('supervisor/groups', [
@@ -68,7 +90,7 @@ class SupervisorController extends BaseController {
             $supervisorId = $_SESSION['user_id'];
             $groupId = $_POST['group_id'] ?? null;
             
-            $supervision_marks = round((float)($_POST['supervision_marks'] ?? 0));
+            $marksArray = $_POST['marks'] ?? [];
             
             if ($groupId) {
                 $db = \Database::getInstance()->getConnection();
@@ -90,16 +112,28 @@ class SupervisorController extends BaseController {
                 try {
                     $db->beginTransaction();
                     
-                    // Update grades
-                    $stmt = $db->prepare("UPDATE grades SET supervision_marks = ?, show_supervision_to_student = ? WHERE group_id = ?");
-                    $stmt->execute([$supervision_marks, $show_supervision_to_student, $groupId]);
+                    // Update grades per student
+                    foreach ($marksArray as $studentId => $markData) {
+                        $supervisionMarks = isset($markData['supervision']) ? round((float)$markData['supervision']) : null;
+                        
+                        $stmtCheck = $db->prepare("SELECT student_id FROM grades WHERE student_id = ?");
+                        $stmtCheck->execute([$studentId]);
+                        
+                        if ($stmtCheck->fetch()) {
+                            $stmtUpdate = $db->prepare("UPDATE grades SET supervision_marks = ?, show_supervision_to_student = ? WHERE student_id = ?");
+                            $stmtUpdate->execute([$supervisionMarks, $show_supervision_to_student, $studentId]);
+                        } else {
+                            $stmtInsert = $db->prepare("INSERT INTO grades (group_id, student_id, supervision_marks, show_supervision_to_student) VALUES (?, ?, ?, ?)");
+                            $stmtInsert->execute([$groupId, $studentId, $supervisionMarks, $show_supervision_to_student]);
+                        }
+                    }
                     
-                    // Recalculate overall grades
+                    // Recalculate overall grades per student
                     $stmtGrades = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
                     $stmtGrades->execute([$groupId]);
-                    $gData = $stmtGrades->fetch();
+                    $studentsGrades = $stmtGrades->fetchAll();
                     
-                    if ($gData) {
+                    foreach ($studentsGrades as $gData) {
                         $total = round(
                             (float)$gData['proposal_marks'] + 
                             (float)$gData['proposal_defense_marks'] + 
@@ -110,7 +144,7 @@ class SupervisorController extends BaseController {
                         
                         $percentage = round(($total / 200.0) * 100.0);
                         
-                        // Grade scale (University of Sindh standard semester system)
+                        // Grade scale
                         $grade = 'F';
                         if ($percentage >= 85) $grade = 'A+';
                         else if ($percentage >= 80) $grade = 'A';
@@ -123,8 +157,8 @@ class SupervisorController extends BaseController {
                         
                         $status = ($percentage >= 50) ? 'Pass' : 'Fail';
                         
-                        $stmtUpdateGrades = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE group_id = ?");
-                        $stmtUpdateGrades->execute([$total, $percentage, $grade, $status, $groupId]);
+                        $stmtUpdateGrades = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE student_id = ?");
+                        $stmtUpdateGrades->execute([$total, $percentage, $grade, $status, $gData['student_id']]);
                     }
                     
                     // Update progress stage to Final Grading Completed only if it is currently at Final Presentation Completed

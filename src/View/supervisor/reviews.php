@@ -163,15 +163,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 
 .action-btn {
-    width: 36px;
+    padding: 6px 14px;
     height: 36px;
-    border-radius: 10px;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
     transition: all 0.2s ease;
 }
 .action-btn:hover {
@@ -271,8 +274,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php echo htmlspecialchars($pr['project_title']); ?>
                             </div>
                             <?php if($pr['file_path']): ?>
+                                <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                                 <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem;">
-                                    <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download PDF
+                                    <?php if($ext === 'pdf'): ?>
+                                        <i class="bi bi-eye-fill me-1"></i>View PDF
+                                    <?php else: ?>
+                                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
+                                    <?php endif; ?>
                                 </a>
                             <?php endif; ?>
                         </td>
@@ -308,13 +316,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </span>
                         </td>
                         <td class="text-end pe-4">
-                            <div class="d-flex gap-2 justify-content-end">
+                            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
                                 <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo $pr['id']; ?>">
-                                    <i class="bi bi-info-circle-fill"></i>
+                                    <i class="bi bi-info-circle-fill"></i> <span>Details</span>
                                 </button>
+                                <?php if($pr['status'] !== 'Approved'): ?>
                                 <button class="action-btn review" title="Review Proposal" data-bs-toggle="modal" data-bs-target="#proposalReviewModal<?php echo $pr['id']; ?>">
-                                    <i class="bi bi-clipboard-check-fill"></i>
+                                    <i class="bi bi-clipboard-check-fill"></i> <span>Review</span>
                                 </button>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
@@ -348,9 +358,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         Status: <?php echo htmlspecialchars($st); ?>
                     </span>
                     <?php if($pr['file_path']): ?>
-                        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium">
-                            <i class="bi bi-download me-1"></i> Download Proposal
-                        </a>
+                        <?php 
+                        $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION));
+                        if($ext === 'pdf'): 
+                        ?>
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium" data-bs-toggle="collapse" data-bs-target="#pdfViewer<?php echo $pr['id']; ?>">
+                                <i class="bi bi-eye me-1"></i> View Proposal
+                            </button>
+                        <?php else: ?>
+                            <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium">
+                                <i class="bi bi-download me-1"></i> Download Proposal
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 
@@ -359,6 +378,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.65; text-align: justify; max-height: 250px; overflow-y: auto;">
                         <?php echo nl2br(htmlspecialchars($pr['abstract'])); ?>
                     </div>
+                    <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
+                    <div class="collapse mt-3" id="pdfViewer<?php echo $pr['id']; ?>">
+                        <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="400px" style="border: 1px solid var(--border-color); border-radius: 8px;"></iframe>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <div>
@@ -413,8 +437,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Feedback Remarks</label>
-                        <textarea class="form-control" name="feedback" rows="5" placeholder="Enter comments, suggestions, or revision notes here..." style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);" required><?php echo htmlspecialchars($pr['feedback'] ?? ''); ?></textarea>
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Feedback Remarks (Optional)</label>
+                        <textarea class="form-control" name="feedback" rows="5" placeholder="Enter comments, suggestions, or revision notes here..." style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);"><?php echo htmlspecialchars($pr['feedback'] ?? ''); ?></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">

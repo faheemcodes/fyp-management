@@ -340,12 +340,13 @@ class AdminController extends BaseController {
         // Fetch stats for reporting
         $progressStages = $db->query("SELECT progress_stage, COUNT(*) as count FROM groups GROUP BY progress_stage")->fetchAll();
         
-        $studentGrades = $db->query("SELECT g.group_code, p.title as project_title, gr.*, s.name as supervisor_name
+        $studentGrades = $db->query("SELECT g.group_code, p.title as project_title, gr.*, s.name as supervisor_name, st.name as student_name, st.student_id as roll_no
             FROM groups g
             JOIN projects p ON g.id = p.group_id
-            LEFT JOIN grades gr ON g.id = gr.group_id
+            JOIN grades gr ON g.id = gr.group_id
+            JOIN students st ON gr.student_id = st.user_id
             LEFT JOIN supervisors s ON p.supervisor_id = s.user_id
-            ORDER BY gr.total_marks DESC")->fetchAll();
+            ORDER BY g.group_code ASC, gr.total_marks DESC")->fetchAll();
             
         $this->render('admin/reports', [
             'progressStages' => $progressStages,

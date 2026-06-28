@@ -176,15 +176,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 
 .action-btn {
-    width: 36px;
+    padding: 6px 14px;
     height: 36px;
-    border-radius: 10px;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
     transition: all 0.2s ease;
 }
 .action-btn:hover {
@@ -201,6 +204,122 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 @media (max-width: 768px) {
     .group-hero { padding: 24px 16px; }
     .group-stat-pill { display: none; }
+}
+
+/* Minimal Modal & Table Styles */
+.eval-modal .modal-content {
+    border: none !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.eval-modal-header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 16px 20px !important;
+}
+
+html.dark-theme .eval-modal-header {
+    background: #1e293b !important;
+}
+
+.eval-table-wrapper {
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.eval-table {
+    margin: 0;
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 600px;
+}
+
+.eval-table thead th {
+    background: var(--form-bg);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.eval-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.eval-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.eval-table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+}
+
+.eval-student-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eval-student-avatar {
+    width: 32px;
+    height: 32px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+html.dark-theme .eval-student-avatar {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+.eval-student-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    line-height: 1.2;
+}
+
+.eval-student-roll {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.eval-input {
+    background-color: transparent !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 6px 8px !important;
+    text-align: center;
+    font-size: 0.85rem !important;
+    color: var(--text-primary) !important;
+    width: 100%;
+    max-width: 70px;
+    margin: 0 auto;
+}
+
+html.dark-theme .eval-input {
+    border-color: #334155 !important;
+}
+
+.eval-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.1) !important;
+    outline: none;
 }
 </style>
 
@@ -278,7 +397,6 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         <th>Project Title</th>
                         <th>Progress Stage</th>
                         <th>Team Members</th>
-                        <th style="min-width: 120px;">Marks</th>
                         <th class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
@@ -315,21 +433,13 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                 <?php endif; ?>
                             </div>
                         </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <span class="fw-bold" style="font-size: 1rem; color: #0d9488;">
-                                    <?php echo number_format($g['supervision_marks'] ?? 0, 0); ?>
-                                </span>
-                                <span class="text-muted fw-semibold ms-1" style="font-size: 0.75rem;">/ 45</span>
-                            </div>
-                        </td>
                         <td class="text-end pe-4">
-                            <div class="d-flex gap-2 justify-content-end">
+                            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
                                 <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo $g['id']; ?>">
-                                    <i class="bi bi-info-circle-fill"></i>
+                                    <i class="bi bi-info-circle-fill"></i> <span>Details</span>
                                 </button>
                                 <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo $g['id']; ?>">
-                                    <i class="bi bi-pencil-fill"></i>
+                                    <i class="bi bi-pencil-fill"></i> <span>Grade</span>
                                 </button>
                             </div>
                         </td>
@@ -403,27 +513,48 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 </div>
 
 <!-- MANUAL GRADING MODAL -->
-<div class="modal fade" id="gradeGroupModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;">
-                <h6 class="modal-title fw-bold">Manual Group Grading</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade eval-modal" id="gradeGroupModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header eval-modal-header border-0">
+                <h5 class="modal-title fw-semibold" style="color: #0d9488; font-size: 1.05rem;"><i class="bi bi-person-check-fill me-2"></i>Supervision Marks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo $basePath; ?>/supervisor/groups/grade" method="POST">
                 <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
-                <div class="modal-body p-4 text-start">
-                    <p class="mb-4" style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary);">Review work manually and enter marks. Overall totals and grades will be updated automatically.</p>
+                <div class="modal-body p-3 text-start">
+                    <p class="mb-3" style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary);">Assign individual supervision marks out of 45 for each student in the group. Overall totals and grades will be updated automatically.</p>
                     
-                    <div class="mb-2">
-                        <label for="supervision_marks_<?php echo $g['id']; ?>" class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Supervision Marks</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control fw-bold" id="supervision_marks_<?php echo $g['id']; ?>" name="supervision_marks" min="0" max="45" step="1" value="<?php echo htmlspecialchars(number_format($g['supervision_marks'] ?? 0, 0)); ?>" style="color: var(--text-primary); background: var(--form-bg); border-color: var(--border-color);" required>
-                            <span class="input-group-text fw-semibold" style="background: var(--form-bg); border-color: var(--border-color); color: var(--text-secondary);">/ 45</span>
-                        </div>
+                    <div class="eval-table-wrapper">
+                        <table class="eval-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-start ps-3">Student</th>
+                                    <th class="text-center" style="width: 30%;">Supervision Marks (45)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($g['members'] as $m): ?>
+                                <tr>
+                                    <td class="text-start ps-3">
+                                        <div class="eval-student-info">
+                                            <div class="eval-student-avatar"><?php echo strtoupper(substr($m['name'], 0, 1)); ?></div>
+                                            <div>
+                                                <div class="eval-student-name"><?php echo htmlspecialchars($m['name']); ?></div>
+                                                <div class="eval-student-roll"><?php echo htmlspecialchars($m['student_id']); ?></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][supervision]" min="0" max="45" step="1" value="<?php echo isset($m['supervision_marks']) ? (int)$m['supervision_marks'] : ''; ?>" required>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                <div class="modal-footer border-0 p-3 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
                     <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
                     <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Save Marks</button>
                 </div>

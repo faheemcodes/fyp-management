@@ -14,13 +14,13 @@ The system implements a robust multi-role architecture tailored to the specific 
   - Ongoing task management and continuous progress tracking.
   
 - **Supervisor Portal:**
-  - Proposal review, feedback, and approval workflow.
-  - Assignment and evaluation of individual student tasks.
+  - Proposal review workflow featuring inline, native PDF preview capabilities.
+  - Granular, per-student "Supervision Marks" evaluation system.
   - Seamless tracking of assigned groups' progress.
 
 - **Committee Member Portal:**
-  - Dedicated grading interfaces for mid-term and final project presentations.
-  - Automated score validation and constraint handling.
+  - Comprehensive, individual per-student grading architecture for Proposal, Progress, and Final presentations.
+  - Automated score validation, calculations, and mobile-responsive evaluation interfaces.
 
 - **Department Coordinator Portal:**
   - Centralized dashboard for department-wide statistics.

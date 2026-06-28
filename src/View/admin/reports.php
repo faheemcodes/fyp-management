@@ -391,7 +391,7 @@ html.dark-theme, body.dark-theme {
         <table class="table modern-table m-0" id="grades-table">
             <thead>
                 <tr>
-                    <th class="ps-4">Group Details</th>
+                    <th class="ps-4">Student Details</th>
                     <th class="text-center">Prop. Sub. (10)</th>
                     <th class="text-center">Prop. Def. (30)</th>
                     <th class="text-center">Prog. Pres. (40)</th>
@@ -406,9 +406,9 @@ html.dark-theme, body.dark-theme {
                 <?php foreach($studentGrades as $sg): ?>
                 <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>">
                     <td class="ps-4">
-                        <div class="fw-bold text-primary" style="font-family: monospace; font-size: 0.95rem;"><?php echo htmlspecialchars($sg['group_code'] ?? 'Group ID Pending'); ?></div>
+                        <div class="fw-bold text-primary" style="font-size: 0.95rem;"><?php echo htmlspecialchars($sg['student_name'] ?? 'Unknown'); ?> (<?php echo htmlspecialchars($sg['roll_no'] ?? ''); ?>)</div>
                         <div class="small text-truncate text-dark mt-1" style="max-width: 180px; font-weight: 500;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
-                        <div class="text-muted" style="font-size: 0.75rem; margin-top: 2px;"><i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
+                        <div class="text-muted" style="font-size: 0.75rem; margin-top: 2px;"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
                     </td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['proposal_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
