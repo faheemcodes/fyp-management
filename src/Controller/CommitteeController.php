@@ -27,11 +27,17 @@ class CommitteeController extends BaseController {
             WHERE p.status = 'Approved'
             ORDER BY g.created_at DESC")->fetchAll();
 
+        // Fetch committee details
+        $stmt = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
+        $stmt->execute([$evaluatorId]);
+        $committee = $stmt->fetch();
+
         $this->render('committee/dashboard', [
             'totalGroups' => $totalGroups,
             'pendingCount' => $pendingCount,
             'gradedCount' => $gradedCount,
-            'groups' => $groups
+            'groups' => $groups,
+            'committee' => $committee
         ]);
     }
 
