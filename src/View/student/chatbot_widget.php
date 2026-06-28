@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold" style="font-size:0.95rem;">FYP AI Guide</h6>
+                    <h6 class="mb-0 fw-bold" style="font-size:0.95rem;">FYP Buddy</h6>
                     <span class="ai-status-text"><span class="ai-status-dot"></span>Online</span>
                 </div>
             </div>
@@ -26,11 +26,11 @@
             <div class="ai-welcome-card">
                 <div class="ai-welcome-icon"><i class="bi bi-mortarboard-fill"></i></div>
                 <p class="ai-welcome-title">Hi there! 👋</p>
-                <p class="ai-welcome-desc">I'm your FYP AI Guide. Ask me anything about proposals, deadlines, or navigating the portal.</p>
+                <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
                 <div class="ai-quick-actions">
                     <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
                     <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                    <button class="ai-quick-btn" data-q="Tell me about supervisor limits"><i class="bi bi-person-check"></i> Supervisor Limits</button>
+                    <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
                     <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
                 </div>
             </div>
@@ -567,11 +567,11 @@ document.addEventListener('DOMContentLoaded', () => {
         welcome.innerHTML = `
             <div class="ai-welcome-icon"><i class="bi bi-mortarboard-fill"></i></div>
             <p class="ai-welcome-title">Hi there! 👋</p>
-            <p class="ai-welcome-desc">I'm your FYP AI Guide. Ask me anything about proposals, deadlines, or navigating the portal.</p>
+            <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
             <div class="ai-quick-actions">
                 <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
                 <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                <button class="ai-quick-btn" data-q="Tell me about supervisor limits"><i class="bi bi-person-check"></i> Supervisor Limits</button>
+                <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
                 <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
             </div>`;
         body.appendChild(welcome);
