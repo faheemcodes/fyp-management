@@ -24,6 +24,11 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
 }
 
+// Load AI Config
+if (file_exists(__DIR__ . '/../config/ai_config.php')) {
+    require_once __DIR__ . '/../config/ai_config.php';
+}
+
 // Autoload config and src/ files
 spl_autoload_register(function ($class) {
     // Replace namespaces with directory separator
@@ -161,7 +166,10 @@ $routes = [
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
     '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
-    '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification']
+    '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification'],
+    
+    // Chatbot API
+    '/api/chatbot' => ['Controller\ChatbotController', 'handleChat']
 ];
 
 // Dispatch route
