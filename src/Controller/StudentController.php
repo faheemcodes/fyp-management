@@ -310,16 +310,24 @@ class StudentController extends BaseController {
             $groupMembers = $stmt->fetchAll();
         }
 
-        // Fetch all supervisors for dropdown who have less than 8 approved slots, or who are currently selected by this project
+        // Fetch supervisors who have < 8 approved slots AND < 15 total (pending+approved) proposals, or who are currently selected
         $currentSupervisorId = $project['supervisor_id'] ?? 0;
         $stmt = $db->prepare("
             SELECT s.user_id, s.name 
             FROM supervisors s
             WHERE (
-                SELECT COUNT(*) 
-                FROM projects p 
-                WHERE p.supervisor_id = s.user_id AND p.status = 'Approved'
-            ) < 8 OR s.user_id = ?
+                (
+                    SELECT COUNT(*) 
+                    FROM projects p 
+                    WHERE p.supervisor_id = s.user_id AND p.status = 'Approved'
+                ) < 8
+                AND
+                (
+                    SELECT COUNT(*) 
+                    FROM projects p 
+                    WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved')
+                ) < 15
+            ) OR s.user_id = ?
             ORDER BY s.name ASC
         ");
         $stmt->execute([$currentSupervisorId]);
