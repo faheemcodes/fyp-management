@@ -59,7 +59,7 @@ The student you are currently talking to has the following context:
 If a student asks a technical question about their project, you can help brainstorm or write code. If they ask about the FYP portal, explain how to navigate the portal (Dashboard, Submissions, View Deadlines, etc.). DO NOT invent new rules. If you are unsure about an administrative deadline or rule, advise them to check the dashboard or contact their coordinator.";
 
         // Prepare Gemini API payload
-        $geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . GEMINI_API_KEY;
+        $geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . GEMINI_API_KEY;
 
         // Convert our message format to Gemini's format
         $geminiContents = [];
@@ -108,7 +108,16 @@ If a student asks a technical question about their project, you can help brainst
         }
 
         $responseData = json_decode($response, true);
-        $aiText = $responseData['candidates'][0]['content']['parts'][0]['text'] ?? "I'm sorry, I couldn't generate a response.";
+        
+        if (!isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+            error_log("Gemini API Error: " . print_r($responseData, true));
+            echo json_encode([
+                'reply' => "I'm sorry, I couldn't generate a response. API Error: " . ($responseData['error']['message'] ?? 'Unknown Error')
+            ]);
+            return;
+        }
+
+        $aiText = $responseData['candidates'][0]['content']['parts'][0]['text'];
 
         echo json_encode([
             'reply' => $aiText
