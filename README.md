@@ -28,15 +28,13 @@ The system implements a robust multi-role architecture tailored to the specific 
   - System-wide notice and announcement broadcasting.
   - Dynamic **External Assessment Sheet** generation (CSV export with customizable attributes and shift filtering).
 
+- **Real-Time Communication & AI:**
+  - **Firebase Real-Time Chat:** Seamless, instant messaging between project groups and their supervisors. Features a highly polished, responsive WhatsApp-style UI with drag-and-drop document/image sharing, message truncation, and edit/delete/copy actions.
+  - **AI Student Guidance:** An integrated Chatbot designed to assist students with FYP rules, deadlines, and technical queries.
+
 - **System-Wide:**
   - Secure authentication and role-based access control.
-  - Highly responsive, mobile-first modern user interface.
-
-## Work in Progress (Upcoming Features)
-This project is under active development. The following major features are currently in the pipeline:
-
-- **Intelligent Student Guidance:** An integrated Chatbot designed to assist students with FYP rules, deadlines, and technical queries.
-- **Real-Time Communication:** A real-time chat infrastructure powered by **Firebase**, enabling seamless, instant communication between students and their respective department coordinators.
+  - Highly responsive, mobile-first modern user interface (Light & Dark modes).
 
 ---
 *Note: This project is currently in active development.*
