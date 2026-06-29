@@ -89,7 +89,7 @@ $firstName = explode(' ', $fullName)[0];
 <div class="group-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #3b82f6, #6366f1, #3b82f6);">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
             <div>

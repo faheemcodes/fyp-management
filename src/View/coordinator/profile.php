@@ -58,7 +58,7 @@ if ($basePath === '/') {
     width: 88px;
     height: 88px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
     padding: 3px;
     flex-shrink: 0;
 }

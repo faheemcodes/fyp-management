@@ -37,7 +37,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 .group-hero-icon {
     width: 56px;
     height: 56px;
-    background: conic-gradient(from 0deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -154,7 +154,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="group-hero">
     <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #8b5cf6, #6366f1, #3b82f6, #8b5cf6);">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);">
                 <i class="bi bi-bank2"></i>
             </div>
             <div>

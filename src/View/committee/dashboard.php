@@ -135,7 +135,7 @@ $firstName = explode(' ', $fullName)[0];
 <div class="group-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #8b5cf6, #6366f1, #3b82f6, #8b5cf6);">
+            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);">
                 <i class="bi bi-person-badge"></i>
             </div>
             <div>
