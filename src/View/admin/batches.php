@@ -1,16 +1,82 @@
 <?php
 $title = 'Batch Management';
-$bp = '/fyp-management/public';
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">Academic Batches</h3>
-        <p class="text-muted mb-0">Manage FYP sessions and academic years.</p>
+<style>
+/* ─── Hero Banner Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+</style>
+
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <div class="d-flex align-items-center gap-4 text-center text-md-start">
+            <!-- Icon -->
+            <div class="group-hero-icon">
+                <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <!-- Info -->
+            <div>
+                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                    System Administration
+                </p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                    Academic Batches
+                </h4>
+            </div>
+        </div>
+        
+        <!-- Action Button -->
+        <div>
+            <button class="btn btn-primary rounded-pill px-4 shadow-sm" style="font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createBatchModal">
+                <i class="bi bi-plus-lg me-2"></i>Create New Batch
+            </button>
+        </div>
     </div>
-    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createBatchModal">
-        <i class="bi bi-plus-lg me-2"></i>Create New Batch
-    </button>
+</div>
+
+<div class="alert alert-info border-0 rounded-4 shadow-sm mb-4" role="alert">
+    <div class="d-flex gap-3">
+        <i class="bi bi-info-circle-fill fs-4 mt-1 text-info"></i>
+        <div>
+            <h6 class="fw-bold mb-1">How Batches Work</h6>
+            <ul class="mb-0 ps-3" style="font-size: 0.9rem;">
+                <li><strong>Registration:</strong> Only one batch can be open. New groups automatically join it.</li>
+                <li><strong>Status:</strong> Active batches are visible to faculty. Archiving a batch hides it from their dashboards and frees up their project slots.</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -55,33 +121,26 @@ $bp = '/fyp-management/public';
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3 text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots-vertical text-muted"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                                        <li>
-                                            <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST">
-                                                <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
-                                                <input type="hidden" name="action" value="toggle_active">
-                                                <button type="submit" class="dropdown-item py-2">
-                                                    <i class="bi <?php echo $b['is_active'] ? 'bi-archive text-warning' : 'bi-arrow-counterclockwise text-success'; ?> me-2"></i>
-                                                    <?php echo $b['is_active'] ? 'Archive Batch' : 'Restore Batch'; ?>
-                                                </button>
-                                            </form>
-                                        </li>
-                                        <?php if(!$b['is_registration_open']): ?>
-                                        <li>
-                                            <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST">
-                                                <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
-                                                <input type="hidden" name="action" value="set_registration">
-                                                <button type="submit" class="dropdown-item py-2">
-                                                    <i class="bi bi-door-open text-primary me-2"></i>Set as Registration Batch
-                                                </button>
-                                            </form>
-                                        </li>
-                                        <?php endif; ?>
-                                    </ul>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST" class="m-0">
+                                        <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
+                                        <input type="hidden" name="action" value="toggle_active">
+                                        <button type="submit" class="btn btn-sm <?php echo $b['is_active'] ? 'btn-outline-warning' : 'btn-outline-success'; ?> rounded-pill" title="<?php echo $b['is_active'] ? 'Archive Batch' : 'Restore Batch'; ?>">
+                                            <i class="bi <?php echo $b['is_active'] ? 'bi-archive-fill' : 'bi-arrow-counterclockwise'; ?>"></i>
+                                            <span class="ms-1 d-none d-md-inline"><?php echo $b['is_active'] ? 'Archive' : 'Restore'; ?></span>
+                                        </button>
+                                    </form>
+
+                                    <?php if(!$b['is_registration_open']): ?>
+                                    <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST" class="m-0">
+                                        <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
+                                        <input type="hidden" name="action" value="set_registration">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill" title="Set as Registration Batch">
+                                            <i class="bi bi-door-open-fill"></i>
+                                            <span class="ms-1 d-none d-md-inline">Open Registration</span>
+                                        </button>
+                                    </form>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
@@ -89,19 +148,6 @@ $bp = '/fyp-management/public';
                     <?php endif; ?>
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<div class="alert alert-info border-0 rounded-4 shadow-sm" role="alert">
-    <div class="d-flex gap-3">
-        <i class="bi bi-info-circle-fill fs-4 mt-1 text-info"></i>
-        <div>
-            <h6 class="fw-bold mb-1">How Batches Work</h6>
-            <ul class="mb-0 ps-3" style="font-size: 0.9rem;">
-                <li><strong>Registration:</strong> Only ONE batch can be open for registration at a time. All newly formed student groups will automatically fall into this batch.</li>
-                <li><strong>Status (Active vs Archived):</strong> You can have multiple batches active simultaneously. Active batches are visible to Supervisors and Committees to evaluate. Archiving a batch hides those projects from faculty dashboards and resets their supervision limits for the new cycle!</li>
-            </ul>
         </div>
     </div>
 </div>

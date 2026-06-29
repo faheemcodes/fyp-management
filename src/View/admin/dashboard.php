@@ -327,6 +327,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <small>Monitor assigned capacity limits (max 8 groups/supervisor)</small>
                     </div>
                 </div>
+                <a href="<?php echo $basePath; ?>/admin/slots" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem; padding: 4px 12px;">View All</a>
             </div>
             <div class="table-responsive">
                 <table class="table modern-table m-0">

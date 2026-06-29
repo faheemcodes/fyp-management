@@ -91,6 +91,7 @@ $routes = [
     '/admin/users/create' => ['Controller\AdminController', 'createUser'],
     '/admin/users/edit' => ['Controller\AdminController', 'editUser'],
     '/admin/users/delete' => ['Controller\AdminController', 'deleteUser'],
+    '/admin/slots' => ['Controller\AdminController', 'supervisorSlots'],
     '/admin/groups' => ['Controller\AdminController', 'groups'],
     '/admin/groups/create' => ['Controller\AdminController', 'createGroup'],
     '/admin/groups/edit' => ['Controller\AdminController', 'editGroup'],
@@ -136,6 +137,7 @@ $routes = [
     '/student/proposal' => ['Controller\StudentController', 'proposal'],
     '/student/proposal/submit' => ['Controller\StudentController', 'submitProposal'],
     '/student/grade' => ['Controller\StudentController', 'grade'],
+    '/student/chat' => ['Controller\StudentController', 'chat'],
     
     // Supervisor routes
     '/supervisor/dashboard' => ['Controller\SupervisorController', 'dashboard'],
@@ -144,6 +146,7 @@ $routes = [
     '/supervisor/groups/grade' => ['Controller\SupervisorController', 'gradeGroup'],
     '/supervisor/groups/toggle-visibility' => ['Controller\SupervisorController', 'toggleVisibility'],
     '/supervisor/reviews' => ['Controller\SupervisorController', 'reviews'],
+    '/supervisor/chat' => ['Controller\SupervisorController', 'chat'],
     '/supervisor/proposal/action' => ['Controller\SupervisorController', 'proposalAction'],
     // Committee routes
     '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
@@ -170,6 +173,7 @@ $routes = [
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
     '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
     '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification'],
+    '/api/upload-chat-file' => ['Controller\ChatController', 'uploadFile'],
     
     // Chatbot API
     '/api/chatbot' => ['Controller\ChatbotController', 'handleChat']

@@ -44,15 +44,30 @@ class AdminController extends BaseController {
         // Fetch all supervisors and their approved slots count
         $supervisorsList = $db->query("
             SELECT s.user_id, s.name, s.department, 
-            (SELECT COUNT(*) FROM projects p WHERE p.supervisor_id = s.user_id AND p.status = 'Approved') as current_slots
+            (SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
             FROM supervisors s
-            ORDER BY s.name ASC
+            ORDER BY s.name ASC LIMIT 5
         ")->fetchAll();
 
         $this->render('admin/dashboard', [
             'stats' => $stats,
             'recentUsers' => $recentUsers,
             'recentGroups' => $recentGroups,
+            'supervisorsList' => $supervisorsList
+        ]);
+    }
+
+    
+    public function supervisorSlots() {
+        $db = \Database::getInstance()->getConnection();
+        $supervisorsList = $db->query("
+            SELECT s.user_id, s.name, s.department, 
+            (SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
+            FROM supervisors s
+            ORDER BY s.name ASC
+        ")->fetchAll();
+
+        $this->render('admin/slots', [
             'supervisorsList' => $supervisorsList
         ]);
     }

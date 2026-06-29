@@ -17,7 +17,36 @@ class StudentController extends BaseController {
         return $stmt->fetch();
     }
 
+    public function chat() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'];
+        
+        // Find if student is the creator of an approved project
+        $stmt = $db->prepare("
+            SELECT g.id as group_id, p.supervisor_id, sup.name as supervisor_name, u.email as supervisor_email
+            FROM groups g
+            JOIN projects p ON g.id = p.group_id
+            JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            JOIN users u ON sup.user_id = u.id
+            WHERE g.created_by = ? AND p.status = 'Approved'
+        ");
+        $stmt->execute([$userId]);
+        $project = $stmt->fetch();
+
+        $this->render('student/chat', [
+            'isGroupLeader' => $project ? true : false,
+            'supervisor' => $project ? [
+                'id' => $project['supervisor_id'],
+                'name' => $project['supervisor_name'],
+                'email' => $project['supervisor_email']
+            ] : null,
+            'studentId' => $userId
+        ]);
+    }
+
     public function dashboard() {
+
+
         $userId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 
@@ -325,14 +354,14 @@ class StudentController extends BaseController {
             WHERE (
                 (
                     SELECT COUNT(*) 
-                    FROM projects p 
-                    WHERE p.supervisor_id = s.user_id AND p.status = 'Approved'
+                    FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
+                    WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1
                 ) < 8
                 AND
                 (
                     SELECT COUNT(*) 
-                    FROM projects p 
-                    WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved')
+                    FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
+                    WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved') AND b.is_active = 1
                 ) < 15
             ) OR s.user_id = ?
             ORDER BY s.name ASC

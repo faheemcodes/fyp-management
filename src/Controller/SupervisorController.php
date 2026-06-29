@@ -3,7 +3,31 @@ namespace Controller;
 
 class SupervisorController extends BaseController {
 
+    public function chat() {
+        $db = \Database::getInstance()->getConnection();
+        $supervisorId = $_SESSION['user_id'];
+        
+        // Fetch all group leaders for approved projects assigned to this supervisor
+        $stmt = $db->prepare("
+            SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar
+            FROM projects p
+            JOIN groups g ON p.group_id = g.id
+            JOIN students s ON g.created_by = s.user_id
+            JOIN users u ON s.user_id = u.id
+            WHERE p.supervisor_id = ? AND p.status = 'Approved'
+        ");
+        $stmt->execute([$supervisorId]);
+        $leaders = $stmt->fetchAll();
+
+        $this->render('supervisor/chat', [
+            'leaders' => $leaders,
+            'supervisorId' => $supervisorId
+        ]);
+    }
+
     public function dashboard() {
+
+
         $supervisorId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 

@@ -57,6 +57,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/admin/slots" class="nav-link <?php echo isActive('/admin/slots', $currentUri); ?>">
+                    <i class="bi bi-person-badge-fill"></i> Supervisor Slots
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/deadlines" class="nav-link <?php echo isActive('/admin/deadlines', $currentUri); ?>">
                     <i class="bi bi-calendar2-event-fill"></i> Deadlines
                 </a>
@@ -126,6 +131,22 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-award-fill"></i> Final Grade
                 </a>
             </li>
+            <?php 
+                $dbSidebar = \Database::getInstance()->getConnection();
+                $stmtChat = $dbSidebar->prepare("
+                    SELECT 1 FROM projects p 
+                    JOIN groups g ON p.group_id = g.id 
+                    WHERE g.created_by = ? AND p.status = 'Approved'
+                ");
+                $stmtChat->execute([$_SESSION['user_id'] ?? 0]);
+                if ($stmtChat->fetchColumn()):
+            ?>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?>">
+                    <i class="bi bi-chat-dots-fill"></i> Chat with Supervisor
+                </a>
+            </li>
+            <?php endif; ?>
 
         <?php elseif ($role === 'supervisor'): ?>
             <li class="nav-item">
@@ -146,6 +167,11 @@ if ($urlPrefix === '/') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?>">
                     <i class="bi bi-clipboard-check-fill"></i> Review Proposals
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?>">
+                    <i class="bi bi-chat-dots-fill"></i> Messages
                 </a>
             </li>
 
