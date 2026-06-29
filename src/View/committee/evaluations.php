@@ -478,12 +478,9 @@ html.dark-theme .eval-input {
                     <!-- 1. Proposal Defence -->
                     <td>
                         <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                            <div class="grade-box">
-                                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 w-100 mb-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal"><i class="bi bi-eye me-1"></i>View / Edit</button>
-                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? ''); ?>">
-                                    <?php echo htmlspecialchars($g['proposal_defense']['remarks'] ?? 'No remarks'); ?>
-                                </div>
-                            </div>
+                            <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">
+                                <i class="bi bi-eye me-1"></i>View Marks
+                            </button>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">
                                 Evaluate (30)
@@ -494,12 +491,9 @@ html.dark-theme .eval-input {
                     <!-- 2. FYP Progress -->
                     <td>
                         <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                            <div class="grade-box">
-                                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 w-100 mb-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress"><i class="bi bi-eye me-1"></i>View / Edit</button>
-                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? ''); ?>">
-                                    <?php echo htmlspecialchars($g['progress_eval']['remarks'] ?? 'No remarks'); ?>
-                                </div>
-                            </div>
+                            <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">
+                                <i class="bi bi-eye me-1"></i>View Marks
+                            </button>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">
                                 Evaluate (40)
@@ -510,12 +504,9 @@ html.dark-theme .eval-input {
                     <!-- 3. Final Presentation -->
                     <td>
                         <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                            <div class="grade-box">
-                                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 w-100 mb-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final"><i class="bi bi-eye me-1"></i>View / Edit</button>
-                                <div class="grade-box-remarks text-truncate" title="<?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? ''); ?>">
-                                    <?php echo htmlspecialchars($g['final_presentation']['remarks'] ?? 'No remarks'); ?>
-                                </div>
-                            </div>
+                            <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">
+                                <i class="bi bi-eye me-1"></i>View Marks
+                            </button>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">
                                 Evaluate (25)
@@ -553,7 +544,7 @@ html.dark-theme .eval-input {
                 <div class="eval-mobile-grade">
                     <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Proposal (30)</span>
                     <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">View / Edit</button>
+                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">View Marks</button>
                     <?php else: ?>
                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">Evaluate</button>
                     <?php endif; ?>
@@ -561,7 +552,7 @@ html.dark-theme .eval-input {
                 <div class="eval-mobile-grade">
                     <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progress (40)</span>
                     <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">View / Edit</button>
+                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">View Marks</button>
                     <?php else: ?>
                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Progress">Evaluate</button>
                     <?php endif; ?>
@@ -569,7 +560,7 @@ html.dark-theme .eval-input {
                 <div class="eval-mobile-grade">
                     <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (25)</span>
                     <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">View / Edit</button>
+                        <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">View Marks</button>
                     <?php else: ?>
                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">Evaluate</button>
                     <?php endif; ?>
@@ -630,9 +621,9 @@ html.dark-theme .eval-input {
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][problem_solution]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][literature_feasibility]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_viva]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][problem_solution]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][literature_feasibility]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_viva]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -640,12 +631,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['proposal_defense']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['proposal_defense']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?><button type="submit" class="btn btn-success rounded-pill px-4 fw-semibold shadow-sm">Update Evaluation</button><?php else: ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <?php if(!$g['proposal_defense'] || $g['proposal_defense']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
                     </div>
                 </form>
             </div>
@@ -708,10 +699,10 @@ html.dark-theme .eval-input {
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][understanding]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][technical_knowledge]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][implementation_progress]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_qa]" value="<?php echo htmlspecialchars($prev4); ?>" min="0" max="10" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][understanding]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][technical_knowledge]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][implementation_progress]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_qa]" value="<?php echo htmlspecialchars($prev4); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -719,12 +710,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['progress_eval']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['progress_eval']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?><button type="submit" class="btn btn-success rounded-pill px-4 fw-semibold shadow-sm">Update Evaluation</button><?php else: ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <?php if(!$g['progress_eval'] || $g['progress_eval']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
                     </div>
                 </form>
             </div>
@@ -772,7 +763,7 @@ html.dark-theme .eval-input {
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="25" step="1" required></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="25" step="1" required <?php echo ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -780,12 +771,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['final_presentation']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['final_presentation']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?><button type="submit" class="btn btn-success rounded-pill px-4 fw-semibold shadow-sm">Update Evaluation</button><?php else: ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <?php if(!$g['final_presentation'] || $g['final_presentation']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
                     </div>
                 </form>
             </div>
