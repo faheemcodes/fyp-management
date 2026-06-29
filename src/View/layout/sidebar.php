@@ -52,6 +52,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/admin/batches" class="nav-link <?php echo isActive('/admin/batches', $currentUri); ?>">
+                    <i class="bi bi-box-seam-fill"></i> Batches
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/deadlines" class="nav-link <?php echo isActive('/admin/deadlines', $currentUri); ?>">
                     <i class="bi bi-calendar2-event-fill"></i> Deadlines
                 </a>

@@ -101,6 +101,15 @@ CREATE TABLE profiles (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Academic Batches Table
+CREATE TABLE academic_batches (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    is_active TINYINT(1) DEFAULT 1,
+    is_registration_open TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Groups Table
 CREATE TABLE groups (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -114,10 +123,12 @@ CREATE TABLE groups (
         'Proposal Defence Presentation Completed', 
         'FYP Progress Presentation Completed', 
         'Final Presentation Completed', 
-        'Final Grading Completed'
+    'Final Grading Completed'
     ) DEFAULT 'Group Created',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES students(user_id) ON DELETE CASCADE
+    batch_id INT NOT NULL,
+    FOREIGN KEY (created_by) REFERENCES students(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (batch_id) REFERENCES academic_batches(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Group Members Table

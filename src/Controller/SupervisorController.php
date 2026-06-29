@@ -8,7 +8,7 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Get count of assigned groups
-        $stmt = $db->prepare("SELECT COUNT(*) FROM projects WHERE supervisor_id = ?");
+        $stmt = $db->prepare("SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1");
         $stmt->execute([$supervisorId]);
         $groupCount = $stmt->fetchColumn();
 
@@ -20,10 +20,7 @@ class SupervisorController extends BaseController {
         $pendingProposals = $stmt->fetchColumn();
 
         // Fetch assigned groups
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status 
-            FROM groups g
-            JOIN projects p ON g.id = p.group_id
-            WHERE p.supervisor_id = ? ORDER BY g.created_at DESC");
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status FROM groups g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
@@ -42,7 +39,8 @@ class SupervisorController extends BaseController {
         $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status
             FROM groups g
             JOIN projects p ON g.id = p.group_id
-            WHERE p.supervisor_id = ? ORDER BY g.created_at DESC");
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
@@ -237,7 +235,7 @@ class SupervisorController extends BaseController {
                         $db->beginTransaction();
 
                         if ($status === 'Approved') {
-                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects WHERE supervisor_id = ? AND status = 'Approved'");
+                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1");
                             $stmtSlots->execute([$_SESSION['user_id']]);
                             $slotsUsed = (int)$stmtSlots->fetchColumn();
                             if ($slotsUsed >= 8) {

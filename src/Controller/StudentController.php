@@ -201,9 +201,16 @@ class StudentController extends BaseController {
             try {
                 $db->beginTransaction();
 
+                // Get active registration batch
+                $batchStmt = $db->query("SELECT id FROM academic_batches WHERE is_registration_open = 1 LIMIT 1");
+                $batch = $batchStmt->fetch();
+                if (!$batch) {
+                    throw new \Exception("No active registration batch found. Please contact administration.");
+                }
+
                 // Insert into groups
-                $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (NULL, ?, 'Group Created')");
-                $stmt->execute([$userId]);
+                $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Group Created', ?)");
+                $stmt->execute([$userId, $batch['id']]);
                 $groupId = $db->lastInsertId();
 
                 // Insert member
@@ -482,8 +489,15 @@ class StudentController extends BaseController {
 
                 $groupId = null;
                 if (!$group) {
-                    $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage) VALUES (NULL, ?, 'Proposal Submitted')");
-                    $stmt->execute([$userId]);
+                    // Get active registration batch
+                    $batchStmt = $db->query("SELECT id FROM academic_batches WHERE is_registration_open = 1 LIMIT 1");
+                    $batch = $batchStmt->fetch();
+                    if (!$batch) {
+                        throw new \Exception("No active registration batch found. Please contact administration.");
+                    }
+
+                    $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Proposal Submitted', ?)");
+                    $stmt->execute([$userId, $batch['id']]);
                     $groupId = $db->lastInsertId();
 
                     // Insert leader into group members

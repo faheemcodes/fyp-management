@@ -8,11 +8,11 @@ class CommitteeController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Count assigned evaluations (groups who have approved projects)
-        $stmt = $db->query("SELECT COUNT(*) FROM groups g JOIN projects p ON g.id = p.group_id WHERE p.status = 'Approved'");
+        $stmt = $db->query("SELECT COUNT(*) FROM groups g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.status = 'Approved' AND b.is_active = 1");
         $totalGroups = $stmt->fetchColumn();
 
         // Graded evaluations count
-        $stmt = $db->prepare("SELECT COUNT(*) FROM evaluations WHERE evaluator_id = ? AND total_marks > 0");
+        $stmt = $db->prepare("SELECT COUNT(*) FROM evaluations e JOIN groups g ON e.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE e.evaluator_id = ? AND b.is_active = 1 AND total_marks > 0");
         $stmt->execute([$evaluatorId]);
         $gradedCount = $stmt->fetchColumn();
 
@@ -24,7 +24,8 @@ class CommitteeController extends BaseController {
             FROM groups g
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
-            WHERE p.status = 'Approved'
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.status = 'Approved' AND b.is_active = 1
             ORDER BY g.created_at DESC")->fetchAll();
 
         // Fetch committee details
@@ -51,7 +52,8 @@ class CommitteeController extends BaseController {
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN proposals prop ON g.id = prop.group_id
-            WHERE p.status = 'Approved'
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.status = 'Approved' AND b.is_active = 1
             ORDER BY g.created_at DESC")->fetchAll();
 
         foreach ($groups as &$group) {
