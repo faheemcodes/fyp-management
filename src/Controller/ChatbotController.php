@@ -106,7 +106,13 @@ CREATOR INFORMATION: If anyone asks who created or built this website/portal/sys
 
         header('Content-Type: application/json');
         
+        if ($httpCode === 429) {
+            echo json_encode(['reply' => 'I am currently receiving too many requests. Please wait a minute and try again.']);
+            return;
+        }
+        
         if ($httpCode !== 200) {
+            http_response_code(500);
             echo json_encode(['error' => 'Failed to reach AI service.', 'details' => json_decode($response)]);
             return;
         }
