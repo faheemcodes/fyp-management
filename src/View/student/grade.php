@@ -36,7 +36,13 @@ $showProposalMarks = (float)($grade['proposal_marks'] ?? 0.00);
 // 2. Proposal Defence
 $visibleDefenseCount = 0; $visibleDefenseSum = 0;
 foreach ($proposalDefenseEvals as $e) {
-    if ($e['show_to_student'] == 1) { $visibleDefenseCount++; $visibleDefenseSum += (float)$e['total_marks']; }
+    if ($e['show_to_student'] == 1) { 
+        $visibleDefenseCount++; 
+        $details = json_decode($e['marks_details'], true);
+        if (isset($details[$_SESSION['user_id']])) {
+            $visibleDefenseSum += array_sum(array_values($details[$_SESSION['user_id']]));
+        }
+    }
     else $hasHiddenMarks = true;
 }
 $showProposalDefenseMarks = count($proposalDefenseEvals) > 0 && $visibleDefenseCount > 0 ? round($visibleDefenseSum / count($proposalDefenseEvals)) : 0.00;
@@ -44,7 +50,13 @@ $showProposalDefenseMarks = count($proposalDefenseEvals) > 0 && $visibleDefenseC
 // 3. FYP Progress
 $visibleProgressCount = 0; $visibleProgressSum = 0;
 foreach ($progressEvals as $e) {
-    if ($e['show_to_student'] == 1) { $visibleProgressCount++; $visibleProgressSum += (float)$e['total_marks']; }
+    if ($e['show_to_student'] == 1) { 
+        $visibleProgressCount++; 
+        $details = json_decode($e['marks_details'], true);
+        if (isset($details[$_SESSION['user_id']])) {
+            $visibleProgressSum += array_sum(array_values($details[$_SESSION['user_id']]));
+        }
+    }
     else $hasHiddenMarks = true;
 }
 $showProgressPresentationMarks = count($progressEvals) > 0 && $visibleProgressCount > 0 ? round($visibleProgressSum / count($progressEvals)) : 0.00;
@@ -58,7 +70,13 @@ if (isset($grade['supervision_marks']) && $grade['supervision_marks'] !== null) 
 // 5. Final Presentation
 $visibleFinalCount = 0; $visibleFinalSum = 0;
 foreach ($finalEvals as $e) {
-    if ($e['show_to_student'] == 1) { $visibleFinalCount++; $visibleFinalSum += (float)$e['total_marks']; }
+    if ($e['show_to_student'] == 1) { 
+        $visibleFinalCount++; 
+        $details = json_decode($e['marks_details'], true);
+        if (isset($details[$_SESSION['user_id']])) {
+            $visibleFinalSum += array_sum(array_values($details[$_SESSION['user_id']]));
+        }
+    }
     else $hasHiddenMarks = true;
 }
 $showFinalPresentationMarks = count($finalEvals) > 0 && $visibleFinalCount > 0 ? round($visibleFinalSum / count($finalEvals)) : 0.00;
