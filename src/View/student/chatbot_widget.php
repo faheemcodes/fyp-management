@@ -132,7 +132,7 @@ html.dark-theme #ai-chat-window {
 
 /* ─── Header (Glass) ─── */
 .ai-chat-header {
-    background: linear-gradient(135deg, rgba(86,87,89,0.92), rgba(37,99,235,0.92));
+    background: linear-gradient(135deg, rgba(86,87,89,0.92), rgba(61,62,64,0.92));
     backdrop-filter: blur(12px);
     color: white;
     padding: 10px 14px;
@@ -322,7 +322,7 @@ html.dark-theme .ai-quick-btn:hover {
 .ai-msg-avatar.user-av {
     background: linear-gradient(135deg, #565759, #3d3e40);
     color: white;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+    box-shadow: 0 2px 8px rgba(61,62,64,0.3);
 }
 
 .ai-message {
