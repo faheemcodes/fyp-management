@@ -16,8 +16,9 @@ if ($basePath === '/') {
 </script>
 <script src="<?php echo $basePath; ?>/js/app.js?v=<?php echo time(); ?>"></script>
 <?php
-// Include Chatbot Widget for students
-if (isset($_SESSION['role']) && $_SESSION['role'] === 'student') {
+// Include Chatbot Widget for students (except on the live chat page)
+$isChatPage = strpos($_SERVER['REQUEST_URI'] ?? '', '/student/chat') !== false;
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'student' && !$isChatPage) {
     $chatbotFile = __DIR__ . '/../student/chatbot_widget.php';
     if (file_exists($chatbotFile)) {
         include $chatbotFile;

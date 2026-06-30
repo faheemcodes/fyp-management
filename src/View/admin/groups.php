@@ -332,7 +332,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </button>
                             <button class="action-btn btn-edit-grades" title="Edit Grades/Marks" data-bs-toggle="modal" data-bs-target="#editGradesModal"
                                 data-id="<?php echo $g['id']; ?>"
-                                data-prop="<?php echo htmlspecialchars($g['proposal_marks'] ?? '0.00'); ?>"
                                 data-def="<?php echo htmlspecialchars($g['proposal_defense_marks'] ?? ''); ?>"
                                 data-prog="<?php echo htmlspecialchars($g['progress_presentation_marks'] ?? ''); ?>"
                                 data-final="<?php echo htmlspecialchars($g['final_presentation_marks'] ?? ''); ?>"
@@ -543,13 +542,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <input type="hidden" id="editGradesGroupId" name="group_id">
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="editGradesProp" class="form-label small fw-semibold text-secondary">Proposal Submission (0-10)</label>
-                            <input type="number" class="form-control bg-light" id="editGradesProp" name="proposal_marks" min="0" max="10" step="1" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="editGradesDef" class="form-label small fw-semibold text-secondary">Proposal Defence (0-30)</label>
-                            <input type="number" class="form-control bg-light" id="editGradesDef" name="proposal_defense_marks" min="0" max="30" step="1">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label small fw-semibold text-secondary">Proposal Defense (Max 40)</label>
+                            <input type="number" class="form-control bg-light" id="editGradesDef" name="proposal_defense_marks" min="0" max="40" step="1">
                         </div>
                     </div>
 

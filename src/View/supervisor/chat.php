@@ -7,17 +7,19 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 /* Modern Chat UI */
 .chat-wrapper {
     display: flex;
-    height: 70vh;
-    min-height: 500px;
+    height: 85vh;
+    min-height: 600px;
+    max-width: 1000px;
+    margin: 0 auto;
     background: var(--surface-color);
     border-radius: var(--border-radius-xl);
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .chat-sidebar {
     width: 280px;
-    border-right: 1px solid var(--border-color);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     background: var(--surface-color);
     display: flex;
     flex-direction: column;
@@ -25,7 +27,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 .sidebar-header {
     padding: 14px 18px;
     background: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 .contacts-list {
     flex-grow: 1;
@@ -33,7 +35,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 }
 .contact-item {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
     cursor: pointer;
     transition: background 0.2s ease;
     display: flex;
@@ -89,7 +91,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 .chat-header {
     padding: 12px 20px;
     background: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -353,7 +355,18 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 @media (max-width: 768px) {
     .chat-wrapper {
-        height: calc(100dvh - 200px);
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
+        min-height: auto;
+        width: 100vw;
+        max-width: 100vw;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        z-index: 1000;
+        border-radius: 0;
+        border: none;
+        margin: 0;
     }
     .chat-sidebar {
         width: 100%;
@@ -563,12 +576,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">Messages</h3>
-        <p class="text-muted mb-0">Chat with Group Leaders of your approved projects.</p>
-    </div>
-</div>
+
 
 <div class="chat-wrapper">
     <!-- Sidebar -->
@@ -879,21 +887,19 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     }
                 }
                 
-                let actionsMenu = '';
-                if (isSentByMe) {
-                    actionsMenu = `
-                        <div class="dropdown d-inline-block ms-1">
-                            <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
-                                <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
-                                <li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>
-                                ${!data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
-                                <li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>
-                            </ul>
-                        </div>
-                    `;
-                }
+                let actionsMenu = `
+                    <div class="dropdown d-inline-block ms-1">
+                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
+                            ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
+                            ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
+                            ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
+                            ${isSentByMe ? `<li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>` : ''}
+                        </ul>
+                    </div>
+                `;
 
                 const needsTruncate = textContent && textContent.split('\n').length > 5 || textContent.length > 300;
 

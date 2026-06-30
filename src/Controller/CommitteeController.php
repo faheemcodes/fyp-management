@@ -8,11 +8,11 @@ class CommitteeController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Count assigned evaluations (groups who have approved projects)
-        $stmt = $db->query("SELECT COUNT(*) FROM groups g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.status = 'Approved' AND b.is_active = 1");
+        $stmt = $db->query("SELECT COUNT(*) FROM ``groups`` g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.status = 'Approved' AND b.is_active = 1");
         $totalGroups = $stmt->fetchColumn();
 
         // Graded evaluations count
-        $stmt = $db->prepare("SELECT COUNT(*) FROM evaluations e JOIN groups g ON e.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE e.evaluator_id = ? AND b.is_active = 1 AND total_marks > 0");
+        $stmt = $db->prepare("SELECT COUNT(*) FROM evaluations e JOIN ``groups`` g ON e.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE e.evaluator_id = ? AND b.is_active = 1 AND total_marks > 0");
         $stmt->execute([$evaluatorId]);
         $gradedCount = $stmt->fetchColumn();
 
@@ -21,7 +21,7 @@ class CommitteeController extends BaseController {
 
         // Fetch groups list
         $groups = $db->query("SELECT g.*, p.title as project_title, p.status as project_status, sup.name as supervisor_name
-            FROM groups g
+            FROM ``groups`` g
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN academic_batches b ON g.batch_id = b.id
@@ -48,7 +48,7 @@ class CommitteeController extends BaseController {
 
         // Fetch groups along with scheduled and graded evaluation records for this committee member, including abstract
         $groups = $db->query("SELECT g.*, p.title as project_title, sup.name as supervisor_name, prop.abstract as proposal_abstract
-            FROM groups g
+            FROM ``groups`` g
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN proposals prop ON g.id = prop.group_id
@@ -116,17 +116,13 @@ class CommitteeController extends BaseController {
                     $marksArr = $_POST['marks'] ?? [];
                     
                     foreach ($marksArr as $studentId => $studentMarks) {
-                        $c1 = (float)($studentMarks['problem_solution'] ?? 0);
-                        $c2 = (float)($studentMarks['literature_feasibility'] ?? 0);
-                        $c3 = (float)($studentMarks['presentation_viva'] ?? 0);
+                        $totalStr = isset($studentMarks['total']) && $studentMarks['total'] !== '' ? (float)$studentMarks['total'] : null;
 
                         $details[$studentId] = [
-                            'problem_solution' => $c1,
-                            'literature_feasibility' => $c2,
-                            'presentation_viva' => $c3
+                            'total' => $totalStr !== null ? $totalStr : ''
                         ];
-                        // Out of 30
-                        $totalScore += ($c1 + $c2 + $c3); 
+                        // Out of 40
+                        $totalScore += (float)$totalStr; 
                     }
                     if (count($marksArr) > 0) $totalScore /= count($marksArr); // Store average in total_marks for group overview
 
@@ -134,19 +130,19 @@ class CommitteeController extends BaseController {
                     $marksArr = $_POST['marks'] ?? [];
                     
                     foreach ($marksArr as $studentId => $studentMarks) {
-                        $c1 = (float)($studentMarks['understanding'] ?? 0);
-                        $c2 = (float)($studentMarks['technical_knowledge'] ?? 0);
-                        $c3 = (float)($studentMarks['implementation_progress'] ?? 0);
-                        $c4 = (float)($studentMarks['presentation_qa'] ?? 0);
+                        $c1 = isset($studentMarks['understanding']) && $studentMarks['understanding'] !== '' ? (float)$studentMarks['understanding'] : null;
+                        $c2 = isset($studentMarks['technical_knowledge']) && $studentMarks['technical_knowledge'] !== '' ? (float)$studentMarks['technical_knowledge'] : null;
+                        $c3 = isset($studentMarks['implementation_progress']) && $studentMarks['implementation_progress'] !== '' ? (float)$studentMarks['implementation_progress'] : null;
+                        $c4 = isset($studentMarks['presentation_qa']) && $studentMarks['presentation_qa'] !== '' ? (float)$studentMarks['presentation_qa'] : null;
                         
                         $details[$studentId] = [
-                            'understanding' => $c1,
-                            'technical_knowledge' => $c2,
-                            'implementation_progress' => $c3,
-                            'presentation_qa' => $c4
+                            'understanding' => $c1 !== null ? $c1 : '',
+                            'technical_knowledge' => $c2 !== null ? $c2 : '',
+                            'implementation_progress' => $c3 !== null ? $c3 : '',
+                            'presentation_qa' => $c4 !== null ? $c4 : ''
                         ];
                         // Out of 40
-                        $totalScore += ($c1 + $c2 + $c3 + $c4);
+                        $totalScore += ((float)$c1 + (float)$c2 + (float)$c3 + (float)$c4);
                     }
                     if (count($marksArr) > 0) $totalScore /= count($marksArr);
 
@@ -154,13 +150,17 @@ class CommitteeController extends BaseController {
                     $marksArr = $_POST['marks'] ?? [];
                     
                     foreach ($marksArr as $studentId => $studentMarks) {
-                        $c3 = (float)($studentMarks['presentation'] ?? 0);
+                        $c1 = isset($studentMarks['thesis']) && $studentMarks['thesis'] !== '' ? (float)$studentMarks['thesis'] : null;
+                        $c2 = isset($studentMarks['demo']) && $studentMarks['demo'] !== '' ? (float)$studentMarks['demo'] : null;
+                        $c3 = isset($studentMarks['presentation']) && $studentMarks['presentation'] !== '' ? (float)$studentMarks['presentation'] : null;
 
                         $details[$studentId] = [
-                            'presentation' => $c3
+                            'thesis' => $c1 !== null ? $c1 : '',
+                            'demo' => $c2 !== null ? $c2 : '',
+                            'presentation' => $c3 !== null ? $c3 : ''
                         ];
-                        // Out of 25
-                        $totalScore += $c3;
+                        // Out of 75
+                        $totalScore += ((float)$c1 + (float)$c2 + (float)$c3);
                     }
                     if (count($marksArr) > 0) $totalScore /= count($marksArr);
                 }
@@ -205,7 +205,7 @@ class CommitteeController extends BaseController {
                             $mDetails = json_decode($ev['marks_details'], true);
                             if (isset($mDetails[$sId])) {
                                 $countEvals++;
-                                $evTotal = array_sum(array_values($mDetails[$sId]));
+                                $evTotal = array_sum(array_map('floatval', array_values($mDetails[$sId])));
                                 $studentTotal += $evTotal;
                             }
                         }
@@ -230,7 +230,6 @@ class CommitteeController extends BaseController {
 
                         if ($gData) {
                             $total = round(
-                                 (float)$gData['proposal_marks'] + 
                                  (float)$gData['proposal_defense_marks'] + 
                                  (float)$gData['progress_presentation_marks'] + 
                                  (float)$gData['final_presentation_marks'] + 
@@ -259,10 +258,10 @@ class CommitteeController extends BaseController {
 
                     // Update group progress stage (done once per group)
                     if ($stage === 'Proposal Defence Presentation') {
-                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'Proposal Defence Presentation Completed' WHERE id = ?");
+                        $stmtStage = $db->prepare("UPDATE ``groups`` SET progress_stage = 'Proposal Defence Presentation Completed' WHERE id = ?");
                         $stmtStage->execute([$groupId]);
                     } else if ($stage === 'FYP Progress Presentation') {
-                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'FYP Progress Presentation Completed' WHERE id = ?");
+                        $stmtStage = $db->prepare("UPDATE ``groups`` SET progress_stage = 'FYP Progress Presentation Completed' WHERE id = ?");
                         $stmtStage->execute([$groupId]);
                     } else if ($stage === 'Final Presentation') {
                         // Check if supervision marks are assigned for at least one student in the group
@@ -271,7 +270,7 @@ class CommitteeController extends BaseController {
                         $supervisionMarks = $stmtSupervision->fetchColumn();
 
                         $targetStage = ($supervisionMarks !== null) ? 'Final Grading Completed' : 'Final Presentation Completed';
-                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = ? WHERE id = ?");
+                        $stmtStage = $db->prepare("UPDATE ``groups`` SET progress_stage = ? WHERE id = ?");
                         $stmtStage->execute([$targetStage, $groupId]);
                     }
 

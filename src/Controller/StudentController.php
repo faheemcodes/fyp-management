@@ -8,7 +8,7 @@ class StudentController extends BaseController {
         $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.supervisor_id, sup.name as supervisor_name,
             creator_std.name as creator_name, creator_std.student_id as creator_student_id
             FROM group_members gm
-            JOIN groups g ON gm.group_id = g.id
+            JOIN `groups` g ON gm.group_id = g.id
             LEFT JOIN students creator_std ON g.created_by = creator_std.user_id
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
@@ -24,7 +24,7 @@ class StudentController extends BaseController {
         // Find if student is the creator of an approved project
         $stmt = $db->prepare("
             SELECT g.id as group_id, p.supervisor_id, sup.name as supervisor_name, u.email as supervisor_email
-            FROM groups g
+            FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN users u ON sup.user_id = u.id
@@ -238,7 +238,7 @@ class StudentController extends BaseController {
                 }
 
                 // Insert into groups
-                $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Group Created', ?)");
+                $stmt = $db->prepare("INSERT INTO `groups` (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Group Created', ?)");
                 $stmt->execute([$userId, $batch['id']]);
                 $groupId = $db->lastInsertId();
 
@@ -354,13 +354,13 @@ class StudentController extends BaseController {
             WHERE (
                 (
                     SELECT COUNT(*) 
-                    FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
+                    FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
                     WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1
                 ) < 8
                 AND
                 (
                     SELECT COUNT(*) 
-                    FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
+                    FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
                     WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved') AND b.is_active = 1
                 ) < 15
             ) OR s.user_id = ?
@@ -525,7 +525,7 @@ class StudentController extends BaseController {
                         throw new \Exception("No active registration batch found. Please contact administration.");
                     }
 
-                    $stmt = $db->prepare("INSERT INTO groups (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Proposal Submitted', ?)");
+                    $stmt = $db->prepare("INSERT INTO `groups` (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Proposal Submitted', ?)");
                     $stmt->execute([$userId, $batch['id']]);
                     $groupId = $db->lastInsertId();
 
@@ -548,7 +548,7 @@ class StudentController extends BaseController {
                     $stmt->execute([$title, $abstract, $supervisor_id, $groupId]);
 
                     // Update group progress stage
-                    $stmt = $db->prepare("UPDATE groups SET progress_stage = 'Proposal Submitted' WHERE id = ?");
+                    $stmt = $db->prepare("UPDATE `groups` SET progress_stage = 'Proposal Submitted' WHERE id = ?");
                     $stmt->execute([$groupId]);
 
                     // Reset non-leader group members

@@ -8,20 +8,22 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 <style>
 /* Modern Chat UI */
 .chat-container {
-    height: 70vh;
-    min-height: 500px;
+    height: 85vh;
+    min-height: 600px;
+    max-width: 1000px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     background: var(--surface-color);
     border-radius: var(--border-radius-xl);
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .chat-header {
     padding: 12px 20px;
     background: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -279,9 +281,18 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
 @media (max-width: 768px) {
     .chat-container {
-        height: calc(100vh - 220px);
-        height: calc(100dvh - 220px);
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
         min-height: auto;
+        width: 100vw;
+        max-width: 100vw;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        z-index: 1000;
+        border-radius: 0;
+        border: none;
+        margin: 0;
     }
     .chat-message {
         max-width: 90%;
@@ -475,12 +486,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">Messages</h3>
-        <p class="text-muted mb-0">Direct chat with your Project Supervisor.</p>
-    </div>
-</div>
+
 
 <?php if (!$isGroupLeader): ?>
     <div class="alert alert-warning border-0 shadow-sm rounded-4 d-flex align-items-center gap-3 p-4">
@@ -719,21 +725,19 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     }
                 }
                 
-                let actionsMenu = '';
-                if (isSentByMe) {
-                    actionsMenu = `
-                        <div class="dropdown d-inline-block ms-1">
-                            <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
-                                <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
-                                <li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>
-                                ${!data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
-                                <li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>
-                            </ul>
-                        </div>
-                    `;
-                }
+                let actionsMenu = `
+                    <div class="dropdown d-inline-block ms-1">
+                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
+                            ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
+                            ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
+                            ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
+                            ${isSentByMe ? `<li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>` : ''}
+                        </ul>
+                    </div>
+                `;
 
                 const needsTruncate = textContent && textContent.split('\n').length > 5 || textContent.length > 300;
 

@@ -392,8 +392,7 @@ html.dark-theme, body.dark-theme {
             <thead>
                 <tr>
                     <th class="ps-4">Student Details</th>
-                    <th class="text-center">Prop. Sub. (10)</th>
-                    <th class="text-center">Prop. Def. (30)</th>
+                    <th class="text-center">Prop. Def. (40)</th>
                     <th class="text-center">Prog. Pres. (40)</th>
                     <th class="text-center">Supv. (45)</th>
                     <th class="text-center">Final Pres. (75)</th>
@@ -410,7 +409,6 @@ html.dark-theme, body.dark-theme {
                         <div class="small text-truncate text-dark mt-1" style="max-width: 180px; font-weight: 500;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
                         <div class="text-muted" style="font-size: 0.75rem; margin-top: 2px;"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
                     </td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['proposal_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>

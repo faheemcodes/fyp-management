@@ -11,7 +11,7 @@ class SupervisorController extends BaseController {
         $stmt = $db->prepare("
             SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar
             FROM projects p
-            JOIN groups g ON p.group_id = g.id
+            JOIN ``groups`` g ON p.group_id = g.id
             JOIN students s ON g.created_by = s.user_id
             JOIN users u ON s.user_id = u.id
             WHERE p.supervisor_id = ? AND p.status = 'Approved'
@@ -32,7 +32,7 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Get count of assigned groups
-        $stmt = $db->prepare("SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1");
+        $stmt = $db->prepare("SELECT COUNT(*) FROM projects p JOIN ``groups`` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1");
         $stmt->execute([$supervisorId]);
         $groupCount = $stmt->fetchColumn();
 
@@ -44,7 +44,7 @@ class SupervisorController extends BaseController {
         $pendingProposals = $stmt->fetchColumn();
 
         // Fetch assigned groups
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status FROM groups g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status FROM ``groups`` g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
@@ -61,7 +61,7 @@ class SupervisorController extends BaseController {
 
         // Fetch all supervised groups with grades
         $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status
-            FROM groups g
+            FROM ``groups`` g
             JOIN projects p ON g.id = p.group_id
             JOIN academic_batches b ON g.batch_id = b.id
             WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
@@ -157,7 +157,6 @@ class SupervisorController extends BaseController {
                     
                     foreach ($studentsGrades as $gData) {
                         $total = round(
-                            (float)$gData['proposal_marks'] + 
                             (float)$gData['proposal_defense_marks'] + 
                             (float)$gData['progress_presentation_marks'] + 
                             (float)$gData['final_presentation_marks'] + 
@@ -184,11 +183,11 @@ class SupervisorController extends BaseController {
                     }
                     
                     // Update progress stage to Final Grading Completed only if it is currently at Final Presentation Completed
-                    $stmtGroup = $db->prepare("SELECT progress_stage FROM groups WHERE id = ?");
+                    $stmtGroup = $db->prepare("SELECT progress_stage FROM ``groups`` WHERE id = ?");
                     $stmtGroup->execute([$groupId]);
                     $currentStage = $stmtGroup->fetchColumn();
                     if ($currentStage === 'Final Presentation Completed') {
-                        $stmtStage = $db->prepare("UPDATE groups SET progress_stage = 'Final Grading Completed' WHERE id = ?");
+                        $stmtStage = $db->prepare("UPDATE ``groups`` SET progress_stage = 'Final Grading Completed' WHERE id = ?");
                         $stmtStage->execute([$groupId]);
                     }
                     
@@ -219,7 +218,7 @@ class SupervisorController extends BaseController {
         // Fetch proposals for assigned groups
         $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
             FROM proposals pr
-            JOIN groups g ON pr.group_id = g.id
+            JOIN ``groups`` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
             WHERE p.supervisor_id = ? ORDER BY pr.submitted_at DESC");
         $stmt->execute([$supervisorId]);
@@ -259,7 +258,7 @@ class SupervisorController extends BaseController {
                         $db->beginTransaction();
 
                         if ($status === 'Approved') {
-                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN groups g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1");
+                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN ``groups`` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1");
                             $stmtSlots->execute([$_SESSION['user_id']]);
                             $slotsUsed = (int)$stmtSlots->fetchColumn();
                             if ($slotsUsed >= 8) {
@@ -281,7 +280,7 @@ class SupervisorController extends BaseController {
                             $stage = 'Proposal Approved';
                             
                             // Check if group_code is already assigned
-                            $stmtCodeCheck = $db->prepare("SELECT group_code, created_by FROM groups WHERE id = ?");
+                            $stmtCodeCheck = $db->prepare("SELECT group_code, created_by FROM ``groups`` WHERE id = ?");
                             $stmtCodeCheck->execute([$proposal['group_id']]);
                             $groupData = $stmtCodeCheck->fetch();
                             
@@ -307,26 +306,20 @@ class SupervisorController extends BaseController {
                                 
                                 $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
                                 
-                                $stmtCount = $db->prepare("SELECT COUNT(*) FROM groups WHERE group_code LIKE ?");
+                                $stmtCount = $db->prepare("SELECT COUNT(*) FROM ``groups`` WHERE group_code LIKE ?");
                                 $stmtCount->execute([$prefix . '%']);
                                 $count = (int)$stmtCount->fetchColumn();
                                 $nextNumber = $count + 1;
                                 $groupCode = $prefix . $nextNumber;
                                 
                                 // Update group_code in DB
-                                $stmtUpdateCode = $db->prepare("UPDATE groups SET group_code = ? WHERE id = ?");
+                                $stmtUpdateCode = $db->prepare("UPDATE ``groups`` SET group_code = ? WHERE id = ?");
                                 $stmtUpdateCode->execute([$groupCode, $proposal['group_id']]);
                             }
                         }
                         
-                        $stmt = $db->prepare("UPDATE groups SET progress_stage = ? WHERE id = ?");
+                        $stmt = $db->prepare("UPDATE ``groups`` SET progress_stage = ? WHERE id = ?");
                         $stmt->execute([$stage, $proposal['group_id']]);
-
-                        // Seed Grade table proposal marks if approved
-                        if ($status === 'Approved') {
-                            $stmt = $db->prepare("UPDATE grades SET proposal_marks = 10.00 WHERE group_id = ?");
-                            $stmt->execute([$proposal['group_id']]);
-                        }
 
                         $db->commit();
 

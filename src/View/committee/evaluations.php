@@ -483,7 +483,7 @@ html.dark-theme .eval-input {
                             </button>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Proposal">
-                                Evaluate (30)
+                                Evaluate (40)
                             </button>
                         <?php endif; ?>
                     </td>
@@ -509,7 +509,7 @@ html.dark-theme .eval-input {
                             </button>
                         <?php else: ?>
                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#gradeModal<?php echo $g['id']; ?>Final">
-                                Evaluate (25)
+                                Evaluate (75)
                             </button>
                         <?php endif; ?>
                     </td>
@@ -593,9 +593,7 @@ html.dark-theme .eval-input {
                                 <thead>
                                     <tr>
                                         <th class="text-start ps-3">Student</th>
-                                        <th class="text-center">Problem & Sol (10)</th>
-                                        <th class="text-center">Lit & Feas (10)</th>
-                                        <th class="text-center">Pres & Viva (10)</th>
+                                        <th class="text-center">Proposal Defense Marks (40)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -611,19 +609,15 @@ html.dark-theme .eval-input {
                                             </div>
                                         </td>
                                         <?php 
-                                        $prev1 = ''; $prev2 = ''; $prev3 = '';
+                                        $prev1 = '';
                                         if ($g['proposal_defense'] && $g['proposal_defense']['marks_details']) {
                                             $md = json_decode($g['proposal_defense']['marks_details'], true);
                                             if (isset($md[$m['user_id']])) {
-                                                $prev1 = $md[$m['user_id']]['problem_solution'] ?? '';
-                                                $prev2 = $md[$m['user_id']]['literature_feasibility'] ?? '';
-                                                $prev3 = $md[$m['user_id']]['presentation_viva'] ?? '';
+                                                $prev1 = $md[$m['user_id']]['total'] ?? '';
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][problem_solution]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][literature_feasibility]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_viva]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][total]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="40" step="1"></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -631,12 +625,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['proposal_defense']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['proposal_defense']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if(!$g['proposal_defense'] || $g['proposal_defense']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Save Evaluation</button>
                     </div>
                 </form>
             </div>
@@ -699,10 +693,10 @@ html.dark-theme .eval-input {
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][understanding]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][technical_knowledge]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][implementation_progress]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_qa]" value="<?php echo htmlspecialchars($prev4); ?>" min="0" max="10" step="1" required <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][understanding]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="10" step="1"></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][technical_knowledge]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="10" step="1"></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][implementation_progress]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="10" step="1"></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation_qa]" value="<?php echo htmlspecialchars($prev4); ?>" min="0" max="10" step="1"></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -710,12 +704,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['progress_eval']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['progress_eval']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if(!$g['progress_eval'] || $g['progress_eval']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Save Evaluation</button>
                     </div>
                 </form>
             </div>
@@ -739,6 +733,8 @@ html.dark-theme .eval-input {
                                 <thead>
                                     <tr>
                                         <th class="text-start ps-3">Student</th>
+                                        <th class="text-center">Thesis (25)</th>
+                                        <th class="text-center">Demo (25)</th>
                                         <th class="text-center">Presentation (25)</th>
                                     </tr>
                                 </thead>
@@ -755,15 +751,19 @@ html.dark-theme .eval-input {
                                             </div>
                                         </td>
                                         <?php 
-                                        $prev1 = '';
+                                        $prev1 = ''; $prev2 = ''; $prev3 = '';
                                         if ($g['final_presentation'] && $g['final_presentation']['marks_details']) {
                                             $md = json_decode($g['final_presentation']['marks_details'], true);
                                             if (isset($md[$m['user_id']])) {
-                                                $prev1 = $md[$m['user_id']]['presentation'] ?? '';
+                                                $prev1 = $md[$m['user_id']]['thesis'] ?? '';
+                                                $prev2 = $md[$m['user_id']]['demo'] ?? '';
+                                                $prev3 = $md[$m['user_id']]['presentation'] ?? '';
                                             }
                                         }
                                         ?>
-                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="25" step="1" required <?php echo ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0) ? 'disabled' : ''; ?>></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][thesis]" value="<?php echo htmlspecialchars($prev1); ?>" min="0" max="25" step="1"></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][demo]" value="<?php echo htmlspecialchars($prev2); ?>" min="0" max="25" step="1"></td>
+                                        <td class="text-center"><input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][presentation]" value="<?php echo htmlspecialchars($prev3); ?>" min="0" max="25" step="1"></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -771,12 +771,12 @@ html.dark-theme .eval-input {
                         </div>
                         <div class="eval-remarks-box">
                             <div class="eval-remarks-label">Group Evaluator Remarks</div>
-                            <?php $pR = $g['final_presentation']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..." <?php echo ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0) ? 'disabled' : ''; ?>><?php echo htmlspecialchars($pR); ?></textarea>
+                            <?php $pR = $g['final_presentation']['remarks'] ?? ''; ?><textarea class="form-control eval-remarks-textarea" name="remarks" rows="2" placeholder="Apply to entire group..."><?php echo htmlspecialchars($pR); ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <?php if(!$g['final_presentation'] || $g['final_presentation']['total_marks'] <= 0): ?><button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Submit Evaluation</button><?php endif; ?>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">Save Evaluation</button>
                     </div>
                 </form>
             </div>

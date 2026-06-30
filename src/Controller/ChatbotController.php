@@ -29,7 +29,7 @@ class ChatbotController extends BaseController {
             SELECT g.progress_stage, p.status, g.group_code 
             FROM students s 
             LEFT JOIN group_members gm ON s.user_id = gm.student_id 
-            LEFT JOIN groups g ON gm.group_id = g.id 
+            LEFT JOIN ``groups`` g ON gm.group_id = g.id 
             LEFT JOIN projects p ON g.id = p.group_id 
             WHERE s.user_id = ?
         ");

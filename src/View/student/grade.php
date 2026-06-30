@@ -30,8 +30,7 @@ foreach ($evaluations as $e) {
     }
 }
 
-// 1. Proposal Marks
-$showProposalMarks = (float)($grade['proposal_marks'] ?? 0.00);
+
 
 // 2. Proposal Defence
 $visibleDefenseCount = 0; $visibleDefenseSum = 0;
@@ -40,7 +39,7 @@ foreach ($proposalDefenseEvals as $e) {
         $visibleDefenseCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleDefenseSum += array_sum(array_values($details[$_SESSION['user_id']]));
+            $visibleDefenseSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
         }
     }
     else $hasHiddenMarks = true;
@@ -54,7 +53,7 @@ foreach ($progressEvals as $e) {
         $visibleProgressCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleProgressSum += array_sum(array_values($details[$_SESSION['user_id']]));
+            $visibleProgressSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
         }
     }
     else $hasHiddenMarks = true;
@@ -74,7 +73,7 @@ foreach ($finalEvals as $e) {
         $visibleFinalCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleFinalSum += array_sum(array_values($details[$_SESSION['user_id']]));
+            $visibleFinalSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
         }
     }
     else $hasHiddenMarks = true;
@@ -82,7 +81,7 @@ foreach ($finalEvals as $e) {
 $showFinalPresentationMarks = count($finalEvals) > 0 && $visibleFinalCount > 0 ? round($visibleFinalSum / count($finalEvals)) : 0.00;
 
 // Cumulative
-$showTotalMarks = $showProposalMarks + $showProposalDefenseMarks + $showProgressPresentationMarks + $showSupervisionMarks + $showFinalPresentationMarks;
+$showTotalMarks = $showProposalDefenseMarks + $showProgressPresentationMarks + $showSupervisionMarks + $showFinalPresentationMarks;
 $showPercentage = ($showTotalMarks / 200.0) * 100.0;
 
 // Grade letter
@@ -137,8 +136,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                     <tbody>
                         <?php
                         $rubrics = [
-                            ['label' => 'Proposal Submission', 'desc' => 'Awarded upon supervisor approval', 'max' => 10, 'val' => $showProposalMarks],
-                            ['label' => 'Proposal Defence Presentation', 'desc' => 'Awarded by committee at defence', 'max' => 30, 'val' => $showProposalDefenseMarks],
+                            ['label' => 'Proposal Defence Presentation', 'desc' => 'Awarded by committee at defence', 'max' => 40, 'val' => $showProposalDefenseMarks],
                             ['label' => 'FYP Progress Presentation', 'desc' => 'Awarded by committee at mid-term', 'max' => 40, 'val' => $showProgressPresentationMarks],
                             ['label' => 'Supervision', 'desc' => 'Awarded by supervisor for guidance', 'max' => 45, 'val' => $showSupervisionMarks],
                             ['label' => 'Final Presentation', 'desc' => 'Demo (25) + Thesis (25) + Presentation (25)', 'max' => 75, 'val' => $showFinalPresentationMarks],

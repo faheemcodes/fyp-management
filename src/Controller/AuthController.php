@@ -404,7 +404,7 @@ class AuthController extends BaseController {
             
             if ($user) {
                 $token = bin2hex(random_bytes(32));
-                $expiry = date('Y-m-d H:i:s', time() + 3600); // 1 hour validity
+                $expiry = date('Y-m-d H:i:s', time() + 600); // 10 minutes validity
                 
                 $stmt = $db->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?");
                 $stmt->execute([$token, $expiry, $user['id']]);
@@ -433,7 +433,7 @@ class AuthController extends BaseController {
                            "We received a request to reset your password for your FYP Management Portal account.\n" .
                            "Please click the link below to set a new password:\n\n" .
                            $resetLink . "\n\n" .
-                           "This link is valid for 1 hour. If you did not make this request, you can safely ignore this email.\n\n" .
+                           "This link is valid for 10 minutes. If you did not make this request, you can safely ignore this email.\n\n" .
                            "Regards,\nUniversity of Sindh FYP Portal Support";
                 $headers = "From: noreply@usindh.edu.pk\r\n" .
                            "Reply-To: noreply@usindh.edu.pk\r\n" .

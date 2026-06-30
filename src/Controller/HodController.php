@@ -21,7 +21,7 @@ class HodController extends BaseController {
         $stmtPending->execute([$dept]);
         $stats['pending_approvals'] = $stmtPending->fetchColumn();
         
-        $stmtGroupsCount = $db->prepare("SELECT COUNT(*) FROM groups g JOIN students s ON g.created_by = s.user_id WHERE s.department = ?");
+        $stmtGroupsCount = $db->prepare("SELECT COUNT(*) FROM ``groups`` g JOIN students s ON g.created_by = s.user_id WHERE s.department = ?");
         $stmtGroupsCount->execute([$dept]);
         $stats['total_groups'] = $stmtGroupsCount->fetchColumn();
         

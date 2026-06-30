@@ -190,7 +190,7 @@ CREATE TABLE evaluations (
 CREATE TABLE grades (
     student_id INT PRIMARY KEY,
     group_id INT NOT NULL,
-    proposal_marks DECIMAL(5,2) DEFAULT 0.00,
+
     proposal_defense_marks DECIMAL(5,2) DEFAULT NULL,
     progress_presentation_marks DECIMAL(5,2) DEFAULT NULL,
     final_presentation_marks DECIMAL(5,2) DEFAULT NULL,
