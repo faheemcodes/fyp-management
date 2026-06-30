@@ -4,6 +4,7 @@
 /* ─── Design Tokens ─── */
 :root {
     --primary-color: #3b82f6;
+    --primary-rgb: 59, 130, 246;
     --primary-hover: #2563eb;
     --secondary-color: #0d9488;
     --accent-color: #f59e0b;
