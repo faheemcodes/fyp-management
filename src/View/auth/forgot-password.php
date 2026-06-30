@@ -6,9 +6,10 @@
     <title>Forgot Password - FYP Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <?php
-    $basePath = dirname($_SERVER['SCRIPT_NAME']);
-    if ($basePath === '\\' || $basePath === '/') {
+    $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    if ($basePath === '/') {
         $basePath = '';
     }
     ?>
@@ -19,84 +20,479 @@
         }
     </script>
     <style>
+        * { box-sizing: border-box; }
+
         body {
-            background: var(--bg-color);
-            height: 100vh;
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        html.dark-theme body {
+            background-color: #0a0a0f;
+            color: #e4e4e7;
+        }
+
+        /* ─── Gradient Header ─── */
+        .header-top {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            padding: 14px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-top::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; right: 0; bottom: 0;
+            width: 300%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+            animation: headerShimmer 8s ease-in-out infinite;
+        }
+
+        @keyframes headerShimmer {
+            0% { transform: translateX(-33%); }
+            100% { transform: translateX(33%); }
+        }
+
+        .header-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .header-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.1rem;
+            color: #fff;
+            flex-shrink: 0;
         }
-        .reset-card {
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-            background: var(--card-bg);
-            overflow: hidden;
-            width: 100%;
-            max-width: 450px;
-        }
-        .reset-header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+        .header-brand-text h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin: 0;
             color: #ffffff;
-            padding: 40px 30px;
-            text-align: center;
+            letter-spacing: -0.01em;
         }
-        .btn-primary {
-            background-color: #2E5BFF;
-            border-color: #2E5BFF;
-            box-shadow: 0 4px 12px rgba(46,91,255,0.25);
-            padding: 12px;
+
+        .header-brand-text p {
+            font-size: 0.7rem;
+            margin: 0;
+            color: rgba(255,255,255,0.5);
+            font-weight: 400;
+        }
+
+        .header-signup-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ffffff;
+            padding: 6px 18px;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
-        .btn-primary:hover {
-            background-color: #1A40D4;
-            border-color: #1A40D4;
+
+        .header-signup-btn:hover {
+            background: rgba(255,255,255,0.18);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* ─── Page Background ─── */
+        .login-page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(14, 165, 233, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        html.dark-theme .login-page::before {
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+        }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* ─── Main Login Card ─── */
+        .login-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 44px 36px 32px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+        }
+
+        html.dark-theme .login-card {
+            background: #16161a;
+            border-color: #2a2a30;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        /* ─── Brand Title ─── */
+        .login-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-brand h2 {
+            font-weight: 700;
+            font-size: 1.75rem;
+            letter-spacing: -0.03em;
+            margin: 0;
+            background: linear-gradient(135deg, #1a1a2e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        html.dark-theme .login-brand h2 {
+            background: linear-gradient(135deg, #e4e4e7, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .login-brand p {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin: 6px 0 0;
+            font-weight: 400;
+        }
+
+        /* ─── Floating Label Inputs ─── */
+        .input-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            height: 46px;
+            padding: 16px 14px 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            border: 1.5px solid #d1d5db;
+            border-radius: 10px;
+            background: #f9fafb;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-wrap input:focus {
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.12);
+        }
+
+        .input-wrap label {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.875rem;
+            color: #9ca3af;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            background: transparent;
+            padding: 0 2px;
+        }
+
+        .input-wrap input:focus + label,
+        .input-wrap input:not(:placeholder-shown) + label {
+            top: 7px;
+            transform: translateY(0);
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #3b82f6;
+            letter-spacing: 0.03em;
+        }
+
+        html.dark-theme .input-wrap input {
+            background: #1e1e24;
+            border-color: #3a3a42;
+            color: #e4e4e7;
+        }
+
+        html.dark-theme .input-wrap input:focus {
+            background: #1e1e24;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3.5px rgba(96, 165, 250, 0.12);
+        }
+
+        html.dark-theme .input-wrap input:focus + label,
+        html.dark-theme .input-wrap input:not(:placeholder-shown) + label {
+            color: #60a5fa;
+        }
+
+        /* ─── Show/Hide toggle ─── */
+        .pw-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 4px 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6b7280;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            transition: color 0.15s;
+        }
+
+        .pw-toggle:hover { color: #1a1a2e; }
+        html.dark-theme .pw-toggle { color: #9ca3af; }
+        html.dark-theme .pw-toggle:hover { color: #e4e4e7; }
+
+        /* ─── Login Button ─── */
+        .btn-login {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* ─── Divider ─── */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 22px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        html.dark-theme .divider::before,
+        html.dark-theme .divider::after {
+            background: #2a2a30;
+        }
+
+        .divider span {
+            padding: 0 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ─── Forgot Password ─── */
+        .forgot-link {
+            display: block;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-top: 18px;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .forgot-link:hover { color: #1d4ed8; }
+        html.dark-theme .forgot-link { color: #60a5fa; }
+        html.dark-theme .forgot-link:hover { color: #93bbfc; }
+
+        /* ─── Register Card ─── */
+        .register-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 22px;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        html.dark-theme .register-card {
+            background: #16161a;
+            border-color: #2a2a30;
+            color: #9ca3af;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .register-card a {
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .register-card a:hover { color: #1d4ed8; }
+        html.dark-theme .register-card a { color: #60a5fa; }
+
+        /* ─── Alerts ─── */
+        .alert-login {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 18px;
+            border: none;
+            font-weight: 500;
+        }
+
+        .alert-login.alert-danger {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .alert-login.alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        html.dark-theme .alert-login.alert-danger {
+            background: rgba(220, 38, 38, 0.1);
+            color: #f87171;
+        }
+
+        html.dark-theme .alert-login.alert-success {
+            background: rgba(22, 163, 74, 0.1);
+            color: #4ade80;
+        }
+
+        /* ─── Footer ─── */
+        .login-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .login-card { padding: 32px 24px 24px; }
+            .login-wrapper { max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div class="reset-card shadow-lg">
-    <div class="reset-header">
-        <h4 class="fw-bold m-0"><i class="bi bi-key-fill"></i> Recover Password</h4>
-        <p class="text-muted mb-0 mt-2 text-white-50">Enter your email to reset password</p>
+<!-- ─── Top Header ─── -->
+<header class="header-top">
+    <div class="container header-inner d-flex justify-content-between align-items-center">
+        <a class="header-brand" href="<?php echo $basePath; ?>/login">
+            <div class="header-logo">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="header-brand-text">
+                <h1>University of Sindh</h1>
+                <p>Faculty of Engineering & Technology</p>
+            </div>
+        </a>
+        <a href="<?php echo $basePath; ?>/register" class="header-signup-btn">Sign Up</a>
     </div>
-    
-    <div class="p-4 p-sm-5">
-        <?php if (isset($_SESSION['flash']['error'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show small" role="alert">
-                <i class="bi bi-exclamation-triangle-fill"></i> <?php echo $_SESSION['flash']['error']; unset($_SESSION['flash']['error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php endif; ?>
+</header>
 
-        <?php if (isset($_SESSION['flash']['success'])): ?>
-            <div class="alert alert-success alert-dismissible fade show small" role="alert">
-                <i class="bi bi-check-circle-fill"></i> <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<!-- ─── Login Area ─── -->
+<main class="login-page">
+    <div class="login-wrapper">
+        
+        <div class="login-card">
+            <div class="login-brand">
+                <h2>Recover Password</h2>
+                <p>Enter your email to reset password</p>
             </div>
-        <?php endif; ?>
 
-        <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/forgot-password" method="POST">
-            <div class="mb-4">
-                <label for="email" class="form-label small fw-semibold text-secondary">Registered Email Address</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-                    <input type="email" class="form-control bg-light border-start-0" id="email" name="email" placeholder="name@university.edu" required>
+            <?php if (isset($_SESSION['flash']['error'])): ?>
+                <div class="alert-login alert-danger" role="alert">
+                    <?php echo $_SESSION['flash']['error']; unset($_SESSION['flash']['error']); ?>
                 </div>
-                <div class="form-text small text-muted mt-2">
-                    We will send a password reset link to this email address.
-                </div>
-            </div>
+            <?php endif; ?>
 
-            <button type="submit" class="btn btn-primary w-100 rounded-pill mb-3">Send Reset Instructions</button>
-            
-            <div class="text-center small mt-4">
-                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/login" class="text-decoration-none fw-semibold"><i class="bi bi-arrow-left"></i> Back to Login</a>
-            </div>
-        </form>
+            <?php if (isset($_SESSION['flash']['success'])): ?>
+                <div class="alert-login alert-success" role="alert">
+                    <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="<?php echo $basePath; ?>/forgot-password" method="POST" autocomplete="off">
+                <div class="input-wrap">
+                    <input type="email" id="email" name="email" placeholder=" " required>
+                    <label for="email">Email Address</label>
+                </div>
+
+                <button type="submit" class="btn-login" style="margin-bottom: 20px;">Send Reset Instructions</button>
+                
+                <div style="text-align: center;">
+                    <a href="<?php echo $basePath; ?>/login" class="forgot-link">Back to Login</a>
+                </div>
+            </form>
+        </div>
     </div>
+</main>
+
+<div class="login-footer">
+    &copy; <?php echo date('Y'); ?> University of Sindh &middot; FYP Management Portal
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
