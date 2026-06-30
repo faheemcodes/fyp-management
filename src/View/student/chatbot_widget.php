@@ -42,7 +42,7 @@
                 <div class="ai-input-wrapper">
                     <input type="text" id="ai-chat-input" placeholder="Type your message..." autocomplete="off">
                     <button type="submit" id="ai-send-btn" disabled>
-                        <i class="bi bi-arrow-up"></i>
+                        <i class="bi bi-send-fill"></i>
                     </button>
                 </div>
             </form>
