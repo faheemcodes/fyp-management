@@ -135,14 +135,14 @@ html.dark-theme #ai-chat-window {
     background: linear-gradient(135deg, rgba(var(--primary-rgb),0.92), rgba(37,99,235,0.92));
     backdrop-filter: blur(12px);
     color: white;
-    padding: 14px 16px;
+    padding: 10px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .ai-avatar-ring {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     padding: 2px;
     background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
@@ -181,9 +181,9 @@ html.dark-theme #ai-chat-window {
 }
 .ai-header-actions { display: flex; gap: 4px; }
 .ai-header-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     border: none;
     background: rgba(255,255,255,0.12);
     backdrop-filter: blur(4px);
@@ -192,7 +192,7 @@ html.dark-theme #ai-chat-window {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     transition: background 0.2s;
 }
 .ai-header-btn:hover { background: rgba(255,255,255,0.22); }
