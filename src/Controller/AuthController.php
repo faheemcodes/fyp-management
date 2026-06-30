@@ -394,7 +394,7 @@ class AuthController extends BaseController {
             $email = trim($_POST['email'] ?? '');
             if (empty($email)) {
                 $this->flash('error', 'Please provide your email.');
-                redirect('/forgot-password');
+                redirect('/login');
             }
             
             $db = \Database::getInstance()->getConnection();
@@ -482,8 +482,9 @@ class AuthController extends BaseController {
             } else {
                 $this->flash('error', 'No account found with this email address.');
             }
-            redirect('/forgot-password');
+            redirect('/login');
         }
+        // Fallback for direct GET access if needed
         $this->render('auth/forgot-password');
     }
     
