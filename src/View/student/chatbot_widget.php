@@ -440,7 +440,7 @@ html.dark-theme .ai-chat-footer {
     gap: 8px;
     background: var(--form-bg);
     backdrop-filter: blur(8px);
-    border-radius: 14px;
+    border-radius: 30px;
     padding: 4px 4px 4px 14px;
     border: 1.5px solid transparent;
     transition: all 0.25s;
@@ -471,7 +471,7 @@ html.dark-theme .ai-input-wrapper:focus-within {
 #ai-send-btn {
     width: 32px;
     height: 32px;
-    border-radius: 10px;
+    border-radius: 50%;
     border: none;
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: white;
