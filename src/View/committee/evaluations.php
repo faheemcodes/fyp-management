@@ -395,6 +395,19 @@ html.dark-theme .eval-input {
             </div>
         </div>
         
+        <div class="d-flex align-items-center gap-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-light rounded-pill dropdown-toggle shadow-sm px-4 fw-bold" type="button" id="printSheetsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-printer me-1"></i> Print Blank Sheets
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="printSheetsDropdown">
+                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=Proposal Defence Presentation"><i class="bi bi-file-earmark-text text-primary me-2"></i>Proposal Defence</a></li>
+                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=FYP Progress Presentation"><i class="bi bi-file-earmark-bar-graph text-success me-2"></i>Progress Presentation</a></li>
+                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=Final Presentation"><i class="bi bi-file-earmark-check text-danger me-2"></i>Final Presentation</a></li>
+                </ul>
+            </div>
+        </div>
+        
         <?php
         $anyHidden = false;
         $hasEvaluations = false;

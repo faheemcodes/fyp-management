@@ -151,6 +151,7 @@ $routes = [
     // Committee routes
     '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
     '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
+    '/committee/evaluations/print' => ['Controller\CommitteeController', 'printSheet'],
     '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
     '/committee/evaluations/toggle-visibility' => ['Controller\CommitteeController', 'toggleCommitteeVisibility'],
     '/committee/profile' => ['Controller\CommitteeController', 'profile'],

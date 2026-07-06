@@ -94,6 +94,77 @@ class CommitteeController extends BaseController {
         ]);
     }
 
+    public function printSheet() {
+        $evaluatorId = $_SESSION['user_id'];
+        $stage = $_GET['stage'] ?? '';
+        
+        if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
+            die("Invalid stage.");
+        }
+
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch committee details
+        $stmtC = $db->prepare("SELECT c.name, c.department FROM committees c WHERE c.user_id = ?");
+        $stmtC->execute([$evaluatorId]);
+        $committee = $stmtC->fetch();
+
+        // Fetch groups assigned to this committee member
+        $groups = $db->query("SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.status = 'Approved' AND b.is_active = 1
+            ORDER BY g.group_code ASC")->fetchAll();
+
+        $grouped = [];
+
+        foreach ($groups as $group) {
+            $groupId = $group['group_id'];
+            
+            // Fetch group members
+            $stmtM = $db->prepare("SELECT s.name as student_name, s.student_id as roll_no FROM group_members gm JOIN students s ON gm.student_id = s.user_id WHERE gm.group_id = ? ORDER BY s.student_id ASC");
+            $stmtM->execute([$groupId]);
+            $members = $stmtM->fetchAll();
+
+            if (empty($members)) continue;
+
+            $groupData = [];
+            
+            // Fetch previous comments if it's FYP Progress Presentation
+            $previousComments = [];
+            if ($stage === 'FYP Progress Presentation') {
+                $stmtComments = $db->prepare("SELECT e.remarks FROM evaluations e WHERE e.group_id = ? AND e.stage = 'Proposal Defence Presentation' AND e.remarks IS NOT NULL AND e.remarks != ''");
+                $stmtComments->execute([$groupId]);
+                $comments = $stmtComments->fetchAll();
+                foreach ($comments as $c) {
+                    $previousComments[] = $c['remarks'];
+                }
+            }
+
+            foreach ($members as $m) {
+                $groupData[] = [
+                    'group_id' => $groupId,
+                    'group_code' => $group['group_code'],
+                    'project_title' => $group['project_title'],
+                    'supervisor_name' => $group['supervisor_name'],
+                    'roll_no' => $m['roll_no'],
+                    'student_name' => $m['student_name'],
+                    'previous_comments' => implode(" ", $previousComments)
+                ];
+            }
+            
+            $grouped[$groupId] = $groupData;
+        }
+
+        $this->render('committee/print_sheet', [
+            'grouped' => $grouped,
+            'stage' => $stage,
+            'committee' => $committee
+        ]);
+    }
+
     public function gradeEvaluation() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $groupId = $_POST['group_id'] ?? null;

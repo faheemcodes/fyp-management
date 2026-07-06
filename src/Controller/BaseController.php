@@ -18,7 +18,8 @@ class BaseController {
                 'auth/forgot-password', 
                 'auth/reset-password',
                 'coordinator/view_notice',
-                'coordinator/assessment_report'
+                'coordinator/assessment_report',
+                'committee/print_sheet'
             ];
             
             if (in_array($viewName, $noLayoutViews)) {
