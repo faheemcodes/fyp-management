@@ -135,7 +135,7 @@ if ($urlPrefix === '/') {
                 $dbSidebar = \Database::getInstance()->getConnection();
                 $stmtChat = $dbSidebar->prepare("
                     SELECT 1 FROM projects p 
-                    JOIN ``groups`` g ON p.group_id = g.id 
+                    JOIN `groups` g ON p.group_id = g.id 
                     WHERE g.created_by = ? AND p.status = 'Approved'
                 ");
                 $stmtChat->execute([$_SESSION['user_id'] ?? 0]);

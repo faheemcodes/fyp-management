@@ -289,7 +289,7 @@ class CoordinatorController extends BaseController {
 
             $query = "
                 SELECT g.group_code, p.title as project_title, u_stu.name as student_name
-                FROM ``groups`` g
+                FROM `groups` g
                 LEFT JOIN projects p ON p.group_id = g.id
                 JOIN group_members gm ON gm.group_id = g.id
                 JOIN students u_stu ON gm.student_id = u_stu.user_id

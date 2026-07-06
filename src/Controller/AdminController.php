@@ -14,7 +14,7 @@ class AdminController extends BaseController {
         $stats['committee'] = $db->query("SELECT COUNT(*) FROM committees")->fetchColumn();
         
         $stats['active_projects'] = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
-        $stats['completed_projects'] = $db->query("SELECT COUNT(*) FROM ``groups`` WHERE progress_stage = 'Final Grading Completed'")->fetchColumn();
+        $stats['completed_projects'] = $db->query("SELECT COUNT(*) FROM `groups` WHERE progress_stage = 'Final Grading Completed'")->fetchColumn();
         
         // Pending evaluations (evaluations scheduled but not graded yet, or pending proposals)
         $pendingProposals = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Pending'")->fetchColumn();
@@ -36,7 +36,7 @@ class AdminController extends BaseController {
             ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
 
         $recentGroups = $db->query("SELECT g.*, p.title as project_title, s.name as creator_name 
-            FROM ``groups`` g
+            FROM `groups` g
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN students s ON g.created_by = s.user_id
             ORDER BY g.created_at DESC LIMIT 5")->fetchAll();
@@ -44,7 +44,7 @@ class AdminController extends BaseController {
         // Fetch all supervisors and their approved slots count
         $supervisorsList = $db->query("
             SELECT s.user_id, s.name, s.department, 
-            (SELECT COUNT(*) FROM projects p JOIN ``groups`` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
+            (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
             FROM supervisors s
             ORDER BY s.name ASC LIMIT 5
         ")->fetchAll();
@@ -62,7 +62,7 @@ class AdminController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $supervisorsList = $db->query("
             SELECT s.user_id, s.name, s.department, 
-            (SELECT COUNT(*) FROM projects p JOIN ``groups`` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
+            (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
             FROM supervisors s
             ORDER BY s.name ASC
         ")->fetchAll();
@@ -245,7 +245,7 @@ class AdminController extends BaseController {
             sup.name as supervisor_name, sup.user_id as supervisor_id,
             creator.name as creator_name,
             gr.proposal_defense_marks, gr.progress_presentation_marks, gr.final_presentation_marks, gr.supervision_marks, gr.total_marks, gr.percentage, gr.grade as final_grade, gr.status as pass_fail_status
-            FROM ``groups`` g
+            FROM `groups` g
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN students creator ON g.created_by = creator.user_id
@@ -353,10 +353,10 @@ class AdminController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         
         // Fetch stats for reporting
-        $progressStages = $db->query("SELECT progress_stage, COUNT(*) as count FROM ``groups`` GROUP BY progress_stage")->fetchAll();
+        $progressStages = $db->query("SELECT progress_stage, COUNT(*) as count FROM `groups` GROUP BY progress_stage")->fetchAll();
         
         $studentGrades = $db->query("SELECT g.group_code, p.title as project_title, gr.*, s.name as supervisor_name, st.name as student_name, st.student_id as roll_no
-            FROM ``groups`` g
+            FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             JOIN grades gr ON g.id = gr.group_id
             JOIN students st ON gr.student_id = st.user_id
@@ -521,7 +521,7 @@ class AdminController extends BaseController {
                     
                     $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
                     
-                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM ``groups`` WHERE group_code LIKE ?");
+                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM `groups` WHERE group_code LIKE ?");
                     $stmtCount->execute([$prefix . '%']);
                     $count = (int)$stmtCount->fetchColumn();
                     $nextNumber = $count + 1;
@@ -529,7 +529,7 @@ class AdminController extends BaseController {
                 }
                 
                 // Insert group
-                $stmt = $db->prepare("INSERT INTO ``groups`` (group_code, created_by, progress_stage) VALUES (?, ?, ?)");
+                $stmt = $db->prepare("INSERT INTO `groups` (group_code, created_by, progress_stage) VALUES (?, ?, ?)");
                 $stmt->execute([$group_code, $created_by, $progress_stage]);
                 $groupId = $db->lastInsertId();
                 
@@ -564,7 +564,7 @@ class AdminController extends BaseController {
             
             $db = \Database::getInstance()->getConnection();
             try {
-                $stmt = $db->prepare("UPDATE ``groups`` SET group_code = ?, progress_stage = ? WHERE id = ?");
+                $stmt = $db->prepare("UPDATE `groups` SET group_code = ?, progress_stage = ? WHERE id = ?");
                 $stmt->execute([$group_code, $progress_stage, $id]);
                 
                 $this->flash('success', "Group details updated successfully.");
@@ -580,7 +580,7 @@ class AdminController extends BaseController {
         if ($id) {
             $db = \Database::getInstance()->getConnection();
             try {
-                $stmt = $db->prepare("DELETE FROM ``groups`` WHERE id = ?");
+                $stmt = $db->prepare("DELETE FROM `groups` WHERE id = ?");
                 $stmt->execute([$id]);
                 $this->flash('success', 'Group and all associated files/records deleted successfully.');
             } catch (\Exception $e) {
@@ -604,7 +604,7 @@ class AdminController extends BaseController {
             try {
                 $db->beginTransaction();
                 
-                $stmtLeader = $db->prepare("SELECT created_by FROM ``groups`` WHERE id = ?");
+                $stmtLeader = $db->prepare("SELECT created_by FROM `groups` WHERE id = ?");
                 $stmtLeader->execute([$groupId]);
                 $leaderId = $stmtLeader->fetchColumn();
                 
