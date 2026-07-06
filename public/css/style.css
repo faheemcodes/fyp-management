@@ -631,6 +631,43 @@ html.dark-theme .accordion-button::after {
 }
 
 /* ─── Responsive sidebar ─── */
+@media (min-width: 992px) {
+    #sidebar.collapsed {
+        width: 76px;
+        margin-left: 0;
+    }
+    #content.expanded {
+        margin-left: 76px;
+        width: calc(100% - 76px);
+    }
+    
+    /* Header adjustments */
+    #sidebar.collapsed .sidebar-header {
+        padding-left: 0 !important;
+        justify-content: center !important;
+    }
+    #sidebar.collapsed .sidebar-header > a > div:nth-child(2) {
+        display: none !important;
+    }
+    
+    /* Nav links adjustments */
+    #sidebar.collapsed .nav-text {
+        display: none !important;
+    }
+    
+    #sidebar.collapsed .nav-link {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    #sidebar.collapsed .nav-link i, 
+    #sidebar.collapsed .nav-link .action-icon-pw,
+    #sidebar.collapsed .nav-link .action-icon-logout {
+        margin: 0 !important;
+    }
+}
+
 @media (max-width: 991.98px) {
     #sidebar {
         margin-left: calc(-1 * var(--sidebar-width));

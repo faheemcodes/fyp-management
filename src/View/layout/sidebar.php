@@ -24,112 +24,96 @@ if ($urlPrefix === '/') {
 
 <!-- Sidebar -->
 <nav id="sidebar" class="d-flex flex-column">
-    <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?: 'login'); ?>/dashboard" class="sidebar-header d-flex align-items-center gap-3 text-decoration-none">
-        <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #fff; flex-shrink: 0;">
-            <i class="bi bi-mortarboard-fill"></i>
-        </div>
-        <div>
-            <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
-            <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
-        </div>
-    </a>
+    <div class="sidebar-header d-flex align-items-center justify-content-center pt-4 pb-3" style="padding-left: 1.5rem;">
+        <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?: 'login'); ?>/dashboard" class="d-flex align-items-center gap-3 text-decoration-none flex-grow-1">
+            <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #fff; flex-shrink: 0;">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div>
+                <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
+                <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
+            </div>
+        </a>
+    </div>
 
-    <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto;">
+    <ul class="list-unstyled nav flex-column mt-1 flex-grow-1 pb-3" style="overflow-y: auto;">
         <?php if ($role === 'admin'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/dashboard" class="nav-link <?php echo isActive('/admin/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/users" class="nav-link <?php echo isActive('/admin/users', $currentUri); ?>">
-                    <i class="bi bi-people-fill"></i> Manage Users
-                </a>
+                    <i class="bi bi-people-fill"></i> <span class="nav-text">Manage Users</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/groups" class="nav-link <?php echo isActive('/admin/groups', $currentUri); ?>">
-                    <i class="bi bi-folder-fill"></i> FYP Groups
-                </a>
+                    <i class="bi bi-folder-fill"></i> <span class="nav-text">FYP Groups</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/batches" class="nav-link <?php echo isActive('/admin/batches', $currentUri); ?>">
-                    <i class="bi bi-box-seam-fill"></i> Batches
-                </a>
+                    <i class="bi bi-box-seam-fill"></i> <span class="nav-text">Batches</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/slots" class="nav-link <?php echo isActive('/admin/slots', $currentUri); ?>">
-                    <i class="bi bi-person-badge-fill"></i> Supervisor Slots
-                </a>
+                    <i class="bi bi-person-badge-fill"></i> <span class="nav-text">Supervisor Slots</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/deadlines" class="nav-link <?php echo isActive('/admin/deadlines', $currentUri); ?>">
-                    <i class="bi bi-calendar2-event-fill"></i> Deadlines
-                </a>
+                    <i class="bi bi-calendar2-event-fill"></i> <span class="nav-text">Deadlines</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/reports" class="nav-link <?php echo isActive('/admin/reports', $currentUri); ?>">
-                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Analytics & Reports
-                </a>
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i> <span class="nav-text">Analytics & Reports</span></a>
             </li>
 
         <?php elseif ($role === 'hod'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/dashboard" class="nav-link <?php echo isActive('/hod/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/profile" class="nav-link <?php echo isActive('/hod/profile', $currentUri); ?>">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
+                    <i class="bi bi-person-circle"></i> <span class="nav-text">My Profile</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/supervisors" class="nav-link <?php echo isActive('/hod/supervisors', $currentUri); ?>">
-                    <i class="bi bi-person-badge-fill"></i> Supervisors
-                </a>
+                    <i class="bi bi-person-badge-fill"></i> <span class="nav-text">Supervisors</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/committee" class="nav-link <?php echo isActive('/hod/committee', $currentUri); ?>">
-                    <i class="bi bi-shield-fill"></i> Committee Members
-                </a>
+                    <i class="bi bi-shield-fill"></i> <span class="nav-text">Committee Members</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/coordinators" class="nav-link <?php echo isActive('/hod/coordinators', $currentUri); ?>">
-                    <i class="bi bi-person-workspace"></i> Coordinators
-                </a>
+                    <i class="bi bi-person-workspace"></i> <span class="nav-text">Coordinators</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/hod/students/verify" class="nav-link <?php echo isActive('/hod/students/verify', $currentUri); ?>">
-                    <i class="bi bi-person-check-fill"></i> Verify Students
-                </a>
+                    <i class="bi bi-person-check-fill"></i> <span class="nav-text">Verify Students</span></a>
             </li>
 
 
         <?php elseif ($role === 'student'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/dashboard" class="nav-link <?php echo isActive('/student/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/profile" class="nav-link <?php echo isActive('/student/profile', $currentUri); ?>">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
+                    <i class="bi bi-person-circle"></i> <span class="nav-text">My Profile</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/group" class="nav-link <?php echo isActive('/student/group', $currentUri); ?>">
-                    <i class="bi bi-people-fill"></i> Group & Members
-                </a>
+                    <i class="bi bi-people-fill"></i> <span class="nav-text">Group & Members</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/proposal" class="nav-link <?php echo isActive('/student/proposal', $currentUri); ?>">
-                    <i class="bi bi-file-earmark-plus-fill"></i> Project Proposal
-                </a>
+                    <i class="bi bi-file-earmark-plus-fill"></i> <span class="nav-text">Project Proposal</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/grade" class="nav-link <?php echo isActive('/student/grade', $currentUri); ?>">
-                    <i class="bi bi-award-fill"></i> Final Grade
-                </a>
+                    <i class="bi bi-award-fill"></i> <span class="nav-text">Final Grade</span></a>
             </li>
             <?php 
                 $dbSidebar = \Database::getInstance()->getConnection();
@@ -143,86 +127,71 @@ if ($urlPrefix === '/') {
             ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?>">
-                    <i class="bi bi-chat-dots-fill"></i> Chat with Supervisor
-                </a>
+                    <i class="bi bi-chat-dots-fill"></i> <span class="nav-text">Chat with Supervisor</span></a>
             </li>
             <?php endif; ?>
 
         <?php elseif ($role === 'supervisor'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/dashboard" class="nav-link <?php echo isActive('/supervisor/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/profile" class="nav-link <?php echo isActive('/supervisor/profile', $currentUri); ?>">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
+                    <i class="bi bi-person-circle"></i> <span class="nav-text">My Profile</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/groups" class="nav-link <?php echo isActive('/supervisor/groups', $currentUri); ?>">
-                    <i class="bi bi-people-fill"></i> Assigned Groups
-                </a>
+                    <i class="bi bi-people-fill"></i> <span class="nav-text">Assigned Groups</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?>">
-                    <i class="bi bi-clipboard-check-fill"></i> Review Proposals
-                </a>
+                    <i class="bi bi-clipboard-check-fill"></i> <span class="nav-text">Review Proposals</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?>">
-                    <i class="bi bi-chat-dots-fill"></i> Messages
-                </a>
+                    <i class="bi bi-chat-dots-fill"></i> <span class="nav-text">Messages</span></a>
             </li>
 
         <?php elseif ($role === 'committee'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/committee/dashboard" class="nav-link <?php echo isActive('/committee/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/committee/profile" class="nav-link <?php echo isActive('/committee/profile', $currentUri); ?>">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
+                    <i class="bi bi-person-circle"></i> <span class="nav-text">My Profile</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/committee/evaluations" class="nav-link <?php echo isActive('/committee/evaluations', $currentUri); ?>">
-                    <i class="bi bi-calendar-check-fill"></i> Evaluations
-                </a>
+                    <i class="bi bi-calendar-check-fill"></i> <span class="nav-text">Evaluations</span></a>
             </li>
 
 
         <?php elseif ($role === 'coordinator'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/dashboard" class="nav-link <?php echo isActive('/coordinator/dashboard', $currentUri); ?>">
-                    <i class="bi bi-grid-fill"></i> Dashboard
-                </a>
+                    <i class="bi bi-grid-fill"></i> <span class="nav-text">Dashboard</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/profile" class="nav-link <?php echo isActive('/coordinator/profile', $currentUri); ?>">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
+                    <i class="bi bi-person-circle"></i> <span class="nav-text">My Profile</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/proposals" class="nav-link <?php echo isActive('/coordinator/proposals', $currentUri); ?>">
-                    <i class="bi bi-file-earmark-text-fill"></i> Project Proposals
-                </a>
+                    <i class="bi bi-file-earmark-text-fill"></i> <span class="nav-text">Project Proposals</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/users" class="nav-link <?php echo isActive('/coordinator/users', $currentUri); ?>">
-                    <i class="bi bi-person-check-fill"></i> Verify Students
-                </a>
+                    <i class="bi bi-person-check-fill"></i> <span class="nav-text">Verify Students</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/assessment" class="nav-link <?php echo isActive('/coordinator/assessment', $currentUri); ?>">
-                    <i class="bi bi-file-earmark-excel-fill"></i> External Assessment
-                </a>
+                    <i class="bi bi-file-earmark-excel-fill"></i> <span class="nav-text">External Assessment</span></a>
             </li>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
-                    <i class="bi bi-megaphone-fill"></i> Notice Generator
-                </a>
+                    <i class="bi bi-megaphone-fill"></i> <span class="nav-text">Notice Generator</span></a>
             </li>
         <?php endif; ?>
         
@@ -253,17 +222,13 @@ if ($urlPrefix === '/') {
                     <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?> d-flex align-items-center gap-2">
                         <div class="action-icon-pw">
                             <i class="bi bi-shield-lock-fill"></i>
-                        </div>
-                        Change Password
-                    </a>
+                        </div> <span class="nav-text">Change Password</span></a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link <?php echo isActive('/logout', $currentUri); ?> d-flex align-items-center gap-2">
                         <div class="action-icon-logout">
                             <i class="bi bi-box-arrow-right"></i>
-                        </div>
-                        Log Out
-                    </a>
+                        </div> <span class="nav-text">Log Out</span></a>
                 </li>
             </ul>
         </div>
@@ -283,8 +248,7 @@ if ($urlPrefix === '/') {
                 <div>
                     <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.95rem; letter-spacing: -0.01em;">Faculty of Engineering &amp; Technology</h6>
                     <small style="color: var(--text-secondary); font-size: 0.72rem; letter-spacing: 0.02em; font-weight: 500;">University of Sindh, Jamshoro</small>
-                </div>
-            </a>
+                </div> <span class="nav-text"> </span></a>
             
             <!-- Mobile Branding -->
             <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-flex align-items-center gap-2 d-sm-none text-decoration-none" style="cursor: pointer;">
@@ -294,8 +258,7 @@ if ($urlPrefix === '/') {
                 <div>
                     <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.85rem; letter-spacing: -0.01em;">University of Sindh</h6>
                     <small style="color: var(--text-secondary); font-size: 0.65rem; letter-spacing: 0.02em;">FYP Portal</small>
-                </div>
-            </a>
+                </div> <span class="nav-text"> </span></a>
             
             <div class="ms-auto d-flex align-items-center gap-2 gap-md-3">
                 <!-- Dark Theme Toggle -->
@@ -338,7 +301,7 @@ if ($urlPrefix === '/') {
                 </div>
 
                 <!-- Three-line hamburger menu button placed on the right on mobile -->
-                <button type="button" id="sidebarCollapse" class="btn btn-light d-lg-none ms-1 rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border: 1px solid var(--border-color); background: var(--form-bg); color: var(--text-primary);">
+                <button type="button" id="sidebarCollapse" class="btn btn-light ms-1 rounded-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; border: 1px solid var(--border-color); background: var(--form-bg); color: var(--text-primary);">
                     <i class="bi bi-list" style="font-size: 1.2rem;"></i>
                 </button>
             </div>
