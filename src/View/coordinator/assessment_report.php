@@ -79,6 +79,20 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
+            /* Ensure table headers repeat on every printed page */
+            thead {
+                display: table-header-group;
+            }
+            /* Prevent rows from splitting across pages */
+            tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            /* Prevent breaking inside cells */
+            td, th {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
         }
     </style>
 </head>
