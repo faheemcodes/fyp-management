@@ -288,9 +288,12 @@ class CoordinatorController extends BaseController {
             $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
 
             $query = "
-                SELECT g.group_code, p.title as project_title, u_stu.name as student_name
+                SELECT g.id as group_id, g.group_code, p.title as project_title, 
+                       u_stu.name as student_name, u_stu.student_id as roll_no,
+                       sup.name as supervisor_name
                 FROM `groups` g
                 LEFT JOIN projects p ON p.group_id = g.id
+                LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
                 JOIN group_members gm ON gm.group_id = g.id
                 JOIN students u_stu ON gm.student_id = u_stu.user_id
                 LEFT JOIN students s ON s.user_id = g.created_by
@@ -303,47 +306,28 @@ class CoordinatorController extends BaseController {
                 $params[] = $shift;
             }
 
-            $query .= " ORDER BY g.group_code ASC, u_stu.name ASC";
+            $query .= " ORDER BY g.group_code ASC, u_stu.student_id ASC";
 
             $stmt = $db->prepare($query);
             $stmt->execute($params);
             $students = $stmt->fetchAll();
 
-            // Setup CSV Output
-            while (ob_get_level()) { ob_end_clean(); }
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename=External_Assessment_' . $shift . '_' . date('Ymd') . '.csv');
-            
-            $output = fopen('php://output', 'w');
-
-            // Header Row
-            $header = ['Group ID', 'Project Name', 'Student Name'];
-            foreach ($attributes as $attr) {
-                $header[] = $attr['name'] . ' (Max ' . $attr['marks'] . ')';
-            }
-            $header[] = 'Total Score (Max 50)';
-            $header[] = 'Evaluator Remarks';
-            
-            fputcsv($output, $header, ',', '"', '\\');
-
-            // Data Rows
+            // Group the students by group_id
+            $grouped = [];
             foreach ($students as $s) {
-                $row = [
-                    $s['group_code'],
-                    $s['project_title'] ?: 'Untitled',
-                    $s['student_name']
-                ];
-                // Add empty columns for the evaluator to fill
-                foreach ($attributes as $attr) {
-                    $row[] = '';
+                $gid = $s['group_id'];
+                if (!isset($grouped[$gid])) {
+                    $grouped[$gid] = [];
                 }
-                $row[] = ''; // Total
-                $row[] = ''; // Remarks
-                
-                fputcsv($output, $row, ',', '"', '\\');
+                $grouped[$gid][] = $s;
             }
 
-            fclose($output);
+            $this->render('coordinator/assessment_report', [
+                'attributes' => $attributes,
+                'grouped' => $grouped,
+                'shift' => $shift,
+                'department' => $dept
+            ]);
             exit;
         }
         redirect('/coordinator/assessment');
