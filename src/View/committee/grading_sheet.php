@@ -88,9 +88,15 @@ html.dark-theme .eval-remarks-input {
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-gray-800 fw-bold"><?php echo htmlspecialchars($stage); ?> Grading</h1>
-    <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm" target="_blank">
-        <i class="bi bi-printer me-1"></i> Print Blank Sheet
-    </a>
+    <div class="d-flex gap-3 align-items-center">
+        <div class="input-group shadow-sm" style="max-width: 350px;">
+            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+            <input type="text" id="gradingSearch" class="form-control border-start-0 ps-0" placeholder="Search ID, Name, Supervisor...">
+        </div>
+        <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm" target="_blank" style="white-space: nowrap;">
+            <i class="bi bi-printer me-1"></i> Print Blank Sheet
+        </a>
+    </div>
 </div>
 
 <?php if (isset($_SESSION['flash_success'])): ?>
@@ -130,13 +136,13 @@ html.dark-theme .eval-remarks-input {
                         <th style="width: 150px;">Full Name</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php 
-                    $srNo = 1;
-                    foreach ($grouped as $groupId => $members): 
-                        $numMembers = count($members);
-                        $firstMember = $members[0];
-                    ?>
+                <?php 
+                $srNo = 1;
+                foreach ($grouped as $groupId => $members): 
+                    $numMembers = count($members);
+                    $firstMember = $members[0];
+                ?>
+                <tbody class="eval-group-tbody">
                         <tr>
                             <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
                             <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
@@ -173,7 +179,9 @@ html.dark-theme .eval-remarks-input {
                                 </td>
                             </tr>
                         <?php endfor; ?>
-                    <?php endforeach; ?>
+                </tbody>
+                <?php endforeach; ?>
+                <tbody>
                     <?php if (empty($grouped)): ?>
                         <tr>
                             <td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="text-center py-5 text-muted">No approved projects assigned to you for evaluation.</td>
@@ -213,13 +221,13 @@ html.dark-theme .eval-remarks-input {
                         <th class="vertical-text">Completeness (5)</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php 
-                    $srNo = 1;
-                    foreach ($grouped as $groupId => $members): 
-                        $numMembers = count($members);
-                        $firstMember = $members[0];
-                    ?>
+                <?php 
+                $srNo = 1;
+                foreach ($grouped as $groupId => $members): 
+                    $numMembers = count($members);
+                    $firstMember = $members[0];
+                ?>
+                <tbody class="eval-group-tbody">
                         <tr>
                             <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
                             <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
@@ -273,7 +281,9 @@ html.dark-theme .eval-remarks-input {
                                 <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($member['marks']['demo_total'] ?? ''); ?>"></td>
                             </tr>
                         <?php endfor; ?>
-                    <?php endforeach; ?>
+                </tbody>
+                <?php endforeach; ?>
+                <tbody>
                     <?php if (empty($grouped)): ?>
                         <tr>
                             <td colspan="18" class="text-center py-5 text-muted">No approved projects assigned to you for evaluation.</td>

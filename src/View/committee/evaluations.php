@@ -396,16 +396,7 @@ html.dark-theme .eval-input {
         </div>
         
         <div class="d-flex align-items-center gap-2">
-            <div class="dropdown">
-                <button class="btn btn-outline-light rounded-pill dropdown-toggle shadow-sm px-4 fw-bold" type="button" id="printSheetsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-printer me-1"></i> Print Blank Sheets
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="printSheetsDropdown">
-                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=Proposal Defence Presentation"><i class="bi bi-file-earmark-text text-primary me-2"></i>Proposal Defence</a></li>
-                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=FYP Progress Presentation"><i class="bi bi-file-earmark-bar-graph text-success me-2"></i>Progress Presentation</a></li>
-                    <li><a class="dropdown-item py-2 fw-medium" href="<?php echo $bp; ?>/committee/evaluations/print?stage=Final Presentation"><i class="bi bi-file-earmark-check text-danger me-2"></i>Final Presentation</a></li>
-                </ul>
-            </div>
+            
         </div>
         
         <?php
@@ -488,7 +479,96 @@ html.dark-theme .eval-input {
                         </button>
                     </td>
                     
-                    <!-- Grading modals replaced by online grading sheets -->
+                    <!-- 1. Proposal Defence -->
+                    <td>
+                        <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                        <?php else: ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <?php endif; ?>
+                    </td>
+                    
+                    <!-- 2. FYP Progress -->
+                    <td>
+                        <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                        <?php else: ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <?php endif; ?>
+                    </td>
+
+                    <!-- 3. Final Presentation -->
+                    <td>
+                        <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                        <?php else: ?>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php if(empty($groups)): ?>
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted" style="font-size: 0.9rem;">
+                            <i class="bi bi-inbox fs-2 mb-2 d-block"></i>No project groups available for evaluation yet.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile View -->
+    <div class="d-block d-md-none p-3" id="evals-table-mobile">
+        <?php foreach($groups as $g): ?>
+            <div class="eval-mobile-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
+                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem;" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>">
+                        Abstract
+                    </button>
+                </div>
+                <h6 class="fw-bold mb-1" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?></h6>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
+                </div>
+
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Proposal (30)</span>
+                    <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                    <?php else: ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                    <?php endif; ?>
+                </div>
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progress (40)</span>
+                    <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                    <?php else: ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                    <?php endif; ?>
+                </div>
+                <div class="eval-mobile-grade">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (25)</span>
+                    <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                    <?php else: ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <?php if(empty($groups)): ?>
+            <div class="text-center py-4 text-muted" style="font-size: 0.9rem;">No projects assigned.</div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- GRADING MODALS -->
+<?php foreach($groups as $g): ?>
+    
+    <!-- Grading modals removed. Links point to online sheets instead -->
 
     <!-- 4. View Abstract -->
     <div class="modal fade eval-modal" id="abstractModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true">
@@ -519,5 +599,37 @@ document.addEventListener('DOMContentLoaded', function() {
     modals.forEach(function(modal) {
         document.body.appendChild(modal);
     });
+
+    // Search functionality
+    const searchInputs = document.querySelectorAll('.table-search');
+    searchInputs.forEach(function(input) {
+        input.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            
+            // Filter desktop table
+            const trs = document.querySelectorAll('#evals-table tbody tr');
+            trs.forEach(function(tr) {
+                // skip the empty state row
+                if(tr.querySelector('td[colspan]')) return;
+                
+                if (tr.innerText.toLowerCase().includes(term)) {
+                    tr.style.display = '';
+                } else {
+                    tr.style.display = 'none';
+                }
+            });
+
+            // Filter mobile cards
+            const cards = document.querySelectorAll('.eval-mobile-card');
+            cards.forEach(function(card) {
+                if (card.innerText.toLowerCase().includes(term)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
 });
 </script>
