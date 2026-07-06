@@ -275,13 +275,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
                             <?php if($pr['file_path']): ?>
                                 <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
-                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem;">
-                                    <?php if($ext === 'pdf'): ?>
-                                        <i class="bi bi-eye-fill me-1"></i>View PDF
-                                    <?php else: ?>
+                                <?php if($ext === 'pdf'): ?>
+                                    <!-- Laptop Offcanvas trigger -->
+                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo $pr['id']; ?>">
+                                        <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
+                                    </span>
+                                    <!-- Mobile new tab trigger -->
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem;">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i>View PDF
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem;">
                                         <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
-                                    <?php endif; ?>
-                                </a>
+                                    </a>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -357,25 +364,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <span class="badge" style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
                         Status: <?php echo htmlspecialchars($st); ?>
                     </span>
-                    <?php if($pr['file_path']): ?>
-                        <?php 
-                        $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION));
-                        if($ext === 'pdf'): 
-                        ?>
-                            <!-- Laptop Offcanvas trigger -->
-                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium d-none d-md-inline-block" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo $pr['id']; ?>">
-                                <i class="bi bi-layout-sidebar-reverse me-1"></i> View Proposal
-                            </button>
-                            <!-- Mobile new tab trigger -->
-                            <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium d-md-none">
-                                <i class="bi bi-box-arrow-up-right me-1"></i> View Proposal
-                            </a>
-                        <?php else: ?>
-                            <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium">
-                                <i class="bi bi-download me-1"></i> Download Proposal
-                            </a>
-                        <?php endif; ?>
-                    <?php endif; ?>
                 </div>
                 
                 <div class="mb-4">
