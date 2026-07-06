@@ -205,6 +205,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/proposals" class="nav-link <?php echo isActive('/coordinator/proposals', $currentUri); ?>">
+                    <i class="bi bi-file-earmark-text-fill"></i> Project Proposals
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/users" class="nav-link <?php echo isActive('/coordinator/users', $currentUri); ?>">
                     <i class="bi bi-person-check-fill"></i> Verify Students
                 </a>

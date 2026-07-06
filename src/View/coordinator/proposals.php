@@ -1,0 +1,418 @@
+<!-- Coordinator Project Proposals View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+<style>
+/* ─── Group Page Scoped Styles ─── */
+.group-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.group-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.group-hero-icon {
+    width: 56px;
+    height: 56px;
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.group-stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    min-width: 80px;
+}
+.group-stat-pill .stat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+.group-stat-pill .stat-label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+}
+
+/* ─── Section Panel ─── */
+.grp-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+    transition: box-shadow 0.25s ease;
+}
+
+@media (min-width: 769px) {
+    .table-responsive {
+        overflow: visible;
+    }
+}
+.grp-section:hover {
+    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+}
+
+/* ─── Modern Table Styles ─── */
+.modern-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 950px;
+}
+.modern-table thead th {
+    background: var(--form-bg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tbody td {
+    padding: 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: background-color 0.2s ease;
+}
+.modern-table tbody tr:hover td {
+    background-color: rgba(59,130,246,0.02);
+}
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.group-code-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(59,130,246,0.1);
+    color: #3b82f6;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+}
+.project-title-cell {
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    font-size: 0.9rem;
+    max-width: 250px;
+}
+
+.avatar-stack {
+    display: flex;
+    align-items: center;
+}
+.avatar-stack img {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--card-bg);
+    margin-left: -12px;
+    transition: transform 0.2s ease;
+}
+.avatar-stack img:first-child {
+    margin-left: 0;
+}
+.avatar-stack img:hover {
+    transform: translateY(-3px);
+    z-index: 10;
+}
+
+.action-btn {
+    padding: 6px 14px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.action-btn:hover {
+    background: rgba(59,130,246,0.1);
+    color: #3b82f6;
+    border-color: rgba(59,130,246,0.2);
+}
+
+@media (max-width: 768px) {
+    .group-hero { padding: 24px 16px; }
+    .group-stat-pill { display: none; }
+}
+</style>
+
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="group-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+        <!-- Icon -->
+        <div class="group-hero-icon">
+            <i class="bi bi-folder2-open"></i>
+        </div>
+
+        <!-- Info -->
+        <div class="flex-grow-1 text-center text-md-start">
+            <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                Department View
+            </p>
+            <h4 class="text-white fw-bold" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                Project Proposals
+            </h4>
+        </div>
+
+        <!-- Stats -->
+        <div class="d-none d-lg-flex gap-3">
+            <div class="group-stat-pill">
+                <span class="stat-num"><?php echo count($proposals); ?></span>
+                <span class="stat-label">Total Proposals</span>
+            </div>
+            <?php 
+            $approvedCount = 0;
+            foreach ($proposals as $p) {
+                if ($p['status'] === 'Approved') {
+                    $approvedCount++;
+                }
+            }
+            if ($approvedCount > 0):
+            ?>
+            <div class="group-stat-pill" style="background: rgba(16,185,129,0.15);">
+                <span class="stat-num" style="color: #34d399;"><?php echo $approvedCount; ?></span>
+                <span class="stat-label">Approved</span>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php if (empty($proposals)): ?>
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6">
+            <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg);">
+                <div style="width: 72px; height: 72px; background: rgba(59,130,246,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #3b82f6;">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <h5 class="fw-bold mb-2">No Proposals Found</h5>
+                <p class="text-muted mb-0" style="font-size: 0.875rem; max-width: 380px; margin: 0 auto;">No project proposals have been submitted by students in your department yet.</p>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="grp-section">
+        <div class="table-responsive">
+            <table class="table modern-table">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Group Code</th>
+                        <th>Project Title</th>
+                        <th>Supervisor</th>
+                        <th>Team Members</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($proposals as $pr): ?>
+                    <tr>
+                        <td class="ps-4">
+                            <span class="group-code-badge">
+                                <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="project-title-cell text-truncate" title="<?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?>">
+                                <?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?>
+                            </div>
+                            <?php if($pr['file_path']): ?>
+                                <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
+                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem;">
+                                    <?php if($ext === 'pdf'): ?>
+                                        <i class="bi bi-eye-fill me-1"></i>View PDF
+                                    <?php else: ?>
+                                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
+                                    <?php endif; ?>
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="fw-semibold text-dark" style="font-size: 0.85rem;">
+                                    <?php echo htmlspecialchars($pr['supervisor_name'] ?? 'Not Assigned'); ?>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-stack">
+                                    <?php foreach(array_slice($pr['members'], 0, 4) as $m): ?>
+                                        <img src="<?php echo $basePath; ?>/uploads/avatars/default_avatar.svg" 
+                                             title="<?php echo htmlspecialchars($m['student_name']); ?>"
+                                             alt="Avatar">
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php if(count($pr['members']) > 4): ?>
+                                    <span class="text-muted small fw-semibold">+<?php echo count($pr['members']) - 4; ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <?php 
+                            $statusMap = [
+                                'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                                'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
+                                'Revision Requested' => ['rgba(139,92,246,0.1)', '#8b5cf6'],
+                                'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
+                            ];
+                            $st = $pr['status'];
+                            $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
+                            $color = $statusMap[$st][1] ?? '#6b7280';
+                            ?>
+                            <span style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; font-size: 0.7rem; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center;">
+                                <?php echo htmlspecialchars($st); ?>
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo $pr['id']; ?>">
+                                <i class="bi bi-info-circle-fill"></i> <span>Details</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Modals rendered outside the table to prevent z-index/backdrop issues -->
+<?php foreach($proposals as $pr): ?>
+<!-- DETAILS MODAL -->
+<div class="modal fade" id="proposalDetailsModal<?php echo $pr['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
+            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+                <h6 class="modal-title fw-bold">Proposal Details - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?></h5>
+                    <div class="text-muted small fw-semibold mb-3">Supervisor: <?php echo htmlspecialchars($pr['supervisor_name'] ?? 'Not Assigned'); ?></div>
+                    <?php 
+                    $st = $pr['status'];
+                    $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
+                    $color = $statusMap[$st][1] ?? '#6b7280';
+                    ?>
+                    <span class="badge" style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                        Status: <?php echo htmlspecialchars($st); ?>
+                    </span>
+                    <?php if($pr['file_path']): ?>
+                        <?php 
+                        $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION));
+                        if($ext === 'pdf'): 
+                        ?>
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium" data-bs-toggle="collapse" data-bs-target="#pdfViewer<?php echo $pr['id']; ?>">
+                                <i class="bi bi-eye me-1"></i> View Proposal
+                            </button>
+                        <?php else: ?>
+                            <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium">
+                                <i class="bi bi-download me-1"></i> Download Proposal
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em;">Project Abstract</label>
+                    <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.65; text-align: justify; max-height: 250px; overflow-y: auto;">
+                        <?php echo nl2br(htmlspecialchars($pr['abstract'])); ?>
+                    </div>
+                    <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
+                    <div class="collapse mt-3" id="pdfViewer<?php echo $pr['id']; ?>">
+                        <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="400px" style="border: 1px solid var(--border-color); border-radius: 8px;"></iframe>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em;">Team Members</label>
+                    <div class="row g-3">
+                        <?php foreach($pr['members'] as $m): ?>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color); background: var(--card-bg);">
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/default_avatar.svg" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
+                                <div>
+                                    <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
+                                        <?php echo htmlspecialchars($m['student_name']); ?>
+                                    </div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.75rem;"><?php echo htmlspecialchars($m['roll_no']); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
+                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Move all modals to the body to prevent z-index issues from CSS stacking contexts
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            document.body.appendChild(modal);
+        });
+    });
+</script>

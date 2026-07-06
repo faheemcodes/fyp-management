@@ -349,6 +349,37 @@ class CoordinatorController extends BaseController {
         redirect('/coordinator/assessment');
     }
 
+    public function proposals() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+        // Fetch proposals for groups where the group creator is a student in the coordinator's department
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, p.title as project_title, sup.name as supervisor_name 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? 
+            ORDER BY pr.submitted_at DESC");
+        $stmt->execute([$dept]);
+        $proposals = $stmt->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($proposals as &$pr) {
+            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, u_m.name as student_name FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                JOIN users u_m ON s_m.user_id = u_m.id 
+                WHERE gm.group_id = ?");
+            $stmtM->execute([$pr['group_id']]);
+            $pr['members'] = $stmtM->fetchAll();
+        }
+
+        $this->render('coordinator/proposals', [
+            'proposals' => $proposals
+        ]);
+    }
+
     public function profile() {
         $userId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();

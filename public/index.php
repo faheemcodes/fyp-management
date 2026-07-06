@@ -157,6 +157,7 @@ $routes = [
     
     // Coordinator routes
     '/coordinator/dashboard' => ['Controller\CoordinatorController', 'dashboard'],
+    '/coordinator/proposals' => ['Controller\CoordinatorController', 'proposals'],
     '/coordinator/profile' => ['Controller\CoordinatorController', 'profile'],
     '/coordinator/users' => ['Controller\CoordinatorController', 'verifyStudents'],
     '/coordinator/users/approve' => ['Controller\CoordinatorController', 'approveStudent'],
