@@ -191,6 +191,25 @@ if ($urlPrefix === '/') {
                     <i class="bi bi-calendar-check-fill"></i> Evaluations
                 </a>
             </li>
+            
+            <li class="nav-item mt-3 mb-1 px-3">
+                <span class="text-xs fw-bold text-uppercase text-secondary" style="font-size: 0.7rem; letter-spacing: 0.05em;">Online Grading</span>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Proposal Defence Presentation') ? 'active' : ''; ?>">
+                    <i class="bi bi-table"></i> Grade Proposal
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'FYP Progress Presentation') ? 'active' : ''; ?>">
+                    <i class="bi bi-table"></i> Grade Progress
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Final Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Final Presentation') ? 'active' : ''; ?>">
+                    <i class="bi bi-table"></i> Grade Final
+                </a>
+            </li>
 
 
         <?php elseif ($role === 'coordinator'): ?>

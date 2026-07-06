@@ -165,6 +165,289 @@ class CommitteeController extends BaseController {
         ]);
     }
 
+    public function gradingSheet() {
+        $evaluatorId = $_SESSION['user_id'];
+        $stage = $_GET['stage'] ?? '';
+        
+        if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
+            die("Invalid stage.");
+        }
+
+        $db = \Database::getInstance()->getConnection();
+
+        $groups = $db->query("SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.status = 'Approved' AND b.is_active = 1
+            ORDER BY g.group_code ASC")->fetchAll();
+
+        $grouped = [];
+
+        foreach ($groups as $group) {
+            $groupId = $group['group_id'];
+            
+            $stmtM = $db->prepare("SELECT s.name as student_name, s.student_id as roll_no, s.user_id as student_id FROM group_members gm JOIN students s ON gm.student_id = s.user_id WHERE gm.group_id = ? ORDER BY s.student_id ASC");
+            $stmtM->execute([$groupId]);
+            $members = $stmtM->fetchAll();
+
+            if (empty($members)) continue;
+
+            $stmtEval = $db->prepare("SELECT id, remarks, marks_details FROM evaluations WHERE group_id = ? AND evaluator_id = ? AND stage = ?");
+            $stmtEval->execute([$groupId, $evaluatorId, $stage]);
+            $eval = $stmtEval->fetch();
+            $marksDetails = $eval ? json_decode($eval['marks_details'], true) : [];
+            $groupRemarks = $eval ? $eval['remarks'] : '';
+
+            $groupData = [];
+            
+            $previousComments = [];
+            if ($stage === 'FYP Progress Presentation') {
+                $stmtComments = $db->prepare("SELECT e.remarks FROM evaluations e WHERE e.group_id = ? AND e.stage = 'Proposal Defence Presentation' AND e.remarks IS NOT NULL AND e.remarks != ''");
+                $stmtComments->execute([$groupId]);
+                $comments = $stmtComments->fetchAll();
+                foreach ($comments as $c) {
+                    $previousComments[] = $c['remarks'];
+                }
+            }
+
+            foreach ($members as $m) {
+                $studentMarks = isset($marksDetails[$m['student_id']]) ? $marksDetails[$m['student_id']] : [];
+                $groupData[] = [
+                    'group_id' => $groupId,
+                    'group_code' => $group['group_code'],
+                    'project_title' => $group['project_title'],
+                    'supervisor_name' => $group['supervisor_name'],
+                    'student_id' => $m['student_id'],
+                    'roll_no' => $m['roll_no'],
+                    'student_name' => $m['student_name'],
+                    'previous_comments' => implode(" ", $previousComments),
+                    'marks' => $studentMarks,
+                    'group_remarks' => $groupRemarks
+                ];
+            }
+            
+            $grouped[$groupId] = $groupData;
+        }
+
+        $this->render('committee/grading_sheet', [
+            'grouped' => $grouped,
+            'stage' => $stage
+        ]);
+    }
+
+    public function bulkGradeEvaluation() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $stage = $_POST['stage'] ?? '';
+            $evaluations = $_POST['evaluations'] ?? [];
+            $evaluatorId = $_SESSION['user_id'];
+
+            if ($stage && !empty($evaluations)) {
+                $db = \Database::getInstance()->getConnection();
+                
+                $stmtVis = $db->prepare("SELECT show_to_student FROM evaluations WHERE evaluator_id = ? ORDER BY id DESC LIMIT 1");
+                $stmtVis->execute([$evaluatorId]);
+                $lastVis = $stmtVis->fetchColumn();
+                $show_to_student = ($lastVis !== false) ? (int)$lastVis : 0;
+
+                try {
+                    $db->beginTransaction();
+
+                    foreach ($evaluations as $groupId => $groupEval) {
+                        $marksArr = $groupEval['marks'] ?? [];
+                        $remarks = trim($groupEval['remarks'] ?? '');
+                        
+                        $totalScore = 0.00;
+                        $details = [];
+                        
+                        // We will map the 15 exact fields or 1 field to the existing structure.
+                        // The user requested table fields that perfectly match the print sheets.
+                        
+                        if ($stage === 'Proposal Defence Presentation' || $stage === 'FYP Progress Presentation') {
+                            foreach ($marksArr as $studentId => $studentMarks) {
+                                $totalStr = isset($studentMarks['total']) && $studentMarks['total'] !== '' ? (float)$studentMarks['total'] : null;
+
+                                if ($stage === 'FYP Progress Presentation') {
+                                    // Split the 40 marks into 4 categories equally just to satisfy the old model,
+                                    // or just update old logic to allow 'total' alone. Let's provide total and let old model see it if it checks.
+                                    // Actually, if we just save 'understanding' = total, it's fine.
+                                    // Or we can save exactly what they entered.
+                                    // We will just store 'total' and sum it.
+                                    $details[$studentId] = [
+                                        'total' => $totalStr !== null ? $totalStr : '',
+                                        'understanding' => $totalStr !== null ? $totalStr : '' // For backward compatibility if needed, but not strictly required if we sum.
+                                    ];
+                                } else {
+                                    $details[$studentId] = [
+                                        'total' => $totalStr !== null ? $totalStr : ''
+                                    ];
+                                }
+                                $totalScore += (float)$totalStr; 
+                            }
+                            if (count($marksArr) > 0) $totalScore /= count($marksArr);
+                        } else if ($stage === 'Final Presentation') {
+                            foreach ($marksArr as $studentId => $sm) {
+                                // Extract the 15 fields into the 3 main categories
+                                $pres_total = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0));
+                                $thesis_total = ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0));
+                                $demo_total = (float)($sm['demo_total']??0); // Demo is just one 25 mark block
+                                
+                                $details[$studentId] = [
+                                    'pres_contents' => $sm['pres_contents']??'',
+                                    'pres_time' => $sm['pres_time']??'',
+                                    'pres_confidence' => $sm['pres_confidence']??'',
+                                    'pres_qa' => $sm['pres_qa']??'',
+                                    'pres_language' => $sm['pres_language']??'',
+                                    'thesis_contents' => $sm['thesis_contents']??'',
+                                    'thesis_formatting' => $sm['thesis_formatting']??'',
+                                    'thesis_referencing' => $sm['thesis_referencing']??'',
+                                    'thesis_fig' => $sm['thesis_fig']??'',
+                                    'thesis_completeness' => $sm['thesis_completeness']??'',
+                                    'demo_total' => $sm['demo_total']??'',
+                                    
+                                    // Legacy mapping for existing total sum
+                                    'presentation' => $pres_total,
+                                    'thesis' => $thesis_total,
+                                    'demo' => $demo_total
+                                ];
+                                $totalScore += ($pres_total + $thesis_total + $demo_total);
+                            }
+                            if (count($marksArr) > 0) $totalScore /= count($marksArr);
+                        }
+                        
+                        $stmt = $db->prepare("SELECT id FROM evaluations WHERE group_id = ? AND evaluator_id = ? AND stage = ?");
+                        $stmt->execute([$groupId, $evaluatorId, $stage]);
+                        $eval = $stmt->fetch();
+
+                        $jsonDetails = json_encode($details);
+
+                        if ($eval) {
+                            $stmtUpdate = $db->prepare("UPDATE evaluations SET marks_details = ?, total_marks = ?, remarks = ?, show_to_student = ? WHERE id = ?");
+                            $stmtUpdate->execute([$jsonDetails, $totalScore, $remarks, $show_to_student, $eval['id']]);
+                        } else {
+                            $stmtInsert = $db->prepare("INSERT INTO evaluations (group_id, evaluator_id, stage, marks_details, total_marks, remarks, show_to_student) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                            $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks, $show_to_student]);
+                        }
+                        
+                        // Recalculate average marks for this stage PER STUDENT
+                        $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                        $stmtM->execute([$groupId]);
+                        $members = $stmtM->fetchAll();
+
+                        foreach ($members as $m) {
+                            $sId = $m['student_id'];
+                            
+                            $stmtEvals = $db->prepare("SELECT marks_details FROM evaluations WHERE group_id = ? AND stage = ?");
+                            $stmtEvals->execute([$groupId, $stage]);
+                            $allEvals = $stmtEvals->fetchAll();
+
+                            $studentTotal = 0;
+                            $countEvals = 0;
+
+                            foreach ($allEvals as $ev) {
+                                $mDetails = json_decode($ev['marks_details'], true);
+                                if (isset($mDetails[$sId])) {
+                                    $countEvals++;
+                                    // For new format, we need to specifically sum the correct fields
+                                    if ($stage === 'Final Presentation') {
+                                        $sm = $mDetails[$sId];
+                                        $evTotal = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0))
+                                                 + ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0))
+                                                 + (float)($sm['demo_total']??0);
+                                        // Legacy fallback
+                                        if (isset($sm['thesis']) && !isset($sm['thesis_contents'])) {
+                                            $evTotal = (float)($sm['thesis']??0) + (float)($sm['demo']??0) + (float)($sm['presentation']??0);
+                                        }
+                                        $studentTotal += $evTotal;
+                                    } else {
+                                        // Proposal or Progress
+                                        $sm = $mDetails[$sId];
+                                        if (isset($sm['total'])) {
+                                            $evTotal = (float)$sm['total'];
+                                        } else {
+                                            // Legacy fallback
+                                            $evTotal = array_sum(array_map('floatval', array_values($sm)));
+                                        }
+                                        $studentTotal += $evTotal;
+                                    }
+                                }
+                            }
+
+                            $averageScore = $countEvals > 0 ? round($studentTotal / $countEvals) : 0;
+
+                            if ($stage === 'Proposal Defence Presentation') {
+                                $stmtGrade = $db->prepare("UPDATE grades SET proposal_defense_marks = ? WHERE student_id = ?");
+                                $stmtGrade->execute([$averageScore, $sId]);
+                            } else if ($stage === 'FYP Progress Presentation') {
+                                $stmtGrade = $db->prepare("UPDATE grades SET progress_presentation_marks = ? WHERE student_id = ?");
+                                $stmtGrade->execute([$averageScore, $sId]);
+                            } else if ($stage === 'Final Presentation') {
+                                $stmtGrade = $db->prepare("UPDATE grades SET final_presentation_marks = ? WHERE student_id = ?");
+                                $stmtGrade->execute([$averageScore, $sId]);
+                            }
+
+                            // Recalculate overall grades per student
+                            $stmtGrades = $db->prepare("SELECT * FROM grades WHERE student_id = ?");
+                            $stmtGrades->execute([$sId]);
+                            $gData = $stmtGrades->fetch();
+
+                            if ($gData) {
+                                $total = round(
+                                     (float)$gData['proposal_defense_marks'] + 
+                                     (float)$gData['progress_presentation_marks'] + 
+                                     (float)$gData['final_presentation_marks'] + 
+                                     (float)$gData['supervision_marks']
+                                );
+                                
+                                $percentage = round(($total / 200.0) * 100.0);
+                                
+                                $grade = 'F';
+                                if ($percentage >= 85) $grade = 'A+';
+                                else if ($percentage >= 80) $grade = 'A';
+                                else if ($percentage >= 75) $grade = 'B+';
+                                else if ($percentage >= 70) $grade = 'B';
+                                else if ($percentage >= 65) $grade = 'C+';
+                                else if ($percentage >= 60) $grade = 'C';
+                                else if ($percentage >= 55) $grade = 'D+';
+                                else if ($percentage >= 50) $grade = 'D';
+                                
+                                $status = ($percentage >= 50) ? 'Pass' : 'Fail';
+
+                                $stmtUpdateGrade = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE student_id = ?");
+                                $stmtUpdateGrade->execute([$total, $percentage, $grade, $status, $sId]);
+                            }
+                        }
+
+                        // Update group progress stage
+                        if ($stage === 'Proposal Defence Presentation') {
+                            $stmtStage = $db->prepare("UPDATE `groups` SET progress_stage = 'Proposal Defence Presentation Completed' WHERE id = ?");
+                            $stmtStage->execute([$groupId]);
+                        } else if ($stage === 'FYP Progress Presentation') {
+                            $stmtStage = $db->prepare("UPDATE `groups` SET progress_stage = 'FYP Progress Presentation Completed' WHERE id = ?");
+                            $stmtStage->execute([$groupId]);
+                        } else if ($stage === 'Final Presentation') {
+                            $stmtSupervision = $db->prepare("SELECT supervision_marks FROM grades WHERE group_id = ? LIMIT 1");
+                            $stmtSupervision->execute([$groupId]);
+                            $supervisionMarks = $stmtSupervision->fetchColumn();
+
+                            $targetStage = ($supervisionMarks !== null) ? 'Final Grading Completed' : 'Final Presentation Completed';
+                            $stmtStage = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
+                            $stmtStage->execute([$targetStage, $groupId]);
+                        }
+                    }
+
+                    $db->commit();
+                    $this->flash('success', "Marks for all groups saved successfully.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Error saving evaluations: ' . $e->getMessage());
+                }
+            }
+        }
+        redirect('/committee/grading-sheet?stage=' . urlencode($_POST['stage'] ?? ''));
+    }
+
     public function gradeEvaluation() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $groupId = $_POST['group_id'] ?? null;
