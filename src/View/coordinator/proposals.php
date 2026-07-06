@@ -291,7 +291,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar-stack">
                                     <?php foreach(array_slice($pr['members'], 0, 4) as $m): ?>
-                                        <img src="<?php echo $basePath; ?>/uploads/avatars/default_avatar.svg" 
+                                        <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
+                                        <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
                                              title="<?php echo htmlspecialchars($m['student_name']); ?>"
                                              alt="Avatar">
                                     <?php endforeach; ?>
@@ -386,7 +387,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php foreach($pr['members'] as $m): ?>
                         <div class="col-md-6">
                             <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color); background: var(--card-bg);">
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/default_avatar.svg" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
+                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
                                 <div>
                                     <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
                                         <?php echo htmlspecialchars($m['student_name']); ?>

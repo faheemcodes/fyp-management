@@ -367,7 +367,7 @@ class CoordinatorController extends BaseController {
 
         // Fetch members for each proposal group
         foreach ($proposals as &$pr) {
-            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, s_m.name as student_name FROM group_members gm 
+            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar FROM group_members gm 
                 JOIN students s_m ON gm.student_id = s_m.user_id 
                 JOIN users u_m ON s_m.user_id = u_m.id 
                 WHERE gm.group_id = ?");
