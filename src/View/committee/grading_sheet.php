@@ -42,8 +42,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     font-size: 0.75rem;
 }
 .eval-input {
-    width: 100%;
-    max-width: 50px;
+    width: 55px !important;
+    min-width: 55px !important;
     margin: 0 auto;
     text-align: center;
     background-color: var(--form-bg) !important;
@@ -51,6 +51,17 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     border-radius: 4px !important;
     padding: 4px !important;
     color: var(--text-primary) !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+/* Hide the up/down arrows on number inputs to save space */
+.eval-input::-webkit-outer-spin-button,
+.eval-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.eval-input[type=number] {
+    -moz-appearance: textfield;
 }
 html.dark-theme .eval-input {
     border-color: #334155 !important;
