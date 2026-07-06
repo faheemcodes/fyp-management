@@ -20,23 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Toggle Sidebar on Mobile and Desktop
+    // Toggle Sidebar on Mobile
     const sidebarCollapse = document.getElementById('sidebarCollapse');
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     
-    function toggleSidebar(e) {
-        if (e) e.stopPropagation();
-        if (window.innerWidth < 992) {
-            sidebar.classList.toggle('show');
-        } else {
-            sidebar.classList.toggle('collapsed');
-            if (content) content.classList.toggle('expanded');
-        }
-    }
-
     if (sidebarCollapse && sidebar) {
-        sidebarCollapse.addEventListener('click', toggleSidebar);
+        sidebarCollapse.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.toggle('show');
+        });
 
         if (content) {
             content.addEventListener('click', function() {
