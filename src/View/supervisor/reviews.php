@@ -362,9 +362,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION));
                         if($ext === 'pdf'): 
                         ?>
-                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium" data-bs-toggle="collapse" data-bs-target="#pdfViewer<?php echo $pr['id']; ?>">
-                                <i class="bi bi-eye me-1"></i> View Proposal
+                            <!-- Laptop Offcanvas trigger -->
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium d-none d-md-inline-block" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo $pr['id']; ?>">
+                                <i class="bi bi-layout-sidebar-reverse me-1"></i> View Proposal
                             </button>
+                            <!-- Mobile new tab trigger -->
+                            <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium d-md-none">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> View Proposal
+                            </a>
                         <?php else: ?>
                             <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-2 fw-medium">
                                 <i class="bi bi-download me-1"></i> Download Proposal
@@ -378,11 +383,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.65; text-align: justify; max-height: 250px; overflow-y: auto;">
                         <?php echo nl2br(htmlspecialchars($pr['abstract'])); ?>
                     </div>
-                    <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
-                    <div class="collapse mt-3" id="pdfViewer<?php echo $pr['id']; ?>">
-                        <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="400px" style="border: 1px solid var(--border-color); border-radius: 8px;"></iframe>
-                    </div>
-                    <?php endif; ?>
                 </div>
 
                 <div>
@@ -449,6 +449,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
 </div>
+
+<?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
+<!-- PDF Offcanvas (Right Side) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo $pr['id']; ?>" style="width: 50vw; min-width: 320px; z-index: 1060;">
+  <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+    <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none;"></iframe>
+  </div>
+</div>
+<?php endif; ?>
+
 <?php endforeach; ?>
 
 <script>
