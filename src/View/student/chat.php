@@ -570,7 +570,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         const textareaWrap = document.getElementById('textareaWrap');
         const dragOverlay = document.getElementById('dragOverlay');
 
-        let selectedFiles = [];
+        let selectedFile = null;
 
         function formatFileSize(bytes) {
             if (bytes < 1024) return bytes + ' B';
@@ -594,54 +594,35 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
             return map[cls] || map.generic;
         }
 
-        function handleFiles(files) {
-        for(let i=0; i<files.length; i++) {
-            selectedFiles.push(files[i]);
-        }
-        updateFileChips();
-        messageInput.required = false;
-    }
-
-    function updateFileChips() {
-        if (selectedFiles.length === 0) {
-            fileChip.classList.remove('active');
-            fileChipVisual.innerHTML = '';
-            messageInput.required = true;
-            return;
-        }
-        fileChip.classList.add('active');
-        let html = '';
-        selectedFiles.forEach((file, index) => {
+        function showFileChip(file) {
+            selectedFile = file;
+            fileChipName.textContent = file.name;
+            fileChipSize.textContent = formatFileSize(file.size);
             const cls = getChipClass(file);
-            let phtml = '';
+
             if (cls === 'img') {
                 const url = URL.createObjectURL(file);
-                phtml = `<img src="${url}" style="width:20px;height:20px;object-fit:cover;border-radius:4px;margin-right:4px;" alt="preview">`;
+                fileChipVisual.innerHTML = `<img src="${url}" class="file-chip-thumb" alt="preview">`;
             } else {
-                phtml = `<i class="bi ${getChipIcon(cls)} text-muted me-1"></i>`;
+                fileChipVisual.innerHTML = `<div class="file-chip-icon ${cls}"><i class="bi ${getChipIcon(cls)}"></i></div>`;
             }
-            html += `
-                <div class="file-chip-item d-inline-flex align-items-center bg-white border rounded-pill px-2 py-1 me-2 mb-1 shadow-sm" style="font-size:0.75rem;">
-                    ${phtml}
-                    <span class="text-truncate" style="max-width: 100px;">${file.name}</span>
-                    <button type="button" class="btn-close ms-2 remove-file-btn" data-index="${index}" style="font-size: 0.5rem;"></button>
-                </div>
-            `;
+            fileChip.classList.add('active');
+            messageInput.required = false;
+        }
+
+        function clearFileChip() {
+            selectedFile = null;
+            fileInput.value = '';
+            fileChip.classList.remove('active');
+            fileChipVisual.innerHTML = '';
+            if (!messageInput.value.trim()) messageInput.required = true;
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) showFileChip(e.target.files[0]);
         });
-        
-        fileChipVisual.innerHTML = html;
-        
-        // Add listeners to remove buttons
-        const removeBtns = fileChipVisual.querySelectorAll('.remove-file-btn');
-        removeBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(e.target.getAttribute('data-index'));
-                selectedFiles.splice(idx, 1);
-                updateFileChips();
-                if(selectedFiles.length === 0) fileInput.value = '';
-            });
-        });
-    }
+
+        removeFileBtn.addEventListener('click', clearFileChip);
 
         // Drag & Drop
         let dragCounter = 0;
@@ -653,11 +634,11 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
             dragCounter = 0;
             textareaWrap.classList.remove('drag-over');
             dragOverlay.classList.remove('show');
-            if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
+            if (e.dataTransfer.files.length > 0) showFileChip(e.dataTransfer.files[0]);
         });
 
         messageInput.addEventListener('input', () => {
-            if(messageInput.value.trim() || selectedFiles.length > 0) {
+            if(messageInput.value.trim() || selectedFile) {
                 messageInput.required = false;
             } else {
                 messageInput.required = true;
@@ -711,44 +692,37 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem; opacity: 0.8;">(edited)</span>' : '';
                 
                 let fileContent = '';
-                let filesList = data.files || [];
                 if (data.fileUrl) {
-                    // Backwards compatibility
-                    filesList.push({ fileUrl: data.fileUrl, fileName: data.fileName, fileType: data.fileType });
-                }
-                if (filesList.length > 0) {
-                    filesList.forEach(f => {
-                        if (f.fileType && f.fileType.startsWith('image/')) {
-                            fileContent += `
-                            <div class="file-img-wrap mb-1">
-                                <a href="${f.fileUrl}" target="_blank" style="text-decoration:none">
-                                    <img src="${f.fileUrl}" alt="${f.fileName || 'Image'}" loading="lazy">
-                                    <div class="file-img-overlay">
-                                        <i class="bi bi-arrows-fullscreen"></i>
-                                    </div>
-                                </a>
-                            </div>`;
-                        } else {
-                            const fi = getFileIconClass(f.fileType, f.fileName);
-                            const ext = getFileExt(f.fileName);
+                    if (data.fileType && data.fileType.startsWith('image/')) {
+                        fileContent = `
+                        <div class="file-img-wrap mb-1">
+                            <a href="${data.fileUrl}" target="_blank" style="text-decoration:none">
+                                <img src="${data.fileUrl}" alt="${data.fileName || 'Image'}" loading="lazy">
+                                <div class="file-img-overlay">
+                                    <i class="bi bi-arrows-fullscreen"></i>
+                                </div>
+                            </a>
+                        </div>`;
+                    } else {
+                        const fi = getFileIconClass(data.fileType, data.fileName);
+                        const ext = getFileExt(data.fileName);
 
-                            fileContent += `
-                            <div class="mb-1">
-                                <a href="${f.fileUrl}" target="_blank" class="file-doc-card">
-                                    <div class="file-doc-icon ${fi.cls}">
-                                        <i class="bi ${fi.icon}"></i>
-                                    </div>
-                                    <div class="file-doc-info">
-                                        <span class="file-doc-name" title="${f.fileName || 'Attachment'}">${f.fileName || 'Attachment'}</span>
-                                        <span class="file-doc-size">${ext} file</span>
-                                    </div>
-                                    <div class="file-doc-dl">
-                                        <i class="bi bi-download"></i>
-                                    </div>
-                                </a>
-                            </div>`;
-                        }
-                    });
+                        fileContent = `
+                        <div class="mb-1">
+                            <a href="${data.fileUrl}" target="_blank" class="file-doc-card">
+                                <div class="file-doc-icon ${fi.cls}">
+                                    <i class="bi ${fi.icon}"></i>
+                                </div>
+                                <div class="file-doc-info">
+                                    <span class="file-doc-name" title="${data.fileName || 'Attachment'}">${data.fileName || 'Attachment'}</span>
+                                    <span class="file-doc-size">${ext} file</span>
+                                </div>
+                                <div class="file-doc-dl">
+                                    <i class="bi bi-download"></i>
+                                </div>
+                            </a>
+                        </div>`;
+                    }
                 }
                 
                 let actionsMenu = `
@@ -758,8 +732,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
                             ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
-                            ${filesList.length > 0 ? `<li><a class="dropdown-item" href="${filesList[0].fileUrl}" target="_blank" download="${filesList[0].fileName || 'file'}"><i class="bi bi-download me-2"></i>Download First File</a></li>` : ''}
-                            ${isSentByMe && filesList.length === 0 ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
+                            ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
+                            ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
                             ${isSentByMe ? `<li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>` : ''}
                         </ul>
                     </div>
@@ -878,7 +852,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
-            if (!text && selectedFiles.length === 0) return;
+            if (!text && !selectedFile) return;
 
             messageInput.value = '';
             messageInput.placeholder = 'Type a message...';
@@ -898,49 +872,48 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     await setDoc(chatDocRef, { lastUpdated: serverTimestamp() }, { merge: true });
                     editingMsgId = null;
                 } else {
-                    let uploadedFiles = [];
-                
-                if (selectedFiles.length > 0) {
-                    // Upload all files concurrently
-                    const uploadPromises = selectedFiles.map(async (file) => {
+                    let fileUrl = null;
+                    let fileName = null;
+                    let fileType = null;
+                    
+                    if (selectedFile) {
                         const formData = new FormData();
-                        formData.append('file', file);
+                        formData.append('file', selectedFile);
+
                         const response = await fetch('<?php echo $bp; ?>/api/upload-chat-file', {
                             method: 'POST',
                             body: formData
                         });
+
                         const data = await response.json();
+                        
                         if (!data.success) {
                             throw new Error(data.error || 'Failed to upload file.');
                         }
-                        return {
-                            fileUrl: data.fileUrl,
-                            fileName: data.fileName,
-                            fileType: data.fileType
-                        };
-                    });
+                        
+                        fileUrl = data.fileUrl;
+                        fileName = data.fileName;
+                        fileType = data.fileType;
+                    }
                     
-                    uploadedFiles = await Promise.all(uploadPromises);
-                }
-                
-                // Send new message
+                    // Send new message
                     await setDoc(chatDocRef, {
                         participants: [studentId, supervisorId.toString()],
-                        lastMessage: text || (selectedFiles.length > 0 ? 'Attachment' : ''),
+                        lastMessage: text || (selectedFile ? 'Attachment' : ''),
                         lastUpdated: serverTimestamp()
                     }, { merge: true });
 
                     await addDoc(messagesRef, {
                         senderId: studentId,
                         text: text,
-                        files: uploadedFiles,
-                        
-                        
+                        fileUrl: fileUrl,
+                        fileName: fileName,
+                        fileType: fileType,
                         timestamp: serverTimestamp()
                     });
                     
                     // Reset file input
-                    selectedFiles = [];
+                    selectedFile = null;
                     fileInput.value = '';
                     fileChip.classList.remove('active');
                     fileChipVisual.innerHTML = '';
