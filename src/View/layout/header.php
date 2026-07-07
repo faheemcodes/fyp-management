@@ -25,6 +25,6 @@
     </script>
 </head>
 <body>
-
+    <?php include __DIR__ . '/loader.php'; ?>
 <div class="d-flex">
     <!-- Sidebar component is loaded separately right after header -->

@@ -515,6 +515,7 @@
     </style>
 </head>
 <body>
+    <?php include __DIR__ . '/../layout/loader.php'; ?>
 
 <!-- ─── Top Header ─── -->
 <header class="header-top">
