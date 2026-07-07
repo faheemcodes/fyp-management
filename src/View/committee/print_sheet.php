@@ -123,7 +123,8 @@
             table.sheet tr,
             table.sheet th,
             table.sheet td {
-                border: 1px solid black !important;
+                border: 1pt solid black !important; /* Use 1pt instead of px to prevent vanishing lines */
+                background-clip: padding-box !important;
             }
 
             table.sheet th {
@@ -180,7 +181,7 @@
         </tr>
         <tr>
             <th style="width: 80px;">Roll No</th>
-            <th style="width: 110px;">Full Name</th>
+            <th style="min-width: 130px; width: auto;">Full Name</th>
         </tr>
     </thead>
     <tbody>
@@ -230,7 +231,7 @@
         </tr>
         <tr>
             <th style="width: 75px;">Roll No</th>
-            <th style="width: 100px;">Full Name</th>
+            <th style="min-width: 130px; width: auto;">Full Name</th>
             <!-- Presentation -->
             <th class="vtext">Contents (5)</th>
             <th class="vtext">Time spent (5)</th>
