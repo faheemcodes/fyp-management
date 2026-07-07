@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Toggle Sidebar on Mobile
     const sidebarCollapse = document.getElementById('sidebarCollapse');
+    const desktopSidebarCollapse = document.getElementById('desktopSidebarCollapse');
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     
@@ -30,6 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             sidebar.classList.toggle('show');
         });
+
+        if (desktopSidebarCollapse) {
+            desktopSidebarCollapse.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.toggle('collapsed');
+                if (content) content.classList.toggle('collapsed');
+            });
+        }
 
         if (content) {
             content.addEventListener('click', function() {

@@ -24,15 +24,20 @@ if ($urlPrefix === '/') {
 
 <!-- Sidebar -->
 <nav id="sidebar" class="d-flex flex-column">
-    <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?: 'login'); ?>/dashboard" class="sidebar-header d-flex align-items-center gap-3 text-decoration-none">
-        <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-        </div>
-        <div>
-            <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
-            <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
-        </div>
-    </a>
+    <div class="sidebar-header d-flex align-items-center justify-content-between">
+        <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?: 'login'); ?>/dashboard" class="d-flex align-items-center gap-3 text-decoration-none sidebar-brand">
+            <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            <div class="sidebar-brand-text">
+                <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
+                <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
+            </div>
+        </a>
+        <button type="button" id="desktopSidebarCollapse" class="btn btn-link text-white p-0 d-none d-lg-flex align-items-center justify-content-center" style="opacity: 0.7; transition: opacity 0.2s;" title="Toggle Sidebar">
+            <i class="bi bi-layout-sidebar-inset" style="font-size: 1.2rem;"></i>
+        </button>
+    </div>
 
     <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto;">
         <?php if ($role === 'admin'): ?>
@@ -295,12 +300,12 @@ if ($urlPrefix === '/') {
     <nav class="navbar navbar-expand-lg top-navbar" style="border-bottom: 1px solid var(--border-color); padding-top: 14px; padding-bottom: 14px;">
         <div class="container-fluid p-0">
             <!-- Desktop Branding -->
-            <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-none d-sm-flex align-items-center gap-3 text-decoration-none" style="cursor: pointer;">
+            <div class="d-none d-lg-flex align-items-center gap-3">
                 <div>
                     <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.95rem; letter-spacing: -0.01em;">Faculty of Engineering &amp; Technology</h6>
                     <small style="color: var(--text-secondary); font-size: 0.72rem; letter-spacing: 0.02em; font-weight: 500;">University of Sindh, Jamshoro</small>
                 </div>
-            </a>
+            </div>
             
             <!-- Mobile Branding -->
             <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-flex align-items-center gap-2 d-sm-none text-decoration-none" style="cursor: pointer;">

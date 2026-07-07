@@ -630,6 +630,39 @@ html.dark-theme .accordion-button::after {
     font-size: 0.875rem;
 }
 
+/* ─── Desktop Collapsed Sidebar ─── */
+@media (min-width: 992px) {
+    :root {
+        --sidebar-collapsed-width: 80px;
+    }
+    #sidebar.collapsed {
+        width: var(--sidebar-collapsed-width);
+    }
+    #sidebar.collapsed .sidebar-brand-text {
+        display: none !important;
+    }
+    #sidebar.collapsed .sidebar-brand {
+        display: none !important;
+    }
+    #sidebar.collapsed .sidebar-header {
+        justify-content: center !important;
+        padding: 20px 0;
+    }
+    #sidebar.collapsed .nav-link {
+        font-size: 0;
+        justify-content: center;
+        padding: 12px 0;
+        gap: 0;
+    }
+    #sidebar.collapsed .nav-link i {
+        font-size: 1.3rem;
+    }
+    #content.collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+        width: calc(100% - var(--sidebar-collapsed-width));
+    }
+}
+
 /* ─── Responsive sidebar ─── */
 @media (max-width: 991.98px) {
     #sidebar {
