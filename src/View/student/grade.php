@@ -39,7 +39,12 @@ foreach ($proposalDefenseEvals as $e) {
         $visibleDefenseCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleDefenseSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
+            $sd = $details[$_SESSION['user_id']];
+            if (isset($sd['total'])) {
+                $visibleDefenseSum += floatval($sd['total']);
+            } else {
+                $visibleDefenseSum += array_sum(array_map('floatval', array_values($sd)));
+            }
         }
     }
     else $hasHiddenMarks = true;
@@ -53,7 +58,12 @@ foreach ($progressEvals as $e) {
         $visibleProgressCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleProgressSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
+            $sd = $details[$_SESSION['user_id']];
+            if (isset($sd['total'])) {
+                $visibleProgressSum += floatval($sd['total']);
+            } else {
+                $visibleProgressSum += array_sum(array_map('floatval', array_values($sd)));
+            }
         }
     }
     else $hasHiddenMarks = true;
@@ -73,7 +83,12 @@ foreach ($finalEvals as $e) {
         $visibleFinalCount++; 
         $details = json_decode($e['marks_details'], true);
         if (isset($details[$_SESSION['user_id']])) {
-            $visibleFinalSum += array_sum(array_map('floatval', array_values($details[$_SESSION['user_id']])));
+            $sd = $details[$_SESSION['user_id']];
+            if (isset($sd['presentation']) && isset($sd['thesis']) && isset($sd['demo'])) {
+                $visibleFinalSum += floatval($sd['presentation']) + floatval($sd['thesis']) + floatval($sd['demo']);
+            } else {
+                $visibleFinalSum += array_sum(array_map('floatval', array_values($sd)));
+            }
         }
     }
     else $hasHiddenMarks = true;
