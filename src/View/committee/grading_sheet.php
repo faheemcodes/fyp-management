@@ -342,16 +342,32 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
 /* ─── Mobile Responsiveness ─── */
 @media (max-width: 768px) {
     .gs-hero {
-        padding: 20px 20px;
-        position: static; /* Disable sticky on mobile as it takes too much screen space */
+        padding: 12px 16px;
+        position: sticky; /* Keep sticky on mobile */
+        top: 60px; /* Mobile top navbar is usually shorter */
         margin-bottom: 16px;
     }
     .gs-hero .d-flex.flex-column > div {
         width: 100%;
         justify-content: flex-start;
     }
+    .gs-hero-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1rem !important;
+    }
+    .gs-hero h4 {
+        font-size: 1.1rem !important;
+    }
+    .gs-hero p.mb-0 {
+        display: none; /* Hide subtitle to save vertical space on mobile */
+    }
+    .gs-hero .search-and-print {
+        flex-wrap: wrap;
+    }
     .custom-search-bar {
         max-width: 100%;
+        flex: 1 1 auto;
     }
     .eval-table-wrapper {
         padding-bottom: 10px;
@@ -382,7 +398,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
             </div>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3 search-and-print">
             <!-- Search Bar -->
             <div class="custom-search-bar">
                 <i class="bi bi-search search-icon"></i>
