@@ -10,49 +10,49 @@
             background: #fff;
             color: #000;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 10pt;
-            padding: 10px;
+            font-size: 12.5pt; /* Scaled 1.25x */
+            padding: 15px;
         }
 
         /* ─── Header ─── */
         .report-header {
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             line-height: 1.3;
         }
-        .report-header .dept { font-size: 11pt; font-weight: bold; }
-        .report-header .batch { font-size: 9pt; }
-        .report-header .stage-title { font-size: 10pt; font-weight: bold; text-decoration: underline; margin-top: 2px; }
+        .report-header .dept { font-size: 14pt; font-weight: bold; } /* Scaled 1.25x */
+        .report-header .batch { font-size: 11pt; } /* Scaled 1.25x */
+        .report-header .stage-title { font-size: 12.5pt; font-weight: bold; text-decoration: underline; margin-top: 2px; } /* Scaled 1.25x */
 
         /* ─── Evaluator Info ─── */
         .evaluator-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin: 6px 0 8px 0;
-            font-size: 9pt;
+            margin: 8px 0 10px 0;
+            font-size: 11pt; /* Scaled 1.25x */
         }
 
         /* ─── Table ─── */
         table.sheet {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8pt;
+            font-size: 10pt; /* Scaled 1.25x */
             table-layout: auto;
         }
         table.sheet th,
         table.sheet td {
             border: 1.5px solid #000;
-            padding: 2px 3px;
+            padding: 3px 4px;
             vertical-align: middle;
         }
         table.sheet th {
             background: #e8e8e8;
             font-weight: bold;
             text-align: center;
-            font-size: 7pt;
+            font-size: 9pt; /* Scaled 1.25x */
         }
-        table.sheet td { font-size: 8pt; }
+        table.sheet td { font-size: 10pt; } /* Scaled 1.25x */
         table.sheet td.center { text-align: center; }
 
         /* Vertical text for sub-columns */
@@ -60,24 +60,24 @@
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             white-space: nowrap;
-            height: 80px;
-            padding: 3px 1px;
-            font-size: 6.5pt;
-            width: 20px;
+            height: 100px; /* Scaled 1.25x */
+            padding: 4px 2px;
+            font-size: 8pt; /* Scaled 1.25x */
+            width: 25px; /* Scaled 1.25x */
         }
 
         /* Marks empty cells */
         table.sheet td.mark {
-            width: 20px;
+            width: 25px; /* Scaled 1.25x */
             text-align: center;
-            height: 20px;
+            height: 25px; /* Scaled 1.25x */
         }
 
         /* Signature */
         .sig-line {
             text-align: right;
-            margin-top: 15px;
-            font-size: 9pt;
+            margin-top: 20px;
+            font-size: 11pt; /* Scaled 1.25x */
             font-weight: bold;
         }
 
@@ -97,14 +97,25 @@
                 color-adjust: exact !important;
             }
 
-            body { padding: 0; font-size: 9pt; background: #fff !important; }
-            .no-print { display: none !important; }
-
+            /* Restore to the compact sizes for physical A4 printing */
+            body { padding: 0; font-size: 10pt !important; background: #fff !important; }
+            .report-header .dept { font-size: 11pt !important; }
+            .report-header .batch { font-size: 9pt !important; }
+            .report-header .stage-title { font-size: 10pt !important; }
+            .evaluator-row { font-size: 9pt !important; margin: 6px 0 8px 0 !important; }
+            
             table.sheet {
                 border-collapse: collapse !important;
-                font-size: 7.5pt;
+                font-size: 8pt !important;
                 width: 100% !important;
             }
+            table.sheet th { font-size: 7pt !important; }
+            table.sheet td { font-size: 8pt !important; }
+            table.sheet th.vtext { height: 80px !important; width: 20px !important; font-size: 6.5pt !important; padding: 3px 1px !important; }
+            table.sheet td.mark { width: 20px !important; height: 20px !important; }
+            .sig-line { font-size: 9pt !important; margin-top: 15px !important; }
+
+            .no-print { display: none !important; }
 
             table.sheet,
             table.sheet thead,
