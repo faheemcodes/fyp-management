@@ -570,7 +570,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         const textareaWrap = document.getElementById('textareaWrap');
         const dragOverlay = document.getElementById('dragOverlay');
 
-        let selectedFile = null;
+        let selectedFiles = [];
 
         function formatFileSize(bytes) {
             if (bytes < 1024) return bytes + ' B';
@@ -611,7 +611,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         }
 
         function clearFileChip() {
-            selectedFile = null;
+            selectedFiles = [];
             fileInput.value = '';
             fileChip.classList.remove('active');
             fileChipVisual.innerHTML = '';
@@ -619,8 +619,10 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         }
 
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) showFileChip(e.target.files[0]);
-        });
+        if (e.target.files.length > 0) {
+            handleFiles(e.target.files);
+        }
+    });
 
         removeFileBtn.addEventListener('click', clearFileChip);
 
@@ -634,11 +636,11 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
             dragCounter = 0;
             textareaWrap.classList.remove('drag-over');
             dragOverlay.classList.remove('show');
-            if (e.dataTransfer.files.length > 0) showFileChip(e.dataTransfer.files[0]);
+            if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
         });
 
         messageInput.addEventListener('input', () => {
-            if(messageInput.value.trim() || selectedFile) {
+            if(messageInput.value.trim() || selectedFiles.length > 0) {
                 messageInput.required = false;
             } else {
                 messageInput.required = true;
@@ -692,37 +694,44 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem; opacity: 0.8;">(edited)</span>' : '';
                 
                 let fileContent = '';
+                let filesList = data.files || [];
                 if (data.fileUrl) {
-                    if (data.fileType && data.fileType.startsWith('image/')) {
-                        fileContent = `
-                        <div class="file-img-wrap mb-1">
-                            <a href="${data.fileUrl}" target="_blank" style="text-decoration:none">
-                                <img src="${data.fileUrl}" alt="${data.fileName || 'Image'}" loading="lazy">
-                                <div class="file-img-overlay">
-                                    <i class="bi bi-arrows-fullscreen"></i>
-                                </div>
-                            </a>
-                        </div>`;
-                    } else {
-                        const fi = getFileIconClass(data.fileType, data.fileName);
-                        const ext = getFileExt(data.fileName);
+                    // Backwards compatibility
+                    filesList.push({ fileUrl: data.fileUrl, fileName: data.fileName, fileType: data.fileType });
+                }
+                if (filesList.length > 0) {
+                    filesList.forEach(f => {
+                        if (f.fileType && f.fileType.startsWith('image/')) {
+                            fileContent += `
+                            <div class="file-img-wrap mb-1">
+                                <a href="${f.fileUrl}" target="_blank" style="text-decoration:none">
+                                    <img src="${f.fileUrl}" alt="${f.fileName || 'Image'}" loading="lazy">
+                                    <div class="file-img-overlay">
+                                        <i class="bi bi-arrows-fullscreen"></i>
+                                    </div>
+                                </a>
+                            </div>`;
+                        } else {
+                            const fi = getFileIconClass(f.fileType, f.fileName);
+                            const ext = getFileExt(f.fileName);
 
-                        fileContent = `
-                        <div class="mb-1">
-                            <a href="${data.fileUrl}" target="_blank" class="file-doc-card">
-                                <div class="file-doc-icon ${fi.cls}">
-                                    <i class="bi ${fi.icon}"></i>
-                                </div>
-                                <div class="file-doc-info">
-                                    <span class="file-doc-name" title="${data.fileName || 'Attachment'}">${data.fileName || 'Attachment'}</span>
-                                    <span class="file-doc-size">${ext} file</span>
-                                </div>
-                                <div class="file-doc-dl">
-                                    <i class="bi bi-download"></i>
-                                </div>
-                            </a>
-                        </div>`;
-                    }
+                            fileContent += `
+                            <div class="mb-1">
+                                <a href="${f.fileUrl}" target="_blank" class="file-doc-card">
+                                    <div class="file-doc-icon ${fi.cls}">
+                                        <i class="bi ${fi.icon}"></i>
+                                    </div>
+                                    <div class="file-doc-info">
+                                        <span class="file-doc-name" title="${f.fileName || 'Attachment'}">${f.fileName || 'Attachment'}</span>
+                                        <span class="file-doc-size">${ext} file</span>
+                                    </div>
+                                    <div class="file-doc-dl">
+                                        <i class="bi bi-download"></i>
+                                    </div>
+                                </a>
+                            </div>`;
+                        }
+                    });
                 }
                 
                 let actionsMenu = `
@@ -732,8 +741,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
                             ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
-                            ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
-                            ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
+                            ${filesList.length > 0 ? `<li><a class="dropdown-item" href="${filesList[0].fileUrl}" target="_blank" download="${filesList[0].fileName || 'file'}"><i class="bi bi-download me-2"></i>Download First File</a></li>` : ''}
+                            ${isSentByMe && filesList.length === 0 ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}
                             ${isSentByMe ? `<li><a class="dropdown-item text-danger delete-msg-btn" href="#" data-id="${doc.id}"><i class="bi bi-trash me-2"></i>Delete</a></li>` : ''}
                         </ul>
                     </div>
@@ -852,7 +861,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
-            if (!text && !selectedFile) return;
+            if (!text && selectedFiles.length === 0) return;
 
             messageInput.value = '';
             messageInput.placeholder = 'Type a message...';
@@ -872,48 +881,49 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     await setDoc(chatDocRef, { lastUpdated: serverTimestamp() }, { merge: true });
                     editingMsgId = null;
                 } else {
-                    let fileUrl = null;
-                    let fileName = null;
-                    let fileType = null;
-                    
-                    if (selectedFile) {
+                    let uploadedFiles = [];
+                
+                if (selectedFiles.length > 0) {
+                    // Upload all files concurrently
+                    const uploadPromises = selectedFiles.map(async (file) => {
                         const formData = new FormData();
-                        formData.append('file', selectedFile);
-
+                        formData.append('file', file);
                         const response = await fetch('<?php echo $bp; ?>/api/upload-chat-file', {
                             method: 'POST',
                             body: formData
                         });
-
                         const data = await response.json();
-                        
                         if (!data.success) {
                             throw new Error(data.error || 'Failed to upload file.');
                         }
-                        
-                        fileUrl = data.fileUrl;
-                        fileName = data.fileName;
-                        fileType = data.fileType;
-                    }
+                        return {
+                            fileUrl: data.fileUrl,
+                            fileName: data.fileName,
+                            fileType: data.fileType
+                        };
+                    });
                     
-                    // Send new message
+                    uploadedFiles = await Promise.all(uploadPromises);
+                }
+                
+                // Send new message
                     await setDoc(chatDocRef, {
                         participants: [studentId, supervisorId.toString()],
-                        lastMessage: text || (selectedFile ? 'Attachment' : ''),
+                        lastMessage: text || (selectedFiles.length > 0 ? 'Attachment' : ''),
                         lastUpdated: serverTimestamp()
                     }, { merge: true });
 
                     await addDoc(messagesRef, {
                         senderId: studentId,
                         text: text,
-                        fileUrl: fileUrl,
-                        fileName: fileName,
-                        fileType: fileType,
+                        files: uploadedFiles,
+                        
+                        
                         timestamp: serverTimestamp()
                     });
                     
                     // Reset file input
-                    selectedFile = null;
+                    selectedFiles = [];
                     fileInput.value = '';
                     fileChip.classList.remove('active');
                     fileChipVisual.innerHTML = '';
