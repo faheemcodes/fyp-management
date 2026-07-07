@@ -11,22 +11,13 @@ $stageBadgeColor = '#3b82f6';
 
 if ($stage === 'Proposal Defence Presentation') {
     $heroIcon = 'bi-file-earmark-text';
-    $heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
-    $heroIconGradient = 'conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa)';
     $heroSubtitle = 'Grade project proposals and provide initial feedback.';
-    $stageBadgeColor = '#3b82f6';
 } elseif ($stage === 'FYP Progress Presentation') {
     $heroIcon = 'bi-graph-up-arrow';
-    $heroGradient = 'linear-gradient(135deg, #042f2e 0%, #065f46 50%, #042f2e 100%)';
-    $heroIconGradient = 'conic-gradient(from 0deg, #6ee7b7, #10b981, #047857, #6ee7b7)';
     $heroSubtitle = 'Evaluate project progress and development milestones.';
-    $stageBadgeColor = '#10b981';
 } elseif ($stage === 'Final Presentation') {
     $heroIcon = 'bi-trophy';
-    $heroGradient = 'linear-gradient(135deg, #1c1917 0%, #78350f 50%, #1c1917 100%)';
-    $heroIconGradient = 'conic-gradient(from 0deg, #fbbf24, #f59e0b, #b45309, #fbbf24)';
     $heroSubtitle = 'Complete final evaluation including presentation, thesis, and demo.';
-    $stageBadgeColor = '#f59e0b';
 }
 
 $groupCount = count($grouped ?? []);
@@ -437,7 +428,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     <div class="gs-section">
         <div class="gs-section-header">
             <div class="gs-section-title">
-                <div class="gs-section-icon" style="background: rgba(<?php echo $stage === 'FYP Progress Presentation' ? '16,185,129' : ($stage === 'Final Presentation' ? '245,158,11' : '59,130,246'); ?>,0.1); color: <?php echo $stageBadgeColor; ?>;">
+                <div class="gs-section-icon" style="background: rgba(59,130,246,0.1); color: <?php echo $stageBadgeColor; ?>;">
                     <i class="bi <?php echo $heroIcon; ?>"></i>
                 </div>
                 <div>
