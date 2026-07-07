@@ -84,14 +84,32 @@ html.dark-theme .eval-input {
 html.dark-theme .eval-remarks-input {
     border-color: #334155 !important;
 }
+
+<style>
+.search-highlight {
+    background-color: #fde047; /* Yellow */
+    color: #000;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+.search-highlight.active {
+    background-color: #f97316; /* Orange */
+    color: #fff;
+}
+</style>
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-gray-800 fw-bold"><?php echo htmlspecialchars($stage); ?> Grading</h1>
     <div class="d-flex gap-3 align-items-center">
-        <div class="input-group shadow-sm" style="max-width: 350px;">
-            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-            <input type="text" id="gradingSearch" class="form-control border-start-0 ps-0" placeholder="Search ID, Name, Supervisor...">
+        <div class="input-group shadow-sm" style="max-width: 400px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color, #cbd5e1);">
+            <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-search"></i></span>
+            <input type="text" id="gradingSearch" class="form-control border-0 shadow-none ps-0" placeholder="Find in page...">
+            <span class="input-group-text bg-white border-0 text-muted" id="searchCount" style="font-size: 0.85rem; padding-right: 5px;">0/0</span>
+            <div class="input-group-text bg-white border-0 p-0 d-flex border-start border-light-subtle">
+                <button class="btn btn-sm btn-light border-0 rounded-0" type="button" id="searchPrev" style="padding: 0.35rem 0.6rem;"><i class="bi bi-chevron-up"></i></button>
+                <button class="btn btn-sm btn-light border-0 rounded-0" type="button" id="searchNext" style="padding: 0.35rem 0.6rem;"><i class="bi bi-chevron-down"></i></button>
+            </div>
         </div>
         <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm" target="_blank" style="white-space: nowrap;">
             <i class="bi bi-printer me-1"></i> Print Blank Sheet
@@ -300,3 +318,140 @@ html.dark-theme .eval-remarks-input {
         </button>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('gradingSearch');
+    const searchCount = document.getElementById('searchCount');
+    const searchNext = document.getElementById('searchNext');
+    const searchPrev = document.getElementById('searchPrev');
+    const table = document.querySelector('.eval-table');
+    
+    let matches = [];
+    let currentIndex = -1;
+
+    function clearHighlights() {
+        const highlights = table.querySelectorAll('.search-highlight');
+        highlights.forEach(h => {
+            const parent = h.parentNode;
+            parent.replaceChild(document.createTextNode(h.textContent), h);
+            parent.normalize();
+        });
+        matches = [];
+        currentIndex = -1;
+        searchCount.textContent = '0/0';
+    }
+
+    function getTextNodes(node) {
+        let textNodes = [];
+        if (node.nodeType === 3) {
+            textNodes.push(node);
+        } else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE' && node.nodeName !== 'INPUT' && node.nodeName !== 'TEXTAREA') {
+            for (let child of node.childNodes) {
+                textNodes.push(...getTextNodes(child));
+            }
+        }
+        return textNodes;
+    }
+
+    function highlightText(term) {
+        clearHighlights();
+        if (!term) {
+            // Restore visibility of all tbodies if we were previously filtering
+            document.querySelectorAll('.eval-group-tbody').forEach(tb => tb.style.display = '');
+            return;
+        }
+
+        const textNodes = getTextNodes(table);
+        const termLower = term.toLowerCase();
+
+        textNodes.forEach(node => {
+            let nodeText = node.nodeValue;
+            let nodeTextLower = nodeText.toLowerCase();
+            let index;
+
+            while ((index = nodeTextLower.indexOf(termLower)) !== -1) {
+                const matchText = nodeText.substr(index, term.length);
+                const beforeText = nodeText.substr(0, index);
+                const afterText = nodeText.substr(index + term.length);
+
+                const mark = document.createElement('span');
+                mark.className = 'search-highlight';
+                mark.textContent = matchText;
+
+                const beforeNode = document.createTextNode(beforeText);
+                const afterNode = document.createTextNode(afterText);
+
+                const parent = node.parentNode;
+                parent.replaceChild(afterNode, node);
+                parent.insertBefore(mark, afterNode);
+                parent.insertBefore(beforeNode, mark);
+
+                matches.push(mark);
+
+                // Update node and its text for the next iteration of the while loop
+                node = afterNode;
+                nodeText = node.nodeValue;
+                nodeTextLower = nodeText.toLowerCase();
+            }
+        });
+
+        if (matches.length > 0) {
+            currentIndex = 0;
+            updateHighlights();
+        } else {
+            searchCount.textContent = '0/0';
+        }
+        
+        // Ensure all rows are visible since we are no longer filtering out rows, but highlighting!
+        document.querySelectorAll('.eval-group-tbody').forEach(tb => tb.style.display = '');
+    }
+
+    function updateHighlights() {
+        if (matches.length === 0) return;
+        
+        matches.forEach(m => m.classList.remove('active'));
+        const activeMatch = matches[currentIndex];
+        activeMatch.classList.add('active');
+        
+        searchCount.textContent = `${currentIndex + 1}/${matches.length}`;
+        
+        // Scroll into view smoothly
+        activeMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    if (searchInput && table) {
+        searchInput.addEventListener('input', function(e) {
+            highlightText(e.target.value.trim());
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (matches.length > 0) {
+                    if (e.shiftKey) {
+                        currentIndex = (currentIndex - 1 + matches.length) % matches.length;
+                    } else {
+                        currentIndex = (currentIndex + 1) % matches.length;
+                    }
+                    updateHighlights();
+                }
+            }
+        });
+
+        searchNext.addEventListener('click', function() {
+            if (matches.length > 0) {
+                currentIndex = (currentIndex + 1) % matches.length;
+                updateHighlights();
+            }
+        });
+
+        searchPrev.addEventListener('click', function() {
+            if (matches.length > 0) {
+                currentIndex = (currentIndex - 1 + matches.length) % matches.length;
+                updateHighlights();
+            }
+        });
+    }
+});
+</script>
