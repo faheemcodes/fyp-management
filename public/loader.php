@@ -1,5 +1,5 @@
 <!-- Global Page Loader -->
-<div id="global-loader" class="global-loader">
+<div id="global-loader" class="global-loader hidden">
     <div class="loader-content">
         <div class="loader"></div>
     </div>
@@ -14,14 +14,14 @@
         width: 100vw;
         height: 100vh;
         background: rgba(0, 0, 0, 0.3);       /* Dim light gray overlay */
-        backdrop-filter: blur(5px);           /* Subtle glassmorphism blur effect */
-        -webkit-backdrop-filter: blur(5px);
+        backdrop-filter: blur(2px);           /* Slighter blur effect */
+        -webkit-backdrop-filter: blur(2px);
         z-index: 99999;                       /* Highest z-index to stay on top */
         display: flex;
         justify-content: center;
         align-items: center;
         opacity: 1;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     /* Hidden State */
@@ -40,12 +40,11 @@
     /* Custom Loader Animation */
     .loader {
         --color-1: #fff;
-        --color-2: #3b82f6; /* Back to primary blue */
+        --color-2: #3b82f6; 
         --size: 1.2px;      
 
         width: calc(48 * var(--size));
         height: calc(48 * var(--size));
-        /* Increased from 3 to 5 for a thicker ring */
         border: calc(5 * var(--size)) solid var(--color-1); 
         border-radius: 50%;
         display: inline-block;
@@ -63,7 +62,6 @@
         width: calc(56 * var(--size));
         height: calc(56 * var(--size));
         border-radius: 50%;
-        /* Increased from 3 to 5 for a thicker ring */
         border: calc(5 * var(--size)) solid;
         border-color: var(--color-2) transparent;
     }
@@ -79,18 +77,15 @@
 </style>
 
 <script>
-    // Hide the loader once the page has fully loaded
-    window.addEventListener('load', function() {
+    // Ensure loader is hidden when coming back via browser back button (bfcache)
+    window.addEventListener('pageshow', function(event) {
         const loader = document.getElementById('global-loader');
         if (loader) {
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                setTimeout(() => loader.remove(), 400); 
-            }, 200); 
+            loader.classList.add('hidden');
         }
     });
 
-    // Show the loader if user clicks a link 
+    // Show the loader if user clicks a standard link (waiting for next page)
     document.addEventListener('click', function(e) {
         const target = e.target.closest('a');
         if (target 
@@ -106,6 +101,15 @@
                 document.body.appendChild(loader); 
                 loader.classList.remove('hidden');
             }
+        }
+    });
+
+    // Show loader on form submissions
+    document.addEventListener('submit', function(e) {
+        const loader = document.getElementById('global-loader');
+        if (loader) {
+            document.body.appendChild(loader);
+            loader.classList.remove('hidden');
         }
     });
 </script>
