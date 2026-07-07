@@ -23,6 +23,9 @@
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark-theme');
         }
+        if (localStorage.getItem('sidebar_collapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed');
+        }
     </script>
 </head>
 <body>

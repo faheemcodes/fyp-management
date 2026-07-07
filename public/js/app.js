@@ -35,8 +35,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (desktopSidebarCollapse) {
             desktopSidebarCollapse.addEventListener('click', function(e) {
                 e.stopPropagation();
-                sidebar.classList.toggle('collapsed');
-                if (content) content.classList.toggle('collapsed');
+                document.documentElement.classList.toggle('sidebar-collapsed');
+                
+                if (document.documentElement.classList.contains('sidebar-collapsed')) {
+                    localStorage.setItem('sidebar_collapsed', 'true');
+                } else {
+                    localStorage.setItem('sidebar_collapsed', 'false');
+                }
             });
         }
 

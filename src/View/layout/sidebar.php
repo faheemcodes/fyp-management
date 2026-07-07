@@ -34,12 +34,12 @@ if ($urlPrefix === '/') {
                 <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
             </div>
         </a>
-        <button type="button" id="desktopSidebarCollapse" class="btn btn-link text-white p-0 d-none d-lg-flex align-items-center justify-content-center" style="opacity: 0.7; transition: opacity 0.2s;" title="Toggle Sidebar">
+        <button type="button" id="desktopSidebarCollapse" class="btn btn-link text-white p-0 d-none d-lg-flex align-items-center justify-content-center" style="width: 36px; height: 36px; opacity: 0.7; transition: all 0.2s;" title="Toggle Sidebar">
             <i class="bi bi-layout-sidebar-inset" style="font-size: 1.2rem;"></i>
         </button>
     </div>
 
-    <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto;">
+    <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto; overflow-x: hidden;">
         <?php if ($role === 'admin'): ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/dashboard" class="nav-link <?php echo isActive('/admin/dashboard', $currentUri); ?>">
