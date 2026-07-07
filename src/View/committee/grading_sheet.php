@@ -1,16 +1,139 @@
 <?php 
 $title = "Online Grading Sheet - " . htmlspecialchars($stage);
 $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+
+// Determine hero icon and color scheme based on stage
+$heroIcon = 'bi-file-earmark-text';
+$heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
+$heroIconGradient = 'conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa)';
+$heroSubtitle = 'Assign and manage marks for all assigned groups.';
+$stageBadgeColor = '#3b82f6';
+
+if ($stage === 'Proposal Defence Presentation') {
+    $heroIcon = 'bi-file-earmark-text';
+    $heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
+    $heroIconGradient = 'conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa)';
+    $heroSubtitle = 'Grade project proposals and provide initial feedback.';
+    $stageBadgeColor = '#3b82f6';
+} elseif ($stage === 'FYP Progress Presentation') {
+    $heroIcon = 'bi-graph-up-arrow';
+    $heroGradient = 'linear-gradient(135deg, #042f2e 0%, #065f46 50%, #042f2e 100%)';
+    $heroIconGradient = 'conic-gradient(from 0deg, #6ee7b7, #10b981, #047857, #6ee7b7)';
+    $heroSubtitle = 'Evaluate project progress and development milestones.';
+    $stageBadgeColor = '#10b981';
+} elseif ($stage === 'Final Presentation') {
+    $heroIcon = 'bi-trophy';
+    $heroGradient = 'linear-gradient(135deg, #1c1917 0%, #78350f 50%, #1c1917 100%)';
+    $heroIconGradient = 'conic-gradient(from 0deg, #fbbf24, #f59e0b, #b45309, #fbbf24)';
+    $heroSubtitle = 'Complete final evaluation including presentation, thesis, and demo.';
+    $stageBadgeColor = '#f59e0b';
+}
+
+$groupCount = count($grouped ?? []);
 ?>
 
 <style>
-.eval-table-wrapper {
-    background: var(--card-bg);
+/* ─── Hero Section ─── */
+.gs-hero {
+    background: <?php echo $heroGradient; ?>;
     border-radius: var(--border-radius-lg);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--card-shadow);
-    overflow-x: auto;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
     margin-bottom: 24px;
+}
+.gs-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.gs-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -5%;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.gs-hero-icon {
+    width: 52px;
+    height: 52px;
+    background: <?php echo $heroIconGradient; ?>;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.gs-hero-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 18px;
+    backdrop-filter: blur(4px);
+}
+.gs-hero-stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+.gs-hero-stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+}
+
+/* ─── Table Section ─── */
+.gs-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.gs-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.gs-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.gs-section-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* ─── Eval Table ─── */
+.eval-table-wrapper {
+    overflow-x: auto;
 }
 .eval-table {
     width: 100%;
@@ -28,6 +151,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     color: var(--text-secondary);
     font-weight: 600;
     text-align: center;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 .eval-table td.merged-cell {
     text-align: center;
@@ -41,6 +167,14 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     padding: 10px 5px;
     font-size: 0.75rem;
 }
+.eval-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+.eval-table tbody tr:hover {
+    background-color: rgba(59,130,246,0.03);
+}
+
+/* ─── Inputs ─── */
 .eval-input {
     width: 35px !important;
     min-width: 35px !important;
@@ -53,8 +187,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     color: var(--text-primary) !important;
     font-size: 0.9rem;
     font-weight: 600;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
-/* Hide the up/down arrows on number inputs to save space */
 .eval-input::-webkit-outer-spin-button,
 .eval-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -68,7 +202,7 @@ html.dark-theme .eval-input {
 }
 .eval-input:focus {
     border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.1) !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
     outline: none;
 }
 .eval-remarks-input {
@@ -76,125 +210,182 @@ html.dark-theme .eval-input {
     min-width: 150px;
     background-color: var(--form-bg) !important;
     border: 1px solid #cbd5e1 !important;
-    border-radius: 4px !important;
-    padding: 6px !important;
+    border-radius: 6px !important;
+    padding: 6px 8px !important;
     color: var(--text-primary) !important;
     font-size: 0.8rem;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 html.dark-theme .eval-remarks-input {
     border-color: #334155 !important;
 }
+.eval-remarks-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
+    outline: none;
+}
 
+/* ─── Group Code Badge ─── */
+.gs-group-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    padding: 0.3rem 0.55rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    font-family: monospace;
+    display: inline-block;
+}
+html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+/* ─── Search Highlights ─── */
 .search-highlight {
-    background-color: #fde047; /* Yellow */
+    background-color: #fde047;
     color: #000;
     border-radius: 2px;
     padding: 0 2px;
 }
 .search-highlight.active {
-    background-color: #f97316; /* Orange */
+    background-color: #f97316;
     color: #fff;
 }
 
-/* Custom Search Bar UI */
+/* ─── Custom Search Bar ─── */
 .custom-search-bar {
     display: flex;
     align-items: center;
-    background-color: var(--form-bg);
-    border: 1px solid #cbd5e1;
+    background-color: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     border-radius: 50rem;
-    padding: 0.35rem 0.5rem;
-    max-width: 320px;
+    padding: 0.3rem 0.5rem;
+    max-width: 300px;
     width: 100%;
     transition: all 0.2s ease;
-}
-html.dark-theme .custom-search-bar {
-    border-color: #334155;
+    backdrop-filter: blur(4px);
 }
 .custom-search-bar:focus-within {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    background-color: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.08) !important;
 }
 .custom-search-bar .search-icon {
-    color: #94a3b8;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    font-size: 0.95rem;
+    color: rgba(255,255,255,0.5);
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    font-size: 0.9rem;
 }
 .custom-search-bar .search-input {
     border: none;
     background: transparent;
     outline: none;
     flex-grow: 1;
-    color: var(--text-primary);
-    font-size: 0.9rem;
+    color: #fff;
+    font-size: 0.85rem;
     min-width: 0;
 }
 .custom-search-bar .search-input::placeholder {
-    color: #94a3b8;
+    color: rgba(255,255,255,0.4);
 }
 .custom-search-bar .search-count {
-    font-size: 0.8rem;
-    color: #64748b;
-    margin: 0 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    margin: 0 0.4rem;
     font-variant-numeric: tabular-nums;
     font-weight: 500;
+    white-space: nowrap;
 }
 .custom-search-bar .search-nav {
     display: flex;
-    border-left: 1px solid #e2e8f0;
-    padding-left: 0.25rem;
-}
-html.dark-theme .custom-search-bar .search-nav {
-    border-left-color: #334155;
+    border-left: 1px solid rgba(255,255,255,0.15);
+    padding-left: 0.2rem;
 }
 .custom-search-bar .search-btn {
     background: transparent;
     border: none;
-    color: #64748b;
-    padding: 0.25rem 0.5rem;
+    color: rgba(255,255,255,0.5);
+    padding: 0.2rem 0.4rem;
     border-radius: 50rem;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.85rem;
 }
 .custom-search-bar .search-btn:hover {
-    background-color: rgba(0,0,0,0.06);
-    color: var(--text-primary);
-}
-html.dark-theme .custom-search-bar .search-btn:hover {
     background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+/* ─── Save Button ─── */
+.gs-save-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 40px;
+    border-radius: 50rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+}
+.gs-save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    color: #fff;
 }
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0 text-gray-800 fw-bold"><?php echo htmlspecialchars($stage); ?> Grading</h1>
-    <div class="d-flex gap-3 align-items-center">
-        <div class="custom-search-bar shadow-sm">
-            <i class="bi bi-search search-icon"></i>
-            <input type="text" id="gradingSearch" class="search-input" placeholder="Find in page...">
-            <span id="searchCount" class="search-count" style="display: none;">0/0</span>
-            <div class="search-nav">
-                <button type="button" id="searchPrev" class="search-btn"><i class="bi bi-chevron-up"></i></button>
-                <button type="button" id="searchNext" class="search-btn"><i class="bi bi-chevron-down"></i></button>
+<!-- Hero Section -->
+<div class="gs-hero">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative" style="z-index: 1;">
+        <div class="d-flex align-items-center gap-3">
+            <div class="gs-hero-icon shadow-sm">
+                <i class="bi <?php echo $heroIcon; ?>"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.3rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($stage); ?> Grading</h4>
+                <p class="mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.82rem;"><?php echo $heroSubtitle; ?></p>
             </div>
         </div>
-        <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm rounded-pill px-4" target="_blank" style="white-space: nowrap; font-weight: 600;">
-            <i class="bi bi-printer me-1"></i> Print
-        </a>
+
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <!-- Search Bar -->
+            <div class="custom-search-bar">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" id="gradingSearch" class="search-input" placeholder="Find in page...">
+                <span id="searchCount" class="search-count" style="display: none;">0/0</span>
+                <div class="search-nav">
+                    <button type="button" id="searchPrev" class="search-btn"><i class="bi bi-chevron-up"></i></button>
+                    <button type="button" id="searchNext" class="search-btn"><i class="bi bi-chevron-down"></i></button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="gs-hero-stat">
+                <div>
+                    <div class="gs-hero-stat-value"><?php echo $groupCount; ?></div>
+                    <div class="gs-hero-stat-label">Groups</div>
+                </div>
+            </div>
+
+            <!-- Print Button -->
+            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;">
+                <i class="bi bi-printer me-1"></i> Print
+            </a>
+        </div>
     </div>
 </div>
 
 <?php if (isset($_SESSION['flash_success'])): ?>
-    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg); border: none;">
         <i class="bi bi-check-circle-fill me-2"></i><?php echo $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 <?php if (isset($_SESSION['flash_error'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg); border: none;">
         <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -203,187 +394,212 @@ html.dark-theme .custom-search-bar .search-btn:hover {
 <form action="<?php echo $bp; ?>/committee/grading-sheet/save" method="POST">
     <input type="hidden" name="stage" value="<?php echo htmlspecialchars($stage); ?>">
     
-    <div class="eval-table-wrapper shadow-sm">
-        <table class="eval-table">
-            <?php if ($stage === 'FYP Progress Presentation' || $stage === 'Proposal Defence Presentation'): ?>
-                <thead>
-                    <tr>
-                        <th rowspan="2" style="width: 40px;">Sr.No</th>
-                        <th rowspan="2" style="width: 100px;">Project ID</th>
-                        <th rowspan="2" style="width: 200px;">Title of Project</th>
-                        <th rowspan="2" style="width: 150px;">Primary Supervisor</th>
-                        <th colspan="2">Group Members</th>
-                        <?php if ($stage === 'FYP Progress Presentation'): ?>
-                            <th rowspan="2" style="width: 250px;">Previous comments</th>
-                        <?php endif; ?>
-                        <th rowspan="2" style="width: 100px;">Marks (Out of 40)</th>
-                        <th rowspan="2" style="width: 200px;">Your Group Remarks</th>
-                    </tr>
-                    <tr>
-                        <th style="width: 100px;">Roll No</th>
-                        <th style="width: 150px;">Full Name</th>
-                    </tr>
-                </thead>
-                <?php 
-                $srNo = 1;
-                foreach ($grouped as $groupId => $members): 
-                    $numMembers = count($members);
-                    $firstMember = $members[0];
-                ?>
-                <tbody class="eval-group-tbody">
+    <div class="gs-section">
+        <div class="gs-section-header">
+            <div class="gs-section-title">
+                <div class="gs-section-icon" style="background: rgba(<?php echo $stage === 'FYP Progress Presentation' ? '16,185,129' : ($stage === 'Final Presentation' ? '245,158,11' : '59,130,246'); ?>,0.1); color: <?php echo $stageBadgeColor; ?>;">
+                    <i class="bi <?php echo $heroIcon; ?>"></i>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem; color: var(--text-primary);">Grading Sheet</h6>
+                    <small class="text-muted" style="font-size: 0.78rem;">Enter marks for each student below</small>
+                </div>
+            </div>
+            <div>
+                <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-light rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.8rem;">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Evaluations
+                </a>
+            </div>
+        </div>
+
+        <div class="eval-table-wrapper">
+            <table class="eval-table">
+                <?php if ($stage === 'FYP Progress Presentation' || $stage === 'Proposal Defence Presentation'): ?>
+                    <thead>
                         <tr>
-                            <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
-                            <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
-                                <span class="badge bg-light text-dark border"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
-                            </td>
-                            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
-                            
-                            <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
-                            <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
-                            
+                            <th rowspan="2" style="width: 40px;">Sr.No</th>
+                            <th rowspan="2" style="width: 100px;">Project ID</th>
+                            <th rowspan="2" style="width: 200px;">Title of Project</th>
+                            <th rowspan="2" style="width: 150px;">Primary Supervisor</th>
+                            <th colspan="2">Group Members</th>
                             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                                <td rowspan="<?php echo $numMembers; ?>" style="font-size: 0.8rem; color: var(--text-secondary);">
-                                    <?php echo htmlspecialchars($firstMember['previous_comments'] ?: 'None'); ?>
-                                </td>
+                                <th rowspan="2" style="width: 250px;">Previous comments</th>
                             <?php endif; ?>
-                            
-                            <!-- First Member Mark -->
-                            <td class="text-center">
-                                <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][total]" value="<?php echo htmlspecialchars($firstMember['marks']['total'] ?? ''); ?>">
-                            </td>
-                            
-                            <!-- Group Remarks -->
-                            <td rowspan="<?php echo $numMembers; ?>">
-                                <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Enter remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
-                            </td>
+                            <th rowspan="2" style="width: 100px;">Marks (Out of 40)</th>
+                            <th rowspan="2" style="width: 200px;">Your Group Remarks</th>
                         </tr>
-                        <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+                        <tr>
+                            <th style="width: 100px;">Roll No</th>
+                            <th style="width: 150px;">Full Name</th>
+                        </tr>
+                    </thead>
+                    <?php 
+                    $srNo = 1;
+                    foreach ($grouped as $groupId => $members): 
+                        $numMembers = count($members);
+                        $firstMember = $members[0];
+                    ?>
+                    <tbody class="eval-group-tbody">
                             <tr>
-                                <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
-                                <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
+                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
+                                    <span class="gs-group-badge"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
+                                </td>
+                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                                
+                                <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+                                <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+                                
+                                <?php if ($stage === 'FYP Progress Presentation'): ?>
+                                    <td rowspan="<?php echo $numMembers; ?>" style="font-size: 0.8rem; color: var(--text-secondary);">
+                                        <?php echo htmlspecialchars($firstMember['previous_comments'] ?: 'None'); ?>
+                                    </td>
+                                <?php endif; ?>
+                                
+                                <!-- First Member Mark -->
                                 <td class="text-center">
-                                    <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][total]" value="<?php echo htmlspecialchars($member['marks']['total'] ?? ''); ?>">
+                                    <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][total]" value="<?php echo htmlspecialchars($firstMember['marks']['total'] ?? ''); ?>">
+                                </td>
+                                
+                                <!-- Group Remarks -->
+                                <td rowspan="<?php echo $numMembers; ?>">
+                                    <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Enter remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
                                 </td>
                             </tr>
-                        <?php endfor; ?>
-                </tbody>
-                <?php endforeach; ?>
-                <tbody>
-                    <?php if (empty($grouped)): ?>
-                        <tr>
-                            <td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="text-center py-5 text-muted">No approved projects assigned to you for evaluation.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-                
-            <?php elseif ($stage === 'Final Presentation'): ?>
-                <thead>
-                    <tr>
-                        <th rowspan="2" style="width: 40px;">Sr.No</th>
-                        <th rowspan="2" style="width: 90px;">Project ID</th>
-                        <th rowspan="2" style="width: 150px;">Title of Project</th>
-                        <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
-                        <th colspan="2">Group Members</th>
-                        <th colspan="5">Presentation<br>(25 marks)</th>
-                        <th colspan="5">Thesis<br>(25 marks)</th>
-                        <th rowspan="2" class="vertical-text text-center">Project<br>Demo<br>(25 marks)</th>
-                        <th rowspan="2" style="width: 150px;">Your Group Remarks</th>
-                    </tr>
-                    <tr>
-                        <th style="width: 90px;">Roll No</th>
-                        <th style="width: 140px;">Full Name</th>
-                        
-                        <!-- Presentation Sub -->
-                        <th class="vertical-text">Contents (5)</th>
-                        <th class="vertical-text">Time spent (5)</th>
-                        <th class="vertical-text">Confidence (5)</th>
-                        <th class="vertical-text">Q & A (5)</th>
-                        <th class="vertical-text">Language used (5)</th>
-                        
-                        <!-- Thesis Sub -->
-                        <th class="vertical-text">Contents (5)</th>
-                        <th class="vertical-text">Formatting (5)</th>
-                        <th class="vertical-text">Referencing (5)</th>
-                        <th class="vertical-text">Fig. & tables (5)</th>
-                        <th class="vertical-text">Completeness (5)</th>
-                    </tr>
-                </thead>
-                <?php 
-                $srNo = 1;
-                foreach ($grouped as $groupId => $members): 
-                    $numMembers = count($members);
-                    $firstMember = $members[0];
-                ?>
-                <tbody class="eval-group-tbody">
-                        <tr>
-                            <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
-                            <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
-                                <span class="badge bg-light text-dark border"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
-                            </td>
-                            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
-                            
-                            <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
-                            <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
-                            
-                            <!-- Presentation Fields -->
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_contents'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_time'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_confidence'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_qa'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_language'] ?? ''); ?>"></td>
-                            
-                            <!-- Thesis Fields -->
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_contents'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_formatting'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_referencing'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_fig'] ?? ''); ?>"></td>
-                            <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_completeness'] ?? ''); ?>"></td>
-                            
-                            <!-- Demo Field -->
-                            <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($firstMember['marks']['demo_total'] ?? ''); ?>"></td>
-                            
-                            <!-- Group Remarks -->
-                            <td rowspan="<?php echo $numMembers; ?>">
-                                <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
-                            </td>
-                        </tr>
-                        <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+                            <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+                                    <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+                                    <td class="text-center">
+                                        <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][total]" value="<?php echo htmlspecialchars($member['marks']['total'] ?? ''); ?>">
+                                    </td>
+                                </tr>
+                            <?php endfor; ?>
+                    </tbody>
+                    <?php endforeach; ?>
+                    <tbody>
+                        <?php if (empty($grouped)): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
-                                <td><?php echo htmlspecialchars($member['student_name']); ?></td>
-                                
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($member['marks']['pres_contents'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($member['marks']['pres_time'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($member['marks']['pres_confidence'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($member['marks']['pres_qa'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($member['marks']['pres_language'] ?? ''); ?>"></td>
-                                
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($member['marks']['thesis_contents'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($member['marks']['thesis_formatting'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($member['marks']['thesis_referencing'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($member['marks']['thesis_fig'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($member['marks']['thesis_completeness'] ?? ''); ?>"></td>
-                                
-                                <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($member['marks']['demo_total'] ?? ''); ?>"></td>
+                                <td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+                                    No approved projects assigned to you for evaluation.
+                                </td>
                             </tr>
-                        <?php endfor; ?>
-                </tbody>
-                <?php endforeach; ?>
-                <tbody>
-                    <?php if (empty($grouped)): ?>
+                        <?php endif; ?>
+                    </tbody>
+                    
+                <?php elseif ($stage === 'Final Presentation'): ?>
+                    <thead>
                         <tr>
-                            <td colspan="18" class="text-center py-5 text-muted">No approved projects assigned to you for evaluation.</td>
+                            <th rowspan="2" style="width: 40px;">Sr.No</th>
+                            <th rowspan="2" style="width: 90px;">Project ID</th>
+                            <th rowspan="2" style="width: 150px;">Title of Project</th>
+                            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+                            <th colspan="2">Group Members</th>
+                            <th colspan="5">Presentation<br>(25 marks)</th>
+                            <th colspan="5">Thesis<br>(25 marks)</th>
+                            <th rowspan="2" class="vertical-text text-center">Project<br>Demo<br>(25 marks)</th>
+                            <th rowspan="2" style="width: 150px;">Your Group Remarks</th>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            <?php endif; ?>
-        </table>
+                        <tr>
+                            <th style="width: 90px;">Roll No</th>
+                            <th style="width: 140px;">Full Name</th>
+                            
+                            <!-- Presentation Sub -->
+                            <th class="vertical-text">Contents (5)</th>
+                            <th class="vertical-text">Time spent (5)</th>
+                            <th class="vertical-text">Confidence (5)</th>
+                            <th class="vertical-text">Q & A (5)</th>
+                            <th class="vertical-text">Language used (5)</th>
+                            
+                            <!-- Thesis Sub -->
+                            <th class="vertical-text">Contents (5)</th>
+                            <th class="vertical-text">Formatting (5)</th>
+                            <th class="vertical-text">Referencing (5)</th>
+                            <th class="vertical-text">Fig. & tables (5)</th>
+                            <th class="vertical-text">Completeness (5)</th>
+                        </tr>
+                    </thead>
+                    <?php 
+                    $srNo = 1;
+                    foreach ($grouped as $groupId => $members): 
+                        $numMembers = count($members);
+                        $firstMember = $members[0];
+                    ?>
+                    <tbody class="eval-group-tbody">
+                            <tr>
+                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
+                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
+                                    <span class="gs-group-badge"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
+                                </td>
+                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                                
+                                <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+                                <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+                                
+                                <!-- Presentation Fields -->
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_contents'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_time'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_confidence'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_qa'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_language'] ?? ''); ?>"></td>
+                                
+                                <!-- Thesis Fields -->
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_contents'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_formatting'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_referencing'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_fig'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_completeness'] ?? ''); ?>"></td>
+                                
+                                <!-- Demo Field -->
+                                <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($firstMember['marks']['demo_total'] ?? ''); ?>"></td>
+                                
+                                <!-- Group Remarks -->
+                                <td rowspan="<?php echo $numMembers; ?>">
+                                    <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
+                                </td>
+                            </tr>
+                            <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+                                    <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+                                    
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($member['marks']['pres_contents'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($member['marks']['pres_time'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($member['marks']['pres_confidence'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($member['marks']['pres_qa'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($member['marks']['pres_language'] ?? ''); ?>"></td>
+                                    
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($member['marks']['thesis_contents'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($member['marks']['thesis_formatting'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($member['marks']['thesis_referencing'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($member['marks']['thesis_fig'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($member['marks']['thesis_completeness'] ?? ''); ?>"></td>
+                                    
+                                    <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($member['marks']['demo_total'] ?? ''); ?>"></td>
+                                </tr>
+                            <?php endfor; ?>
+                    </tbody>
+                    <?php endforeach; ?>
+                    <tbody>
+                        <?php if (empty($grouped)): ?>
+                            <tr>
+                                <td colspan="18" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+                                    No approved projects assigned to you for evaluation.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                <?php endif; ?>
+            </table>
+        </div>
     </div>
 
     <div class="d-flex justify-content-end mb-5">
-        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm rounded-pill" style="font-size: 1.1rem;">
+        <button type="submit" class="gs-save-btn">
             <i class="bi bi-save2-fill me-2"></i> Save All Marks
         </button>
     </div>
@@ -410,6 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
         matches = [];
         currentIndex = -1;
         searchCount.textContent = '0/0';
+        searchCount.style.display = 'none';
     }
 
     function getTextNodes(node) {
@@ -427,11 +644,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function highlightText(term) {
         clearHighlights();
         if (!term) {
-            // Restore visibility of all tbodies if we were previously filtering
             document.querySelectorAll('.eval-group-tbody').forEach(tb => tb.style.display = '');
             return;
         }
 
+        searchCount.style.display = '';
         const textNodes = getTextNodes(table);
         const termLower = term.toLowerCase();
 
@@ -459,7 +676,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 matches.push(mark);
 
-                // Update node and its text for the next iteration of the while loop
                 node = afterNode;
                 nodeText = node.nodeValue;
                 nodeTextLower = nodeText.toLowerCase();
@@ -473,7 +689,6 @@ document.addEventListener('DOMContentLoaded', function() {
             searchCount.textContent = '0/0';
         }
         
-        // Ensure all rows are visible since we are no longer filtering out rows, but highlighting!
         document.querySelectorAll('.eval-group-tbody').forEach(tb => tb.style.display = '');
     }
 
@@ -486,7 +701,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         searchCount.textContent = `${currentIndex + 1}/${matches.length}`;
         
-        // Scroll into view smoothly
         activeMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
