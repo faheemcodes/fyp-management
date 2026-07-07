@@ -54,7 +54,7 @@
         }
         table.sheet th,
         table.sheet td {
-            border: 1px solid #000;
+            border: 1.5px solid #000;
             padding: 3px 4px;
             vertical-align: middle;
         }
@@ -128,7 +128,7 @@
             .no-print { display: none !important; }
             table.sheet th,
             table.sheet td {
-                border: 1px solid #000 !important;
+                border: 1.5px solid #000 !important;
             }
             table.sheet th {
                 background: #e8e8e8 !important;
