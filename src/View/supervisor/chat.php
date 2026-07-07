@@ -718,37 +718,54 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         return map[cls] || map.generic;
     }
 
-    function showFileChip(file) {
-        selectedFile = file;
-        fileChipName.textContent = file.name;
-        fileChipSize.textContent = formatFileSize(file.size);
-        const cls = getChipClass(file);
-
-        if (cls === 'img') {
-            const url = URL.createObjectURL(file);
-            fileChipVisual.innerHTML = `<img src="${url}" class="file-chip-thumb" alt="preview">`;
-        } else {
-            fileChipVisual.innerHTML = `<div class="file-chip-icon ${cls}"><i class="bi ${getChipIcon(cls)}"></i></div>`;
+    function handleFiles(files) {
+        for(let i=0; i<files.length; i++) {
+            selectedFiles.push(files[i]);
         }
-        fileChip.classList.add('active');
+        updateFileChips();
         messageInput.required = false;
     }
 
-    function clearFileChip() {
-        selectedFiles = [];
-        fileInput.value = '';
-        fileChip.classList.remove('active');
-        fileChipVisual.innerHTML = '';
-        if (!messageInput.value.trim()) messageInput.required = true;
-    }
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            handleFiles(e.target.files);
+    function updateFileChips() {
+        if (selectedFiles.length === 0) {
+            fileChip.classList.remove('active');
+            fileChipVisual.innerHTML = '';
+            messageInput.required = true;
+            return;
         }
-    });
-
-    removeFileBtn.addEventListener('click', clearFileChip);
+        fileChip.classList.add('active');
+        let html = '';
+        selectedFiles.forEach((file, index) => {
+            const cls = getChipClass(file);
+            let phtml = '';
+            if (cls === 'img') {
+                const url = URL.createObjectURL(file);
+                phtml = `<img src="${url}" style="width:20px;height:20px;object-fit:cover;border-radius:4px;margin-right:4px;" alt="preview">`;
+            } else {
+                phtml = `<i class="bi ${getChipIcon(cls)} text-muted me-1"></i>`;
+            }
+            html += `
+                <div class="file-chip-item d-inline-flex align-items-center bg-white border rounded-pill px-2 py-1 me-2 mb-1 shadow-sm" style="font-size:0.75rem;">
+                    ${phtml}
+                    <span class="text-truncate" style="max-width: 100px;">${file.name}</span>
+                    <button type="button" class="btn-close ms-2 remove-file-btn" data-index="${index}" style="font-size: 0.5rem;"></button>
+                </div>
+            `;
+        });
+        
+        fileChipVisual.innerHTML = html;
+        
+        // Add listeners to remove buttons
+        const removeBtns = fileChipVisual.querySelectorAll('.remove-file-btn');
+        removeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-index'));
+                selectedFiles.splice(idx, 1);
+                updateFileChips();
+                if(selectedFiles.length === 0) fileInput.value = '';
+            });
+        });
+    }
 
     // Drag & Drop
     let dragCounter = 0;
