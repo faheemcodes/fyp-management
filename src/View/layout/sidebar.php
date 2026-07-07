@@ -296,9 +296,6 @@ if ($urlPrefix === '/') {
         <div class="container-fluid p-0">
             <!-- Desktop Branding -->
             <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?? 'login'); ?>/dashboard" class="d-none d-sm-flex align-items-center gap-3 text-decoration-none" style="cursor: pointer;">
-                <div style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                </div>
                 <div>
                     <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.95rem; letter-spacing: -0.01em;">Faculty of Engineering &amp; Technology</h6>
                     <small style="color: var(--text-secondary); font-size: 0.72rem; letter-spacing: 0.02em; font-weight: 500;">University of Sindh, Jamshoro</small>

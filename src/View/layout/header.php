@@ -17,6 +17,7 @@
         $basePath = '';
     }
     ?>
+    <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
     <link href="<?php echo $basePath; ?>/css/style.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script>
         if (localStorage.getItem('theme') === 'dark') {

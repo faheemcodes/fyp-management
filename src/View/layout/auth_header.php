@@ -13,6 +13,7 @@
         $basePath = '';
     }
     ?>
+    <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
     <link href="<?php echo $basePath; ?>/css/style.css" rel="stylesheet">
     <link href="<?php echo $basePath; ?>/css/auth.css" rel="stylesheet">
     <script>
