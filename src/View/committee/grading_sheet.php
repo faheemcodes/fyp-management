@@ -338,6 +338,35 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     box-shadow: 0 6px 20px rgba(59,130,246,0.4);
     color: #fff;
 }
+
+/* ─── Mobile Responsiveness ─── */
+@media (max-width: 768px) {
+    .gs-hero {
+        padding: 20px 20px;
+        position: static; /* Disable sticky on mobile as it takes too much screen space */
+        margin-bottom: 16px;
+    }
+    .gs-hero .d-flex.flex-column > div {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .custom-search-bar {
+        max-width: 100%;
+    }
+    .eval-table-wrapper {
+        padding-bottom: 10px;
+    }
+    .gs-save-btn {
+        width: 100%;
+        padding: 14px;
+        text-align: center;
+    }
+    .gs-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
 </style>
 
 <!-- Hero Section -->
