@@ -350,7 +350,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
             </div>
         </div>
 
-        <div class="d-flex align-items-center gap-3 flex-wrap">
+        <div class="d-flex align-items-center gap-3">
             <!-- Search Bar -->
             <div class="custom-search-bar">
                 <i class="bi bi-search search-icon"></i>
@@ -362,16 +362,8 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
                 </div>
             </div>
 
-            <!-- Stats -->
-            <div class="gs-hero-stat">
-                <div>
-                    <div class="gs-hero-stat-value"><?php echo $groupCount; ?></div>
-                    <div class="gs-hero-stat-label">Groups</div>
-                </div>
-            </div>
-
             <!-- Print Button -->
-            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;">
+            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem; white-space: nowrap;">
                 <i class="bi bi-printer me-1"></i> Print
             </a>
         </div>
