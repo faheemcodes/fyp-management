@@ -33,7 +33,7 @@ class AuthController extends BaseController {
         $stats['supervisors'] = $db->query("SELECT COUNT(*) FROM supervisors")->fetchColumn();
         $stats['projects'] = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
         $stats['students'] = $db->query("SELECT COUNT(*) FROM students")->fetchColumn();
-        $stats['departments'] = 4; // IT, SE, Telecom, Electronics
+        $stats['departments'] = 5; // IT, SE, Telecom, Electronics, Data Science
         
         $this->render('landing', [
             'pageTitle' => 'FYP Portal - Faculty of Engineering & Technology, University of Sindh',

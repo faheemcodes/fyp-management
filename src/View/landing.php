@@ -293,7 +293,7 @@
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <h3><?php echo $stats['departments'] ?? 4; ?></h3>
+                        <h3><?php echo $stats['departments'] ?? 5; ?></h3>
                         <p>Departments</p>
                     </div>
                     <div class="hero-stat">
@@ -405,7 +405,7 @@
                 <div class="section-label green"><i class="bi bi-building"></i> ABOUT THE FACULTY</div>
                 <h2 class="section-heading">Faculty of Engineering & Technology</h2>
                 <div class="about-text">
-                    <p>Faculty of Engineering and Technology is composed of an Institute and four departments: Department of Information Technology, Department of Software Engineering, Department of Telecommunication Engineering, and Department of Electronic Engineering.</p>
+                    <p>Faculty of Engineering and Technology is composed of an Institute and five departments: Department of Information Technology, Department of Software Engineering, Department of Telecommunication Engineering, Department of Electronic Engineering, and Department of Data Science.</p>
                     <p>FET has an excellent infrastructure with highly qualified faculty members (around 20 PhD faculty members), well-equipped state-of-the-art laboratories, spacious classrooms, and access to digital libraries including IEEE, ACM, Elsevier, and Springer Link.</p>
                     <p>The mission of FET is to provide dynamic learning with quality education through rigorous teaching and research methodologies, ensuring a place of pride in the world of learning.</p>
                 </div>
@@ -454,6 +454,13 @@
                 <a href="https://fet.usindh.edu.pk/Home/department/Mg%3D%3D" target="_blank" class="text-decoration-none">
                     <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800020_285.png');">
                         <div class="dept-name">Department of Electronic Engineering</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="https://fet.usindh.edu.pk" target="_blank" class="text-decoration-none">
+                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/slides/1608834917_580.jpg');">
+                        <div class="dept-name">Department of Data Science</div>
                     </div>
                 </a>
             </div>
