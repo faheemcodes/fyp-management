@@ -1,416 +1,618 @@
-<?php include __DIR__ . '/layout/auth_header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo isset($pageTitle) ? $pageTitle : 'FYP Management System'; ?></title>
+    <meta name="description" content="Official Final Year Project management portal for the Faculty of Engineering & Technology, University of Sindh, Jamshoro.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <?php
+    $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    if ($basePath === '/') { $basePath = ''; }
+    ?>
+    <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        
+        :root {
+            --lp-dark: #0f172a;
+            --lp-darker: #020617;
+            --lp-card: rgba(255,255,255,0.03);
+            --lp-card-solid: #1e293b;
+            --lp-border: rgba(255,255,255,0.06);
+            --lp-accent: #10b981;
+            --lp-blue: #3b82f6;
+            --lp-purple: #8b5cf6;
+            --lp-cyan: #06b6d4;
+            --lp-amber: #f59e0b;
+            --lp-rose: #f43f5e;
+            --lp-text: #e2e8f0;
+            --lp-muted: #94a3b8;
+            --lp-white-section: #f8fafc;
+        }
 
-<style>
-    /* Premium Landing Page Styles */
-    :root {
-        --landing-primary: #2563eb;
-        --landing-secondary: #0d9488;
-        --landing-dark: #0f172a;
-        --landing-light: #f8fafc;
-    }
-    
-    body {
-        background-color: var(--landing-light);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* Hero Section */
-    .hero-section {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 58, 138, 0.9) 100%), 
-                    url('<?php echo $basePath; ?>/images/hero-bg.jpg') center/cover no-repeat;
-        color: white;
-        padding: 100px 0 140px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50px;
-        background: var(--landing-light);
-        clip-path: polygon(0 100%, 100% 100%, 100% 0);
-    }
-    
-    .hero-logo-wrapper {
-        width: 100px;
-        height: 100px;
-        background: white;
-        border-radius: 20px;
-        padding: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        margin-bottom: 30px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .hero-logo-wrapper img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        margin-bottom: 20px;
-        background: linear-gradient(to right, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.25rem;
-        font-weight: 400;
-        color: #cbd5e1;
-        max-width: 600px;
-        margin-bottom: 40px;
-    }
-    
-    .btn-hero {
-        padding: 14px 32px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-hero-primary {
-        background: linear-gradient(135deg, #3b82f6, #4f46e5);
-        color: white;
-        border: none;
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-    }
-    
-    .btn-hero-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(59, 130, 246, 0.5);
-        color: white;
-    }
-    
-    .btn-hero-outline {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-    }
-    
-    .btn-hero-outline:hover {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        transform: translateY(-2px);
-    }
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--lp-text);
+            overflow-x: hidden;
+        }
 
-    /* Deadlines Bulletin Board - Prioritized */
-    .bulletin-board {
-        margin-top: -80px; /* Overlaps hero */
-        position: relative;
-        z-index: 10;
-        margin-bottom: 80px;
-    }
-    
-    .bulletin-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
-        overflow: hidden;
-    }
-    
-    .bulletin-header {
-        background: linear-gradient(135deg, #f59e0b, #ea580c);
-        color: white;
-        padding: 20px 30px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    
-    .bulletin-list {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-    }
-    
-    .bulletin-item {
-        padding: 18px 30px;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        transition: background 0.2s;
-    }
-    
-    .bulletin-item:hover {
-        background: #f8fafc;
-    }
-    
-    .bulletin-item:last-child {
-        border-bottom: none;
-    }
-    
-    .bulletin-date {
-        background: rgba(245, 158, 11, 0.1);
-        color: #ea580c;
-        padding: 8px 14px;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        min-width: 90px;
-        text-align: center;
-    }
-    
-    /* Process Section */
-    .section-title {
-        font-weight: 800;
-        color: var(--landing-dark);
-        margin-bottom: 15px;
-        text-align: center;
-    }
-    
-    .process-card {
-        background: white;
-        padding: 30px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        height: 100%;
-        transition: transform 0.3s;
-        border: 1px solid rgba(0,0,0,0.04);
-    }
-    
-    .process-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .process-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        margin: 0 auto 20px;
-    }
-    
-    /* Supervisor Spotlight */
-    .supervisor-card {
-        background: white;
-        border-radius: 16px;
-        padding: 30px 25px;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        border: 1px solid rgba(0,0,0,0.04);
-        transition: all 0.3s;
-        height: 100%;
-    }
-    
-    .supervisor-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-    }
-    
-    .supervisor-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-        color: #64748b;
-        font-size: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 20px;
-        border: 3px solid white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-    
-    /* Footer */
-    .landing-footer {
-        background: var(--landing-dark);
-        color: #94a3b8;
-        padding: 60px 0 30px;
-        margin-top: 80px;
-    }
-    
-</style>
+        /* ─── Sticky Navbar ─── */
+        .lp-navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 14px 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        .lp-navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--lp-border);
+            padding: 10px 0;
+        }
+        .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+        .lp-navbar .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
+        .lp-navbar .brand img { width: 38px; height: 38px; object-fit: contain; }
+        .lp-navbar .brand-text h1 { font-size: 0.92rem; font-weight: 700; margin: 0; color: white; }
+        .lp-navbar .brand-text p { font-size: 0.66rem; margin: 0; color: var(--lp-muted); }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .btn-nav { padding: 9px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-nav-ghost { color: var(--lp-muted); background: transparent; border: none; }
+        .btn-nav-ghost:hover { color: white; }
+        .btn-nav-primary { background: var(--lp-accent); color: white; border: none; }
+        .btn-nav-primary:hover { background: #059669; transform: translateY(-1px); color: white; }
 
-<!-- Hero Section -->
-<section class="hero-section">
+        /* ─── Hero ─── */
+        .lp-hero {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            position: relative; padding: 110px 0 80px;
+            background: linear-gradient(160deg, #020617 0%, #0f172a 30%, #1a1a2e 60%, #0f172a 100%);
+            overflow: hidden;
+        }
+        .lp-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 15% 45%, rgba(16,185,129,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 85% 25%, rgba(139,92,246,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 30% at 50% 85%, rgba(6,182,212,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
+            padding: 6px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; color: #34d399; margin-bottom: 28px;
+        }
+        .hero-badge .pulse { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+        .hero-title { font-size: clamp(2.2rem,4.5vw,3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px; color: white; }
+        .hero-title .gradient { background: linear-gradient(135deg, #34d399, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-desc { font-size: 1.1rem; color: var(--lp-muted); max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn-hero { padding: 14px 28px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-hero-fill { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; box-shadow: 0 8px 25px rgba(16,185,129,0.3); }
+        .btn-hero-fill:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(16,185,129,0.4); color: white; }
+        .btn-hero-outline { background: rgba(255,255,255,0.04); color: white; border: 1px solid rgba(255,255,255,0.12); }
+        .btn-hero-outline:hover { background: rgba(255,255,255,0.08); color: white; transform: translateY(-3px); }
+        .hero-stats { display: flex; gap: 36px; margin-top: 50px; padding-top: 36px; border-top: 1px solid var(--lp-border); flex-wrap: wrap; }
+        .hero-stat h3 { font-size: 1.8rem; font-weight: 800; margin: 0; color: white; }
+        .hero-stat p { font-size: 0.78rem; color: var(--lp-muted); margin: 4px 0 0; }
+        .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
+        .logo-glow {
+            width: 260px; height: 260px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(139,92,246,0.06));
+            border: 1px solid var(--lp-border); border-radius: 40px;
+            display: flex; align-items: center; justify-content: center;
+            animation: float 6s ease-in-out infinite;
+        }
+        .logo-glow img { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 30px rgba(16,185,129,0.15)); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+        /* ─── Light Sections ─── */
+        .section-light { background: var(--lp-white-section); color: #0f172a; padding: 80px 0; }
+        .section-dark { background: var(--lp-dark); padding: 80px 0; }
+        .section-darker { background: var(--lp-darker); padding: 80px 0; }
+        .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+        .section-label.green { color: var(--lp-accent); }
+        .section-label.amber { color: var(--lp-amber); }
+        .section-label.blue { color: var(--lp-blue); }
+        .section-label.purple { color: var(--lp-purple); }
+        .section-label.cyan { color: var(--lp-cyan); }
+        .section-label.rose { color: var(--lp-rose); }
+        .section-heading { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+        .section-sub { font-size: 1rem; max-width: 520px; margin-bottom: 40px; }
+        .section-light .section-heading { color: #0f172a; }
+        .section-light .section-sub { color: #64748b; }
+        .section-dark .section-heading, .section-darker .section-heading { color: white; }
+        .section-dark .section-sub, .section-darker .section-sub { color: var(--lp-muted); }
+
+        /* ─── Deadlines ─── */
+        .deadline-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .deadline-item { padding: 18px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #f1f5f9; transition: background 0.2s; }
+        .deadline-item:last-child { border-bottom: none; }
+        .deadline-item:hover { background: #f8fafc; }
+        .deadline-date-badge { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.15); color: #d97706; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.82rem; min-width: 90px; text-align: center; white-space: nowrap; }
+        .deadline-info h6 { font-weight: 700; margin: 0 0 3px; color: #0f172a; font-size: 0.95rem; }
+        .deadline-info p { margin: 0; font-size: 0.8rem; color: #64748b; }
+        .deadline-empty { padding: 40px; text-align: center; color: #94a3b8; }
+
+        /* ─── Notice Board ─── */
+        .notice-card { background: var(--lp-card-solid); border: 1px solid var(--lp-border); border-radius: 16px; padding: 24px; transition: all 0.3s; height: 100%; }
+        .notice-card:hover { transform: translateY(-4px); border-color: rgba(59,130,246,0.2); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+        .notice-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .notice-badge.students { background: rgba(59,130,246,0.15); color: #60a5fa; }
+        .notice-badge.supervisors { background: rgba(139,92,246,0.15); color: #a78bfa; }
+        .notice-badge.all { background: rgba(16,185,129,0.15); color: #34d399; }
+        .notice-card h6 { color: white; font-weight: 700; font-size: 0.95rem; margin: 12px 0 8px; line-height: 1.4; }
+        .notice-card .notice-meta { color: var(--lp-muted); font-size: 0.78rem; }
+        .notice-card .notice-body { color: #cbd5e1; font-size: 0.85rem; line-height: 1.6; margin-top: 10px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* ─── About FET ─── */
+        .about-text { color: #334155; font-size: 0.95rem; line-height: 1.8; }
+        .about-text p { margin-bottom: 16px; }
+        .about-img-wrapper { position: relative; }
+        .about-img-wrapper img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        /* ─── Departments ─── */
+        .dept-card {
+            border-radius: 16px; overflow: hidden; position: relative; height: 200px;
+            background-size: cover; background-position: center;
+            display: flex; align-items: flex-end;
+            transition: all 0.35s ease; cursor: default;
+        }
+        .dept-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%); transition: all 0.3s; }
+        .dept-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .dept-card:hover::before { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%); }
+        .dept-card .dept-name { position: relative; z-index: 1; padding: 20px; color: white; font-weight: 700; font-size: 0.95rem; line-height: 1.3; }
+
+        /* ─── Process ─── */
+        .process-card {
+            background: white; border: 1px solid #e2e8f0; border-radius: 18px;
+            padding: 32px 24px; text-align: center; height: 100%;
+            transition: all 0.35s ease; position: relative; overflow: hidden;
+        }
+        .process-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; opacity: 0; transition: opacity 0.3s; }
+        .process-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .process-card:hover::before { opacity: 1; }
+        .process-card.c1::before { background: linear-gradient(90deg, var(--lp-accent), var(--lp-cyan)); }
+        .process-card.c2::before { background: linear-gradient(90deg, var(--lp-blue), var(--lp-purple)); }
+        .process-card.c3::before { background: linear-gradient(90deg, var(--lp-cyan), var(--lp-blue)); }
+        .process-card.c4::before { background: linear-gradient(90deg, var(--lp-amber), var(--lp-rose)); }
+        .process-step { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+        .process-icon-wrap { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 18px; }
+        .process-icon-wrap.green { background: rgba(16,185,129,0.1); color: #10b981; }
+        .process-icon-wrap.blue { background: rgba(59,130,246,0.1); color: #3b82f6; }
+        .process-icon-wrap.cyan { background: rgba(6,182,212,0.1); color: #06b6d4; }
+        .process-icon-wrap.amber { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .process-card h5 { font-weight: 700; margin-bottom: 8px; font-size: 1rem; color: #0f172a; }
+        .process-card p { color: #64748b; font-size: 0.85rem; margin: 0; line-height: 1.6; }
+
+        /* ─── Supervisors ─── */
+        .supervisor-card { background: var(--lp-card-solid); border: 1px solid var(--lp-border); border-radius: 18px; padding: 30px 22px; text-align: center; height: 100%; transition: all 0.35s ease; }
+        .supervisor-card:hover { transform: translateY(-6px); border-color: rgba(16,185,129,0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .sup-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.15)); color: #34d399; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 2px solid var(--lp-border); }
+        .supervisor-card h5 { font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; color: white; }
+        .supervisor-card .dept { color: var(--lp-accent); font-size: 0.8rem; font-weight: 600; margin-bottom: 16px; }
+        .btn-contact { width: 100%; padding: 9px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--lp-border); color: var(--lp-muted); font-size: 0.8rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .btn-contact:hover { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.2); color: #34d399; }
+        .btn-view-all { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-decoration: none; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #34d399; transition: all 0.3s; }
+        .btn-view-all:hover { background: rgba(16,185,129,0.2); color: #34d399; transform: translateY(-2px); }
+
+        /* ─── CTA ─── */
+        .cta-inner {
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.06));
+            border: 1px solid rgba(16,185,129,0.12); border-radius: 24px;
+            padding: 60px; text-align: center; position: relative; overflow: hidden;
+        }
+        .cta-inner h2 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; color: white; position: relative; }
+        .cta-inner p { color: var(--lp-muted); max-width: 480px; margin: 0 auto 28px; font-size: 1rem; position: relative; }
+
+        /* ─── Footer ─── */
+        .lp-footer { background: var(--lp-darker); border-top: 1px solid var(--lp-border); padding: 50px 0 24px; }
+        .lp-footer h6 { font-weight: 700; color: white; margin-bottom: 14px; font-size: 0.88rem; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 8px; color: var(--lp-muted); font-size: 0.84rem; }
+        .footer-links a { color: var(--lp-muted); text-decoration: none; font-size: 0.84rem; transition: color 0.2s; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { border-top: 1px solid var(--lp-border); padding-top: 20px; margin-top: 30px; text-align: center; font-size: 0.76rem; color: #475569; }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 991.98px) { .hero-visual { display: none; } }
+        @media (max-width: 575.98px) {
+            .lp-hero { padding: 100px 0 50px; min-height: auto; }
+            .hero-title { font-size: 1.9rem; }
+            .hero-desc { font-size: 0.95rem; }
+            .hero-btns { flex-direction: column; }
+            .btn-hero { justify-content: center; }
+            .hero-stats { gap: 20px; }
+            .hero-stat h3 { font-size: 1.4rem; }
+            .section-heading { font-size: 1.5rem; }
+            .cta-inner { padding: 36px 20px; }
+            .nav-actions .btn-nav-ghost { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── Navbar ─── -->
+<nav class="lp-navbar" id="lpNavbar">
+    <div class="container">
+        <div class="nav-inner">
+            <a href="<?php echo $basePath; ?>/" class="brand">
+                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo">
+                <div class="brand-text">
+                    <h1>University of Sindh</h1>
+                    <p>Faculty of Engineering & Technology</p>
+                </div>
+            </a>
+            <div class="nav-actions">
+                <a href="<?php echo $basePath; ?>/register" class="btn-nav btn-nav-ghost">Register</a>
+                <a href="<?php echo $basePath; ?>/login" class="btn-nav btn-nav-primary">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="lp-hero">
+    <div class="hero-grid"></div>
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="hero-logo-wrapper">
-                    <img src="<?php echo $basePath; ?>/images/logo.png" alt="University Logo">
+            <div class="col-lg-7 hero-content">
+                <div class="hero-badge">
+                    <span class="pulse"></span> FYP Portal is Live — Batch <?php echo date('Y'); ?>
                 </div>
-                <h1 class="hero-title">Empowering the Next Generation of Engineers.</h1>
-                <p class="hero-subtitle">The official Final Year Project (FYP) management portal for the Faculty of Engineering & Technology, University of Sindh.</p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="<?php echo $basePath; ?>/login" class="btn btn-hero btn-hero-primary text-decoration-none d-inline-flex align-items-center gap-2">
+                <h1 class="hero-title">
+                    A Place to<br><span class="gradient">Learn and Lead.</span>
+                </h1>
+                <p class="hero-desc">
+                    Dynamic learning with quality education through rigorous teaching and research methodologies in Engineering and Technology disciplines.
+                </p>
+                <div class="hero-btns">
+                    <a href="<?php echo $basePath; ?>/login" class="btn-hero btn-hero-fill">
                         <i class="bi bi-box-arrow-in-right"></i> Login to Portal
                     </a>
-                    <a href="<?php echo $basePath; ?>/register" class="btn btn-hero btn-hero-outline text-decoration-none d-inline-flex align-items-center gap-2">
-                        <i class="bi bi-person-plus-fill"></i> Register as Student
+                    <a href="<?php echo $basePath; ?>/register" class="btn-hero btn-hero-outline">
+                        <i class="bi bi-person-plus-fill"></i> Student Registration
                     </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <h3><?php echo $stats['departments'] ?? 4; ?></h3>
+                        <p>Departments</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3><?php echo $stats['supervisors'] ?? '10'; ?>+</h3>
+                        <p>Faculty Members</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3><?php echo $stats['projects'] ?? '50'; ?>+</h3>
+                        <p>Active Projects</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3><?php echo $stats['students'] ?? '200'; ?>+</h3>
+                        <p>Registered Students</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+                <div class="hero-visual">
+                    <div class="logo-glow">
+                        <img src="<?php echo $basePath; ?>/images/logo.png" alt="University of Sindh Logo">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Prioritized Bulletin Board -->
-<div class="container bulletin-board">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="bulletin-card">
-                <div class="bulletin-header">
-                    <i class="bi bi-megaphone-fill fs-4"></i>
-                    <h5 class="m-0 fw-bold">Important Deadlines & Announcements</h5>
-                </div>
-                <ul class="bulletin-list">
+<!-- ─── Deadlines (Light Section — Prioritized) ─── -->
+<section class="section-light">
+    <div class="container">
+        <div class="row align-items-start g-5">
+            <div class="col-lg-5">
+                <div class="section-label amber"><i class="bi bi-megaphone-fill"></i> ANNOUNCEMENTS</div>
+                <h2 class="section-heading">Important Deadlines</h2>
+                <p class="section-sub">Stay updated with all upcoming submission dates, evaluations, and important notices for your batch.</p>
+            </div>
+            <div class="col-lg-7">
+                <div class="deadline-card">
                     <?php if (empty($deadlines)): ?>
-                        <li class="bulletin-item justify-content-center text-muted py-4">
-                            <i class="bi bi-info-circle me-2"></i> No upcoming deadlines at the moment.
-                        </li>
+                        <div class="deadline-empty">
+                            <i class="bi bi-calendar-check fs-2 d-block mb-3" style="opacity:0.3"></i>
+                            No upcoming deadlines at the moment. Check back later!
+                        </div>
                     <?php else: ?>
                         <?php foreach ($deadlines as $deadline): ?>
-                            <li class="bulletin-item">
-                                <div class="bulletin-date">
-                                    <?php echo date('M d, Y', strtotime($deadline['date'])); ?>
+                            <div class="deadline-item">
+                                <div class="deadline-date-badge">
+                                    <?php echo date('M d', strtotime($deadline['deadline_date'])); ?>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 fw-bold text-dark"><?php echo htmlspecialchars($deadline['title']); ?></h6>
-                                    <p class="mb-0 text-secondary small">
-                                        <i class="bi bi-diagram-3-fill text-muted me-1"></i> <?php echo htmlspecialchars($deadline['department'] ?? 'All Departments'); ?> 
-                                        &nbsp;&bull;&nbsp; 
-                                        <i class="bi bi-clock-history text-muted me-1"></i> Due by <?php echo htmlspecialchars($deadline['time'] ?? '23:59'); ?>
-                                    </p>
+                                <div class="deadline-info">
+                                    <h6><?php echo htmlspecialchars($deadline['stage']); ?></h6>
+                                    <p><i class="bi bi-diagram-3-fill me-1"></i> <?php echo htmlspecialchars($deadline['department'] ?? 'All Departments'); ?></p>
                                 </div>
-                            </li>
+                            </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- How it Works -->
-<div class="container mb-5 pb-4">
-    <h2 class="section-title">How the FYP Process Works</h2>
-    <p class="text-center text-secondary mb-5">A streamlined journey from idea to final defense.</p>
-    
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="process-card">
-                <div class="process-icon"><i class="bi bi-people-fill"></i></div>
-                <h5 class="fw-bold mb-2">1. Form a Group</h5>
-                <p class="text-secondary small mb-0">Create your group and submit a solid project proposal to your department.</p>
-            </div>
+<!-- ─── Public Notice Board (Dark Section) ─── -->
+<section class="section-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label blue"><i class="bi bi-clipboard2-pulse-fill"></i> NOTICE BOARD</div>
+            <h2 class="section-heading">Latest Notices</h2>
+            <p class="section-sub mx-auto">Official announcements and circulars from the FYP coordination office.</p>
         </div>
-        <div class="col-md-3">
-            <div class="process-card">
-                <div class="process-icon"><i class="bi bi-person-badge-fill"></i></div>
-                <h5 class="fw-bold mb-2">2. Assignment</h5>
-                <p class="text-secondary small mb-0">Get assigned a dedicated faculty supervisor who matches your project domain.</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="process-card">
-                <div class="process-icon"><i class="bi bi-code-square"></i></div>
-                <h5 class="fw-bold mb-2">3. Development</h5>
-                <p class="text-secondary small mb-0">Build your project with regular bi-weekly assessments and feedback.</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="process-card">
-                <div class="process-icon"><i class="bi bi-award-fill"></i></div>
-                <h5 class="fw-bold mb-2">4. Final Defense</h5>
-                <p class="text-secondary small mb-0">Present your final work to the evaluation committee for final grading.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Meet the Supervisors -->
-<div class="container mb-5 pb-5">
-    <h2 class="section-title">Faculty Spotlight</h2>
-    <p class="text-center text-secondary mb-5">Meet some of our esteemed supervisors guiding our engineering students.</p>
-    
-    <div class="row g-4 justify-content-center">
-        <?php if (empty($supervisors)): ?>
-            <div class="col-12 text-center text-muted">
-                <p>Supervisor profiles will be updated shortly.</p>
+        <?php if (empty($notices)): ?>
+            <div class="text-center py-4" style="color: var(--lp-muted);">
+                <i class="bi bi-inbox fs-1 d-block mb-3" style="opacity:0.3"></i>
+                <p>No notices have been published yet.</p>
             </div>
         <?php else: ?>
-            <?php foreach ($supervisors as $supervisor): ?>
-                <div class="col-lg-4 col-md-6">
-                    <div class="supervisor-card">
-                        <div class="supervisor-avatar">
-                            <?php 
-                            $initials = '';
-                            $nameParts = explode(' ', $supervisor['name']);
-                            foreach (array_slice($nameParts, 0, 2) as $part) {
-                                $initials .= strtoupper(substr($part, 0, 1));
-                            }
-                            echo htmlspecialchars($initials);
+            <div class="row g-4">
+                <?php foreach ($notices as $notice): ?>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="notice-card">
+                            <?php
+                            $audience = strtolower($notice['target_audience'] ?? 'all');
+                            $badgeClass = 'all';
+                            if (strpos($audience, 'student') !== false) $badgeClass = 'students';
+                            elseif (strpos($audience, 'supervisor') !== false) $badgeClass = 'supervisors';
                             ?>
+                            <span class="notice-badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($notice['target_audience'] ?? 'All'); ?></span>
+                            <h6><?php echo htmlspecialchars($notice['subject']); ?></h6>
+                            <div class="notice-meta">
+                                <i class="bi bi-calendar3 me-1"></i> <?php echo date('M d, Y', strtotime($notice['notice_date'])); ?>
+                                <?php if (!empty($notice['ref_no'])): ?>
+                                    &nbsp;&bull;&nbsp; Ref: <?php echo htmlspecialchars($notice['ref_no']); ?>
+                                <?php endif; ?>
+                            </div>
+                            <div class="notice-body"><?php echo htmlspecialchars(strip_tags($notice['body'])); ?></div>
                         </div>
-                        <h5 class="fw-bold text-dark mb-1"><?php echo htmlspecialchars($supervisor['name']); ?></h5>
-                        <p class="text-primary fw-semibold small mb-3"><?php echo htmlspecialchars($supervisor['department']); ?> Department</p>
-                        
-                        <a href="mailto:<?php echo htmlspecialchars($supervisor['email']); ?>" class="btn btn-sm btn-light w-100 rounded-pill border">
-                            <i class="bi bi-envelope-fill text-muted me-2"></i> Contact via Email
-                        </a>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
     </div>
-</div>
+</section>
 
-<!-- Footer -->
-<footer class="landing-footer">
+<!-- ─── About FET (Light Section) ─── -->
+<section class="section-light">
     <div class="container">
-        <div class="row g-4 border-bottom border-secondary pb-4 mb-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="section-label green"><i class="bi bi-building"></i> ABOUT THE FACULTY</div>
+                <h2 class="section-heading">Faculty of Engineering & Technology</h2>
+                <div class="about-text">
+                    <p>Faculty of Engineering and Technology is composed of an Institute and four departments: Department of Information Technology, Department of Software Engineering, Department of Telecommunication Engineering, and Department of Electronic Engineering.</p>
+                    <p>FET has an excellent infrastructure with highly qualified faculty members (around 20 PhD faculty members), well-equipped state-of-the-art laboratories, spacious classrooms, and access to digital libraries including IEEE, ACM, Elsevier, and Springer Link.</p>
+                    <p>The mission of FET is to provide dynamic learning with quality education through rigorous teaching and research methodologies, ensuring a place of pride in the world of learning.</p>
+                </div>
+                <a href="https://fet.usindh.edu.pk/Home/about" target="_blank" class="btn-hero btn-hero-fill mt-2" style="padding: 10px 22px; font-size: 0.85rem;">
+                    <i class="bi bi-arrow-up-right"></i> Visit FET Website
+                </a>
+            </div>
+            <div class="col-lg-5 about-img-wrapper">
+                <img src="https://fet.usindh.edu.pk/assets/images/slides/1608745872_813.jpg" alt="FET Building" style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Departments (Dark Section) ─── -->
+<section class="section-darker">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label cyan"><i class="bi bi-layers-fill"></i> OUR DEPARTMENTS</div>
+            <h2 class="section-heading">Institutes & Departments</h2>
+            <p class="section-sub mx-auto">Offering accredited undergraduate and graduate programs in Engineering & Technology.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <a href="https://fet.usindh.edu.pk/Home/department/Mw%3D%3D" target="_blank" class="text-decoration-none">
+                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800555_126.jpg');">
+                        <div class="dept-name">Department of Information Technology</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="https://fet.usindh.edu.pk/Home/department/NA%3D%3D" target="_blank" class="text-decoration-none">
+                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800623_789.jpg');">
+                        <div class="dept-name">Department of Software Engineering</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="https://fet.usindh.edu.pk/Home/department/MQ%3D%3D" target="_blank" class="text-decoration-none">
+                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608799871_312.jpg');">
+                        <div class="dept-name">Department of Telecommunication Engineering</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="https://fet.usindh.edu.pk/Home/department/Mg%3D%3D" target="_blank" class="text-decoration-none">
+                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800020_285.png');">
+                        <div class="dept-name">Department of Electronic Engineering</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── How it Works (Light Section) ─── -->
+<section class="section-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label blue" style="color: #3b82f6;"><i class="bi bi-lightning-charge-fill"></i> HOW IT WORKS</div>
+            <h2 class="section-heading">Your FYP Journey</h2>
+            <p class="section-sub mx-auto" style="color: #64748b;">A streamlined, transparent process from initial proposal to final defense and grading.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="process-card c1">
+                    <div class="process-step" style="color: #10b981;">Step 01</div>
+                    <div class="process-icon-wrap green"><i class="bi bi-people-fill"></i></div>
+                    <h5>Form Your Group</h5>
+                    <p>Create your team and submit a project proposal through the portal.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="process-card c2">
+                    <div class="process-step" style="color: #3b82f6;">Step 02</div>
+                    <div class="process-icon-wrap blue"><i class="bi bi-person-badge-fill"></i></div>
+                    <h5>Supervisor Assignment</h5>
+                    <p>Get matched with a faculty supervisor whose expertise aligns with your domain.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="process-card c3">
+                    <div class="process-step" style="color: #06b6d4;">Step 03</div>
+                    <div class="process-icon-wrap cyan"><i class="bi bi-code-square"></i></div>
+                    <h5>Build & Iterate</h5>
+                    <p>Develop your project with regular bi-weekly assessments and feedback loops.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="process-card c4">
+                    <div class="process-step" style="color: #f59e0b;">Step 04</div>
+                    <div class="process-icon-wrap amber"><i class="bi bi-award-fill"></i></div>
+                    <h5>Final Defense</h5>
+                    <p>Present your work to the evaluation committee for final grading.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Faculty Spotlight (Dark Section) ─── -->
+<section class="section-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-label purple"><i class="bi bi-mortarboard-fill"></i> FACULTY SPOTLIGHT</div>
+            <h2 class="section-heading">Meet Our Supervisors</h2>
+            <p class="section-sub mx-auto">Our esteemed faculty members guiding the next generation of engineering innovators.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <?php if (empty($supervisors)): ?>
+                <div class="col-12 text-center" style="color: var(--lp-muted);">
+                    <p>Supervisor profiles will be updated shortly.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach ($supervisors as $supervisor): ?>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="supervisor-card">
+                            <div class="sup-avatar">
+                                <?php
+                                $initials = '';
+                                $nameParts = explode(' ', $supervisor['name']);
+                                foreach (array_slice($nameParts, 0, 2) as $part) {
+                                    $initials .= strtoupper(substr($part, 0, 1));
+                                }
+                                echo htmlspecialchars($initials);
+                                ?>
+                            </div>
+                            <h5><?php echo htmlspecialchars($supervisor['name']); ?></h5>
+                            <p class="dept"><?php echo htmlspecialchars($supervisor['department']); ?> Department</p>
+                            <a href="mailto:<?php echo htmlspecialchars($supervisor['email']); ?>" class="btn-contact">
+                                <i class="bi bi-envelope-fill"></i> Contact via Email
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <?php if (($totalSupervisors ?? 0) > 6): ?>
+            <div class="text-center mt-5">
+                <a href="<?php echo $basePath; ?>/supervisors" class="btn-view-all">
+                    View All <?php echo $totalSupervisors; ?> Faculty Members <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="section-darker" style="padding: 60px 0;">
+    <div class="container">
+        <div class="cta-inner">
+            <h2>Ready to Start Your FYP Journey?</h2>
+            <p>Register today and take the first step toward building something extraordinary.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap position-relative">
+                <a href="<?php echo $basePath; ?>/register" class="btn-hero btn-hero-fill">
+                    <i class="bi bi-rocket-takeoff-fill"></i> Get Started
+                </a>
+                <a href="<?php echo $basePath; ?>/login" class="btn-hero btn-hero-outline">
+                    <i class="bi bi-box-arrow-in-right"></i> Already Registered? Login
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer class="lp-footer">
+    <div class="container">
+        <div class="row g-4">
             <div class="col-lg-5">
-                <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 mb-3">
                     <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" width="30" height="30" style="object-fit: contain;">
-                    University of Sindh
-                </h5>
-                <p class="small pe-lg-4">The Faculty of Engineering & Technology aims to produce top-tier engineers equipped with practical skills and innovative mindsets through our rigorous Final Year Project curriculum.</p>
+                    <h6 class="m-0">University of Sindh</h6>
+                </div>
+                <p style="color: var(--lp-muted); font-size: 0.85rem; line-height: 1.7; max-width: 380px;">
+                    Faculty of Engineering & Technology — Striving to provide high quality education to empower people with skills and knowledge in Engineering and Technology disciplines.
+                </p>
             </div>
             <div class="col-lg-3 offset-lg-1">
-                <h6 class="text-white fw-bold mb-3">Quick Links</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-white">University Main Site</a></li>
-                    <li class="mb-2"><a href="<?php echo $basePath; ?>/login" class="text-decoration-none text-secondary hover-white">Student Login</a></li>
-                    <li class="mb-2"><a href="<?php echo $basePath; ?>/register" class="text-decoration-none text-secondary hover-white">New Registration</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-white">Library Resources</a></li>
+                <h6>Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="<?php echo $basePath; ?>/login">Student Login</a></li>
+                    <li><a href="<?php echo $basePath; ?>/register">New Registration</a></li>
+                    <li><a href="https://fet.usindh.edu.pk" target="_blank">FET Main Website</a></li>
+                    <li><a href="https://fet.usindh.edu.pk/Home/about" target="_blank">About FET</a></li>
+                    <li><a href="https://fet.usindh.edu.pk/Home/contact" target="_blank">Contact FET</a></li>
                 </ul>
             </div>
             <div class="col-lg-3">
-                <h6 class="text-white fw-bold mb-3">Contact Us</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-2 d-flex gap-2"><i class="bi bi-geo-alt-fill text-primary"></i> Allama I.I. Kazi Campus, Jamshoro</li>
-                    <li class="mb-2 d-flex gap-2"><i class="bi bi-envelope-fill text-primary"></i> fyp.support@usindh.edu.pk</li>
-                    <li class="mb-2 d-flex gap-2"><i class="bi bi-telephone-fill text-primary"></i> +92 (22) 9213181-90</li>
+                <h6>Contact</h6>
+                <ul class="footer-links">
+                    <li><i class="bi bi-geo-alt-fill me-2" style="color: var(--lp-accent);"></i> FET, University of Sindh, Jamshoro</li>
+                    <li><i class="bi bi-telephone-fill me-2" style="color: var(--lp-accent);"></i> +92-(0)22-9213181-90</li>
+                    <li><i class="bi bi-globe2 me-2" style="color: var(--lp-accent);"></i> <a href="https://fet.usindh.edu.pk" target="_blank">fet.usindh.edu.pk</a></li>
                 </ul>
             </div>
         </div>
-        <div class="text-center small">
+        <div class="footer-bottom">
             &copy; <?php echo date('Y'); ?> Faculty of Engineering & Technology, University of Sindh. All rights reserved.
         </div>
     </div>
 </footer>
 
-<?php include __DIR__ . '/layout/footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const navbar = document.getElementById('lpNavbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 40); });
+</script>
+</body>
+</html>

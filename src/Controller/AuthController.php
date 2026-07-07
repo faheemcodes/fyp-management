@@ -9,10 +9,10 @@ class AuthController extends BaseController {
     public function index() {
         $db = \Database::getInstance()->getConnection();
         
-        // Fetch Upcoming Deadlines
-        $deadlines = $db->query("SELECT * FROM deadlines WHERE date >= CURRENT_DATE ORDER BY date ASC LIMIT 5")->fetchAll();
+        // Fetch Upcoming Deadlines (Active only)
+        $deadlines = $db->query("SELECT * FROM deadlines WHERE deadline_date >= CURRENT_DATE AND status = 'Active' ORDER BY deadline_date ASC LIMIT 5")->fetchAll();
         
-        // Fetch Supervisors Spotlight
+        // Fetch Supervisors Spotlight (limited for landing page)
         $supervisors = $db->query("
             SELECT s.name, s.department, u.email 
             FROM supervisors s 
@@ -22,10 +22,26 @@ class AuthController extends BaseController {
             LIMIT 6
         ")->fetchAll();
         
+        // Fetch total supervisor count for "View All" button
+        $totalSupervisors = $db->query("SELECT COUNT(*) FROM supervisors s JOIN users u ON s.user_id = u.id WHERE u.status = 'approved'")->fetchColumn();
+        
+        // Fetch Public Notices (latest 5)
+        $notices = $db->query("SELECT * FROM notices ORDER BY notice_date DESC, created_at DESC LIMIT 5")->fetchAll();
+        
+        // Fetch stats for the hero section
+        $stats = [];
+        $stats['supervisors'] = $db->query("SELECT COUNT(*) FROM supervisors")->fetchColumn();
+        $stats['projects'] = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
+        $stats['students'] = $db->query("SELECT COUNT(*) FROM students")->fetchColumn();
+        $stats['departments'] = 4; // IT, SE, Telecom, Electronics
+        
         $this->render('landing', [
-            'pageTitle' => 'Welcome to FYP Portal - University of Sindh',
+            'pageTitle' => 'FYP Portal - Faculty of Engineering & Technology, University of Sindh',
             'deadlines' => $deadlines,
-            'supervisors' => $supervisors
+            'supervisors' => $supervisors,
+            'totalSupervisors' => $totalSupervisors,
+            'notices' => $notices,
+            'stats' => $stats
         ]);
     }
     

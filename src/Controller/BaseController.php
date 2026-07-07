@@ -19,7 +19,8 @@ class BaseController {
                 'auth/reset-password',
                 'coordinator/view_notice',
                 'coordinator/assessment_report',
-                'committee/print_sheet'
+                'committee/print_sheet',
+                'landing'
             ];
             
             if (in_array($viewName, $noLayoutViews)) {
