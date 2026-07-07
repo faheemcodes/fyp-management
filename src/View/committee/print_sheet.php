@@ -4,299 +4,277 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Committee Evaluation Sheet - <?php echo htmlspecialchars($stage); ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #f8fafc;
-            color: #0f172a;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            padding: 20px;
-        }
-        .report-header {
-            text-align: center;
-            margin-bottom: 18px;
-        }
-        .report-header h4 {
-            font-weight: 700;
-            margin-bottom: 4px;
-            font-size: 1.1rem;
-        }
-        .report-header p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: #475569;
-        }
-        .report-header .title-underline {
-            text-decoration: underline;
-            font-weight: 700;
+            background: #fff;
             color: #000;
-            margin-top: 4px;
-        }
-        .evaluator-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .signature-line {
-            text-align: right;
-            margin-top: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            padding: 15px;
         }
 
-        /* ─── Table Styles ─── */
-        .eval-table {
+        /* ─── Header ─── */
+        .report-header {
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .report-header .dept {
+            font-size: 12pt;
+            font-weight: bold;
+        }
+        .report-header .batch {
+            font-size: 10pt;
+        }
+        .report-header .stage-title {
+            font-size: 11pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 2px;
+        }
+
+        /* ─── Evaluator Info ─── */
+        .evaluator-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 8px 0 10px 0;
+            font-size: 10pt;
+        }
+        .evaluator-row span {
+            font-weight: bold;
+        }
+
+        /* ─── Table ─── */
+        table.sheet {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.78rem;
-            background: #fff;
-            table-layout: fixed;
+            font-size: 9pt;
         }
-        .eval-table th, .eval-table td {
-            border: 1.5px solid #000;
-            padding: 5px 6px;
+        table.sheet th,
+        table.sheet td {
+            border: 1px solid #000;
+            padding: 3px 4px;
             vertical-align: middle;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
         }
-        .eval-table th {
-            background-color: #e2e8f0;
-            font-weight: 700;
+        table.sheet th {
+            background: #e8e8e8;
+            font-weight: bold;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 8pt;
         }
-        .eval-table td.merged-cell {
+        table.sheet td {
+            font-size: 9pt;
+        }
+        table.sheet td.center {
             text-align: center;
         }
-        .eval-table .vertical-text {
+
+        /* Vertical text for sub-columns */
+        table.sheet th.vtext {
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             white-space: nowrap;
-            height: 100px;
-            padding: 5px 2px;
-            font-size: 0.7rem;
-        }
-        .eval-table td.marks-cell {
-            min-height: 28px;
-            height: 28px;
+            height: 90px;
+            padding: 4px 2px;
+            font-size: 7.5pt;
+            width: 22px;
+            min-width: 22px;
+            max-width: 22px;
         }
 
-        /* ─── No Print ─── */
-        .no-print {
-            margin-bottom: 20px;
+        /* Marks empty cells - fixed small width */
+        table.sheet td.mark {
+            width: 22px;
+            min-width: 22px;
+            max-width: 22px;
             text-align: center;
+            height: 22px;
         }
 
-        /* ─── Print Specific Styles ─── */
+        /* Signature */
+        .sig-line {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        /* ─── Print Button ─── */
+        .no-print {
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: Arial, sans-serif;
+        }
+        .no-print button {
+            padding: 8px 24px;
+            font-size: 10pt;
+            cursor: pointer;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            margin: 0 5px;
+        }
+        .no-print .print-btn { background: #2563eb; color: #fff; border: none; font-weight: bold; }
+        .no-print .back-btn { background: #f1f5f9; }
+
+        /* ─── Print ─── */
         @media print {
             @page {
                 size: landscape;
                 margin: 8mm;
             }
-            body {
-                background-color: #fff !important;
-                padding: 0;
-                margin: 0;
-                font-size: 9pt;
+            body { padding: 0; }
+            .no-print { display: none !important; }
+            table.sheet th,
+            table.sheet td {
+                border: 1px solid #000 !important;
+            }
+            table.sheet th {
+                background: #e8e8e8 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            .no-print {
-                display: none !important;
-            }
-            .eval-table {
-                border-collapse: collapse !important;
-            }
-            .eval-table th, .eval-table td {
-                border: 1.5px solid #000 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .eval-table th {
-                background-color: #e2e8f0 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            thead {
-                display: table-header-group;
-            }
-            tbody {
-                display: table-row-group;
-            }
-            tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-            .signature-line {
-                margin-top: 20px;
-            }
+            thead { display: table-header-group; }
+            tr { page-break-inside: avoid; break-inside: avoid; }
         }
     </style>
 </head>
 <body>
 
-    <div class="no-print">
-        <button onclick="window.print()" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
-            <i class="bi bi-printer-fill me-2"></i> Print Sheet
-        </button>
-        <button onclick="window.history.back()" class="btn btn-outline-secondary rounded-pill px-4 fw-bold ms-2">
-            Go Back
-        </button>
-    </div>
+<div class="no-print">
+    <button class="print-btn" onclick="window.print()">🖨️ Print Sheet</button>
+    <button class="back-btn" onclick="window.history.back()">← Go Back</button>
+</div>
 
-    <?php
-    // Build header text
-    $headerText = 'Committee Evaluation Form - ' . htmlspecialchars($stage);
+<div class="report-header">
+    <div class="dept">Department of <?php echo htmlspecialchars($committee['department'] ?? 'Software Engineering'); ?> - Faculty of Engineering and Technology</div>
+    <div class="batch">BS (Software Engineering) - Batch 2k<?php echo date('y') - 4; ?> - Morning</div>
+    <div class="stage-title"><?php echo htmlspecialchars($stage); ?></div>
+</div>
+
+<div class="evaluator-row">
+    <div>Dated: <?php echo date('d-m-Y'); ?></div>
+    <div>Evaluators' Name: <span style="text-decoration: underline; padding: 0 60px;"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
+    <div>Evaluators' Signature: __________________</div>
+</div>
+
+<table class="sheet">
+<?php if ($stage === 'Proposal Defence Presentation' || $stage === 'FYP Progress Presentation'): ?>
+    <thead>
+        <tr>
+            <th rowspan="2" style="width: 28px;">S.<br>No</th>
+            <th rowspan="2" style="width: 70px;">Project ID</th>
+            <th rowspan="2">Title of Project</th>
+            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+            <th colspan="2">Group Members</th>
+            <?php if ($stage === 'FYP Progress Presentation'): ?>
+                <th rowspan="2" style="width: 160px;">Previous comments</th>
+            <?php endif; ?>
+            <th rowspan="2" style="width: 55px;">Marks<br>(Out of 40)</th>
+            <th rowspan="2" style="width: 100px;">Remarks</th>
+        </tr>
+        <tr>
+            <th style="width: 90px;">Roll No</th>
+            <th style="width: 130px;">Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php 
+    $srNo = 1;
+    foreach ($grouped as $groupId => $members): 
+        $numMembers = count($members);
+        $firstMember = $members[0];
     ?>
+        <tr>
+            <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
+            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 8pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+            <?php if ($stage === 'FYP Progress Presentation'): ?>
+                <td rowspan="<?php echo $numMembers; ?>" style="font-size: 7.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
+            <?php endif; ?>
+            <td class="mark"></td>
+            <td rowspan="<?php echo $numMembers; ?>"></td>
+        </tr>
+        <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+        <tr>
+            <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+            <td class="mark"></td>
+        </tr>
+        <?php endfor; ?>
+    <?php endforeach; ?>
+    <?php if (empty($grouped)): ?>
+        <tr><td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
+    <?php endif; ?>
+    </tbody>
 
-    <div class="report-header">
-        <small style="font-size: 0.75rem; color: #64748b;"><?php echo $headerText; ?></small>
-        <h4>Department of <?php echo htmlspecialchars($committee['department'] ?? 'Software Engineering'); ?>, Faculty of Engineering & Technology</h4>
-        <p>FYP Session <?php echo date('Y') + 1; ?>, Batch 2k<?php echo date('y') - 4; ?>, BS (Software Engineering) Morning</p>
-        <div class="title-underline"><?php echo htmlspecialchars($stage); ?></div>
-    </div>
+<?php elseif ($stage === 'Final Presentation'): ?>
+    <thead>
+        <tr>
+            <th rowspan="2" style="width: 28px;">S.<br>No</th>
+            <th rowspan="2" style="width: 70px;">Project ID</th>
+            <th rowspan="2">Title of Project</th>
+            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+            <th colspan="2">Group Members</th>
+            <th colspan="5">Presentation<br>(25 marks)</th>
+            <th colspan="5">Thesis<br>(25 marks)</th>
+            <th rowspan="2" class="vtext">Project Demo (25 marks)</th>
+            <th rowspan="2" style="width: 70px;">Remarks</th>
+        </tr>
+        <tr>
+            <th style="width: 90px;">Roll No</th>
+            <th style="width: 130px;">Full Name</th>
+            <!-- Presentation -->
+            <th class="vtext">Contents (5)</th>
+            <th class="vtext">Time spent (5)</th>
+            <th class="vtext">Confidence (5)</th>
+            <th class="vtext">Q & A (5)</th>
+            <th class="vtext">Language used (5)</th>
+            <!-- Thesis -->
+            <th class="vtext">Contents (5)</th>
+            <th class="vtext">Formatting (5)</th>
+            <th class="vtext">Referencing (5)</th>
+            <th class="vtext">Fig. & tables (5)</th>
+            <th class="vtext">Completeness (5)</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php 
+    $srNo = 1;
+    foreach ($grouped as $groupId => $members): 
+        $numMembers = count($members);
+        $firstMember = $members[0];
+    ?>
+        <tr>
+            <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
+            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 8pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+            <?php for($k=0; $k<11; $k++): ?><td class="mark"></td><?php endfor; ?>
+            <td rowspan="<?php echo $numMembers; ?>"></td>
+        </tr>
+        <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+        <tr>
+            <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+            <?php for($k=0; $k<11; $k++): ?><td class="mark"></td><?php endfor; ?>
+        </tr>
+        <?php endfor; ?>
+    <?php endforeach; ?>
+    <?php if (empty($grouped)): ?>
+        <tr><td colspan="18" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
+    <?php endif; ?>
+    </tbody>
+<?php endif; ?>
+</table>
 
-    <div class="evaluator-details">
-        <div>Dated: <?php echo date('d M Y'); ?></div>
-        <div>Instructor's Name: <span style="text-decoration: underline; padding: 0 50px;"><?php echo htmlspecialchars($committee['name'] ?? '_______________________'); ?></span></div>
-        <div>Instructor's Signature: _______________________</div>
-    </div>
-
-    <table class="eval-table">
-        <?php if ($stage === 'FYP Progress Presentation' || $stage === 'Proposal Defence Presentation'): ?>
-            <thead>
-                <tr>
-                    <th rowspan="2" style="width: 30px;">Sr.<br>No</th>
-                    <th rowspan="2" style="width: 75px;">Project ID</th>
-                    <th rowspan="2" style="width: 140px;">Title of Project</th>
-                    <th rowspan="2" style="width: 100px;">Primary Supervisor</th>
-                    <th colspan="2">Group Members</th>
-                    <?php if ($stage === 'FYP Progress Presentation'): ?>
-                        <th rowspan="2" style="width: 180px;">Previous comments</th>
-                    <?php endif; ?>
-                    <th rowspan="2" style="width: 70px;">Marks<br>(Out of 40)</th>
-                    <th rowspan="2" style="width: 120px;">Remarks</th>
-                </tr>
-                <tr>
-                    <th style="width: 85px;">Roll No</th>
-                    <th style="width: 120px;">Full Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                $srNo = 1;
-                foreach ($grouped as $groupId => $members): 
-                    $numMembers = count($members);
-                    $firstMember = $members[0];
-                ?>
-                    <tr>
-                        <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo $srNo++; ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
-                        
-                        <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
-                        <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
-                        
-                        <?php if ($stage === 'FYP Progress Presentation'): ?>
-                            <td rowspan="<?php echo $numMembers; ?>" style="font-size: 0.7rem; color: #475569;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
-                        <?php endif; ?>
-                        
-                        <td class="marks-cell"></td>
-                        <td rowspan="<?php echo $numMembers; ?>"></td>
-                    </tr>
-                    <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
-                            <td><?php echo htmlspecialchars($member['student_name']); ?></td>
-                            <td class="marks-cell"></td>
-                        </tr>
-                    <?php endfor; ?>
-                <?php endforeach; ?>
-                <?php if (empty($grouped)): ?>
-                    <tr>
-                        <td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="text-center py-4 text-muted">No approved projects found.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-            
-        <?php elseif ($stage === 'Final Presentation'): ?>
-            <thead>
-                <tr>
-                    <th rowspan="2" style="width: 28px;">Sr.<br>No</th>
-                    <th rowspan="2" style="width: 70px;">Project ID</th>
-                    <th rowspan="2" style="width: 130px;">Title of Project</th>
-                    <th rowspan="2" style="width: 95px;">Primary Supervisor</th>
-                    <th colspan="2">Group Members</th>
-                    <th colspan="5">Presentation<br>(25 marks)</th>
-                    <th colspan="5">Thesis<br>(25 marks)</th>
-                    <th rowspan="2" class="vertical-text">Project<br>Demo<br>(25<br>marks)</th>
-                    <th rowspan="2" style="width: 80px;">Remarks</th>
-                </tr>
-                <tr>
-                    <th style="width: 80px;">Roll No</th>
-                    <th style="width: 110px;">Full Name</th>
-                    
-                    <!-- Presentation Sub -->
-                    <th class="vertical-text">Contents (5)</th>
-                    <th class="vertical-text">Time spent (5)</th>
-                    <th class="vertical-text">Confidence (5)</th>
-                    <th class="vertical-text">Q & A (5)</th>
-                    <th class="vertical-text">Language used (5)</th>
-                    
-                    <!-- Thesis Sub -->
-                    <th class="vertical-text">Contents (5)</th>
-                    <th class="vertical-text">Formatting (5)</th>
-                    <th class="vertical-text">Referencing (5)</th>
-                    <th class="vertical-text">Fig. & tables (5)</th>
-                    <th class="vertical-text">Completeness (5)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                $srNo = 1;
-                foreach ($grouped as $groupId => $members): 
-                    $numMembers = count($members);
-                    $firstMember = $members[0];
-                ?>
-                    <tr>
-                        <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo $srNo++; ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                        <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
-                        
-                        <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
-                        <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
-                        
-                        <?php for($k=0; $k<11; $k++): ?><td class="marks-cell"></td><?php endfor; ?>
-                        <td rowspan="<?php echo $numMembers; ?>"></td>
-                    </tr>
-                    <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
-                            <td><?php echo htmlspecialchars($member['student_name']); ?></td>
-                            <?php for($k=0; $k<11; $k++): ?><td class="marks-cell"></td><?php endfor; ?>
-                        </tr>
-                    <?php endfor; ?>
-                <?php endforeach; ?>
-                <?php if (empty($grouped)): ?>
-                    <tr>
-                        <td colspan="18" class="text-center py-4 text-muted">No approved projects found.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        <?php endif; ?>
-    </table>
-
-    <div class="signature-line">
-        Instructor's Signature: _______________________
-    </div>
+<div class="sig-line">Instructor's Signature: __________________</div>
 
 </body>
 </html>
