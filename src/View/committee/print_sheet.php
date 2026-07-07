@@ -216,7 +216,6 @@
             <th colspan="5">Presentation<br>(25 marks)</th>
             <th colspan="5">Thesis<br>(25 marks)</th>
             <th rowspan="2" class="vtext">Project Demo (25 marks)</th>
-            <th rowspan="2" style="width: 55px;">Remarks</th>
         </tr>
         <tr>
             <th style="width: 75px;">Roll No</th>
@@ -250,7 +249,6 @@
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
             <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
             <?php for($k=0; $k<11; $k++): ?><td class="mark"></td><?php endfor; ?>
-            <td rowspan="<?php echo $numMembers; ?>"></td>
         </tr>
         <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
         <tr>
@@ -261,7 +259,7 @@
         <?php endfor; ?>
     <?php endforeach; ?>
     <?php if (empty($grouped)): ?>
-        <tr><td colspan="18" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
+        <tr><td colspan="17" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
     <?php endif; ?>
     </tbody>
 <?php endif; ?>
