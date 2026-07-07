@@ -77,20 +77,24 @@
             transform: rotate(180deg);
             white-space: nowrap;
             height: 90px;
-            padding: 4px 2px;
+            padding: 4px 3px;
             font-size: 7.5pt;
-            width: 22px;
-            min-width: 22px;
-            max-width: 22px;
+            width: 28px;
+            min-width: 28px;
+            max-width: 28px;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
         }
 
         /* Marks empty cells - fixed small width */
         table.sheet td.mark {
-            width: 22px;
-            min-width: 22px;
-            max-width: 22px;
+            width: 28px;
+            min-width: 28px;
+            max-width: 28px;
             text-align: center;
             height: 22px;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
         }
 
         /* Signature */
