@@ -85,7 +85,6 @@ html.dark-theme .eval-remarks-input {
     border-color: #334155 !important;
 }
 
-<style>
 .search-highlight {
     background-color: #fde047; /* Yellow */
     color: #000;
@@ -96,23 +95,94 @@ html.dark-theme .eval-remarks-input {
     background-color: #f97316; /* Orange */
     color: #fff;
 }
-</style>
+
+/* Custom Search Bar UI */
+.custom-search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--form-bg);
+    border: 1px solid #cbd5e1;
+    border-radius: 50rem;
+    padding: 0.35rem 0.5rem;
+    max-width: 320px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+html.dark-theme .custom-search-bar {
+    border-color: #334155;
+}
+.custom-search-bar:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+.custom-search-bar .search-icon {
+    color: #94a3b8;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    font-size: 0.95rem;
+}
+.custom-search-bar .search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex-grow: 1;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    min-width: 0;
+}
+.custom-search-bar .search-input::placeholder {
+    color: #94a3b8;
+}
+.custom-search-bar .search-count {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0 0.5rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+.custom-search-bar .search-nav {
+    display: flex;
+    border-left: 1px solid #e2e8f0;
+    padding-left: 0.25rem;
+}
+html.dark-theme .custom-search-bar .search-nav {
+    border-left-color: #334155;
+}
+.custom-search-bar .search-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.custom-search-bar .search-btn:hover {
+    background-color: rgba(0,0,0,0.06);
+    color: var(--text-primary);
+}
+html.dark-theme .custom-search-bar .search-btn:hover {
+    background-color: rgba(255,255,255,0.1);
+}
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-0 text-gray-800 fw-bold"><?php echo htmlspecialchars($stage); ?> Grading</h1>
     <div class="d-flex gap-3 align-items-center">
-        <div class="input-group shadow-sm" style="max-width: 400px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color, #cbd5e1);">
-            <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-search"></i></span>
-            <input type="text" id="gradingSearch" class="form-control border-0 shadow-none ps-0" placeholder="Find in page...">
-            <span class="input-group-text bg-white border-0 text-muted" id="searchCount" style="font-size: 0.85rem; padding-right: 5px;">0/0</span>
-            <div class="input-group-text bg-white border-0 p-0 d-flex border-start border-light-subtle">
-                <button class="btn btn-sm btn-light border-0 rounded-0" type="button" id="searchPrev" style="padding: 0.35rem 0.6rem;"><i class="bi bi-chevron-up"></i></button>
-                <button class="btn btn-sm btn-light border-0 rounded-0" type="button" id="searchNext" style="padding: 0.35rem 0.6rem;"><i class="bi bi-chevron-down"></i></button>
+        <div class="custom-search-bar shadow-sm">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" id="gradingSearch" class="search-input" placeholder="Find in page...">
+            <span id="searchCount" class="search-count" style="display: none;">0/0</span>
+            <div class="search-nav">
+                <button type="button" id="searchPrev" class="search-btn"><i class="bi bi-chevron-up"></i></button>
+                <button type="button" id="searchNext" class="search-btn"><i class="bi bi-chevron-down"></i></button>
             </div>
         </div>
-        <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm" target="_blank" style="white-space: nowrap;">
-            <i class="bi bi-printer me-1"></i> Print Blank Sheet
+        <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-primary shadow-sm rounded-pill px-4" target="_blank" style="white-space: nowrap; font-weight: 600;">
+            <i class="bi bi-printer me-1"></i> Print
         </a>
     </div>
 </div>
