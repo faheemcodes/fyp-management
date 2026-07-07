@@ -7,7 +7,26 @@ use PHPMailer\PHPMailer\Exception;
 class AuthController extends BaseController {
     
     public function index() {
-        redirect('/login');
+        $db = \Database::getInstance()->getConnection();
+        
+        // Fetch Upcoming Deadlines
+        $deadlines = $db->query("SELECT * FROM deadlines WHERE date >= CURRENT_DATE ORDER BY date ASC LIMIT 5")->fetchAll();
+        
+        // Fetch Supervisors Spotlight
+        $supervisors = $db->query("
+            SELECT s.name, s.department, u.email 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE u.status = 'approved' 
+            ORDER BY s.name ASC 
+            LIMIT 6
+        ")->fetchAll();
+        
+        $this->render('landing', [
+            'pageTitle' => 'Welcome to FYP Portal - University of Sindh',
+            'deadlines' => $deadlines,
+            'supervisors' => $supervisors
+        ]);
     }
     
     public function login() {
