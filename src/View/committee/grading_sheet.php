@@ -38,9 +38,12 @@ $groupCount = count($grouped ?? []);
     background: <?php echo $heroGradient; ?>;
     border-radius: var(--border-radius-lg);
     padding: 28px 32px;
-    position: relative;
+    position: sticky;
+    top: 75px; /* Offset for top navbar */
+    z-index: 100;
     overflow: hidden;
     margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 .gs-hero::before {
     content: '';
