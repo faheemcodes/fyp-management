@@ -160,14 +160,14 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 .group-hero-icon {
     width: 64px;
     height: 64px;
-    border-radius: 16px;
-    background: conic-gradient(from 0deg, #3b82f6, #2563eb, #1d4ed8, #3b82f6);
+    border-radius: 50%;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 28px;
     color: #fff;
-    box-shadow: 0 8px 20px rgba(59,130,246,0.3);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
     flex-shrink: 0;
 }
 .group-stat-pill {
@@ -208,7 +208,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
             <div class="group-hero-icon" style="background: transparent;">
-                <img src="<?php echo $basePath; ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;">
+                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">

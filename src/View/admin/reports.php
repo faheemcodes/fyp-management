@@ -32,15 +32,16 @@
     pointer-events: none;
 }
 .group-hero-icon {
-    width: 56px;
-    height: 56px;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
-    border-radius: 16px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 28px;
     color: #fff;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
     flex-shrink: 0;
 }
 
@@ -166,8 +167,8 @@ html.dark-theme, body.dark-theme {
 <div class="group-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);">
-                <i class="bi bi-bar-chart-fill"></i>
+            <div class="group-hero-icon" style="background: transparent;">
+                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <div>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">Reports & Analytics</h4>
