@@ -106,10 +106,20 @@
 
     // Show loader on form submissions
     document.addEventListener('submit', function(e) {
-        const loader = document.getElementById('global-loader');
-        if (loader) {
-            document.body.appendChild(loader);
-            loader.classList.remove('hidden');
+        // Explicitly ignore chatbot and message forms
+        if (e.target && (e.target.id === 'ai-chat-form' || e.target.id === 'chatForm')) {
+            return;
         }
+        
+        // Use a slight timeout to see if another script called preventDefault() (e.g. for AJAX)
+        setTimeout(() => {
+            if (!e.defaultPrevented) {
+                const loader = document.getElementById('global-loader');
+                if (loader) {
+                    document.body.appendChild(loader);
+                    loader.classList.remove('hidden');
+                }
+            }
+        }, 10);
     });
 </script>
