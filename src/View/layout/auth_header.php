@@ -33,8 +33,8 @@
                 <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <div class="header-brand-text">
-                <h1>University of Sindh</h1>
-                <p>Faculty of Engineering & Technology</p>
+                <h1>Faculty of Engineering & Technology</h1>
+                <p>University of Sindh</p>
             </div>
         </a>
         <?php if(isset($headerBtnLink) && isset($headerBtnText)): ?>

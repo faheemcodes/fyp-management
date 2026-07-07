@@ -254,8 +254,8 @@
             <a href="<?php echo $basePath; ?>/" class="brand">
                 <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo">
                 <div class="brand-text">
-                    <h1>University of Sindh</h1>
-                    <p>Faculty of Engineering & Technology</p>
+                    <h1>Faculty of Engineering & Technology</h1>
+                    <p>University of Sindh</p>
                 </div>
             </a>
             <div class="nav-actions">

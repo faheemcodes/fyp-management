@@ -525,8 +525,8 @@
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
             <div class="header-brand-text">
-                <h1>University of Sindh</h1>
-                <p>Faculty of Engineering & Technology</p>
+                <h1>Faculty of Engineering & Technology</h1>
+                <p>University of Sindh</p>
             </div>
         </a>
         <a href="<?php echo $basePath; ?>/login" class="header-login-btn">Log In</a>
