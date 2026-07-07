@@ -10,137 +10,126 @@
             background: #fff;
             color: #000;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
-            padding: 15px;
+            font-size: 10pt;
+            padding: 10px;
         }
 
         /* ─── Header ─── */
         .report-header {
             text-align: center;
-            margin-bottom: 8px;
-            line-height: 1.4;
+            margin-bottom: 6px;
+            line-height: 1.3;
         }
-        .report-header .dept {
-            font-size: 12pt;
-            font-weight: bold;
-        }
-        .report-header .batch {
-            font-size: 10pt;
-        }
-        .report-header .stage-title {
-            font-size: 11pt;
-            font-weight: bold;
-            text-decoration: underline;
-            margin-top: 2px;
-        }
+        .report-header .dept { font-size: 11pt; font-weight: bold; }
+        .report-header .batch { font-size: 9pt; }
+        .report-header .stage-title { font-size: 10pt; font-weight: bold; text-decoration: underline; margin-top: 2px; }
 
         /* ─── Evaluator Info ─── */
         .evaluator-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin: 8px 0 10px 0;
-            font-size: 10pt;
-        }
-        .evaluator-row span {
-            font-weight: bold;
+            margin: 6px 0 8px 0;
+            font-size: 9pt;
         }
 
         /* ─── Table ─── */
         table.sheet {
             width: 100%;
             border-collapse: collapse;
-            font-size: 9pt;
+            font-size: 8pt;
+            table-layout: auto;
         }
         table.sheet th,
         table.sheet td {
             border: 1.5px solid #000;
-            padding: 3px 4px;
+            padding: 2px 3px;
             vertical-align: middle;
         }
         table.sheet th {
             background: #e8e8e8;
             font-weight: bold;
             text-align: center;
-            font-size: 8pt;
+            font-size: 7pt;
         }
-        table.sheet td {
-            font-size: 9pt;
-        }
-        table.sheet td.center {
-            text-align: center;
-        }
+        table.sheet td { font-size: 8pt; }
+        table.sheet td.center { text-align: center; }
 
         /* Vertical text for sub-columns */
         table.sheet th.vtext {
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             white-space: nowrap;
-            height: 90px;
-            padding: 4px 3px;
-            font-size: 7.5pt;
-            width: 28px;
-            min-width: 28px;
-            max-width: 28px;
-            border-left: 1.5px solid #000;
-            border-right: 1.5px solid #000;
+            height: 80px;
+            padding: 3px 1px;
+            font-size: 6.5pt;
+            width: 20px;
         }
 
-        /* Marks empty cells - fixed small width */
+        /* Marks empty cells */
         table.sheet td.mark {
-            width: 28px;
-            min-width: 28px;
-            max-width: 28px;
+            width: 20px;
             text-align: center;
-            height: 22px;
-            border-left: 1.5px solid #000;
-            border-right: 1.5px solid #000;
+            height: 20px;
         }
 
         /* Signature */
         .sig-line {
             text-align: right;
-            margin-top: 20px;
-            font-size: 10pt;
+            margin-top: 15px;
+            font-size: 9pt;
             font-weight: bold;
         }
 
         /* ─── Print Button ─── */
-        .no-print {
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: Arial, sans-serif;
-        }
-        .no-print button {
-            padding: 8px 24px;
-            font-size: 10pt;
-            cursor: pointer;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            margin: 0 5px;
-        }
+        .no-print { text-align: center; margin-bottom: 12px; font-family: Arial, sans-serif; }
+        .no-print button { padding: 8px 24px; font-size: 10pt; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; margin: 0 5px; }
         .no-print .print-btn { background: #2563eb; color: #fff; border: none; font-weight: bold; }
         .no-print .back-btn { background: #f1f5f9; }
 
         /* ─── Print ─── */
         @media print {
-            @page {
-                size: landscape;
-                margin: 8mm;
+            @page { size: landscape; margin: 6mm; }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
-            body { padding: 0; }
+
+            body { padding: 0; font-size: 9pt; background: #fff !important; }
             .no-print { display: none !important; }
+
+            table.sheet {
+                border-collapse: collapse !important;
+                font-size: 7.5pt;
+                width: 100% !important;
+            }
+
+            table.sheet,
+            table.sheet thead,
+            table.sheet tbody,
+            table.sheet tr,
             table.sheet th,
             table.sheet td {
-                border: 1.5px solid #000 !important;
+                border: 1px solid black !important;
             }
+
             table.sheet th {
-                background: #e8e8e8 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                background-color: #e8e8e8 !important;
             }
-            thead { display: table-header-group; }
-            tr { page-break-inside: avoid; break-inside: avoid; }
+
+            thead { display: table-header-group !important; }
+
+            tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            td, th {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
         }
     </style>
 </head>
@@ -159,28 +148,28 @@
 
 <div class="evaluator-row">
     <div>Dated: <?php echo date('d-m-Y'); ?></div>
-    <div>Evaluators' Name: <span style="text-decoration: underline; padding: 0 60px;"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
-    <div>Evaluators' Signature: __________________</div>
+    <div>Evaluators' Name: <span style="text-decoration: underline; padding: 0 50px;"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
+    <div>Evaluators' Signature: _______________</div>
 </div>
 
 <table class="sheet">
 <?php if ($stage === 'Proposal Defence Presentation' || $stage === 'FYP Progress Presentation'): ?>
     <thead>
         <tr>
-            <th rowspan="2" style="width: 28px;">S.<br>No</th>
-            <th rowspan="2" style="width: 70px;">Project ID</th>
+            <th rowspan="2" style="width: 22px;">S.<br>No</th>
+            <th rowspan="2" style="width: 58px;">Project ID</th>
             <th rowspan="2">Title of Project</th>
-            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+            <th rowspan="2" style="width: 100px;">Primary Supervisor</th>
             <th colspan="2">Group Members</th>
             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                <th rowspan="2" style="width: 160px;">Previous comments</th>
+                <th rowspan="2" style="width: 130px;">Previous comments</th>
             <?php endif; ?>
-            <th rowspan="2" style="width: 55px;">Marks<br>(Out of 40)</th>
-            <th rowspan="2" style="width: 100px;">Remarks</th>
+            <th rowspan="2" style="width: 45px;">Marks<br>(40)</th>
+            <th rowspan="2" style="width: 80px;">Remarks</th>
         </tr>
         <tr>
-            <th style="width: 90px;">Roll No</th>
-            <th style="width: 130px;">Full Name</th>
+            <th style="width: 80px;">Roll No</th>
+            <th style="width: 110px;">Full Name</th>
         </tr>
     </thead>
     <tbody>
@@ -192,13 +181,13 @@
     ?>
         <tr>
             <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 8pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
             <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
             <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
             <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                <td rowspan="<?php echo $numMembers; ?>" style="font-size: 7.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
+                <td rowspan="<?php echo $numMembers; ?>" style="font-size: 6.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
             <?php endif; ?>
             <td class="mark"></td>
             <td rowspan="<?php echo $numMembers; ?>"></td>
@@ -219,19 +208,19 @@
 <?php elseif ($stage === 'Final Presentation'): ?>
     <thead>
         <tr>
-            <th rowspan="2" style="width: 28px;">S.<br>No</th>
-            <th rowspan="2" style="width: 70px;">Project ID</th>
+            <th rowspan="2" style="width: 22px;">S.<br>No</th>
+            <th rowspan="2" style="width: 55px;">Project ID</th>
             <th rowspan="2">Title of Project</th>
-            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+            <th rowspan="2" style="width: 95px;">Primary Supervisor</th>
             <th colspan="2">Group Members</th>
             <th colspan="5">Presentation<br>(25 marks)</th>
             <th colspan="5">Thesis<br>(25 marks)</th>
             <th rowspan="2" class="vtext">Project Demo (25 marks)</th>
-            <th rowspan="2" style="width: 70px;">Remarks</th>
+            <th rowspan="2" style="width: 55px;">Remarks</th>
         </tr>
         <tr>
-            <th style="width: 90px;">Roll No</th>
-            <th style="width: 130px;">Full Name</th>
+            <th style="width: 75px;">Roll No</th>
+            <th style="width: 100px;">Full Name</th>
             <!-- Presentation -->
             <th class="vtext">Contents (5)</th>
             <th class="vtext">Time spent (5)</th>
@@ -255,7 +244,7 @@
     ?>
         <tr>
             <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 8pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
             <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
             <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
@@ -278,7 +267,7 @@
 <?php endif; ?>
 </table>
 
-<div class="sig-line">Instructor's Signature: __________________</div>
+<div class="sig-line">Instructor's Signature: _______________</div>
 
 </body>
 </html>
