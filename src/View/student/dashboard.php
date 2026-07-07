@@ -207,8 +207,8 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 <div class="group-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);">
-                <i class="bi bi-mortarboard-fill"></i>
+            <div class="group-hero-icon" style="background: transparent;">
+                <img src="<?php echo $basePath; ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">

@@ -24,7 +24,7 @@
         <!-- Body -->
         <div id="ai-chat-body">
             <div class="ai-welcome-card">
-                <div class="ai-welcome-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                <div class="ai-welcome-icon" style="background: transparent;"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
                 <p class="ai-welcome-title">Hi there! 👋</p>
                 <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
                 <div class="ai-quick-actions">
@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const welcome = document.createElement('div');
         welcome.className = 'ai-welcome-card';
         welcome.innerHTML = `
-            <div class="ai-welcome-icon"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="ai-welcome-icon" style="background: transparent;"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
             <p class="ai-welcome-title">Hi there! 👋</p>
             <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
             <div class="ai-quick-actions">

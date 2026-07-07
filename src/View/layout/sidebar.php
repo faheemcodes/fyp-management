@@ -25,8 +25,8 @@ if ($urlPrefix === '/') {
 <!-- Sidebar -->
 <nav id="sidebar" class="d-flex flex-column">
     <a href="<?php echo $urlPrefix; ?>/<?php echo htmlspecialchars($role ?: 'login'); ?>/dashboard" class="sidebar-header d-flex align-items-center gap-3 text-decoration-none">
-        <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: #fff; flex-shrink: 0;">
-            <i class="bi bi-mortarboard-fill"></i>
+        <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
         </div>
         <div>
             <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>

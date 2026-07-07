@@ -29,7 +29,7 @@
     <div class="container header-inner d-flex justify-content-between align-items-center">
         <a class="header-brand" href="<?php echo $basePath; ?>/login">
             <div class="header-logo">
-                <i class="bi bi-mortarboard-fill"></i>
+                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <div class="header-brand-text">
                 <h1>University of Sindh</h1>

@@ -278,14 +278,14 @@ if (!isset($basePath)) {
 <div class="letterhead-container">
     <!-- Watermark Seal -->
     <div class="watermark">
-        <img src="<?php echo $basePath; ?>/uploads/fet_logo.png" alt="FET Watermark" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%);">
+        <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Watermark" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%);">
     </div>
 
     <div class="letterhead-content">
         <!-- Faculty Header -->
         <div class="header-logo-section">
             <!-- Colored Crest Emblem -->
-            <img src="<?php echo $basePath; ?>/uploads/fet_logo.png" alt="FET Logo" width="80" height="80" class="d-inline-block align-top" style="object-fit: contain;">
+            <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Logo" width="80" height="80" class="d-inline-block align-top" style="object-fit: contain;">
             <div class="header-text">
                 <h3 class="uni-title m-0">University of Sindh</h3>
                 <h5 class="fac-title m-0">Faculty of Engineering & Technology</h5>
