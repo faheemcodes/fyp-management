@@ -109,15 +109,39 @@
         .hero-stats { display: flex; gap: 36px; margin-top: 50px; padding-top: 36px; border-top: 1px solid var(--lp-border); flex-wrap: wrap; }
         .hero-stat h3 { font-size: 1.8rem; font-weight: 800; margin: 0; color: white; }
         .hero-stat p { font-size: 0.78rem; color: var(--lp-muted); margin: 4px 0 0; }
-        .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
-        .logo-glow {
-            width: 260px; height: 260px;
-            background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(139,92,246,0.06));
-            border: 1px solid var(--lp-border); border-radius: 40px;
-            display: flex; align-items: center; justify-content: center;
+        .hero-visual {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             animation: float 6s ease-in-out infinite;
         }
-        .logo-glow img { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 30px rgba(16,185,129,0.15)); }
+
+        .hero-image-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            pointer-events: none;
+        }
+
+        .hero-illustration {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
 
         /* ─── Light Sections ─── */
@@ -312,8 +336,8 @@
             </div>
             <div class="col-lg-5 d-none d-lg-flex justify-content-center">
                 <div class="hero-visual">
-                    <div class="logo-glow">
-                        <img src="<?php echo $basePath; ?>/images/logo.png" alt="University of Sindh Logo">
+                    <div class="hero-image-wrapper">
+                        <img src="<?php echo $basePath; ?>/images/hero_abstract.jpg" alt="Technology & Engineering" class="hero-illustration">
                     </div>
                 </div>
             </div>
