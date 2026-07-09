@@ -37,8 +37,14 @@
                 <p>University of Sindh</p>
             </div>
         </a>
+        <div class="nav-actions">
         <?php if(isset($headerBtnLink) && isset($headerBtnText)): ?>
-        <a href="<?php echo $basePath . $headerBtnLink; ?>" class="header-signup-btn"><?php echo $headerBtnText; ?></a>
+            <?php if(strpos($headerBtnLink, 'register') !== false): ?>
+                <a href="<?php echo $basePath . $headerBtnLink; ?>" class="btn-nav btn-nav-ghost">Register</a>
+            <?php else: ?>
+                <a href="<?php echo $basePath . $headerBtnLink; ?>" class="btn-nav btn-nav-primary"><i class="bi bi-box-arrow-in-right"></i> <?php echo $headerBtnText; ?></a>
+            <?php endif; ?>
         <?php endif; ?>
+        </div>
     </div>
 </header>

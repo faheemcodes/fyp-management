@@ -48,7 +48,7 @@
         /* ΓöÇΓöÇΓöÇ Gradient Header (same as login) ΓöÇΓöÇΓöÇ */
         .header-top {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            padding: 14px 0;
+            padding: 24px 0;
             position: relative;
             overflow: hidden;
         }
@@ -78,20 +78,16 @@
         }
 
         .header-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            border-radius: 10px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            color: #fff;
             flex-shrink: 0;
         }
 
         .header-brand-text h1 {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
             color: #ffffff;
@@ -99,30 +95,18 @@
         }
 
         .header-brand-text p {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin: 0;
             color: rgba(255,255,255,0.5);
             font-weight: 400;
         }
 
-        .header-login-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #ffffff;
-            padding: 6px 18px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .header-login-btn:hover {
-            background: rgba(255,255,255,0.18);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .btn-nav { padding: 9px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-nav-ghost { color: rgba(255,255,255,0.7); background: transparent; border: none; }
+        .btn-nav-ghost:hover { color: white; }
+        .btn-nav-primary { background: #10b981; color: white; border: none; }
+        .btn-nav-primary:hover { background: #059669; transform: translateY(-1px); color: white; }
 
         /* ΓöÇΓöÇΓöÇ Page Background ΓöÇΓöÇΓöÇ */
         .register-page {
@@ -522,14 +506,16 @@
     <div class="container header-inner d-flex justify-content-between align-items-center">
         <a class="header-brand" href="<?php echo $basePath; ?>/">
             <div class="header-logo">
-                <i class="bi bi-mortarboard-fill"></i>
+                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <div class="header-brand-text">
                 <h1>Faculty of Engineering & Technology</h1>
                 <p>University of Sindh</p>
             </div>
         </a>
-        <a href="<?php echo $basePath; ?>/login" class="header-login-btn">Log In</a>
+        <div class="nav-actions">
+            <a href="<?php echo $basePath; ?>/login" class="btn-nav btn-nav-primary"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+        </div>
     </div>
 </header>
 
@@ -848,7 +834,7 @@
 </main>
 
 <div class="register-footer">
-    &copy; <?php echo date('Y'); ?> University of Sindh &middot; FYP Management Portal
+    &copy; 2026 Faculty of Engineering & Technology, University of Sindh. All rights reserved.
 </div>
 
 <script>

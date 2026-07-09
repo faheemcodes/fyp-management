@@ -58,24 +58,26 @@ class AuthController extends BaseController {
         
         // Fetch HODs
         $hods = $db->query("
-            SELECT name, email, department
-            FROM users 
-            WHERE role = 'hod' AND status = 'approved'
-            ORDER BY department ASC
+            SELECT h.name, u.email, h.department
+            FROM hods h 
+            JOIN users u ON h.user_id = u.id
+            WHERE u.status = 'approved'
+            ORDER BY h.department ASC
         ")->fetchAll();
 
         // Fetch Coordinators
         $coordinators = $db->query("
-            SELECT name, email 
-            FROM users 
-            WHERE role = 'coordinator' AND status = 'approved'
-            ORDER BY name ASC
+            SELECT c.name, u.email 
+            FROM coordinators c 
+            JOIN users u ON c.user_id = u.id
+            WHERE u.status = 'approved'
+            ORDER BY c.name ASC
         ")->fetchAll();
         
         // Fetch Committee members
         $committee = $db->query("
             SELECT c.name, c.department, u.email
-            FROM committee_members c
+            FROM committees c
             JOIN users u ON c.user_id = u.id
             WHERE u.status = 'approved'
             ORDER BY c.department ASC, c.name ASC

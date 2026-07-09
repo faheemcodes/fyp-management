@@ -18,7 +18,7 @@
         /* ─── Gradient Header ─── */
         .header-top {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            padding: 14px 0;
+            padding: 24px 0;
             position: relative;
             overflow: hidden;
         }
@@ -51,8 +51,8 @@
         }
 
         .header-logo {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -60,7 +60,7 @@
         }
 
         .header-brand-text h1 {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
             color: #ffffff;
@@ -68,30 +68,18 @@
         }
 
         .header-brand-text p {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin: 0;
             color: rgba(255,255,255,0.5);
             font-weight: 400;
         }
 
-        .header-signup-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #ffffff;
-            padding: 6px 18px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .header-signup-btn:hover {
-            background: rgba(255,255,255,0.18);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .btn-nav { padding: 9px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-nav-ghost { color: rgba(255,255,255,0.7); background: transparent; border: none; }
+        .btn-nav-ghost:hover { color: white; }
+        .btn-nav-primary { background: #10b981; color: white; border: none; }
+        .btn-nav-primary:hover { background: #059669; transform: translateY(-1px); color: white; }
 
         /* ─── Page Background ─── */
         .login-page {

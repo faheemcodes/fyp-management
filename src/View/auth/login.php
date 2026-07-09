@@ -76,7 +76,7 @@ include __DIR__ . '/../layout/auth_header.php';
 </main>
 
 <div class="login-footer">
-    &copy; <?php echo date('Y'); ?> University of Sindh &middot; FYP Management Portal
+    &copy; 2026 Faculty of Engineering & Technology, University of Sindh. All rights reserved.
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
