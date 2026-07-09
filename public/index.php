@@ -76,6 +76,7 @@ $uri = '/' . ltrim($uri, '/');
 // Define routes
 $routes = [
     '/' => ['Controller\AuthController', 'index'],
+    '/faculty' => ['Controller\AuthController', 'faculty'],
     '/login' => ['Controller\AuthController', 'login'],
     '/logout' => ['Controller\AuthController', 'logout'],
     '/register' => ['Controller\AuthController', 'register'],
@@ -223,7 +224,7 @@ if (array_key_exists($uri, $routes)) {
     }
 
     // Check login requirements (simple session validation)
-    $authRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
+    $authRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/faculty'];
     if (!in_array($uri, $authRoutes)) {
         if (!isset($_SESSION['user_id'])) {
             if ($isApiRoute) {

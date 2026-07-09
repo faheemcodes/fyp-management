@@ -45,6 +45,51 @@ class AuthController extends BaseController {
         ]);
     }
     
+    public function faculty() {
+        $db = \Database::getInstance()->getConnection();
+        
+        $supervisors = $db->query("
+            SELECT s.name, s.department, s.designation, s.research_interest, u.email 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE u.status = 'approved' 
+            ORDER BY FIELD(s.designation, 'Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer', 'Lab Engineer'), s.name ASC
+        ")->fetchAll();
+        
+        // Fetch HODs
+        $hods = $db->query("
+            SELECT name, email, department
+            FROM users 
+            WHERE role = 'hod' AND status = 'approved'
+            ORDER BY department ASC
+        ")->fetchAll();
+
+        // Fetch Coordinators
+        $coordinators = $db->query("
+            SELECT name, email 
+            FROM users 
+            WHERE role = 'coordinator' AND status = 'approved'
+            ORDER BY name ASC
+        ")->fetchAll();
+        
+        // Fetch Committee members
+        $committee = $db->query("
+            SELECT c.name, c.department, u.email
+            FROM committee_members c
+            JOIN users u ON c.user_id = u.id
+            WHERE u.status = 'approved'
+            ORDER BY c.department ASC, c.name ASC
+        ")->fetchAll();
+
+        $this->render('faculty', [
+            'pageTitle' => 'Faculty & Staff - FYP Management Portal',
+            'supervisors' => $supervisors,
+            'hods' => $hods,
+            'coordinators' => $coordinators,
+            'committee' => $committee
+        ]);
+    }
+
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $identifier = trim($_POST['identifier'] ?? '');
