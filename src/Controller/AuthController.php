@@ -14,12 +14,12 @@ class AuthController extends BaseController {
         
         // Fetch Supervisors Spotlight (limited for landing page)
         $supervisors = $db->query("
-            SELECT s.name, s.department, u.email 
+            SELECT s.name, s.department, s.designation, s.research_interest, u.email 
             FROM supervisors s 
             JOIN users u ON s.user_id = u.id 
             WHERE u.status = 'approved' 
-            ORDER BY s.name ASC 
-            LIMIT 6
+            ORDER BY FIELD(s.designation, 'Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer', 'Lab Engineer'), s.name ASC 
+            LIMIT 8
         ")->fetchAll();
         
         // Fetch total supervisor count for "View All" button

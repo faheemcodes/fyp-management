@@ -43,7 +43,7 @@
         /* ─── Sticky Navbar ─── */
         .lp-navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            padding: 14px 0;
+            padding: 24px 0;
             transition: all 0.3s ease;
             background: transparent;
         }
@@ -51,13 +51,13 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--lp-border);
-            padding: 10px 0;
+            padding: 16px 0;
         }
         .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-        .lp-navbar .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
-        .lp-navbar .brand img { width: 38px; height: 38px; object-fit: contain; }
-        .lp-navbar .brand-text h1 { font-size: 0.92rem; font-weight: 700; margin: 0; color: white; }
-        .lp-navbar .brand-text p { font-size: 0.66rem; margin: 0; color: var(--lp-muted); }
+        .lp-navbar .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: white; }
+        .lp-navbar .brand img { width: 50px; height: 50px; object-fit: contain; }
+        .lp-navbar .brand-text h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: white; }
+        .lp-navbar .brand-text p { font-size: 0.75rem; margin: 0; color: var(--lp-muted); }
         .nav-actions { display: flex; align-items: center; gap: 10px; }
         .btn-nav { padding: 9px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
         .btn-nav-ghost { color: var(--lp-muted); background: transparent; border: none; }
@@ -68,81 +68,29 @@
         /* ─── Hero ─── */
         .lp-hero {
             min-height: 100vh;
-            display: flex; align-items: center;
-            position: relative; padding: 110px 0 80px;
-            background: linear-gradient(160deg, #020617 0%, #0f172a 30%, #1a1a2e 60%, #0f172a 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; padding: 140px 0 80px;
+            background: url('https://fet.usindh.edu.pk/assets/images/slides/1608745872_813.jpg') center/cover no-repeat;
             overflow: hidden;
         }
         .lp-hero::before {
             content: '';
             position: absolute; inset: 0;
-            background:
-                radial-gradient(ellipse 60% 50% at 15% 45%, rgba(16,185,129,0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 40% at 85% 25%, rgba(139,92,246,0.07) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 30% at 50% 85%, rgba(6,182,212,0.05) 0%, transparent 70%);
-            pointer-events: none;
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
         }
-        .hero-grid {
-            position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
-        }
-        .hero-content { position: relative; z-index: 2; }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
-            padding: 6px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; color: #34d399; margin-bottom: 28px;
-        }
-        .hero-badge .pulse { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
-        .hero-title { font-size: clamp(2.2rem,4.5vw,3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 24px; color: white; }
-        .hero-title .gradient { background: linear-gradient(135deg, #34d399, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero-desc { font-size: 1.1rem; color: var(--lp-muted); max-width: 520px; line-height: 1.7; margin-bottom: 36px; }
-        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-        .btn-hero { padding: 14px 28px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .hero-content { position: relative; z-index: 2; text-align: center; }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .hero-desc { font-size: 1.3rem; color: #e2e8f0; max-width: 700px; margin: 0 auto 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-weight: 500; }
+        .hero-desc span { display: block; margin-top: 12px; font-size: 1rem; color: var(--lp-accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+        .btn-hero { padding: 14px 32px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
         .btn-hero-fill { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; box-shadow: 0 8px 25px rgba(16,185,129,0.3); }
         .btn-hero-fill:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(16,185,129,0.4); color: white; }
-        .btn-hero-outline { background: rgba(255,255,255,0.04); color: white; border: 1px solid rgba(255,255,255,0.12); }
-        .btn-hero-outline:hover { background: rgba(255,255,255,0.08); color: white; transform: translateY(-3px); }
-        .hero-stats { display: flex; gap: 36px; margin-top: 50px; padding-top: 36px; border-top: 1px solid var(--lp-border); flex-wrap: wrap; }
-        .hero-stat h3 { font-size: 1.8rem; font-weight: 800; margin: 0; color: white; }
-        .hero-stat p { font-size: 0.78rem; color: var(--lp-muted); margin: 4px 0 0; }
-        .hero-visual {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image-wrapper {
-            position: relative;
-            width: 90%;
-            max-width: 450px;
-            aspect-ratio: 1;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .hero-image-wrapper::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-            pointer-events: none;
-        }
-
-        .hero-illustration {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        .btn-hero-outline { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+        .btn-hero-outline:hover { background: rgba(255,255,255,0.15); color: white; transform: translateY(-3px); }
+        .hero-stats { display: flex; justify-content: center; gap: 40px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+        .hero-stat h3 { font-size: 2.2rem; font-weight: 800; margin: 0; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .hero-stat p { font-size: 0.85rem; color: #cbd5e1; margin: 4px 0 0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 
         /* ─── Light Sections ─── */
         .section-light { background: var(--lp-white-section); color: #0f172a; padding: 80px 0; }
@@ -191,16 +139,60 @@
         .about-img-wrapper img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
 
         /* ─── Departments ─── */
-        .dept-card {
-            border-radius: 16px; overflow: hidden; position: relative; height: 200px;
-            background-size: cover; background-position: center;
-            display: flex; align-items: flex-end;
-            transition: all 0.35s ease; cursor: default;
+        .dept-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
         }
-        .dept-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%); transition: all 0.3s; }
-        .dept-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-        .dept-card:hover::before { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%); }
-        .dept-card .dept-name { position: relative; z-index: 1; padding: 20px; color: white; font-weight: 700; font-size: 0.95rem; line-height: 1.3; }
+        .dept-grid .dept-card-wrap {
+            flex: 0 0 calc(33.333% - 16px);
+            max-width: calc(33.333% - 16px);
+        }
+        @media (max-width: 991.98px) { .dept-grid .dept-card-wrap { flex: 0 0 calc(50% - 12px); max-width: calc(50% - 12px); } }
+        @media (max-width: 575.98px) { .dept-grid .dept-card-wrap { flex: 0 0 100%; max-width: 100%; } }
+
+        .dept-card {
+            background: var(--lp-card-solid);
+            border: 1px solid var(--lp-border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            height: 100%;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .dept-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--lp-accent), var(--lp-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .dept-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(16,185,129,0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .dept-card:hover::before { opacity: 1; }
+        .dept-card .dept-icon {
+            width: 56px; height: 56px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .dept-card .dept-icon.green { background: rgba(16,185,129,0.12); color: #34d399; }
+        .dept-card .dept-icon.blue { background: rgba(59,130,246,0.12); color: #60a5fa; }
+        .dept-card .dept-icon.cyan { background: rgba(6,182,212,0.12); color: #22d3ee; }
+        .dept-card .dept-icon.purple { background: rgba(139,92,246,0.12); color: #a78bfa; }
+        .dept-card .dept-icon.amber { background: rgba(245,158,11,0.12); color: #fbbf24; }
+        .dept-card .dept-name { color: white; font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; line-height: 1.3; }
+        .dept-card .dept-desc { color: var(--lp-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 18px; }
+        .dept-card .dept-link { display: inline-flex; align-items: center; gap: 6px; color: var(--lp-accent); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .dept-card .dept-link:hover { gap: 10px; color: #34d399; }
 
         /* ─── Process ─── */
         .process-card {
@@ -224,16 +216,50 @@
         .process-card h5 { font-weight: 700; margin-bottom: 8px; font-size: 1rem; color: #0f172a; }
         .process-card p { color: #64748b; font-size: 0.85rem; margin: 0; line-height: 1.6; }
 
-        /* ─── Supervisors ─── */
-        .supervisor-card { background: var(--lp-card-solid); border: 1px solid var(--lp-border); border-radius: 18px; padding: 30px 22px; text-align: center; height: 100%; transition: all 0.35s ease; }
-        .supervisor-card:hover { transform: translateY(-6px); border-color: rgba(16,185,129,0.25); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
-        .sup-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.15)); color: #34d399; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 2px solid var(--lp-border); }
-        .supervisor-card h5 { font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; color: white; }
-        .supervisor-card .dept { color: var(--lp-accent); font-size: 0.8rem; font-weight: 600; margin-bottom: 16px; }
-        .btn-contact { width: 100%; padding: 9px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--lp-border); color: var(--lp-muted); font-size: 0.8rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-        .btn-contact:hover { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.2); color: #34d399; }
-        .btn-view-all { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-decoration: none; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #34d399; transition: all 0.3s; }
-        .btn-view-all:hover { background: rgba(16,185,129,0.2); color: #34d399; transform: translateY(-2px); }
+        /* ─── Faculty / Supervisors ─── */
+        .faculty-card {
+            background: var(--lp-card-solid);
+            border: 1px solid var(--lp-border);
+            border-radius: 16px;
+            padding: 24px 18px 20px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139,92,246,0.2);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+        }
+        .faculty-avatar {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(59,130,246,0.15));
+            color: #a78bfa;
+            font-size: 1rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+            border: 2px solid var(--lp-border);
+        }
+        .faculty-card h5 { font-weight: 700; margin: 0 0 6px; font-size: 0.88rem; color: white; }
+        .faculty-designation {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+        }
+        .faculty-designation.professor { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .faculty-designation.associate { background: rgba(139,92,246,0.15); color: #a78bfa; }
+        .faculty-designation.assistant { background: rgba(59,130,246,0.15); color: #60a5fa; }
+        .faculty-designation.lecturer { background: rgba(16,185,129,0.15); color: #34d399; }
+        .faculty-designation.other { background: rgba(6,182,212,0.15); color: #22d3ee; }
+        .faculty-dept { color: var(--lp-muted); font-size: 0.75rem; margin: 0; }
+        .btn-view-all { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-decoration: none; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); color: #a78bfa; transition: all 0.3s; }
+        .btn-view-all:hover { background: rgba(139,92,246,0.2); color: #a78bfa; transform: translateY(-2px); }
 
         /* ─── CTA ─── */
         .cta-inner {
@@ -257,12 +283,12 @@
         @media (max-width: 991.98px) { .hero-visual { display: none; } }
         @media (max-width: 575.98px) {
             .lp-hero { padding: 100px 0 50px; min-height: auto; }
-            .hero-title { font-size: 1.9rem; }
-            .hero-desc { font-size: 0.95rem; }
+            .hero-title { font-size: 1.8rem; }
+            .hero-desc { font-size: 1rem; margin-bottom: 30px; }
             .hero-btns { flex-direction: column; }
-            .btn-hero { justify-content: center; }
-            .hero-stats { gap: 20px; }
-            .hero-stat h3 { font-size: 1.4rem; }
+            .btn-hero { justify-content: center; width: 100%; }
+            .hero-stats { gap: 20px; flex-direction: column; padding-top: 30px; margin-top: 40px; }
+            .hero-stat h3 { font-size: 1.8rem; }
             .section-heading { font-size: 1.5rem; }
             .cta-inner { padding: 36px 20px; }
             .nav-actions .btn-nav-ghost { display: none; }
@@ -294,51 +320,40 @@
 
 <!-- ─── Hero ─── -->
 <section class="lp-hero">
-    <div class="hero-grid"></div>
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-7 hero-content">
-                <div class="hero-badge">
-                    <span class="pulse"></span> FYP Portal is Live — Batch <?php echo date('Y'); ?>
-                </div>
-                <h1 class="hero-title">
-                    A Place to<br><span class="gradient">Learn and Lead.</span>
-                </h1>
-                <p class="hero-desc">
-                    Dynamic learning with quality education through rigorous teaching and research methodologies in Engineering and Technology disciplines.
-                </p>
-                <div class="hero-btns">
-                    <a href="<?php echo $basePath; ?>/login" class="btn-hero btn-hero-fill">
-                        <i class="bi bi-box-arrow-in-right"></i> Login to Portal
-                    </a>
-                    <a href="<?php echo $basePath; ?>/register" class="btn-hero btn-hero-outline">
-                        <i class="bi bi-person-plus-fill"></i> Student Registration
-                    </a>
-                </div>
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <h3><?php echo $stats['departments'] ?? 5; ?></h3>
-                        <p>Departments</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3><?php echo $stats['supervisors'] ?? '10'; ?>+</h3>
-                        <p>Faculty Members</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3><?php echo $stats['projects'] ?? '50'; ?>+</h3>
-                        <p>Active Projects</p>
-                    </div>
-                    <div class="hero-stat">
-                        <h3><?php echo $stats['students'] ?? '200'; ?>+</h3>
-                        <p>Registered Students</p>
-                    </div>
-                </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Faculty of Engineering and Technology
+            </h1>
+            <p class="hero-desc">
+                University of Sindh, Jamshoro
+                <span>FYP Management Portal - Batch <?php echo date('Y'); ?></span>
+            </p>
+            <div class="hero-btns">
+                <a href="<?php echo $basePath; ?>/login" class="btn-hero btn-hero-fill">
+                    <i class="bi bi-box-arrow-in-right"></i> Login to Portal
+                </a>
+                <a href="<?php echo $basePath; ?>/register" class="btn-hero btn-hero-outline">
+                    <i class="bi bi-person-plus-fill"></i> Student Registration
+                </a>
             </div>
-            <div class="col-lg-5 d-none d-lg-flex justify-content-center">
-                <div class="hero-visual">
-                    <div class="hero-image-wrapper">
-                        <img src="<?php echo $basePath; ?>/images/hero_abstract.jpg" alt="Technology & Engineering" class="hero-illustration">
-                    </div>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3><?php echo $stats['departments'] ?? 5; ?></h3>
+                    <p>Departments</p>
+                </div>
+                <div class="hero-stat">
+                    <h3><?php echo $stats['supervisors'] ?? '10'; ?>+</h3>
+                    <p>Faculty Members</p>
+                </div>
+                <div class="hero-stat">
+                    <h3><?php echo $stats['projects'] ?? '50'; ?>+</h3>
+                    <p>Active Projects</p>
+                </div>
+                <div class="hero-stat">
+                    <h3><?php echo $stats['students'] ?? '200'; ?>+</h3>
+                    <p>Registered Students</p>
                 </div>
             </div>
         </div>
@@ -452,39 +467,56 @@
             <h2 class="section-heading">Institutes & Departments</h2>
             <p class="section-sub mx-auto">Offering accredited undergraduate and graduate programs in Engineering & Technology.</p>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
+        <div class="dept-grid">
+            <!-- Row 1: 3 cards -->
+            <div class="dept-card-wrap">
                 <a href="https://fet.usindh.edu.pk/Home/department/Mw%3D%3D" target="_blank" class="text-decoration-none">
-                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800555_126.jpg');">
+                    <div class="dept-card">
+                        <div class="dept-icon green"><i class="bi bi-pc-display-horizontal"></i></div>
                         <div class="dept-name">Department of Information Technology</div>
+                        <p class="dept-desc">Focused on data management, networking, cybersecurity, and IT infrastructure for modern enterprises.</p>
+                        <span class="dept-link">Learn More <i class="bi bi-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="dept-card-wrap">
                 <a href="https://fet.usindh.edu.pk/Home/department/NA%3D%3D" target="_blank" class="text-decoration-none">
-                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800623_789.jpg');">
+                    <div class="dept-card">
+                        <div class="dept-icon blue"><i class="bi bi-code-slash"></i></div>
                         <div class="dept-name">Department of Software Engineering</div>
+                        <p class="dept-desc">Building robust software systems through design patterns, agile methodologies, and quality assurance practices.</p>
+                        <span class="dept-link">Learn More <i class="bi bi-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="dept-card-wrap">
                 <a href="https://fet.usindh.edu.pk/Home/department/MQ%3D%3D" target="_blank" class="text-decoration-none">
-                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608799871_312.jpg');">
+                    <div class="dept-card">
+                        <div class="dept-icon cyan"><i class="bi bi-broadcast-pin"></i></div>
                         <div class="dept-name">Department of Telecommunication Engineering</div>
+                        <p class="dept-desc">Exploring wireless communication, signal processing, and next-generation network technologies.</p>
+                        <span class="dept-link">Learn More <i class="bi bi-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <!-- Row 2: 2 centered cards -->
+            <div class="dept-card-wrap">
                 <a href="https://fet.usindh.edu.pk/Home/department/Mg%3D%3D" target="_blank" class="text-decoration-none">
-                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/departments/overlay/1608800020_285.png');">
+                    <div class="dept-card">
+                        <div class="dept-icon purple"><i class="bi bi-cpu"></i></div>
                         <div class="dept-name">Department of Electronic Engineering</div>
+                        <p class="dept-desc">Designing integrated circuits, embedded systems, and electronic devices powering tomorrow's innovations.</p>
+                        <span class="dept-link">Learn More <i class="bi bi-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="dept-card-wrap">
                 <a href="https://fet.usindh.edu.pk" target="_blank" class="text-decoration-none">
-                    <div class="dept-card" style="background-image: url('https://fet.usindh.edu.pk/assets/images/slides/1608834917_580.jpg');">
+                    <div class="dept-card">
+                        <div class="dept-icon amber"><i class="bi bi-bar-chart-line-fill"></i></div>
                         <div class="dept-name">Department of Data Science</div>
+                        <p class="dept-desc">Harnessing big data, machine learning, and AI to extract insights and drive data-driven decision making.</p>
+                        <span class="dept-link">Learn More <i class="bi bi-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
@@ -542,19 +574,20 @@
     <div class="container">
         <div class="text-center mb-5">
             <div class="section-label purple"><i class="bi bi-mortarboard-fill"></i> FACULTY SPOTLIGHT</div>
-            <h2 class="section-heading">Meet Our Supervisors</h2>
-            <p class="section-sub mx-auto">Our esteemed faculty members guiding the next generation of engineering innovators.</p>
+            <h2 class="section-heading">Our Faculty Members</h2>
+            <p class="section-sub mx-auto">Meet the professors, coordinators, and supervisors guiding FYP research across all departments.</p>
         </div>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-3 justify-content-center">
             <?php if (empty($supervisors)): ?>
                 <div class="col-12 text-center" style="color: var(--lp-muted);">
-                    <p>Supervisor profiles will be updated shortly.</p>
+                    <i class="bi bi-people fs-1 d-block mb-3" style="opacity:0.3"></i>
+                    <p>Faculty profiles will be updated shortly.</p>
                 </div>
             <?php else: ?>
                 <?php foreach ($supervisors as $supervisor): ?>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="supervisor-card">
-                            <div class="sup-avatar">
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="faculty-card">
+                            <div class="faculty-avatar">
                                 <?php
                                 $initials = '';
                                 $nameParts = explode(' ', $supervisor['name']);
@@ -565,22 +598,26 @@
                                 ?>
                             </div>
                             <h5><?php echo htmlspecialchars($supervisor['name']); ?></h5>
-                            <p class="dept"><?php echo htmlspecialchars($supervisor['department']); ?> Department</p>
-                            <a href="mailto:<?php echo htmlspecialchars($supervisor['email']); ?>" class="btn-contact">
-                                <i class="bi bi-envelope-fill"></i> Contact via Email
-                            </a>
+                            <?php
+                            $desig = $supervisor['designation'] ?? '';
+                            $desigClass = 'other';
+                            if (stripos($desig, 'Associate') !== false) $desigClass = 'associate';
+                            elseif (stripos($desig, 'Assistant') !== false) $desigClass = 'assistant';
+                            elseif (stripos($desig, 'Professor') !== false) $desigClass = 'professor';
+                            elseif (stripos($desig, 'Lecturer') !== false) $desigClass = 'lecturer';
+                            ?>
+                            <span class="faculty-designation <?php echo $desigClass; ?>"><?php echo htmlspecialchars($desig); ?></span>
+                            <p class="faculty-dept"><?php echo htmlspecialchars($supervisor['department']); ?></p>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-        <?php if (($totalSupervisors ?? 0) > 6): ?>
-            <div class="text-center mt-5">
-                <a href="<?php echo $basePath; ?>/supervisors" class="btn-view-all">
-                    View All <?php echo $totalSupervisors; ?> Faculty Members <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
-        <?php endif; ?>
+        <div class="text-center mt-5">
+            <a href="<?php echo $basePath; ?>/faculty" class="btn-view-all">
+                <i class="bi bi-people-fill"></i> See All Faculty & Staff <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
     </div>
 </section>
 
