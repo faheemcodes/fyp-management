@@ -11,7 +11,7 @@ include __DIR__ . '/layout/auth_header.php';
     }
     .faculty-page-header {
         text-align: center;
-        padding: 60px 20px;
+        padding: 120px 20px 60px;
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }

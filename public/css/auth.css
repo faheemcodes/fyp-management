@@ -15,71 +15,31 @@
             color: #e4e4e7;
         }
 
-        /* ─── Gradient Header ─── */
-        .header-top {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        /* ─── Sticky Navbar ─── */
+        .lp-navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
             padding: 24px 0;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
+            background: transparent;
         }
-
-        .header-top::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; right: 0; bottom: 0;
-            width: 300%;
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
-            animation: headerShimmer 8s ease-in-out infinite;
+        .lp-navbar.scrolled {
+            background: rgba(15, 23, 42, 1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 16px 0;
         }
-
-        @keyframes headerShimmer {
-            0% { transform: translateX(-33%); }
-            100% { transform: translateX(33%); }
-        }
-
-        .header-inner {
-            position: relative;
-            z-index: 1;
-        }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #ffffff;
-        }
-
-        .header-logo {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .header-brand-text h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-        }
-
-        .header-brand-text p {
-            font-size: 0.75rem;
-            margin: 0;
-            color: rgba(255,255,255,0.5);
-            font-weight: 400;
-        }
-
+        .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+        .lp-navbar .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: white; }
+        .lp-navbar .brand img { width: 50px; height: 50px; object-fit: contain; }
+        .lp-navbar .brand-text h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: white; }
+        .lp-navbar .brand-text p { font-size: 0.75rem; margin: 0; color: #94a3b8; }
         .nav-actions { display: flex; align-items: center; gap: 10px; }
         .btn-nav { padding: 9px 20px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-nav-ghost { color: rgba(255,255,255,0.7); background: transparent; border: none; }
+        .btn-nav-ghost { color: #94a3b8; background: transparent; border: none; }
         .btn-nav-ghost:hover { color: white; }
         .btn-nav-primary { background: #10b981; color: white; border: none; }
         .btn-nav-primary:hover { background: #059669; transform: translateY(-1px); color: white; }
+
 
         /* ─── Page Background ─── */
         .login-page {
@@ -87,7 +47,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 120px 20px 40px;
             position: relative;
         }
 

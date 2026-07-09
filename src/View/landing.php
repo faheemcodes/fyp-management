@@ -297,26 +297,7 @@
 </head>
 <body>
 
-<!-- ─── Navbar ─── -->
-<nav class="lp-navbar" id="lpNavbar">
-    <div class="container">
-        <div class="nav-inner">
-            <a href="<?php echo $basePath; ?>/" class="brand">
-                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo">
-                <div class="brand-text">
-                    <h1>Faculty of Engineering & Technology</h1>
-                    <p>University of Sindh</p>
-                </div>
-            </a>
-            <div class="nav-actions">
-                <a href="<?php echo $basePath; ?>/register" class="btn-nav btn-nav-ghost">Register</a>
-                <a href="<?php echo $basePath; ?>/login" class="btn-nav btn-nav-primary">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
-                </a>
-            </div>
-        </div>
-    </div>
-</nav>
+<?php include __DIR__ . '/layout/lp_navbar.php'; ?>
 
 <!-- ─── Hero ─── -->
 <section class="lp-hero">

@@ -25,26 +25,7 @@
 <body>
     <?php include __DIR__ . '/loader.php'; ?>
 
-<!-- ─── Top Header ─── -->
-<header class="header-top">
-    <div class="container header-inner d-flex justify-content-between align-items-center">
-        <a class="header-brand" href="<?php echo $basePath; ?>/">
-            <div class="header-logo">
-                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-            </div>
-            <div class="header-brand-text">
-                <h1>Faculty of Engineering & Technology</h1>
-                <p>University of Sindh</p>
-            </div>
-        </a>
-        <div class="nav-actions">
-        <?php if(isset($headerBtnLink) && isset($headerBtnText)): ?>
-            <?php if(strpos($headerBtnLink, 'register') !== false): ?>
-                <a href="<?php echo $basePath . $headerBtnLink; ?>" class="btn-nav btn-nav-ghost">Register</a>
-            <?php else: ?>
-                <a href="<?php echo $basePath . $headerBtnLink; ?>" class="btn-nav btn-nav-primary"><i class="bi bi-box-arrow-in-right"></i> <?php echo $headerBtnText; ?></a>
-            <?php endif; ?>
-        <?php endif; ?>
-        </div>
-    </div>
-</header>
+<?php 
+$isSolidHeader = true; 
+include __DIR__ . '/lp_navbar.php'; 
+?>
