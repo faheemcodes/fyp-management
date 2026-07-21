@@ -940,7 +940,7 @@ html.dark-theme .modal .btn-close:hover {
     width: 88px;
     height: 88px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    background: conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399);
     padding: 3px;
     flex-shrink: 0;
 }
@@ -949,7 +949,7 @@ html.dark-theme .modal .btn-close:hover {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #0f172a;
+    border: 3px solid #1e352f;
 }
 .profile-completion {
     height: 4px;
@@ -961,7 +961,7 @@ html.dark-theme .modal .btn-close:hover {
 .profile-completion-fill {
     height: 100%;
     border-radius: 99px;
-    background: linear-gradient(90deg, #60a5fa, #3b82f6);
+    background: linear-gradient(90deg, #34d399, #10b981);
     transition: width 0.6s ease;
 }
 .profile-quick-stat {
@@ -976,7 +976,7 @@ html.dark-theme .modal .btn-close:hover {
     white-space: nowrap;
 }
 .profile-quick-stat i {
-    color: #60a5fa;
+    color: #34d399;
     font-size: 0.9rem;
 }
 
