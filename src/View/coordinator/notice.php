@@ -51,7 +51,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 .pf-group .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+    box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 
 .audience-chip-checkbox {
@@ -73,12 +73,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 .audience-chip-label:hover {
     border-color: #93c5fd;
-    background: rgba(59,130,246,0.05);
+    background: rgba(16,185,129,0.05);
 }
 .audience-chip-checkbox:checked + .audience-chip-label {
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
-    border-color: #3b82f6;
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: #10b981;
 }
 
 .action-btn {
@@ -95,9 +95,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     text-decoration: none;
 }
 .action-btn:hover {
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
-    border-color: rgba(59,130,246,0.2);
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
 }
 .action-btn.delete:hover {
     background: rgba(239,68,68,0.1);
@@ -149,7 +149,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-4">
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
-                <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                     <i class="bi bi-pencil-square"></i>
                 </div>
                 <div>

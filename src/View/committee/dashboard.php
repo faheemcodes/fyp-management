@@ -153,12 +153,12 @@ $firstName = explode(' ', $fullName)[0];
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span style="font-size: 0.65rem; background: rgba(59,130,246,0.1); color: #2563eb; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
+                        <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
                         </span>
                     </td>
                     <td class="text-end">
-                        <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(59,130,246,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; white-space: nowrap;">
+                        <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; white-space: nowrap;">
                             <i class="bi bi-pencil-square me-1"></i>Evaluate
                         </a>
                     </td>
@@ -189,7 +189,7 @@ $firstName = explode(' ', $fullName)[0];
                     <?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?>
                 </h6>
                 <div class="mb-3">
-                    <span style="font-size: 0.65rem; background: rgba(59,130,246,0.1); color: #2563eb; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; display: inline-block;">
+                    <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; display: inline-block;">
                         <?php echo htmlspecialchars($g['progress_stage']); ?>
                     </span>
                 </div>
@@ -198,7 +198,7 @@ $firstName = explode(' ', $fullName)[0];
                         <i class="bi bi-person-badge text-success me-1"></i>
                         <?php echo $g['supervisor_name'] ? htmlspecialchars($g['supervisor_name']) : 'Unassigned'; ?>
                     </div>
-                    <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(59,130,246,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 14px;">
+                    <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 14px;">
                         Evaluate
                     </a>
                 </div>

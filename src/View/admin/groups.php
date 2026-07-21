@@ -76,11 +76,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     transition: all 0.2s ease;
 }
 .action-btn:hover {
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
-    border-color: rgba(59,130,246,0.2);
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
 }
-.action-btn.btn-edit-group:hover { background: rgba(59,130,246,0.1); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+.action-btn.btn-edit-group:hover { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
 .action-btn.btn-edit-project:hover { background: rgba(139,92,246,0.1); color: #8b5cf6; border-color: rgba(139,92,246,0.2); }
 .action-btn.btn-edit-grades:hover { background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
 .action-btn.btn-delete-group:hover { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
@@ -173,7 +173,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <?php if(count($g['members']) > 3): ?>
-                                <div class="avatar-circle" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                                <div class="avatar-circle" style="background: rgba(16,185,129,0.1); color: #10b981;">
                                     +<?php echo count($g['members']) - 3; ?>
                                 </div>
                             <?php endif; ?>
@@ -227,7 +227,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                     </td>
                     <td>
-                        <span class="status-pill" style="background: rgba(59,130,246,0.1); color: #2563eb;">
+                        <span class="status-pill" style="background: rgba(16,185,129,0.1); color: #059669;">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
                         </span>
                         <?php if($g['project_status'] === 'Submitted'): ?>

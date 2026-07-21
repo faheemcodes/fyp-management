@@ -20,7 +20,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     right: -10%;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -38,7 +38,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 .eval-hero-icon {
     width: 56px;
     height: 56px;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    background: conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -59,7 +59,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     transition: box-shadow 0.25s ease;
 }
 .eval-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+    box-shadow: 0 4px 20px rgba(16,185,129,0.06);
 }
 .eval-section-header {
     display: flex;
@@ -121,8 +121,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 /* ─── Badges & Status ─── */
 .group-code-badge {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
     padding: 0.35rem 0.6rem;
     border-radius: 6px;
     font-weight: 600;
@@ -130,7 +130,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     font-family: monospace;
     display: inline-block;
 }
-html.dark-theme .group-code-badge { background: rgba(59,130,246,0.15); color: #60a5fa; }
+html.dark-theme .group-code-badge { background: rgba(16,185,129,0.15); color: #34d399; }
 
 .grade-box {
     background: rgba(16, 185, 129, 0.1);
@@ -205,8 +205,8 @@ html.dark-theme .grade-box-remarks { color: #6ee7b7; }
     border-radius: 10px;
 }
 .eval-modal .form-control:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
 /* Fix close button visibility in dark theme */
@@ -356,8 +356,8 @@ html.dark-theme .eval-input {
 }
 
 .eval-input:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.1) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.1) !important;
     outline: none;
 }
 
@@ -436,7 +436,7 @@ html.dark-theme .eval-input {
 <div class="eval-section">
     <div class="eval-section-header flex-column flex-md-row gap-3">
         <div class="d-flex align-items-center gap-3">
-            <div class="eval-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+            <div class="eval-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                 <i class="bi bi-card-list"></i>
             </div>
             <div>

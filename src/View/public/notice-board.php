@@ -35,7 +35,7 @@
     .notice-item:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        border-color: rgba(59,130,246,0.3);
+        border-color: rgba(16,185,129,0.3);
     }
     .notice-meta {
         display: flex;
@@ -97,8 +97,8 @@
         background: #334155;
     }
     .page-link.active {
-        background: #3b82f6;
-        border-color: #3b82f6;
+        background: #10b981;
+        border-color: #10b981;
     }
 </style>
 

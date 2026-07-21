@@ -134,7 +134,7 @@ html.dark-theme #ai-chat-window {
 
 /* ─── Header (Glass) ─── */
 .ai-chat-header {
-    background: #0e2d4d;
+    background: #1e352f;
     backdrop-filter: blur(12px);
     color: white;
     padding: 10px 14px;

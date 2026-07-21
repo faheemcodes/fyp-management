@@ -113,7 +113,7 @@ elseif ($showPercentage >= 50) $showGrade = 'D';
 $showStatus = ($showPercentage >= 50) ? 'Pass' : 'Fail';
 
 // Grade color
-$gradeColor = '#3b82f6';
+$gradeColor = '#10b981';
 if (in_array($showGrade, ['A+','A'])) $gradeColor = '#059669';
 elseif (in_array($showGrade, ['B+','B'])) $gradeColor = '#0891b2';
 elseif (in_array($showGrade, ['C+','C'])) $gradeColor = '#d97706';
@@ -133,7 +133,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
             <div class="section-title"><i class="bi bi-table"></i> Grade Breakdown</div>
 
             <?php if ($hasHiddenMarks): ?>
-                <div class="alert border-0 rounded-3 d-flex align-items-center gap-2 mb-4 py-2 px-3" style="background: rgba(59,130,246,0.07); color: #2563eb; font-size: 0.82rem;" role="alert">
+                <div class="alert border-0 rounded-3 d-flex align-items-center gap-2 mb-4 py-2 px-3" style="background: rgba(16,185,129,0.07); color: #059669; font-size: 0.82rem;" role="alert">
                     <i class="bi bi-info-circle-fill flex-shrink-0"></i>
                     Some component marks are currently hidden by evaluators. Results only include published marks.
                 </div>
@@ -219,7 +219,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                                     <div class="row g-3">
                                         <?php foreach ($stageEvals as $se): ?>
                                             <div class="col-12">
-                                                <div class="p-3 rounded-3" style="background: var(--form-bg); border-left: 3px solid #3b82f6;">
+                                                <div class="p-3 rounded-3" style="background: var(--form-bg); border-left: 3px solid #10b981;">
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                                         <div class="fw-semibold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
                                                             <i class="bi bi-person-fill text-muted"></i>
@@ -294,7 +294,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                 ['A+', '#059669', '85 – 100%', '170 – 200'],
                 ['A',  '#0891b2', '80 – 84%',  '160 – 169'],
                 ['B+', '#0891b2', '75 – 79%',  '150 – 159'],
-                ['B',  '#3b82f6', '70 – 74%',  '140 – 149'],
+                ['B',  '#10b981', '70 – 74%',  '140 – 149'],
                 ['C+', '#6366f1', '65 – 69%',  '130 – 139'],
                 ['C',  '#8b5cf6', '60 – 64%',  '120 – 129'],
                 ['D+', '#d97706', '55 – 59%',  '110 – 119'],

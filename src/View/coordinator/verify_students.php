@@ -16,7 +16,7 @@
     right: -10%;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -34,7 +34,7 @@
 .eval-hero-icon {
     width: 56px;
     height: 56px;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    background: conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -55,7 +55,7 @@
     transition: box-shadow 0.25s ease;
 }
 .eval-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+    box-shadow: 0 4px 20px rgba(16,185,129,0.06);
 }
 .eval-section-header {
     display: flex;
@@ -197,7 +197,7 @@ html.dark-theme .modal .btn-close:hover {
     <!-- Header -->
     <div class="eval-section-header">
         <div class="d-flex align-items-center gap-3">
-            <div class="eval-section-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+            <div class="eval-section-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
                 <i class="bi bi-inbox-fill"></i>
             </div>
             <div>
@@ -279,7 +279,7 @@ html.dark-theme .modal .btn-close:hover {
                                 </div>
                                 
                                 <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($s['name']); ?></h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(59, 130, 246, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($s['student_id']); ?>
                                 </div>
                             </div>
@@ -314,7 +314,7 @@ html.dark-theme .modal .btn-close:hover {
                                     
                                     <!-- Department Card -->
                                     <div class="col-6">
-                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.1);">
+                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.1);">
                                             <i class="bi bi-building text-primary mb-2 d-block" style="font-size: 1.25rem;"></i>
                                             <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Department</div>
                                             <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['department']); ?></div>

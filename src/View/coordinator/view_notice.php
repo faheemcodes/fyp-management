@@ -135,7 +135,7 @@ if (!isset($basePath)) {
         .signature-cursive {
             font-family: 'Great Vibes', cursive;
             font-size: 2.1rem;
-            color: #1d4ed8; /* Blue fountain-pen ink color */
+            color: #047857; /* Blue fountain-pen ink color */
             position: absolute;
             top: -38px;
             left: 20px;
@@ -257,7 +257,7 @@ if (!isset($basePath)) {
                 display: none !important;
             }
             .signature-cursive {
-                color: #1d4ed8 !important; /* Ensure blue ink prints correctly */
+                color: #047857 !important; /* Ensure blue ink prints correctly */
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }

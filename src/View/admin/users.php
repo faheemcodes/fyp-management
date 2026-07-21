@@ -64,7 +64,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Approve self-registered accounts or add academic staff directly</p>
             </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #3b82f6, #2563eb);" data-bs-toggle="modal" data-bs-target="#createUserModal">
+        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669);" data-bs-toggle="modal" data-bs-target="#createUserModal">
             <i class="bi bi-person-plus-fill me-2"></i> Add New User
         </button>
     </div>
@@ -136,7 +136,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $avatarFile = !empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg'; ?>
                                 <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px; height: 42px; object-fit: cover; border: 2px solid var(--card-bg);" alt="Avatar">
                             <?php else: ?>
-                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; font-weight: bold; background: rgba(59,130,246,0.1); color: #3b82f6; border: 2px solid var(--card-bg);">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; font-weight: bold; background: rgba(16,185,129,0.1); color: #10b981; border: 2px solid var(--card-bg);">
                                     <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
                                 </div>
                             <?php endif; ?>
@@ -319,7 +319,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </div>
                 <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Create Account</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981; border-color: #10b981;">Create Account</button>
                 </div>
             
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
@@ -416,7 +416,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </div>
                 <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Save Changes</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981; border-color: #10b981;">Save Changes</button>
                 </div>
             
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">

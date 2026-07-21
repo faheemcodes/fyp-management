@@ -332,7 +332,7 @@ if ($urlPrefix === '/') {
                         <span class="position-absolute bg-danger text-white fw-bold d-none align-items-center justify-content-center" id="notification-badge" style="top: -4px; right: -4px; font-size: 0.65rem; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 10px; border: 2px solid var(--navbar-bg); box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); z-index: 2;"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 py-0" style="width: 320px; max-height: 440px; overflow-y: auto; border-radius: 14px; background: var(--card-bg);" id="notification-dropdown">
-                        <div class="p-3 border-bottom d-flex align-items-center justify-content-between rounded-top" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff; border-color: var(--border-color) !important;">
+                        <div class="p-3 border-bottom d-flex align-items-center justify-content-between rounded-top" style="background: #1e352f; color: #ffffff; border-color: var(--border-color) !important;">
                             <span class="small fw-semibold">Recent Alerts</span>
                             <a href="#" class="text-white text-decoration-none" id="mark-all-read" style="font-size: 0.75rem; opacity: 0.8;">Mark all read</a>
                         </div>

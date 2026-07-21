@@ -84,7 +84,7 @@
         /* ─── Print Button ─── */
         .no-print { text-align: center; margin-bottom: 12px; font-family: Arial, sans-serif; }
         .no-print button { padding: 8px 24px; font-size: 10pt; cursor: pointer; border-radius: 20px; border: 1px solid #ccc; margin: 0 5px; }
-        .no-print .print-btn { background: #2563eb; color: #fff; border: none; font-weight: bold; }
+        .no-print .print-btn { background: #059669; color: #fff; border: none; font-weight: bold; }
         .no-print .back-btn { background: #f1f5f9; }
 
         /* ─── Print ─── */

@@ -189,11 +189,11 @@ foreach (($supervisors ?? []) as $s) {
     </div>
 
     <!-- Info Alert -->
-    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);">
-        <div style="width: 32px; height: 32px; background: rgba(59,130,246,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #3b82f6; font-size: 0.9rem;">
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15);">
+        <div style="width: 32px; height: 32px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #10b981; font-size: 0.9rem;">
             <i class="bi bi-info-circle-fill"></i>
         </div>
-        <span style="font-size: 0.85rem; color: #2563eb; line-height: 1.5;">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
+        <span style="font-size: 0.85rem; color: #059669; line-height: 1.5;">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
     </div>
 
     <div class="row g-4">
@@ -201,7 +201,7 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Abstract -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                         <i class="bi bi-file-text-fill"></i>
                     </div>
                     <div>
@@ -230,9 +230,9 @@ foreach (($supervisors ?? []) as $s) {
                             <div class="d-flex flex-column gap-3">
                                 <!-- Leader -->
                                 <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #60a5fa, #3b82f6); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 0.85rem; flex-shrink: 0;">L</div>
+                                    <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #34d399, #10b981); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 0.85rem; flex-shrink: 0;">L</div>
                                     <div>
-                                        <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($group['creator_name'] ?? 'Group Leader'); ?> <span style="font-size: 0.6rem; background: rgba(59,130,246,0.12); color: #3b82f6; padding: 2px 7px; border-radius: 8px; font-weight: 700;">Leader</span></div>
+                                        <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($group['creator_name'] ?? 'Group Leader'); ?> <span style="font-size: 0.6rem; background: rgba(16,185,129,0.12); color: #10b981; padding: 2px 7px; border-radius: 8px; font-weight: 700;">Leader</span></div>
                                         <div class="font-monospace text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($group['creator_student_id'] ?? '—'); ?></div>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@ foreach (($supervisors ?? []) as $s) {
                             </div>
                             <div class="mb-3">
                                 <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Group Code</div>
-                                <div class="fw-bold font-monospace" style="color: #3b82f6;"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
+                                <div class="fw-bold font-monospace" style="color: #10b981;"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
                             </div>
                             <?php if ($proposal && $proposal['file_path']): ?>
                             <div>
@@ -364,7 +364,7 @@ foreach (($supervisors ?? []) as $s) {
                 <!-- Abstract (read-only) -->
                 <div class="page-section">
                     <div class="page-section-header">
-                        <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                        <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                             <i class="bi bi-file-text-fill"></i>
                         </div>
                         <div>
@@ -393,7 +393,7 @@ foreach (($supervisors ?? []) as $s) {
                     <!-- Project Details -->
                     <div class="page-section">
                         <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                            <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                                 <i class="bi bi-journal-text"></i>
                             </div>
                             <div>
@@ -422,7 +422,7 @@ foreach (($supervisors ?? []) as $s) {
                                     <?php if ($proposal && $proposal['file_path']): ?>
                                         <div class="mt-1" style="font-size: 0.75rem; color: var(--text-secondary);">
                                             <i class="bi bi-file-earmark-check text-primary me-1"></i>
-                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #3b82f6;">Current file uploaded</a>
+                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #10b981;">Current file uploaded</a>
                                         </div>
                                     <?php endif; ?>
                                 </div>

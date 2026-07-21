@@ -65,7 +65,7 @@ $firstName = explode(' ', $fullName)[0];
                 <?php foreach($groups as $g): ?>
                 <tr style="transition: background-color 0.2s;">
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important;">
-                        <span class="fw-bold" style="color: #3b82f6; font-size: 0.9rem;"><?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></span>
+                        <span class="fw-bold" style="color: #10b981; font-size: 0.9rem;"><?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></span>
                     </td>
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important;">
                         <div class="fw-semibold text-truncate" style="max-width: 350px; color: var(--text-primary); font-size: 0.9rem;" title="<?php echo htmlspecialchars($g['project_title']); ?>">
@@ -83,7 +83,7 @@ $firstName = explode(' ', $fullName)[0];
                     </td>
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important;">
                         <div class="d-flex align-items-center gap-2">
-                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(59,130,246,0.15);"></span>
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(16,185,129,0.15);"></span>
                             <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary); line-height: 1.3;">
                                 <?php echo htmlspecialchars($g['progress_stage']); ?>
                             </span>

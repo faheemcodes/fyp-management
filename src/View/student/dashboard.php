@@ -29,7 +29,7 @@ if ($currentIdx === false) $currentIdx = 1;
 $statusColors = [
     'Active'   => ['rgba(16,185,129,0.1)',  '#059669'],
     'Pending'  => ['rgba(245,158,11,0.1)',   '#d97706'],
-    'Approved' => ['rgba(59,130,246,0.1)',   '#2563eb'],
+    'Approved' => ['rgba(16,185,129,0.1)',   '#059669'],
     'Rejected' => ['rgba(239,68,68,0.1)',    '#dc2626'],
 ];
 $st = $group['project_status'] ?? 'Pending';
@@ -45,10 +45,10 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     padding: 10px 0;
     overflow-x: auto;
     scrollbar-width: thin;
-    scrollbar-color: rgba(59,130,246,0.3) transparent;
+    scrollbar-color: rgba(16,185,129,0.3) transparent;
 }
 .h-stepper::-webkit-scrollbar { height: 4px; }
-.h-stepper::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.25); border-radius: 4px; }
+.h-stepper::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.25); border-radius: 4px; }
 
 .h-step {
     display: flex;
@@ -76,7 +76,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     background: linear-gradient(90deg, #059669, #0d9488);
 }
 .h-step.active:not(:last-child)::after {
-    background: linear-gradient(90deg, #3b82f6 0%, var(--border-color) 100%);
+    background: linear-gradient(90deg, #10b981 0%, var(--border-color) 100%);
 }
 
 .h-step-dot {
@@ -102,15 +102,15 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     box-shadow: 0 0 0 4px rgba(5,150,105,0.12);
 }
 .h-step.active .h-step-dot {
-    background: #3b82f6;
-    border-color: #3b82f6;
+    background: #10b981;
+    border-color: #10b981;
     color: #fff;
-    box-shadow: 0 0 0 5px rgba(59,130,246,0.18);
+    box-shadow: 0 0 0 5px rgba(16,185,129,0.18);
     animation: pulse-dot 2s ease-in-out infinite;
 }
 @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 0 5px rgba(59,130,246,0.18); }
-    50%       { box-shadow: 0 0 0 8px rgba(59,130,246,0.08); }
+    0%, 100% { box-shadow: 0 0 0 5px rgba(16,185,129,0.18); }
+    50%       { box-shadow: 0 0 0 8px rgba(16,185,129,0.08); }
 }
 
 .h-step-label {
@@ -123,7 +123,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     word-break: break-word;
 }
 .h-step.completed .h-step-label { color: #059669; font-weight: 600; }
-.h-step.active    .h-step-label { color: #3b82f6; font-weight: 700; }
+.h-step.active    .h-step-label { color: #10b981; font-weight: 700; }
 
 
 
@@ -312,14 +312,14 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             <span class="text-muted">Completed</span>
         </span>
         <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span>
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
             <span class="text-muted">Current Stage</span>
         </span>
         <span class="d-flex align-items-center gap-2">
             <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--border-color); display: inline-block;"></span>
             <span class="text-muted">Upcoming</span>
         </span>
-        <span class="ms-auto fw-semibold" style="color: #3b82f6;">
+        <span class="ms-auto fw-semibold" style="color: #10b981;">
             <?php echo $currentIdx + 1; ?> of <?php echo count($stagesList); ?> stages complete
         </span>
     </div>

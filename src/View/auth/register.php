@@ -200,7 +200,7 @@ include __DIR__ . '/../layout/auth_header.php';
                                     <i class="bi bi-cloud-arrow-up fs-1 mb-2" style="color: var(--lp-text);"></i>
                                     <span class="fw-semibold small mb-1">Drag & drop your photo here, or <span style="color: var(--lp-text); text-decoration: underline;">Browse</span></span>
                                     <span class="small" style="font-size: 0.75rem; color: #9ca3af;">Supports JPG, JPEG, PNG (Max 500KB)</span>
-                                    <span class="badge mt-3" style="font-size: 0.65rem; background: rgba(59,130,246,0.08); color: var(--lp-text); border: 1px solid rgba(59,130,246,0.2);"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
+                                    <span class="badge mt-3" style="font-size: 0.65rem; background: rgba(16,185,129,0.08); color: var(--lp-text); border: 1px solid rgba(16,185,129,0.2);"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
                                 </div>
                                 
                                 <!-- Preview State -->

@@ -32,8 +32,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 .group-code-badge {
     display: inline-flex;
     align-items: center;
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
     font-family: monospace;
     font-size: 0.85rem;
     font-weight: 700;
@@ -95,9 +95,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     transition: all 0.2s ease;
 }
 .action-btn:hover {
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
-    border-color: rgba(59,130,246,0.2);
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
 }
 .action-btn.grade:hover {
     background: rgba(13,148,136,0.1);
@@ -221,8 +221,8 @@ html.dark-theme .eval-input {
 }
 
 .eval-input:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.1) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.1) !important;
     outline: none;
 }
 </style>
@@ -284,7 +284,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
     <div class="row justify-content-center mt-4">
         <div class="col-lg-6">
             <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg);">
-                <div style="width: 72px; height: 72px; background: rgba(59,130,246,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #3b82f6;">
+                <div style="width: 72px; height: 72px; background: rgba(16,185,129,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #10b981;">
                     <i class="bi bi-people-fill"></i>
                 </div>
                 <h5 class="fw-bold mb-2">No Assigned Groups</h5>
@@ -372,7 +372,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
             <div class="modal-body p-4">
                 <div class="mb-4">
                     <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></h5>
-                    <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                    <span class="badge" style="background: rgba(16,185,129,0.1); color: #10b981; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
                         Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
                     </span>
                 </div>
@@ -396,7 +396,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                     <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
                                         <?php echo htmlspecialchars($m['name']); ?>
                                         <?php if($m['user_id'] == $g['created_by']): ?>
-                                            <span class="badge ms-1" style="background: rgba(59,130,246,0.15); color: #3b82f6; font-size: 0.6rem;">Leader</span>
+                                            <span class="badge ms-1" style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.6rem;">Leader</span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="text-muted font-monospace" style="font-size: 0.75rem;"><?php echo htmlspecialchars($m['student_id']); ?></div>

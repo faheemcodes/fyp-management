@@ -94,7 +94,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 </div>
                                 
                                 <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($s['name']); ?></h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(59, 130, 246, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($s['student_id']); ?>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     
                                     <!-- Department Card -->
                                     <div class="col-6">
-                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.1);">
+                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.1);">
                                             <i class="bi bi-building text-primary mb-2 d-block" style="font-size: 1.25rem;"></i>
                                             <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Department</div>
                                             <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['department']); ?></div>

@@ -40,7 +40,7 @@
     /* Custom Loader Animation */
     .loader {
         --color-1: #fff;
-        --color-2: #3b82f6; 
+        --color-2: #10b981; 
         --size: 1.2px;      
 
         width: calc(48 * var(--size));

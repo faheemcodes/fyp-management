@@ -5,9 +5,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 // Determine hero icon and color scheme based on stage
 $heroIcon = 'bi-file-earmark-text';
 $heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
-$heroIconGradient = 'conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa)';
+$heroIconGradient = 'conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399)';
 $heroSubtitle = 'Assign and manage marks for all assigned groups.';
-$stageBadgeColor = '#3b82f6';
+$stageBadgeColor = '#10b981';
 
 if ($stage === 'Proposal Defence Presentation') {
     $heroIcon = 'bi-file-earmark-text';
@@ -165,7 +165,7 @@ $groupCount = count($grouped ?? []);
     transition: background-color 0.15s ease;
 }
 .eval-table tbody tr:hover {
-    background-color: rgba(59,130,246,0.03);
+    background-color: rgba(16,185,129,0.03);
 }
 
 /* ─── Inputs ─── */
@@ -195,8 +195,8 @@ html.dark-theme .eval-input {
     border-color: #334155 !important;
 }
 .eval-input:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.15) !important;
     outline: none;
 }
 .eval-remarks-input {
@@ -215,15 +215,15 @@ html.dark-theme .eval-remarks-input {
     border-color: #334155 !important;
 }
 .eval-remarks-input:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.15) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.15) !important;
     outline: none;
 }
 
 /* ─── Group Code Badge ─── */
 .gs-group-badge {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
     padding: 0.3rem 0.55rem;
     border-radius: 6px;
     font-weight: 600;
@@ -231,7 +231,7 @@ html.dark-theme .eval-remarks-input {
     font-family: monospace;
     display: inline-block;
 }
-html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a5fa; }
+html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d399; }
 
 /* ─── Search Highlights ─── */
 .search-highlight {
@@ -314,7 +314,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
 
 /* ─── Save Button ─── */
 .gs-save-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     border: none;
     color: #fff;
     font-weight: 700;
@@ -322,11 +322,11 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     border-radius: 50rem;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    box-shadow: 0 4px 15px rgba(16,185,129,0.3);
 }
 .gs-save-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    box-shadow: 0 6px 20px rgba(16,185,129,0.4);
     color: #fff;
 }
 
@@ -428,7 +428,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     <div class="gs-section">
         <div class="gs-section-header">
             <div class="gs-section-title">
-                <div class="gs-section-icon" style="background: rgba(59,130,246,0.1); color: <?php echo htmlspecialchars((string)($stageBadgeColor), ENT_QUOTES, 'UTF-8'); ?>;">
+                <div class="gs-section-icon" style="background: rgba(16,185,129,0.1); color: <?php echo htmlspecialchars((string)($stageBadgeColor), ENT_QUOTES, 'UTF-8'); ?>;">
                     <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
                 </div>
                 <div>

@@ -38,8 +38,8 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .member-row:hover {
-    border-color: rgba(59,130,246,0.25);
-    box-shadow: 0 4px 16px rgba(59,130,246,0.07);
+    border-color: rgba(16,185,129,0.25);
+    box-shadow: 0 4px 16px rgba(16,185,129,0.07);
     transform: translateY(-1px);
 }
 .member-row .m-avatar {
@@ -47,7 +47,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     height: 50px;
     border-radius: 14px;
     object-fit: cover;
-    border: 2px solid rgba(59,130,246,0.15);
+    border: 2px solid rgba(16,185,129,0.15);
     flex-shrink: 0;
 }
 .member-row .m-name {
@@ -141,8 +141,8 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     width: 18px;
     height: 18px;
     border-radius: 6px;
-    background: rgba(59,130,246,0.1);
-    color: #3b82f6;
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
     font-size: 0.6rem;
     font-weight: 800;
     display: inline-flex;
@@ -197,7 +197,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     <div class="row justify-content-center mt-4">
         <div class="col-lg-6">
             <div class="card border-0 text-center p-5">
-                <div style="width: 72px; height: 72px; background: rgba(59,130,246,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #3b82f6;">
+                <div style="width: 72px; height: 72px; background: rgba(16,185,129,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #10b981;">
                     <i class="bi bi-people-fill"></i>
                 </div>
                 <h5 class="fw-bold mb-2">No Project Group Found</h5>
@@ -231,7 +231,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         <?php echo htmlspecialchars($group['group_code'] ?? 'ID PENDING'); ?>
                     </span>
                     <?php if ($isLeader): ?>
-                        <span class="page-hero-chip" style="background: rgba(59,130,246,0.2); color: #93c5fd;">
+                        <span class="page-hero-chip" style="background: rgba(16,185,129,0.2); color: #93c5fd;">
                             <i class="bi bi-shield-fill-check"></i> Group Leader
                         </span>
                     <?php endif; ?>
@@ -259,7 +259,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
             <!-- Members Directory -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                         <i class="bi bi-people-fill"></i>
                     </div>
                     <div>
@@ -279,7 +279,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                                 <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                                     <span class="m-name"><?php echo htmlspecialchars($m['name']); ?></span>
                                     <?php if ($isThisLeader): ?>
-                                        <span class="member-role-badge" style="background: rgba(59,130,246,0.12); color: #3b82f6;">
+                                        <span class="member-role-badge" style="background: rgba(16,185,129,0.12); color: #10b981;">
                                             <i class="bi bi-star-fill" style="font-size: 0.5rem; margin-right: 2px;"></i> Leader
                                         </span>
                                     <?php else: ?>
@@ -381,7 +381,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         </div>
                     </div>
                     <div class="grp-info-item">
-                        <div class="info-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                        <div class="info-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                             <i class="bi bi-journal-text"></i>
                         </div>
                         <div style="min-width: 0;">
@@ -395,7 +395,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         </div>
                         <div>
                             <div class="info-label">Group Code</div>
-                            <div class="info-value font-monospace" style="color: #3b82f6; letter-spacing: 0.02em;">
+                            <div class="info-value font-monospace" style="color: #10b981; letter-spacing: 0.02em;">
                                 <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                             </div>
                         </div>
@@ -406,7 +406,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         </div>
                         <div>
                             <div class="info-label">Progress Stage</div>
-                            <span style="font-size: 0.78rem; background: rgba(59,130,246,0.1); color: #3b82f6; padding: 4px 14px; border-radius: 20px; font-weight: 600; display: inline-block; margin-top: 4px;">
+                            <span style="font-size: 0.78rem; background: rgba(16,185,129,0.1); color: #10b981; padding: 4px 14px; border-radius: 20px; font-weight: 600; display: inline-block; margin-top: 4px;">
                                 <?php echo htmlspecialchars($group['progress_stage']); ?>
                             </span>
                         </div>

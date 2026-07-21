@@ -16,7 +16,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Manage evaluation committee members who grade student presentations and project phases</p>
             </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #3b82f6, #2563eb);" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
+        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669);" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
             <i class="bi bi-person-plus-fill me-2"></i> Add Member
         </button>
     </div>
@@ -85,7 +85,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-pencil-square text-primary" style="font-size: 1.75rem;"></i>
                                 </div>
                                 <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;">Edit Committee Member</h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(59, 130, 246, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($c['name']); ?>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
                                         <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1); color: var(--text-primary); padding: 0.6rem 0;" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Save Changes</button>
+                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Save Changes</button>
                                     </div>
                                 </div>
                             
@@ -205,7 +205,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="modal-footer border-0 p-4 pt-0">
                     <div class="d-flex w-100 gap-2">
                         <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1); color: var(--text-primary); padding: 0.6rem 0;" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Add Member</button>
+                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Add Member</button>
                     </div>
                 </div>
             

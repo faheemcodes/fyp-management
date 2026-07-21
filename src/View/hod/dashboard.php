@@ -76,7 +76,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669);">
                         <i class="bi bi-person-badge"></i>
                     </div>
                     <div>

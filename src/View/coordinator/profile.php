@@ -243,8 +243,8 @@ if ($basePath === '/') {
 
 <!-- ═══════════════ Status Alert ═══════════════ -->
 <?php if ($isLocked): ?>
-<div class="profile-alert" style="background: rgba(59,130,246,0.06); color: #2563eb;">
-    <div class="profile-alert-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+<div class="profile-alert" style="background: rgba(16,185,129,0.06); color: #059669;">
+    <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
         <i class="bi bi-shield-check"></i>
     </div>
     <div>
@@ -271,7 +271,7 @@ if ($basePath === '/') {
         <div class="col-lg-6">
             <div class="page-section h-100">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>

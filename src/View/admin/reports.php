@@ -59,7 +59,7 @@ html.dark-theme, body.dark-theme {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 4px; height: 100%;
-    background: var(--accent-color, #3b82f6);
+    background: var(--accent-color, #10b981);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -116,7 +116,7 @@ html.dark-theme, body.dark-theme {
                             <span class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
                                 <?php echo htmlspecialchars($ps['progress_stage']); ?>
                             </span>
-                            <span class="badge rounded-pill shadow-sm px-3 py-2" style="background: rgba(59,130,246,0.1); color: #3b82f6; border: 1px solid rgba(59,130,246,0.2); font-size: 0.85rem;">
+                            <span class="badge rounded-pill shadow-sm px-3 py-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.85rem;">
                                 <?php echo htmlspecialchars((string)($ps['count']), ENT_QUOTES, 'UTF-8'); ?> Groups
                             </span>
                         </div>
@@ -134,13 +134,13 @@ html.dark-theme, body.dark-theme {
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
                     <div>
                         <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="letter-spacing: -0.02em;">
-                            <i class="bi bi-shield-check" style="color: #3b82f6; font-size: 1.3rem;"></i> 
+                            <i class="bi bi-shield-check" style="color: #10b981; font-size: 1.3rem;"></i> 
                             Evaluation Criteria
                         </h5>
                         <p class="m-0" style="opacity: 0.6;">Systematic breakdown of the final grading components.</p>
                     </div>
                     <div class="text-sm-end">
-                        <span class="badge rounded-pill fw-bold px-3 py-2 shadow-sm" style="background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); font-size: 0.85rem; letter-spacing: 0.03em;">200 TOTAL MARKS</span>
+                        <span class="badge rounded-pill fw-bold px-3 py-2 shadow-sm" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-size: 0.85rem; letter-spacing: 0.03em;">200 TOTAL MARKS</span>
                     </div>
                 </div>
 
@@ -167,9 +167,9 @@ html.dark-theme, body.dark-theme {
 
                     <!-- Stage 2 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #3b82f6;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #10b981;">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(59,130,246,0.15); color: #3b82f6;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(16,185,129,0.15); color: #10b981;">
                                     <i class="bi bi-easel-fill fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
@@ -178,7 +178,7 @@ html.dark-theme, body.dark-theme {
                                         <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded manually by committee on presentation defence.</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.85rem;">30 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.85rem;">30 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -315,7 +315,7 @@ html.dark-theme, body.dark-theme {
                     <th class="text-center">Prog. Pres. (40)</th>
                     <th class="text-center">Supv. (45)</th>
                     <th class="text-center">Final Pres. (75)</th>
-                    <th class="text-center" style="background: rgba(59,130,246,0.1); color: #1e3a5f;">Total (200)</th>
+                    <th class="text-center" style="background: rgba(16,185,129,0.1); color: #1e3a5f;">Total (200)</th>
                     <th class="text-center">Grade</th>
                     <th class="text-end pe-4">Status</th>
                 </tr>
@@ -332,7 +332,7 @@ html.dark-theme, body.dark-theme {
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-bold fs-5" style="background: rgba(59,130,246,0.02); color: #1e3a5f;"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-bold fs-5" style="background: rgba(16,185,129,0.02); color: #1e3a5f;"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
                     <td class="text-center">
                         <span class="badge font-monospace rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; font-size: 0.95rem; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff;">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>

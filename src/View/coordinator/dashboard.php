@@ -223,12 +223,12 @@ $firstName = explode(' ', $fullName)[0];
                                 </span>
                             </td>
                             <td>
-                                <span style="font-size: 0.65rem; background: rgba(59,130,246,0.1); color: #2563eb; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
+                                <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
                                     <?php echo htmlspecialchars($n['target_audience']); ?>
                                 </span>
                             </td>
                             <td class="text-end">
-                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(59,130,246,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
+                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
                                     <i class="bi bi-eye-fill me-1"></i>View
                                 </a>
                             </td>
@@ -254,7 +254,7 @@ $firstName = explode(' ', $fullName)[0];
                         <span class="fw-bold" style="font-family: monospace; font-size: 0.75rem; color: var(--text-secondary); background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px;">
                             <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
                         </span>
-                        <span style="font-size: 0.65rem; background: rgba(59,130,246,0.1); color: #2563eb; padding: 4px 10px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
                             <?php echo htmlspecialchars($n['target_audience']); ?>
                         </span>
                     </div>
@@ -285,8 +285,8 @@ $firstName = explode(' ', $fullName)[0];
 <style>
 /* Add hover effect for horizontal action cards */
 .modern-table-card[onclick]:hover {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 8px 24px rgba(59,130,246,0.15) !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.15) !important;
 }
 html.dark-theme .text-dark {
     color: #f8fafc !important;

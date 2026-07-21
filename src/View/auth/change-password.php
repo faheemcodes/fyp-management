@@ -20,7 +20,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     right: -20%;
     width: 250px;
     height: 250px;
-    background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -87,8 +87,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .password-group:focus-within {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16,185,129,0.15);
     transform: translateY(-1px);
 }
 .password-group .input-group-text,
@@ -107,20 +107,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     box-shadow: none;
 }
 .password-group .btn:hover {
-    color: #3b82f6;
+    color: #10b981;
 }
 .cp-submit-btn {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #10b981, #059669);
     border: none;
     border-radius: 99px;
     font-weight: 600;
     color: #fff;
-    box-shadow: 0 8px 20px -6px rgba(59,130,246,0.5);
+    box-shadow: 0 8px 20px -6px rgba(16,185,129,0.5);
     transition: all 0.3s ease;
 }
 .cp-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px -6px rgba(59,130,246,0.6);
+    box-shadow: 0 12px 24px -6px rgba(16,185,129,0.6);
     color: #fff;
 }
 </style>
@@ -156,7 +156,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-7 col-md-7">
         <div class="cp-form-card">
             <div class="d-flex align-items-center gap-3 border-bottom pb-4 mb-4">
-                <div style="width: 48px; height: 48px; background: rgba(59,130,246,0.1); color: #3b82f6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                <div style="width: 48px; height: 48px; background: rgba(16,185,129,0.1); color: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
                     <i class="bi bi-key-fill"></i>
                 </div>
                 <div>

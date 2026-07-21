@@ -171,20 +171,22 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    border: none;
+    border: 1px solid var(--border-color, #e2e5e9);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
     font-size: 1.15rem;
     color: var(--text-secondary);
-    background: var(--form-bg, #f0f2f5);
+    background: var(--card-bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
 .chat-input-row .btn-icon:hover {
-    background: var(--border-color, #e2e5e9);
-    color: var(--text-primary);
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 .chat-input-row .btn-send {
     background: var(--primary-color);
@@ -198,11 +200,12 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     min-width: 0;
     display: flex;
     flex-direction: column;
-    background: var(--form-bg, #f0f2f5);
+    background: var(--card-bg);
     border-radius: 22px;
     padding: 0;
-    transition: border-color 0.2s;
-    border: 2px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border-color, #e2e5e9);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
 .chat-textarea-wrap.drag-over {
     border-color: var(--primary-color);

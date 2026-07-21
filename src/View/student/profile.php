@@ -241,8 +241,8 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
 
 <!-- ═══════════════ Status Alert ═══════════════ -->
 <?php if ($isLocked): ?>
-    <div class="profile-alert" style="background: rgba(59,130,246,0.06); color: #2563eb;">
-        <div class="profile-alert-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+    <div class="profile-alert" style="background: rgba(16,185,129,0.06); color: #059669;">
+        <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
             <i class="bi bi-shield-lock-fill"></i>
         </div>
         <div>
@@ -271,7 +271,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
             <!-- Personal Information -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                         <i class="bi bi-person-fill"></i>
                     </div>
                     <div>
