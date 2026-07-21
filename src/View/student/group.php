@@ -8,49 +8,10 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 
 <style>
 /* ─── Group Page Scoped Styles ─── */
-.group-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.group-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.group-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -5%;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.group-hero-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
-    flex-shrink: 0;
-}
+
+
+
+
 .group-hero-chip {
     display: inline-flex;
     align-items: center;
@@ -61,30 +22,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     border-radius: 20px;
     white-space: nowrap;
 }
-.group-stat-pill {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 20px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 12px;
-    min-width: 80px;
-}
-.group-stat-pill .stat-num {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1;
-    letter-spacing: -0.03em;
-}
-.group-stat-pill .stat-label {
-    font-size: 0.62rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: rgba(255,255,255,0.4);
-    margin-top: 4px;
-}
+
+
+
 
 /* ─── Section Panel (reuse profile pattern) ─── */
 .grp-section {
@@ -292,8 +232,8 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 }
 
 @media (max-width: 768px) {
-    .group-hero { padding: 24px 16px; }
-    .group-stat-pill { display: none; }
+    
+    
     .grp-section-body { padding: 16px; }
     .member-row { padding: 12px; gap: 12px; }
     .member-row .m-avatar { width: 42px; height: 42px; border-radius: 12px; }
@@ -322,7 +262,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
             <!-- Icon -->
             <div class="group-hero-icon" style="background: transparent;">
-                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <i class="bi bi-mortarboard-fill"></i>
             </div>
 
             <!-- Info -->

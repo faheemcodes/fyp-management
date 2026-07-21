@@ -159,10 +159,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'dark') {
             document.documentElement.classList.add('dark-theme');
+            document.documentElement.setAttribute('data-theme', 'dark');
             if (themeSunIcon) themeSunIcon.classList.remove('d-none');
             if (themeMoonIcon) themeMoonIcon.classList.add('d-none');
         } else {
             document.documentElement.classList.remove('dark-theme');
+            document.documentElement.setAttribute('data-theme', 'light');
             if (themeSunIcon) themeSunIcon.classList.add('d-none');
             if (themeMoonIcon) themeMoonIcon.classList.remove('d-none');
         }
@@ -173,9 +175,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let theme = 'light';
             if (document.documentElement.classList.contains('dark-theme')) {
                 theme = 'dark';
+                document.documentElement.setAttribute('data-theme', 'dark');
                 if (themeSunIcon) themeSunIcon.classList.remove('d-none');
                 if (themeMoonIcon) themeMoonIcon.classList.add('d-none');
             } else {
+                document.documentElement.setAttribute('data-theme', 'light');
                 if (themeSunIcon) themeSunIcon.classList.add('d-none');
                 if (themeMoonIcon) themeMoonIcon.classList.remove('d-none');
             }

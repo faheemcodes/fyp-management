@@ -30,11 +30,11 @@ if ($urlPrefix === '/') {
                 <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <div class="sidebar-brand-text">
-                <h6 class="m-0 text-white fw-bold" style="font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
-                <small style="font-size: 0.65rem; color: rgba(255,255,255,0.42);">FYP Portal</small>
+                <h6 class="m-0 fw-bold" style="color: var(--text-primary); font-size: 0.88rem; letter-spacing: -0.01em;">University of Sindh</h6>
+                <small style="font-size: 0.65rem; color: var(--text-secondary);">FYP Portal</small>
             </div>
         </a>
-        <button type="button" id="desktopSidebarCollapse" class="btn btn-link text-white p-0 d-none d-lg-flex align-items-center justify-content-center" style="width: 36px; height: 36px; opacity: 0.7; transition: all 0.2s;" title="Toggle Sidebar">
+        <button type="button" id="desktopSidebarCollapse" class="btn btn-link p-0 d-none d-lg-flex align-items-center justify-content-center" style="color: var(--text-primary); width: 36px; height: 36px; opacity: 0.7; transition: all 0.2s;" title="Toggle Sidebar">
             <i class="bi bi-layout-sidebar-inset" style="font-size: 1.2rem;"></i>
         </button>
     </div>

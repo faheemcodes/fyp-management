@@ -7,81 +7,18 @@ $firstName = explode(' ', $fullName)[0];
 ?>
 
 <style>
-/* ─── Hero Banner Styles ─── */
-.group-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
-.group-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.group-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -20%;
-    left: 10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, rgba(0,0,0,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.group-hero-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
-    flex-shrink: 0;
-}
-.group-stat-pill {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 12px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 120px;
-    backdrop-filter: blur(10px);
-    margin-right: 12px;
-}
-.group-stat-pill .stat-num {
-    font-size: 1.4rem;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 4px;
-}
-.group-stat-pill .stat-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba(255,255,255,0.6);
-    font-weight: 600;
-}
+
+
+
+
+
+
+
+
 @media (max-width: 768px) {
-    .group-hero { padding: 24px 16px; }
-    .group-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
-    .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    
+    
+    
 }
 </style>
 
@@ -90,7 +27,7 @@ $firstName = explode(' ', $fullName)[0];
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
             <div class="group-hero-icon" style="background: transparent;">
-                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <i class="bi bi-person-workspace"></i>
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">

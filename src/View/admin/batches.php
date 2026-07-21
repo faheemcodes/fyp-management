@@ -4,39 +4,10 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 ?>
 
 <style>
-/* ─── Hero Banner Styles ─── */
-.group-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.group-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.group-hero-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
-    flex-shrink: 0;
-}
+
+
+
+
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
@@ -45,7 +16,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         <div class="d-flex align-items-center gap-4 text-center text-md-start">
             <!-- Icon -->
             <div class="group-hero-icon" style="background: transparent;">
-                <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <i class="bi bi-shield-lock-fill"></i>
             </div>
             <!-- Info -->
             <div>
