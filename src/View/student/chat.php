@@ -32,7 +32,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--primary-color), #3b82f6, #1d4ed8, var(--primary-color));
+    background: conic-gradient(from 0deg, var(--primary-color), #10b981, #047857, var(--primary-color));
     color: #fff;
     display: flex;
     align-items: center;
@@ -212,7 +212,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     font-size: 1.1rem;
 }
 .file-chip-icon.pdf  { background: #fde8e8; color: #e53e3e; }
-.file-chip-icon.word { background: #dbeafe; color: #2563eb; }
+.file-chip-icon.word { background: #dbeafe; color: #059669; }
 .file-chip-icon.excel{ background: #d1fae5; color: #059669; }
 .file-chip-icon.ppt  { background: #fef3c7; color: #d97706; }
 .file-chip-icon.img  { background: #ede9fe; color: #7c3aed; }
@@ -416,7 +416,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     font-size: 1.2rem;
 }
 .file-doc-icon.pdf  { background: #fde8e8; color: #e53e3e; }
-.file-doc-icon.word { background: #dbeafe; color: #2563eb; }
+.file-doc-icon.word { background: #dbeafe; color: #059669; }
 .file-doc-icon.excel { background: #d1fae5; color: #059669; }
 .file-doc-icon.ppt  { background: #fef3c7; color: #d97706; }
 .file-doc-icon.generic { background: #e5e7eb; color: #6b7280; }
