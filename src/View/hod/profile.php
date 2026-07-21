@@ -303,9 +303,9 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                         <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3">
                             <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 600;">PROFILE SETUP</span>
                             <div class="profile-completion">
-                                <div class="profile-completion-fill" style="width: <?php echo $completionPct; ?>%;"></div>
+                                <div class="profile-completion-fill" style="width: <?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%;"></div>
                             </div>
-                            <span class="text-white fw-bold" style="font-size: 0.75rem;"><?php echo $completionPct; ?>%</span>
+                            <span class="text-white fw-bold" style="font-size: 0.75rem;"><?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%</span>
                         </div>
                     </div>
                 </div>
@@ -479,4 +479,6 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                     </div>
                 </div>
             </div>
-        </form>
+        
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>

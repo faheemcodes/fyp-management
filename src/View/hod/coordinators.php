@@ -160,17 +160,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1); color: #047fb0; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $c['user_id']; ?>">
+                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1); color: #047fb0; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <i class="bi bi-pencil-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Edit</span>
                             </button>
-                            <a href="<?php echo $basePath; ?>/hod/coordinators/delete?id=<?php echo $c['user_id']; ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1); color: #a80a34; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="return confirm('Are you sure you want to delete this coordinator? This will permanently delete their account.')">
+                            <a href="<?php echo $basePath; ?>/hod/coordinators/delete?id=<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1); color: #a80a34; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Are you sure you want to delete this coordinator? This will permanently delete their account.')">
                                 <i class="bi bi-trash3-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Delete</span>
                             </a>
                         </div>
                     </td>
                 </tr>
                 <!-- Edit Modal -->
-                <div class="modal fade" id="editModal<?php echo $c['user_id']; ?>" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content border-0" style="border-radius: 1.5rem; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
                             <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem; border-bottom: 1px solid var(--border-color) !important;">
@@ -187,7 +187,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
                             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/coordinators/edit" method="POST">
                                 <div class="modal-body p-4">
-                                    <input type="hidden" name="user_id" value="<?php echo $c['user_id']; ?>">
+                                    <input type="hidden" name="user_id" value="<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     
                                     <div class="mb-3 text-start">
                                         <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">Full Name</label>
@@ -207,8 +207,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <div class="mb-3 text-start">
                                         <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px;">New Password (leave blank to keep current)</label>
                                         <div class="position-relative">
-                                            <input type="password" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="pwdEdit<?php echo $c['user_id']; ?>" name="password" placeholder="••••••••" style="padding-right: 56px;">
-                                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('pwdEdit<?php echo $c['user_id']; ?>'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                                            <input type="password" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="pwdEdit<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" name="password" placeholder="••••••••" style="padding-right: 56px;">
+                                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('pwdEdit<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                         </div>
                                     </div>
                                 </div>
@@ -218,7 +218,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Save Changes</button>
                                     </div>
                                 </div>
-                            </form>
+                            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
                         </div>
                     </div>
                 </div>
@@ -301,7 +303,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.6rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Add Coordinator</button>
                     </div>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>

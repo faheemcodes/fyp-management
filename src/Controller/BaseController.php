@@ -2,6 +2,27 @@
 namespace Controller;
 
 class BaseController {
+    protected $db;
+
+    public function __construct() {
+        $this->db = \Database::getInstance()->getConnection();
+        
+        }
+
+    protected function validateCsrf() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+            if (empty($token) || !hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'error' => 'CSRF validation failed.']);
+                    exit;
+                }
+                die('CSRF token validation failed.');
+            }
+        }
+    }
+
     // Render view
     protected function render($viewName, $data = []) {
         // Extract data to local variables
@@ -20,14 +41,18 @@ class BaseController {
                 'coordinator/view_notice',
                 'coordinator/assessment_report',
                 'committee/print_sheet',
-                'landing'
+                'landing',
+                'about',
+                'contact',
+                'faculty',
+                'public/notice-board'
             ];
             
             if (in_array($viewName, $noLayoutViews)) {
                 require $viewFile;
             } else {
                 // Get page notifications
-                $db = \Database::getInstance()->getConnection();
+                $db = $this->db;
                 $userId = $_SESSION['user_id'] ?? null;
                 $notifications = [];
                 $unreadCount = 0;
@@ -72,7 +97,7 @@ class BaseController {
 
     // Add notification helper
     protected function addNotification($userId, $title, $message, $redirectUrl = null) {
-        $db = \Database::getInstance()->getConnection();
+        $db = $this->db;
         $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url) VALUES (?, ?, ?, ?)");
         $stmt->execute([$userId, $title, $message, $redirectUrl]);
     }

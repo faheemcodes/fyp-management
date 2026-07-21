@@ -151,6 +151,7 @@ class AdminController extends BaseController {
 
     public function createUser() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $role = $_POST['role'] ?? '';
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
@@ -231,7 +232,7 @@ class AdminController extends BaseController {
                 $this->flash('success', "User $name ($role) created successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error creating user: ' . $e->getMessage());
+                $this->flash('error', 'Error creating user. Please try again.');
             }
         }
         redirect('/admin/users');
@@ -276,6 +277,7 @@ class AdminController extends BaseController {
 
     public function assignSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $groupId = $_POST['group_id'] ?? null;
             $supervisorId = $_POST['supervisor_id'] ?? null;
 
@@ -315,6 +317,7 @@ class AdminController extends BaseController {
         $department = $_GET['department'] ?? 'Software Engineering';
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $stage = $_POST['stage'] ?? '';
             $date = $_POST['deadline_date'] ?? '';
             $status = $_POST['status'] ?? 'Inactive';
@@ -371,6 +374,7 @@ class AdminController extends BaseController {
 
     public function editUser() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $id = $_POST['id'] ?? null;
             $name = trim($_POST['name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -435,7 +439,7 @@ class AdminController extends BaseController {
                 $this->flash('success', "User account updated successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error updating user: ' . $e->getMessage());
+                $this->flash('error', 'Error updating user. Please try again.');
             }
         }
         redirect('/admin/users');
@@ -466,7 +470,7 @@ class AdminController extends BaseController {
                 $this->flash('success', 'User account deleted successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error deleting user: ' . $e->getMessage());
+                $this->flash('error', 'Error deleting user. Please try again.');
             }
         }
         redirect('/admin/users');
@@ -474,6 +478,7 @@ class AdminController extends BaseController {
 
     public function createGroup() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $group_code = trim($_POST['group_code'] ?? '');
             $created_by = $_POST['created_by'] ?? null;
             $progress_stage = $_POST['progress_stage'] ?? 'Group Created';
@@ -545,7 +550,7 @@ class AdminController extends BaseController {
                 $this->flash('success', "Group $group_code created successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error creating group: ' . $e->getMessage());
+                $this->flash('error', 'Error creating group. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -553,6 +558,7 @@ class AdminController extends BaseController {
 
     public function editGroup() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $id = $_POST['id'] ?? null;
             $group_code = trim($_POST['group_code'] ?? '');
             $progress_stage = $_POST['progress_stage'] ?? '';
@@ -569,7 +575,7 @@ class AdminController extends BaseController {
                 
                 $this->flash('success', "Group details updated successfully.");
             } catch (\Exception $e) {
-                $this->flash('error', 'Error updating group: ' . $e->getMessage());
+                $this->flash('error', 'Error updating group. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -584,7 +590,7 @@ class AdminController extends BaseController {
                 $stmt->execute([$id]);
                 $this->flash('success', 'Group and all associated files/records deleted successfully.');
             } catch (\Exception $e) {
-                $this->flash('error', 'Error deleting group: ' . $e->getMessage());
+                $this->flash('error', 'Error deleting group. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -592,6 +598,7 @@ class AdminController extends BaseController {
 
     public function updateGroupMembers() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $groupId = $_POST['group_id'] ?? null;
             $members = $_POST['members'] ?? [];
             
@@ -636,7 +643,7 @@ class AdminController extends BaseController {
                 $this->flash('success', 'Group members updated successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error updating group members: ' . $e->getMessage());
+                $this->flash('error', 'Error updating group members. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -644,6 +651,7 @@ class AdminController extends BaseController {
 
     public function editProject() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $groupId = $_POST['group_id'] ?? null;
             $title = trim($_POST['title'] ?? '');
             $description = trim($_POST['description'] ?? '');
@@ -687,7 +695,7 @@ class AdminController extends BaseController {
                 $this->flash('success', 'Project details saved successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error saving project details: ' . $e->getMessage());
+                $this->flash('error', 'Error saving project details. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -705,7 +713,7 @@ class AdminController extends BaseController {
                 $this->flash('success', 'Project and proposal records deleted successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error deleting project: ' . $e->getMessage());
+                $this->flash('error', 'Error deleting project. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -713,6 +721,7 @@ class AdminController extends BaseController {
 
     public function editGrades() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $groupId = $_POST['group_id'] ?? null;
             
             $proposal_defense_marks = isset($_POST['proposal_defense_marks']) && $_POST['proposal_defense_marks'] !== '' ? (float)$_POST['proposal_defense_marks'] : null;
@@ -771,7 +780,7 @@ class AdminController extends BaseController {
                 $this->flash('success', 'Grades updated and recalculated successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error updating grades: ' . $e->getMessage());
+                $this->flash('error', 'Error updating grades. Please try again.');
             }
         }
         redirect('/admin/groups');
@@ -787,7 +796,7 @@ class AdminController extends BaseController {
                 $stmt->execute([$stage, $department]);
                 $this->flash('success', "Deadline for $stage deleted successfully.");
             } catch (\Exception $e) {
-                $this->flash('error', 'Error deleting deadline: ' . $e->getMessage());
+                $this->flash('error', 'Error deleting deadline. Please try again.');
             }
         }
         redirect('/admin/deadlines?department=' . urlencode($department));
@@ -802,6 +811,7 @@ class AdminController extends BaseController {
 
     public function createBatch() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $name = trim($_POST['name'] ?? '');
             if (empty($name)) {
                 $this->flash('error', 'Batch name is required.');
@@ -821,6 +831,7 @@ class AdminController extends BaseController {
 
     public function toggleBatch() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $id = $_POST['batch_id'] ?? 0;
             $action = $_POST['action'] ?? '';
             $db = \Database::getInstance()->getConnection();

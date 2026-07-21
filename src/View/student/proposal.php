@@ -287,8 +287,8 @@ foreach (($supervisors ?? []) as $s) {
                     <?php echo htmlspecialchars($project['title'] ?? 'FYP Project'); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="prop-hero-chip" style="background: <?php echo $sc[0]; ?>; color: <?php echo $sc[1]; ?>;">
-                        <i class="bi <?php echo $sc[2]; ?>"></i> <?php echo $st; ?>
+                    <span class="prop-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                        <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                     <span class="prop-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
                         <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
@@ -443,8 +443,8 @@ foreach (($supervisors ?? []) as $s) {
                     <?php echo $proposal ? htmlspecialchars($project['title'] ?? 'Project Proposal') : 'New Project Proposal'; ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="prop-hero-chip" style="background: <?php echo $sc[0]; ?>; color: <?php echo $sc[1]; ?>;">
-                        <i class="bi <?php echo $sc[2]; ?>"></i> <?php echo $st; ?>
+                    <span class="prop-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                        <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
             </div>
@@ -529,7 +529,7 @@ foreach (($supervisors ?? []) as $s) {
                                     <select class="form-select" id="supervisor_id" name="supervisor_id" required>
                                         <option value="" disabled <?php echo empty($supervisorIdVal) ? 'selected' : ''; ?>>Select Faculty Member</option>
                                         <?php foreach ($supervisors as $s): ?>
-                                            <option value="<?php echo $s['user_id']; ?>" <?php echo $s['user_id'] == $supervisorIdVal ? 'selected' : ''; ?>><?php echo htmlspecialchars($s['name']); ?></option>
+                                            <option value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo $s['user_id'] == $supervisorIdVal ? 'selected' : ''; ?>><?php echo htmlspecialchars($s['name']); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -587,7 +587,9 @@ foreach (($supervisors ?? []) as $s) {
                             </button>
                         </div>
                     </div>
-                </form>
+                
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
             <?php endif; ?>
         </div>
 
@@ -652,7 +654,7 @@ foreach (($supervisors ?? []) as $s) {
                                 <?php echo $done ? '<i class="bi bi-check-lg" style="font-size:0.75rem;"></i>' : ($i + 1); ?>
                             </div>
                             <span style="font-size: 0.82rem; font-weight: <?php echo $done ? '600' : '500'; ?>; color: <?php echo $done ? '#059669' : 'var(--text-primary)'; ?>;">
-                                <?php echo $label; ?>
+                                <?php echo htmlspecialchars((string)($label), ENT_QUOTES, 'UTF-8'); ?>
                             </span>
                         </div>
                         <?php endforeach; ?>

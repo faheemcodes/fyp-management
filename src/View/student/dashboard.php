@@ -221,7 +221,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
                     <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
                         Group Code: <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                     </span>
-                    <span style="font-size: 0.75rem; background: <?php echo $sc[0]; ?>; color: <?php echo $sc[1]; ?>; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem; background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
                         <?php echo htmlspecialchars($st); ?>
                     </span>
                 </div>

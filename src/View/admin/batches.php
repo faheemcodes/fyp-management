@@ -124,23 +124,27 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <td class="px-4 py-3 text-end">
                                 <div class="d-flex justify-content-end gap-2">
                                     <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST" class="m-0">
-                                        <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
+                                        <input type="hidden" name="batch_id" value="<?php echo htmlspecialchars((string)($b['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <input type="hidden" name="action" value="toggle_active">
                                         <button type="submit" class="btn btn-sm <?php echo $b['is_active'] ? 'btn-outline-warning' : 'btn-outline-success'; ?> rounded-pill" title="<?php echo $b['is_active'] ? 'Archive Batch' : 'Restore Batch'; ?>">
                                             <i class="bi <?php echo $b['is_active'] ? 'bi-archive-fill' : 'bi-arrow-counterclockwise'; ?>"></i>
                                             <span class="ms-1 d-none d-md-inline"><?php echo $b['is_active'] ? 'Archive' : 'Restore'; ?></span>
                                         </button>
-                                    </form>
+                                    
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
 
                                     <?php if(!$b['is_registration_open']): ?>
                                     <form action="<?php echo $bp; ?>/admin/batches/toggle" method="POST" class="m-0">
-                                        <input type="hidden" name="batch_id" value="<?php echo $b['id']; ?>">
+                                        <input type="hidden" name="batch_id" value="<?php echo htmlspecialchars((string)($b['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <input type="hidden" name="action" value="set_registration">
                                         <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill" title="Set as Registration Batch">
                                             <i class="bi bi-door-open-fill"></i>
                                             <span class="ms-1 d-none d-md-inline">Open Registration</span>
                                         </button>
-                                    </form>
+                                    
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -172,7 +176,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4">Create Batch</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>

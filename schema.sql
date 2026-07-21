@@ -226,6 +226,8 @@ CREATE TABLE notices (
     notice_date DATE NOT NULL,
     ref_no VARCHAR(100) DEFAULT NULL,
     target_audience VARCHAR(100) DEFAULT 'All',
+    department VARCHAR(100) DEFAULT NULL,
+    is_public TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

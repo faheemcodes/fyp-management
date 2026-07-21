@@ -224,7 +224,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             if ($approvedCount > 0):
             ?>
             <div class="group-stat-pill" style="background: rgba(16,185,129,0.15);">
-                <span class="stat-num" style="color: #34d399;"><?php echo $approvedCount; ?></span>
+                <span class="stat-num" style="color: #34d399;"><?php echo htmlspecialchars((string)($approvedCount), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Approved</span>
             </div>
             <?php endif; ?>
@@ -274,7 +274,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                                 <?php if($ext === 'pdf'): ?>
                                     <!-- Laptop Offcanvas trigger -->
-                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo $pr['id']; ?>">
+                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
                                     </span>
                                     <!-- Mobile new tab trigger -->
@@ -327,7 +327,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </span>
                         </td>
                         <td class="text-end pe-4">
-                            <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo $pr['id']; ?>">
+                            <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <i class="bi bi-info-circle-fill"></i> <span>Details</span>
                             </button>
                         </td>
@@ -342,7 +342,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Modals rendered outside the table to prevent z-index/backdrop issues -->
 <?php foreach($proposals as $pr): ?>
 <!-- DETAILS MODAL -->
-<div class="modal fade" id="proposalDetailsModal<?php echo $pr['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade" id="proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
@@ -399,7 +399,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
 <!-- PDF Offcanvas (Right Side) -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo $pr['id']; ?>" style="width: 50vw; min-width: 320px; z-index: 1060;">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw; min-width: 320px; z-index: 1060;">
   <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
     <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>

@@ -186,19 +186,19 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <!-- Stats -->
         <div class="d-flex flex-wrap hero-stats-container">
             <div class="group-stat-pill">
-                <span class="stat-num text-info"><?php echo $stats['total_users']; ?></span>
+                <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_users']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Total Users</span>
             </div>
             <div class="group-stat-pill">
-                <span class="stat-num text-success"><?php echo $stats['active_projects']; ?></span>
+                <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['active_projects']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Active Projects</span>
             </div>
             <div class="group-stat-pill">
-                <span class="stat-num text-warning"><?php echo $stats['pending_evaluations']; ?></span>
+                <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($stats['pending_evaluations']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Pending Evals</span>
             </div>
             <div class="group-stat-pill" style="margin-right: 0;">
-                <span class="stat-num text-primary"><?php echo $stats['avg_marks']; ?></span>
+                <span class="stat-num text-primary"><?php echo htmlspecialchars((string)($stats['avg_marks']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Avg Grades</span>
             </div>
         </div>
@@ -355,12 +355,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <div class="progress flex-grow-1" style="height: 8px; max-width: 150px; background-color: var(--border-color); border-radius: 4px; overflow: hidden;">
                                             <div class="progress-bar <?php echo $current >= 8 ? 'bg-danger' : ($current >= 6 ? 'bg-warning' : 'bg-success'); ?>" role="progressbar" style="width: <?php echo ($current / 8) * 100; ?>%"></div>
                                         </div>
-                                        <span class="fw-bold text-dark" style="font-size: 0.75rem;"><?php echo $current; ?></span>
+                                        <span class="fw-bold text-dark" style="font-size: 0.75rem;"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
                                     </div>
                                 </td>
                                 <td class="text-center">
                                     <span class="fw-bold <?php echo $remaining === 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.85rem;">
-                                        <?php echo $remaining; ?>
+                                        <?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
                                 </td>
                                 <td class="text-end pe-4">

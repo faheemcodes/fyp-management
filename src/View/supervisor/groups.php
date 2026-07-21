@@ -361,7 +361,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         <i class="bi <?php echo $globalSupervisionShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-2"></i>
                         <?php echo $globalSupervisionShowAction ? 'Publish Marks to Students' : 'Marks are Visible'; ?>
                     </button>
-                </form>
+                
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
             </div>
         </div>
 
@@ -436,10 +438,10 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         </td>
                         <td class="text-end pe-4">
                             <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
-                                <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo $g['id']; ?>">
+                                <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <i class="bi bi-info-circle-fill"></i> <span>Details</span>
                                 </button>
-                                <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo $g['id']; ?>">
+                                <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <i class="bi bi-pencil-fill"></i> <span>Grade</span>
                                 </button>
                             </div>
@@ -457,7 +459,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <?php foreach($groups as $g): ?>
 
 <!-- DETAILS MODAL -->
-<div class="modal fade" id="detailsModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
             <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
@@ -514,7 +516,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 </div>
 
 <!-- MANUAL GRADING MODAL -->
-<div class="modal fade eval-modal" id="gradeGroupModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade eval-modal" id="gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header eval-modal-header border-0">
@@ -522,7 +524,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo $basePath; ?>/supervisor/groups/grade" method="POST">
-                <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
+                <input type="hidden" name="group_id" value="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="modal-body p-3 text-start">
                     <p class="mb-3" style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary);">Assign individual supervision marks out of 45 for each student in the group. Overall totals and grades will be updated automatically.</p>
                     
@@ -547,7 +549,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <input type="number" class="eval-input" name="marks[<?php echo $m['user_id']; ?>][supervision]" min="0" max="45" step="1" value="<?php echo isset($m['supervision_marks']) ? (int)$m['supervision_marks'] : ''; ?>" required>
+                                        <input type="number" class="eval-input" name="marks[<?php echo htmlspecialchars((string)($m['user_id']), ENT_QUOTES, 'UTF-8'); ?>][supervision]" min="0" max="45" step="1" value="<?php echo isset($m['supervision_marks']) ? (int)$m['supervision_marks'] : ''; ?>" required>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -559,7 +561,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
                     <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Save Marks</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>

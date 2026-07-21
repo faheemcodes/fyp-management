@@ -309,6 +309,25 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <label class="audience-chip-label" for="audience_hod"><i class="bi bi-diagram-3-fill me-1"></i> HOD</label>
                         </div>
                     </div>
+                    
+                    <div class="pf-group mb-4">
+                        <label class="form-label d-block">Public Visibility</label>
+                        <style>
+                            #is_public:checked {
+                                background-color: #10b981 !important;
+                                border-color: #10b981 !important;
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+                            }
+                            #is_public {
+                                background-color: var(--pf-bg-alt);
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+                            }
+                        </style>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_public" name="is_public" value="1" checked style="cursor: pointer; border: 1px solid #ced4da; box-shadow: none;">
+                            <label class="form-check-label ms-2" for="is_public" style="cursor: pointer;">Display on Public Home Page</label>
+                        </div>
+                    </div>
 
                     <div class="pf-group mb-3">
                         <label for="subject" class="form-label">Subject / Title <span class="text-danger">*</span></label>

@@ -190,16 +190,16 @@ $firstName = explode(' ', $fullName)[0];
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
                 <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)'; ?>;"><?php echo $stats['pending_approvals']; ?></span>
+                    <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)'; ?>;"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Approvals</span>
                 </div>
             </a>
             <div class="group-stat-pill">
-                <span class="stat-num text-success"><?php echo $stats['total_students']; ?></span>
+                <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['total_students']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Active Students</span>
             </div>
             <div class="group-stat-pill" style="margin-right: 0;">
-                <span class="stat-num text-info"><?php echo $stats['total_notices']; ?></span>
+                <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_notices']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Notices Generated</span>
             </div>
         </div>
@@ -217,7 +217,7 @@ $firstName = explode(' ', $fullName)[0];
                 <div>
                     <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Verify Students</h6>
                     <p class="mb-0 text-muted" style="font-size: 0.8rem;">
-                        <strong style="color: #f59e0b;"><?php echo $stats['pending_approvals']; ?></strong> pending registrations
+                        <strong style="color: #f59e0b;"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></strong> pending registrations
                     </p>
                 </div>
             </div>
@@ -291,7 +291,7 @@ $firstName = explode(' ', $fullName)[0];
                                 </span>
                             </td>
                             <td class="text-end">
-                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo $n['id']; ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(59,130,246,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
+                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(59,130,246,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
                                     <i class="bi bi-eye-fill me-1"></i>View
                                 </a>
                             </td>
@@ -328,7 +328,7 @@ $firstName = explode(' ', $fullName)[0];
                         <span class="fw-semibold" style="font-size: 0.75rem; color: var(--text-secondary);">
                             <i class="bi bi-calendar3 me-2"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
                         </span>
-                        <a href="<?php echo $bp; ?>/notice/view?id=<?php echo $n['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem;">
+                        <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem;">
                             View
                         </a>
                     </div>

@@ -161,9 +161,9 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                         <tr>
                             <td>
                                 <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo ($i+1) . '. ' . $r['label']; ?></div>
-                                <small class="text-muted d-none d-md-block" style="font-size: 0.75rem;"><?php echo $r['desc']; ?></small>
+                                <small class="text-muted d-none d-md-block" style="font-size: 0.75rem;"><?php echo htmlspecialchars((string)($r['desc']), ENT_QUOTES, 'UTF-8'); ?></small>
                             </td>
-                            <td style="font-size: 0.875rem; color: var(--text-secondary);"><?php echo $r['max']; ?></td>
+                            <td style="font-size: 0.875rem; color: var(--text-secondary);"><?php echo htmlspecialchars((string)($r['max']), ENT_QUOTES, 'UTF-8'); ?></td>
                             <td class="text-end">
                                 <span class="font-monospace fw-bold" style="font-size: 0.9rem;"><?php echo number_format($r['val'], 0); ?></span>
                             </td>
@@ -305,9 +305,9 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                 $isCurrentGrade = $row[0] === $showGrade;
             ?>
             <div class="d-flex align-items-center justify-content-between py-1" style="font-size: 0.78rem; <?php echo $isCurrentGrade ? 'background: ' . $row[1] . '15; border-radius: 6px; padding: 6px 8px;' : ''; ?>">
-                <span class="fw-bold" style="color: <?php echo $row[1]; ?>; min-width: 28px;"><?php echo $row[0]; ?></span>
-                <span class="text-muted"><?php echo $row[2]; ?></span>
-                <span class="font-monospace text-muted" style="font-size: 0.72rem;"><?php echo $row[3]; ?></span>
+                <span class="fw-bold" style="color: <?php echo htmlspecialchars((string)($row[1]), ENT_QUOTES, 'UTF-8'); ?>; min-width: 28px;"><?php echo htmlspecialchars((string)($row[0]), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="text-muted"><?php echo htmlspecialchars((string)($row[2]), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="font-monospace text-muted" style="font-size: 0.72rem;"><?php echo htmlspecialchars((string)($row[3]), ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php if ($isCurrentGrade): ?><i class="bi bi-arrow-left text-muted" style="font-size: 0.7rem;"></i><?php endif; ?>
             </div>
             <?php endforeach; ?>

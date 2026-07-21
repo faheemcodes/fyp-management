@@ -169,7 +169,9 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 rounded-pill" style="background: linear-gradient(135deg, #3b82f6, #2563eb); border: none;">Update Deadline</button>
-                </form>
+                
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
             </div>
         </div>
     </div>

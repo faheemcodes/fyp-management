@@ -19,6 +19,9 @@ session_set_cookie_params([
 
 session_start();
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 // Load Composer Autoloader
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -75,8 +78,11 @@ $uri = '/' . ltrim($uri, '/');
 
 // Define routes
 $routes = [
-    '/' => ['Controller\AuthController', 'index'],
-    '/faculty' => ['Controller\AuthController', 'faculty'],
+    '/' => ['Controller\PublicController', 'landing'],
+    '/about' => ['Controller\PublicController', 'about'],
+    '/contact' => ['Controller\PublicController', 'contact'],
+    '/faculty' => ['Controller\PublicController', 'faculty'],
+    '/notice-board' => ['Controller\PublicController', 'noticeBoard'],
     '/login' => ['Controller\AuthController', 'login'],
     '/logout' => ['Controller\AuthController', 'logout'],
     '/register' => ['Controller\AuthController', 'register'],
@@ -179,6 +185,8 @@ $routes = [
     '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
     '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification'],
     '/api/upload-chat-file' => ['Controller\ChatController', 'uploadFile'],
+    '/api/chat/notify' => ['Controller\ChatController', 'notifyRecipient'],
+    
     
     // Chatbot API
     '/api/chatbot' => ['Controller\ChatbotController', 'handleChat']
@@ -224,7 +232,7 @@ if (array_key_exists($uri, $routes)) {
     }
 
     // Check login requirements (simple session validation)
-    $authRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/faculty'];
+    $authRoutes = ['/', '/about', '/contact', '/login', '/register', '/forgot-password', '/reset-password', '/faculty', '/notice-board'];
     if (!in_array($uri, $authRoutes)) {
         if (!isset($_SESSION['user_id'])) {
             if ($isApiRoute) {

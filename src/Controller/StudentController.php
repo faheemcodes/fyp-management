@@ -258,7 +258,7 @@ class StudentController extends BaseController {
                 $this->flash('success', 'Group created successfully! You can now invite team members.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Failed to create group: ' . $e->getMessage());
+                $this->flash('error', 'Failed to create group: . Please try again.');
             }
         }
         redirect('/student/group');
@@ -311,7 +311,7 @@ class StudentController extends BaseController {
                 $this->addNotification($targetId, 'Added to Group', "You have been added to the project group by {$_SESSION['name']}.");
                 $this->flash('success', "Student {$targetStudent['name']} added to group successfully.");
             } catch (\Exception $e) {
-                $this->flash('error', 'Failed to add member: ' . $e->getMessage());
+                $this->flash('error', 'Failed to add member: . Please try again.');
             }
         }
         redirect('/student/group');
@@ -699,7 +699,7 @@ class StudentController extends BaseController {
                     $this->flash('success', 'Profile updated successfully.');
                     redirect('/student/profile');
                 } catch (\Exception $e) {
-                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                    $this->flash('error', 'Database error: . Please try again.');
                 }
             } else {
                 $this->flash('error', implode(" ", $errors));

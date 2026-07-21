@@ -420,12 +420,14 @@ html.dark-theme .eval-input {
         ?>
         <div class="d-flex gap-2">
             <form action="<?php echo $bp; ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
-                <input type="hidden" name="show" value="<?php echo $globalShowAction; ?>">
+                <input type="hidden" name="show" value="<?php echo htmlspecialchars((string)($globalShowAction), ENT_QUOTES, 'UTF-8'); ?>">
                 <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-black' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;">
                     <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-1"></i>
                     <?php echo $globalShowAction ? 'Publish Marks' : 'Hide Marks'; ?>
                 </button>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -474,7 +476,7 @@ html.dark-theme .eval-input {
                         <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;">
                             <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
                         </div>
-                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>" style="font-size: 0.8rem;">
+                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem;">
                             View Abstract
                         </button>
                     </td>
@@ -524,7 +526,7 @@ html.dark-theme .eval-input {
             <div class="eval-mobile-card">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
-                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem;" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo $g['id']; ?>">
+                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem;" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                         Abstract
                     </button>
                 </div>
@@ -571,7 +573,7 @@ html.dark-theme .eval-input {
     <!-- Grading modals removed. Links point to online sheets instead -->
 
     <!-- 4. View Abstract -->
-    <div class="modal fade eval-modal" id="abstractModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true">
+    <div class="modal fade eval-modal" id="abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">

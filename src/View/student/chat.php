@@ -505,7 +505,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 <?php 
                 $supervisorInitial = strtoupper(substr($supervisor['name'], 0, 1));
                 ?>
-                <span class="fw-bold"><?php echo $supervisorInitial; ?></span>
+                <span class="fw-bold"><?php echo htmlspecialchars((string)($supervisorInitial), ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
             <div>
                 <h6 class="fw-bold mb-0 text-dark"><?php echo htmlspecialchars($supervisor['name']); ?></h6>
@@ -544,7 +544,9 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     <button type="submit" class="btn-icon btn-send" id="sendBtn" title="Send">
                         <i class="bi bi-send-fill"></i>
                     </button>
-                </form>
+                
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
             </div>
         </div>
     </div>
@@ -553,8 +555,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     <script type="module">
         import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL } from '<?php echo $bp; ?>/js/firebase-config.js';
 
-        const studentId = "<?php echo $studentId; ?>";
-        const supervisorId = "<?php echo $supervisor['id']; ?>";
+        const studentId = "<?php echo htmlspecialchars((string)($studentId), ENT_QUOTES, 'UTF-8'); ?>";
+        const supervisorId = "<?php echo htmlspecialchars((string)($supervisor['id']), ENT_QUOTES, 'UTF-8'); ?>";
         const chatId = `chat_${studentId}_${supervisorId}`;
         const chatMessages = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
@@ -810,15 +812,25 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 e.preventDefault();
                 const msgId = deleteBtn.getAttribute('data-id');
                 
-                if (confirm("Are you sure you want to delete this message?")) {
-                    try {
-                        const msgRef = doc(db, 'chats', chatId, 'messages', msgId);
-                        await deleteDoc(msgRef);
-                    } catch (error) {
-                        console.error("Error deleting message:", error);
-                        alert("Could not delete message. " + error.message);
+                Swal.fire({
+                    title: 'Delete Message?',
+                    text: 'Are you sure you want to delete this message?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            const msgRef = doc(db, 'chats', chatId, 'messages', msgId);
+                            await deleteDoc(msgRef);
+                        } catch (error) {
+                            console.error("Error deleting message:", error);
+                            Swal.fire('Error', "Could not delete message. " + error.message, 'error');
+                        }
                     }
-                }
+                });
             }
         });
 
@@ -882,6 +894,9 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
                         const response = await fetch('<?php echo $bp; ?>/api/upload-chat-file', {
                             method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '<?php echo $_SESSION['csrf_token'] ?? ''; ?>'
+                            },
                             body: formData
                         });
 
@@ -911,6 +926,20 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                         fileType: fileType,
                         timestamp: serverTimestamp()
                     });
+
+                    // Trigger notification and email
+                    fetch('<?php echo $bp; ?>/api/chat/notify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '<?php echo $_SESSION['csrf_token'] ?? ''; ?>'
+                        },
+                        body: JSON.stringify({
+                            recipient_id: supervisorId,
+                            chat_id: chatId,
+                            message_preview: text || (selectedFile ? '[Attachment]' : '')
+                        })
+                    }).catch(e => console.error("Notification failed", e));
                     
                     // Reset file input
                     selectedFile = null;

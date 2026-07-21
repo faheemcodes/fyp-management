@@ -256,7 +256,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-view-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='var(--border-color)';" onmouseout="this.style.background='var(--form-bg)';"
                                 data-bs-toggle="modal" data-bs-target="#viewUserModal"
-                                data-id="<?php echo $u['id']; ?>"
+                                data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
                                 data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
                                 data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
@@ -276,12 +276,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <i class="bi bi-eye"></i> Details
                             </button>
                             <?php if($u['status'] === 'pending'): ?>
-                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 10px rgba(16,185,129,0.2);">Approve</a>
-                                <a href="<?php echo $basePath; ?>/admin/users/reject?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;">Reject</a>
+                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 10px rgba(16,185,129,0.2);">Approve</a>
+                                <a href="<?php echo $basePath; ?>/admin/users/reject?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;">Reject</a>
                             <?php else: ?>
                                 <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-edit-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500;"
                                     data-bs-toggle="modal" data-bs-target="#editUserModal"
-                                    data-id="<?php echo $u['id']; ?>"
+                                    data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                     data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
                                     data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
                                     data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
@@ -294,7 +294,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <?php if($u['role'] !== 'admin'): ?>
-                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo $u['id']; ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
+                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 <?php endif; ?>
@@ -404,7 +404,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Create Account</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -499,7 +501,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #3b82f6; border-color: #3b82f6;">Save Changes</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>

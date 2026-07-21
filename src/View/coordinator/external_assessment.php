@@ -153,7 +153,9 @@ html.dark-theme select option {
                     </button>
                 </div>
             </div>
-        </form>
+        
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
     </div>
 </div>
 

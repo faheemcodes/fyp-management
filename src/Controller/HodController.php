@@ -52,6 +52,7 @@ class HodController extends BaseController {
 
     public function createSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -107,7 +108,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Supervisor $fullName added successfully and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error adding supervisor: ' . $e->getMessage());
+                $this->flash('error', 'Error adding supervisor. Please try again.');
             }
         }
         redirect('/hod/supervisors');
@@ -115,6 +116,7 @@ class HodController extends BaseController {
 
     public function editSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
@@ -147,7 +149,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Supervisor deleted successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', "Failed to delete supervisor: " . $e->getMessage());
+                $this->flash('error', 'Failed to delete supervisor. Please try again.');
             }
         }
         redirect('/hod/supervisors');
@@ -164,6 +166,7 @@ class HodController extends BaseController {
 
     public function createCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -218,7 +221,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Committee Member $fullName added successfully and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error adding committee member: ' . $e->getMessage());
+                $this->flash('error', 'Error adding committee member. Please try again.');
             }
         }
         redirect('/hod/committee');
@@ -226,6 +229,7 @@ class HodController extends BaseController {
 
     public function editCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
             $department = trim($_POST['department'] ?? '');
@@ -255,7 +259,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Committee member deleted successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', "Failed to delete committee member: " . $e->getMessage());
+                $this->flash('error', 'Failed to delete committee member. Please try again.');
             }
         }
         redirect('/hod/committee');
@@ -348,6 +352,7 @@ class HodController extends BaseController {
 
     public function createCoordinator() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -404,7 +409,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Coordinator $fullName created successfully under department $dept and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error creating coordinator: ' . $e->getMessage());
+                $this->flash('error', 'Error creating coordinator. Please try again.');
             }
         }
         redirect('/hod/coordinators');
@@ -412,6 +417,7 @@ class HodController extends BaseController {
 
     public function editCoordinator() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -463,7 +469,7 @@ class HodController extends BaseController {
                 $this->flash('success', "Coordinator details updated successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error updating coordinator: ' . $e->getMessage());
+                $this->flash('error', 'Error updating coordinator. Please try again.');
             }
         }
         redirect('/hod/coordinators');
@@ -489,7 +495,7 @@ class HodController extends BaseController {
                     $this->flash('success', "Coordinator deleted successfully.");
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Error deleting coordinator: ' . $e->getMessage());
+                    $this->flash('error', 'Error deleting coordinator. Please try again.');
                 }
             } else {
                 $this->flash('error', 'Unauthorized: Coordinator is not in your department.');
@@ -516,6 +522,7 @@ class HodController extends BaseController {
         $profile = $stmt->fetch();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $errors = [];
             $prefix = trim($_POST['prefix'] ?? '');
             $mobile_code = trim($_POST['mobile_code'] ?? '');
@@ -583,7 +590,7 @@ class HodController extends BaseController {
                     redirect('/hod/profile');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                    $this->flash('error', 'Database error. Please try again.');
                 }
             } else {
                 $this->flash('error', implode(" ", $errors));

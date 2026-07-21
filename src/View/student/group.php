@@ -454,7 +454,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                                 <i class="bi bi-check2-circle me-2"></i>Save Team
                             </button>
                         </div>
-                    </form>
+                    
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
                 </div>
             </div>
             <?php endif; ?>

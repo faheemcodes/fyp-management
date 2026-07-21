@@ -17,8 +17,13 @@
     <link href="<?php echo $basePath; ?>/css/style.css" rel="stylesheet">
     <link href="<?php echo $basePath; ?>/css/auth.css" rel="stylesheet">
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-theme');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
         }
     </script>
 </head>
@@ -27,5 +32,6 @@
 
 <?php 
 $isSolidHeader = true; 
+$hideThemeButton = false;
 include __DIR__ . '/lp_navbar.php'; 
 ?>

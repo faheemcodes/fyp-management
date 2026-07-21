@@ -239,6 +239,7 @@ class CommitteeController extends BaseController {
 
     public function bulkGradeEvaluation() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $stage = $_POST['stage'] ?? '';
             $evaluations = $_POST['evaluations'] ?? [];
             $evaluatorId = $_SESSION['user_id'];
@@ -441,7 +442,7 @@ class CommitteeController extends BaseController {
                     $this->flash('success', "Marks for all groups saved successfully.");
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Error saving evaluations: ' . $e->getMessage());
+                    $this->flash('error', 'Error saving evaluations. Please try again.');
                 }
             }
         }
@@ -450,6 +451,7 @@ class CommitteeController extends BaseController {
 
     public function gradeEvaluation() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $groupId = $_POST['group_id'] ?? null;
             $stage = $_POST['stage'] ?? '';
             $remarks = trim($_POST['remarks'] ?? '');
@@ -642,7 +644,7 @@ class CommitteeController extends BaseController {
                     $this->flash('success', "Marks and evaluation details for $stage saved successfully.");
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Error saving evaluation: ' . $e->getMessage());
+                    $this->flash('error', 'Error saving evaluation. Please try again.');
                 }
             }
         }
@@ -651,6 +653,7 @@ class CommitteeController extends BaseController {
 
     public function toggleCommitteeVisibility() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $evaluatorId = $_SESSION['user_id'];
             $groupId = $_POST['group_id'] ?? null;
             $stage = $_POST['stage'] ?? null;
@@ -695,6 +698,7 @@ class CommitteeController extends BaseController {
         $profile = $stmt->fetch();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $errors = [];
             $prefix = trim($_POST['prefix'] ?? '');
             $mobile_code = trim($_POST['mobile_code'] ?? '');
@@ -773,7 +777,7 @@ class CommitteeController extends BaseController {
                     redirect('/committee/profile');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                    $this->flash('error', 'Database error. Please try again.');
                 }
             } else {
                 $this->flash('error', implode(" ", $errors));

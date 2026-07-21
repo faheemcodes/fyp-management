@@ -184,6 +184,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Global SweetAlert Confirm Action for links
+window.confirmAction = function(e, message) {
+    e.preventDefault();
+    const url = e.currentTarget.href;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#a80a34',
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+};
+
 // Helper to resolve the correct basePath for AJAX requests
 function getBasePath() {
     if (typeof window.appBasePath !== 'undefined') {
@@ -298,7 +318,11 @@ function markNotificationsRead() {
     
     fetch(`${basePath}/api/notifications/read`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': typeof window.csrfToken !== 'undefined' ? window.csrfToken : ''
+        },
         body: JSON.stringify({})
     })
     .then(res => res.json())
@@ -315,7 +339,11 @@ function markNotificationSingle(id) {
     
     fetch(`${basePath}/api/notifications/read`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': typeof window.csrfToken !== 'undefined' ? window.csrfToken : ''
+        },
         body: JSON.stringify({ id: id })
     })
     .then(res => res.json())
@@ -329,22 +357,40 @@ function markNotificationSingle(id) {
 // Delete Notification
 window.deleteNotification = function(id) {
     const basePath = getBasePath();
-    if (!confirm('Are you sure you want to delete this notification?')) return;
     
-    fetch(`${basePath}/api/notifications/delete`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: id })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            fetchNotifications();
-        } else {
-            alert('Error: ' + (data.error || 'Could not delete notification'));
+    Swal.fire({
+        title: 'Delete Notification?',
+        text: 'Are you sure you want to delete this notification?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`${basePath}/api/notifications/delete`, {
+                method: 'POST',
+                headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': typeof window.csrfToken !== 'undefined' ? window.csrfToken : ''
+        },
+                body: JSON.stringify({ id: id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    fetchNotifications();
+                } else {
+                    Swal.fire('Error', data.error || 'Could not delete notification', 'error');
+                }
+            })
+            .catch(err => {
+                console.log('Error deleting notification:', err);
+                Swal.fire('Error', 'A network error occurred', 'error');
+            });
         }
-    })
-    .catch(err => console.log('Error deleting notification:', err));
+    });
 };
 
 // Helper: Escape HTML to prevent XSS

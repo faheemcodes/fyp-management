@@ -127,7 +127,7 @@
                 <th rowspan="2" style="width: 140px;">Primary Supervisor</th>
                 <th colspan="2">Group Members</th>
                 <?php foreach ($attributes as $attr): ?>
-                    <th rowspan="2" style="width: 60px;"><?php echo htmlspecialchars($attr['name']); ?><br><small>(<?php echo $attr['marks']; ?> marks)</small></th>
+                    <th rowspan="2" style="width: 60px;"><?php echo htmlspecialchars($attr['name']); ?><br><small>(<?php echo htmlspecialchars((string)($attr['marks']), ENT_QUOTES, 'UTF-8'); ?> marks)</small></th>
                 <?php endforeach; ?>
                 <th rowspan="2" style="width: 60px;">Total<br><small>(50 marks)</small></th>
             </tr>
@@ -145,10 +145,10 @@
             ?>
                 <!-- First row for the group includes the merged columns -->
                 <tr>
-                    <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo $srNo++; ?></td>
-                    <td rowspan="<?php echo $numMembers; ?>" class="merged-cell"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
-                    <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                    <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell"><?php echo $srNo++; ?></td>
+                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
                     
                     <!-- First Member Details -->
                     <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>

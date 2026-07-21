@@ -45,7 +45,9 @@
                         <i class="bi bi-send-fill"></i>
                     </button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
             <p class="ai-disclaimer">AI can make mistakes. Verify important info.</p>
         </div>
     </div>

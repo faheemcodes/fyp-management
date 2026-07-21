@@ -1078,6 +1078,20 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     fileType: fileType,
                     timestamp: serverTimestamp()
                 });
+
+                // Trigger notification and email
+                fetch('<?php echo $bp; ?>/api/chat/notify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '<?php echo $_SESSION['csrf_token'] ?? ''; ?>'
+                    },
+                    body: JSON.stringify({
+                        recipient_id: currentLeaderId,
+                        chat_id: chatId,
+                        message_preview: text || (selectedFile ? '[Attachment]' : '')
+                    })
+                }).catch(e => console.error("Notification failed", e));
                 
                 // Reset file input
                 selectedFile = null;

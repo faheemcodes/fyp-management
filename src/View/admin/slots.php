@@ -49,15 +49,15 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                                     <div class="progress flex-grow-1" style="height: 6px; max-width: 120px; background: rgba(0,0,0,0.05);">
                                         <div class="progress-bar bg-<?php echo $statusColor; ?>" style="width: <?php echo min(100, $percentage); ?>%"></div>
                                     </div>
-                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem; min-width: 20px; text-align: right;"><?php echo $current; ?></span>
+                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem; min-width: 20px; text-align: right;"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
                                 </div>
                             </td>
                             <td class="py-3 text-center">
-                                <span class="fw-bold text-<?php echo $statusColor; ?> fs-5"><?php echo $remaining; ?></span>
+                                <span class="fw-bold text-<?php echo $statusColor; ?> fs-5"><?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?></span>
                             </td>
                             <td class="px-4 py-3 text-end">
                                 <span class="badge bg-<?php echo $statusColor; ?> bg-opacity-10 text-<?php echo $statusColor; ?> px-3 py-2 rounded-pill" style="letter-spacing: 0.05em;">
-                                    <?php echo $statusText; ?>
+                                    <?php echo htmlspecialchars((string)($statusText), ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>
                         </tr>

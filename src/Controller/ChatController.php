@@ -103,4 +103,105 @@ class ChatController extends BaseController {
         }
         exit;
     }
+
+    public function notifyRecipient() {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['user_id'])) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $recipientId = $input['recipient_id'] ?? null;
+        $chatId = $input['chat_id'] ?? null;
+        $messagePreview = $input['message_preview'] ?? 'New message received.';
+        $senderId = $_SESSION['user_id'];
+
+        if (!$recipientId || !$chatId) {
+            echo json_encode(['success' => false, 'error' => 'Missing recipient or chat info']);
+            exit;
+        }
+
+        $db = \Database::getInstance()->getConnection();
+        
+        // Check if an email was sent for this chat in the last 15 minutes to this recipient
+        $stmt = $db->prepare("SELECT created_at FROM notifications WHERE user_id = ? AND redirect_url LIKE ? ORDER BY created_at DESC LIMIT 1");
+        $stmt->execute([$recipientId, "%chat%"]);
+        $lastNotification = $stmt->fetchColumn();
+
+        $shouldSendEmail = true;
+        if ($lastNotification) {
+            $lastTime = strtotime($lastNotification);
+            if (time() - $lastTime < 900) { // 15 minutes throttle
+                $shouldSendEmail = false;
+            }
+        }
+
+        // Insert web notification
+        $senderName = $_SESSION['user_name'] ?? 'Someone'; 
+        
+        // Attempt to fetch sender name if not in session
+        if (empty($_SESSION['user_name'])) {
+            $s = $db->prepare("SELECT COALESCE(students.name, supervisors.name, users.email) as name FROM users LEFT JOIN students ON students.user_id = users.id LEFT JOIN supervisors ON supervisors.user_id = users.id WHERE users.id = ?");
+            $s->execute([$senderId]);
+            $res = $s->fetch(\PDO::FETCH_ASSOC);
+            if ($res && !empty($res['name'])) $senderName = $res['name'];
+        }
+
+        $title = "New Message from " . $senderName;
+        $redirectUrl = ($_SESSION['role'] === 'student') ? '/supervisor/chat' : '/student/chat'; // recipient's route
+
+        $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url, created_at) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$recipientId, $title, substr($messagePreview, 0, 100), $redirectUrl, date('Y-m-d H:i:s')]);
+
+        if ($shouldSendEmail) {
+            // Fetch recipient email
+            $stmt = $db->prepare("SELECT users.email, COALESCE(students.name, supervisors.name, users.email) as name FROM users LEFT JOIN students ON students.user_id = users.id LEFT JOIN supervisors ON supervisors.user_id = users.id WHERE users.id = ?");
+            $stmt->execute([$recipientId]);
+            $recipientUser = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($recipientUser && $recipientUser['email']) {
+                $recipientName = $recipientUser['name'] ?? 'User';
+                
+                try {
+                    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.mailtrap.io';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = '215a77f0a6cdcb';
+                    $mail->Password   = '16db043e0e7a2b';
+                    $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 2525;
+                    $mail->setFrom('noreply@fypmanagement.com', 'FYP Management System');
+                    $mail->addAddress($recipientUser['email'], $recipientName);
+                    $mail->isHTML(true);
+                    $mail->Subject = 'New Chat Message Received';
+                    
+                    $appUrl = 'http://' . $_SERVER['HTTP_HOST'];
+                    $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+                    if ($basePath === '/') $basePath = '';
+                    $fullUrl = $appUrl . $basePath . $redirectUrl;
+
+                    $mail->Body = "
+                        <h3>Hello $recipientName,</h3>
+                        <p>You have received a new message from <strong>$senderName</strong>.</p>
+                        <p><em>\"" . htmlspecialchars(substr($messagePreview, 0, 100)) . "...\"</em></p>
+                        <br>
+                        <a href='$fullUrl' style='display:inline-block;padding:10px 20px;background:#4f7cf7;color:#fff;text-decoration:none;border-radius:5px;'>View Message</a>
+                        <br><br>
+                        <small>You won't receive another email for this chat thread for 15 minutes to prevent spam.</small>
+                    ";
+                    
+                    $mail->send();
+                } catch (\Exception $e) {
+                    // Fail silently for email to not break chat API
+                }
+            }
+        }
+
+        echo json_encode(['success' => true]);
+        exit;
+    }
 }

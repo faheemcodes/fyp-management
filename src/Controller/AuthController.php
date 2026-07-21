@@ -6,94 +6,13 @@ use PHPMailer\PHPMailer\Exception;
 
 class AuthController extends BaseController {
     
-    public function index() {
-        $db = \Database::getInstance()->getConnection();
-        
-        // Fetch Upcoming Deadlines (Active only)
-        $deadlines = $db->query("SELECT * FROM deadlines WHERE deadline_date >= CURRENT_DATE AND status = 'Active' ORDER BY deadline_date ASC LIMIT 5")->fetchAll();
-        
-        // Fetch Supervisors Spotlight (limited for landing page)
-        $supervisors = $db->query("
-            SELECT s.name, s.department, s.designation, s.research_interest, u.email 
-            FROM supervisors s 
-            JOIN users u ON s.user_id = u.id 
-            WHERE u.status = 'approved' 
-            ORDER BY FIELD(s.designation, 'Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer', 'Lab Engineer'), s.name ASC 
-            LIMIT 8
-        ")->fetchAll();
-        
-        // Fetch total supervisor count for "View All" button
-        $totalSupervisors = $db->query("SELECT COUNT(*) FROM supervisors s JOIN users u ON s.user_id = u.id WHERE u.status = 'approved'")->fetchColumn();
-        
-        // Fetch Public Notices (latest 5)
-        $notices = $db->query("SELECT * FROM notices ORDER BY notice_date DESC, created_at DESC LIMIT 5")->fetchAll();
-        
-        // Fetch stats for the hero section
-        $stats = [];
-        $stats['supervisors'] = $db->query("SELECT COUNT(*) FROM supervisors")->fetchColumn();
-        $stats['projects'] = $db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
-        $stats['students'] = $db->query("SELECT COUNT(*) FROM students")->fetchColumn();
-        $stats['departments'] = 5; // IT, SE, Telecom, Electronics, Data Science
-        
-        $this->render('landing', [
-            'pageTitle' => 'FYP Portal - Faculty of Engineering & Technology, University of Sindh',
-            'deadlines' => $deadlines,
-            'supervisors' => $supervisors,
-            'totalSupervisors' => $totalSupervisors,
-            'notices' => $notices,
-            'stats' => $stats
-        ]);
-    }
+
+
     
-    public function faculty() {
-        $db = \Database::getInstance()->getConnection();
-        
-        $supervisors = $db->query("
-            SELECT s.name, s.department, s.designation, s.research_interest, u.email 
-            FROM supervisors s 
-            JOIN users u ON s.user_id = u.id 
-            WHERE u.status = 'approved' 
-            ORDER BY FIELD(s.designation, 'Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer', 'Lab Engineer'), s.name ASC
-        ")->fetchAll();
-        
-        // Fetch HODs
-        $hods = $db->query("
-            SELECT h.name, u.email, h.department
-            FROM hods h 
-            JOIN users u ON h.user_id = u.id
-            WHERE u.status = 'approved'
-            ORDER BY h.department ASC
-        ")->fetchAll();
-
-        // Fetch Coordinators
-        $coordinators = $db->query("
-            SELECT c.name, u.email 
-            FROM coordinators c 
-            JOIN users u ON c.user_id = u.id
-            WHERE u.status = 'approved'
-            ORDER BY c.name ASC
-        ")->fetchAll();
-        
-        // Fetch Committee members
-        $committee = $db->query("
-            SELECT c.name, c.department, u.email
-            FROM committees c
-            JOIN users u ON c.user_id = u.id
-            WHERE u.status = 'approved'
-            ORDER BY c.department ASC, c.name ASC
-        ")->fetchAll();
-
-        $this->render('faculty', [
-            'pageTitle' => 'Faculty & Staff - FYP Management Portal',
-            'supervisors' => $supervisors,
-            'hods' => $hods,
-            'coordinators' => $coordinators,
-            'committee' => $committee
-        ]);
-    }
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $identifier = trim($_POST['identifier'] ?? '');
             $password = $_POST['password'] ?? '';
             
@@ -130,6 +49,7 @@ class AuthController extends BaseController {
                 }
                 
                 // Set session details
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
@@ -185,6 +105,7 @@ class AuthController extends BaseController {
     
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             // Save old input values to preserve form state on validation failure
             $_SESSION['old'] = $_POST;
             $_SESSION['has_old_data'] = true;
@@ -287,7 +208,7 @@ class AuthController extends BaseController {
                 $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                 $allowedExtensions = ['jpg', 'jpeg', 'png'];
                 
-                if (!in_array($file['type'], $allowedTypes) && !in_array($extension, $allowedExtensions)) {
+                if (!in_array($file['type'], $allowedTypes) || !in_array($extension, $allowedExtensions)) {
                     $this->flash('error', 'Profile image must be in JPG, JPEG, or PNG format.');
                     redirect('/register');
                 }
@@ -362,7 +283,7 @@ class AuthController extends BaseController {
                     redirect('/login');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Student registration transaction failed: ' . $e->getMessage());
+                    $this->flash('error', 'Student registration transaction failed. Please try again.');
                     redirect('/register');
                 }
             } else {
@@ -462,7 +383,7 @@ class AuthController extends BaseController {
                     redirect('/login');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Staff registration transaction failed: ' . $e->getMessage());
+                    $this->flash('error', 'Staff registration transaction failed. Please try again.');
                     redirect('/register');
                 }
             }
@@ -473,11 +394,25 @@ class AuthController extends BaseController {
     
     public function forgotPassword() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $email = trim($_POST['email'] ?? '');
             if (empty($email)) {
                 $this->flash('error', 'Please provide your email.');
                 redirect('/login');
             }
+            
+            // Check time restriction (1 minute)
+            $sessionKey = 'last_reset_request_' . md5($email);
+            if (isset($_SESSION[$sessionKey])) {
+                $timeSinceLastRequest = time() - $_SESSION[$sessionKey];
+                if ($timeSinceLastRequest < 60) {
+                    $remaining = 60 - $timeSinceLastRequest;
+                    $this->flash('error', "Please wait $remaining seconds before requesting another reset link.");
+                    redirect('/login');
+                }
+            }
+            // Mark session
+            $_SESSION[$sessionKey] = time();
             
             $db = \Database::getInstance()->getConnection();
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
@@ -574,6 +509,7 @@ class AuthController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $token = trim($_POST['token'] ?? '');
             $password = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
@@ -664,6 +600,7 @@ class AuthController extends BaseController {
         
         $db = \Database::getInstance()->getConnection();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = json_decode(file_get_contents('php://input'), true);
             $notifId = $data['id'] ?? null;
             
@@ -687,6 +624,7 @@ class AuthController extends BaseController {
         
         $db = \Database::getInstance()->getConnection();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $data = json_decode(file_get_contents('php://input'), true);
             $notifId = $data['id'] ?? null;
             
@@ -702,6 +640,7 @@ class AuthController extends BaseController {
     
     public function changePassword() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $currentPassword = $_POST['current_password'] ?? '';
             $password = $_POST['new_password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';

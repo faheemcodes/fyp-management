@@ -142,6 +142,7 @@ class CoordinatorController extends BaseController {
             $notice_date = $_POST['notice_date'] ?? date('Y-m-d');
             $ref_no = trim($_POST['ref_no'] ?? '');
             $target_audiences = $_POST['target_audiences'] ?? [];
+            $is_public = isset($_POST['is_public']) ? 1 : 0;
 
             if (empty($subject) || empty($body) || empty($notice_date)) {
                 $this->flash('error', 'Subject, Date and Body are required.');
@@ -162,8 +163,8 @@ class CoordinatorController extends BaseController {
             try {
                 $db->beginTransaction();
 
-                $stmt = $db->prepare("INSERT INTO notices (sender_id, subject, body, notice_date, ref_no, target_audience) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$userId, $subject, $body, $notice_date, $ref_no ?: null, $target_audience]);
+                $stmt = $db->prepare("INSERT INTO notices (sender_id, subject, body, notice_date, ref_no, target_audience, department, is_public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $subject, $body, $notice_date, $ref_no ?: null, $target_audience, $dept, $is_public]);
                 $noticeId = $db->lastInsertId();
 
                 // Send notifications to target audience in the department

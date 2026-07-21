@@ -192,17 +192,17 @@
         $firstMember = $members[0];
     ?>
         <tr>
-            <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
-            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center"><?php echo $srNo++; ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
             <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                <td rowspan="<?php echo $numMembers; ?>" style="font-size: 6.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
+                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 6.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
             <?php endif; ?>
             <td class="mark"></td>
-            <td rowspan="<?php echo $numMembers; ?>"></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"></td>
         </tr>
         <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
         <tr>
@@ -254,10 +254,10 @@
         $firstMember = $members[0];
     ?>
         <tr>
-            <td rowspan="<?php echo $numMembers; ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo $numMembers; ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
-            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-            <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center"><?php echo $srNo++; ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
             <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
             <?php for($k=0; $k<11; $k++): ?><td class="mark"></td><?php endfor; ?>

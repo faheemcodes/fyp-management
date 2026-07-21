@@ -38,7 +38,9 @@ include __DIR__ . '/../layout/auth_header.php';
                 <div style="text-align: center;">
                     <a href="<?php echo $basePath; ?>/login" class="forgot-link">Back to Login</a>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </main>

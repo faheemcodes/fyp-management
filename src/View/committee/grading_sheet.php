@@ -26,7 +26,7 @@ $groupCount = count($grouped ?? []);
 <style>
 /* ─── Hero Section ─── */
 .gs-hero {
-    background: <?php echo $heroGradient; ?>;
+    background: <?php echo htmlspecialchars((string)($heroGradient), ENT_QUOTES, 'UTF-8'); ?>;
     border-radius: var(--border-radius-lg);
     padding: 28px 32px;
     position: sticky;
@@ -61,7 +61,7 @@ $groupCount = count($grouped ?? []);
 .gs-hero-icon {
     width: 52px;
     height: 52px;
-    background: <?php echo $heroIconGradient; ?>;
+    background: <?php echo htmlspecialchars((string)($heroIconGradient), ENT_QUOTES, 'UTF-8'); ?>;
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -381,11 +381,11 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative" style="z-index: 1;">
         <div class="d-flex align-items-center gap-3">
             <div class="gs-hero-icon shadow-sm">
-                <i class="bi <?php echo $heroIcon; ?>"></i>
+                <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
             </div>
             <div>
                 <h4 class="text-white fw-bold mb-1" style="font-size: 1.3rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($stage); ?> Grading</h4>
-                <p class="mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.82rem;"><?php echo $heroSubtitle; ?></p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.82rem;"><?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
         </div>
 
@@ -428,8 +428,8 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
     <div class="gs-section">
         <div class="gs-section-header">
             <div class="gs-section-title">
-                <div class="gs-section-icon" style="background: rgba(59,130,246,0.1); color: <?php echo $stageBadgeColor; ?>;">
-                    <i class="bi <?php echo $heroIcon; ?>"></i>
+                <div class="gs-section-icon" style="background: rgba(59,130,246,0.1); color: <?php echo htmlspecialchars((string)($stageBadgeColor), ENT_QUOTES, 'UTF-8'); ?>;">
+                    <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
                 </div>
                 <div>
                     <h6 class="mb-0 fw-bold" style="font-size: 0.95rem; color: var(--text-primary);">Grading Sheet</h6>
@@ -472,30 +472,30 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
                     ?>
                     <tbody class="eval-group-tbody">
                             <tr>
-                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
-                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell">
                                     <span class="gs-group-badge"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
                                 </td>
-                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
                                 
                                 <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
                                 <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
                                 
                                 <?php if ($stage === 'FYP Progress Presentation'): ?>
-                                    <td rowspan="<?php echo $numMembers; ?>" style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem; color: var(--text-secondary);">
                                         <?php echo htmlspecialchars($firstMember['previous_comments'] ?: 'None'); ?>
                                     </td>
                                 <?php endif; ?>
                                 
                                 <!-- First Member Mark -->
                                 <td class="text-center">
-                                    <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][total]" value="<?php echo htmlspecialchars($firstMember['marks']['total'] ?? ''); ?>">
+                                    <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][total]" value="<?php echo htmlspecialchars($firstMember['marks']['total'] ?? ''); ?>">
                                 </td>
                                 
                                 <!-- Group Remarks -->
-                                <td rowspan="<?php echo $numMembers; ?>">
-                                    <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Enter remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <textarea class="eval-remarks-input" rows="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][remarks]" placeholder="Enter remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
                                 </td>
                             </tr>
                             <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
@@ -503,7 +503,7 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
                                     <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
                                     <td><?php echo htmlspecialchars($member['student_name']); ?></td>
                                     <td class="text-center">
-                                        <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][total]" value="<?php echo htmlspecialchars($member['marks']['total'] ?? ''); ?>">
+                                        <input type="number" step="0.5" max="40" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][total]" value="<?php echo htmlspecialchars($member['marks']['total'] ?? ''); ?>">
                                     </td>
                                 </tr>
                             <?php endfor; ?>
@@ -560,36 +560,36 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
                     ?>
                     <tbody class="eval-group-tbody">
                             <tr>
-                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
-                                <td rowspan="<?php echo $numMembers; ?>" class="merged-cell">
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell">
                                     <span class="gs-group-badge"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
                                 </td>
-                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
-                                <td rowspan="<?php echo $numMembers; ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
                                 
                                 <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
                                 <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
                                 
                                 <!-- Presentation Fields -->
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_contents'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_time'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_confidence'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_qa'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_language'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_contents'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_time]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_time'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_confidence]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_confidence'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_qa]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_qa'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_language]" value="<?php echo htmlspecialchars($firstMember['marks']['pres_language'] ?? ''); ?>"></td>
                                 
                                 <!-- Thesis Fields -->
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_contents'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_formatting'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_referencing'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_fig'] ?? ''); ?>"></td>
-                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_completeness'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_contents]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_contents'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_formatting]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_formatting'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_referencing]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_referencing'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_fig]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_fig'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_completeness]" value="<?php echo htmlspecialchars($firstMember['marks']['thesis_completeness'] ?? ''); ?>"></td>
                                 
                                 <!-- Demo Field -->
-                                <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $firstMember['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($firstMember['marks']['demo_total'] ?? ''); ?>"></td>
+                                <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][demo_total]" value="<?php echo htmlspecialchars($firstMember['marks']['demo_total'] ?? ''); ?>"></td>
                                 
                                 <!-- Group Remarks -->
-                                <td rowspan="<?php echo $numMembers; ?>">
-                                    <textarea class="eval-remarks-input" rows="<?php echo $numMembers; ?>" name="evaluations[<?php echo $groupId; ?>][remarks]" placeholder="Remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <textarea class="eval-remarks-input" rows="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][remarks]" placeholder="Remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
                                 </td>
                             </tr>
                             <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
@@ -597,19 +597,19 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
                                     <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
                                     <td><?php echo htmlspecialchars($member['student_name']); ?></td>
                                     
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_contents]" value="<?php echo htmlspecialchars($member['marks']['pres_contents'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_time]" value="<?php echo htmlspecialchars($member['marks']['pres_time'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_confidence]" value="<?php echo htmlspecialchars($member['marks']['pres_confidence'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_qa]" value="<?php echo htmlspecialchars($member['marks']['pres_qa'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][pres_language]" value="<?php echo htmlspecialchars($member['marks']['pres_language'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_contents]" value="<?php echo htmlspecialchars($member['marks']['pres_contents'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_time]" value="<?php echo htmlspecialchars($member['marks']['pres_time'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_confidence]" value="<?php echo htmlspecialchars($member['marks']['pres_confidence'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_qa]" value="<?php echo htmlspecialchars($member['marks']['pres_qa'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][pres_language]" value="<?php echo htmlspecialchars($member['marks']['pres_language'] ?? ''); ?>"></td>
                                     
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_contents]" value="<?php echo htmlspecialchars($member['marks']['thesis_contents'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_formatting]" value="<?php echo htmlspecialchars($member['marks']['thesis_formatting'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_referencing]" value="<?php echo htmlspecialchars($member['marks']['thesis_referencing'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_fig]" value="<?php echo htmlspecialchars($member['marks']['thesis_fig'] ?? ''); ?>"></td>
-                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][thesis_completeness]" value="<?php echo htmlspecialchars($member['marks']['thesis_completeness'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_contents]" value="<?php echo htmlspecialchars($member['marks']['thesis_contents'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_formatting]" value="<?php echo htmlspecialchars($member['marks']['thesis_formatting'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_referencing]" value="<?php echo htmlspecialchars($member['marks']['thesis_referencing'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_fig]" value="<?php echo htmlspecialchars($member['marks']['thesis_fig'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="5" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis_completeness]" value="<?php echo htmlspecialchars($member['marks']['thesis_completeness'] ?? ''); ?>"></td>
                                     
-                                    <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo $groupId; ?>][marks][<?php echo $member['student_id']; ?>][demo_total]" value="<?php echo htmlspecialchars($member['marks']['demo_total'] ?? ''); ?>"></td>
+                                    <td><input type="number" step="0.5" max="25" class="eval-input" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][demo_total]" value="<?php echo htmlspecialchars($member['marks']['demo_total'] ?? ''); ?>"></td>
                                 </tr>
                             <?php endfor; ?>
                     </tbody>
@@ -634,6 +634,8 @@ html.dark-theme .gs-group-badge { background: rgba(59,130,246,0.15); color: #60a
             <i class="bi bi-save2-fill me-2"></i> Save All Marks
         </button>
     </div>
+
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </form>
 
 <script>

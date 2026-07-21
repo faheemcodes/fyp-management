@@ -266,16 +266,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php if($g['supervisor_id']): ?>
                             <div class="d-flex flex-column">
                                 <span class="fw-semibold text-dark" style="font-size: 0.85rem;"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
-                                <button class="btn btn-link p-0 text-decoration-none text-start text-primary" style="font-size: 0.7rem; margin-top: 2px;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo $g['id']; ?>">Change Supervisor</button>
+                                <button class="btn btn-link p-0 text-decoration-none text-start text-primary" style="font-size: 0.7rem; margin-top: 2px;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">Change Supervisor</button>
                             </div>
                         <?php else: ?>
-                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo $g['id']; ?>">
+                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 Assign Supervisor
                             </button>
                         <?php endif; ?>
 
                         <!-- Assign Modal -->
-                        <div class="modal fade admin-modal" id="assignModal<?php echo $g['id']; ?>" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade admin-modal" id="assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header py-3">
@@ -284,13 +284,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     </div>
                                     <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/assign" method="POST">
                                         <div class="modal-body p-4">
-                                            <input type="hidden" name="group_id" value="<?php echo $g['id']; ?>">
+                                            <input type="hidden" name="group_id" value="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                             <div class="mb-3 text-start">
                                                 <label class="form-label small fw-semibold text-secondary">Select Faculty Member</label>
                                                 <select class="form-select bg-light" name="supervisor_id" required>
                                                     <option value="">-- Choose --</option>
                                                     <?php foreach($supervisors as $s): ?>
-                                                        <option value="<?php echo $s['user_id']; ?>" <?php echo $g['supervisor_id'] == $s['user_id'] ? 'selected' : ''; ?>>
+                                                        <option value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo $g['supervisor_id'] == $s['user_id'] ? 'selected' : ''; ?>>
                                                             <?php echo htmlspecialchars($s['name']); ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -301,7 +301,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                             <button type="button" class="btn btn-secondary rounded-pill btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
                                             <button type="submit" class="btn btn-primary rounded-pill btn-sm px-4">Assign</button>
                                         </div>
-                                    </form>
+                                    
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
                                 </div>
                             </div>
                         </div>
@@ -318,13 +320,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td class="text-end pe-4">
                         <div class="d-flex gap-1 justify-content-end">
                             <button class="action-btn btn-edit-group" title="Edit Group Details" data-bs-toggle="modal" data-bs-target="#editGroupModal"
-                                data-id="<?php echo $g['id']; ?>"
+                                data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-code="<?php echo htmlspecialchars($g['group_code'] ?? ''); ?>"
                                 data-stage="<?php echo htmlspecialchars($g['progress_stage']); ?>">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
                             <button class="action-btn btn-edit-project" title="Edit Project/Proposal" data-bs-toggle="modal" data-bs-target="#editProjectModal"
-                                data-id="<?php echo $g['id']; ?>"
+                                data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-title="<?php echo htmlspecialchars($g['project_title'] ?? ''); ?>"
                                 data-desc="<?php echo htmlspecialchars($g['project_description'] ?? ''); ?>"
                                 data-status="<?php echo htmlspecialchars($g['project_status'] ?? 'Draft'); ?>"
@@ -332,14 +334,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <i class="bi bi-file-text-fill"></i>
                             </button>
                             <button class="action-btn btn-edit-grades" title="Edit Grades/Marks" data-bs-toggle="modal" data-bs-target="#editGradesModal"
-                                data-id="<?php echo $g['id']; ?>"
+                                data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-def="<?php echo htmlspecialchars($g['proposal_defense_marks'] ?? ''); ?>"
                                 data-prog="<?php echo htmlspecialchars($g['progress_presentation_marks'] ?? ''); ?>"
                                 data-final="<?php echo htmlspecialchars($g['final_presentation_marks'] ?? ''); ?>"
                                 data-sup="<?php echo htmlspecialchars($g['supervision_marks'] ?? ''); ?>">
                                 <i class="bi bi-award-fill"></i>
                             </button>
-                            <a class="action-btn btn-delete-group text-danger text-decoration-none" title="Delete Group" href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/delete?id=<?php echo $g['id']; ?>" onclick="return confirm('Are you sure you want to permanently delete this group and all its records? This cannot be undone.');">
+                            <a class="action-btn btn-delete-group text-danger text-decoration-none" title="Delete Group" href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/delete?id=<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" onclick="return confirm('Are you sure you want to permanently delete this group and all its records? This cannot be undone.');">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         </div>
@@ -376,7 +378,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <select class="form-select bg-light" id="createModalLeader" name="created_by" required>
                             <option value="">-- Choose Student --</option>
                             <?php foreach($students as $st): ?>
-                                <option value="<?php echo $st['user_id']; ?>">
+                                <option value="<?php echo htmlspecialchars((string)($st['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($st['name']); ?> (<?php echo htmlspecialchars($st['student_id']); ?>)
                                 </option>
                             <?php endforeach; ?>
@@ -396,7 +398,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Create Group</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -435,7 +439,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Save Changes</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -457,7 +463,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <label class="form-label small fw-semibold text-secondary">Group Members</label>
                         <select class="form-select bg-light" id="manageMembersSelect" name="members[]" multiple size="8" style="height: auto;">
                             <?php foreach($students as $st): ?>
-                                <option value="<?php echo $st['user_id']; ?>">
+                                <option value="<?php echo htmlspecialchars((string)($st['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($st['name']); ?> (<?php echo htmlspecialchars($st['student_id']); ?>)
                                 </option>
                             <?php endforeach; ?>
@@ -469,7 +475,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Update Members</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -513,7 +521,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <select class="form-select bg-light" id="editProjectSupervisor" name="supervisor_id">
                                 <option value="">-- Unassigned --</option>
                                 <?php foreach($supervisors as $s): ?>
-                                    <option value="<?php echo $s['user_id']; ?>">
+                                    <option value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <?php echo htmlspecialchars($s['name']); ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -525,7 +533,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Save Project</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>
@@ -571,7 +581,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm">Save Marks</button>
                 </div>
-            </form>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
         </div>
     </div>
 </div>

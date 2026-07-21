@@ -204,7 +204,7 @@ class SupervisorController extends BaseController {
                     $this->flash('success', 'Marks updated successfully!');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Error saving marks: ' . $e->getMessage());
+                    $this->flash('error', 'Error saving marks: . Please try again.');
                 }
             }
         }
@@ -335,7 +335,7 @@ class SupervisorController extends BaseController {
                         $this->flash('success', "Proposal status updated to '$status'.");
                     } catch (\Exception $e) {
                         $db->rollBack();
-                        $this->flash('error', 'Failed to update proposal: ' . $e->getMessage());
+                        $this->flash('error', 'Failed to update proposal: . Please try again.');
                     }
                 }
             }
@@ -430,7 +430,7 @@ class SupervisorController extends BaseController {
                     redirect('/supervisor/profile');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                    $this->flash('error', 'Database error: . Please try again.');
                 }
             } else {
                 $this->flash('error', implode(" ", $errors));
