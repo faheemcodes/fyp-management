@@ -1023,7 +1023,6 @@ html.dark-theme .modal .btn-close:hover {
 .prop-step.active .step-circle { background: #10b981; color: #fff; }
 .prop-step:not(.done):not(.active) .step-circle { background: var(--border-color); color: var(--text-secondary); }
 
- . t e x t - p r i m a r y   {   c o l o r :   # 1 0 b 9 8 1   ! i m p o r t a n t ;   } 
- . b g - p r i m a r y   {   b a c k g r o u n d - c o l o r :   # 1 0 b 9 8 1   ! i m p o r t a n t ;   } 
- . b o r d e r - p r i m a r y   {   b o r d e r - c o l o r :   # 1 0 b 9 8 1   ! i m p o r t a n t ;   }  
- 
+.text-primary { color: #10b981 !important; }
+.bg-primary { background-color: #10b981 !important; }
+.border-primary { border-color: #10b981 !important; }
