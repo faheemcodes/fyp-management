@@ -509,46 +509,7 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
             </div>
 
-            <!-- Submission Steps -->
-            <div class="page-section">
-                <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
-                        <i class="bi bi-list-check"></i>
-                    </div>
-                    <div>
-                        <h6>Submission Process</h6>
-                        <small>Track your proposal progress</small>
-                    </div>
-                </div>
-                <div class="page-section-body">
-                    <div class="d-flex flex-column gap-2">
-                        <?php
-                        $steps = [
-                            ['Fill in project title & abstract', !empty($titleVal)],
-                            ['Choose a supervisor', !empty($supervisorIdVal)],
-                            ['Upload proposal document', !empty($proposal['file_path'] ?? '')],
-                            ['Supervisor reviews & approves', ($proposal['status'] ?? '') === 'Approved'],
-                        ];
-                        foreach ($steps as $i => [$label, $done]):
-                            $cls = $done ? 'done' : (($proposal || $i === 0) ? 'active' : '');
-                        ?>
-                        <div class="prop-step <?php echo $cls; ?>">
-                            <div class="step-circle">
-                                <?php echo $done ? '<i class="bi bi-check-lg" style="font-size:0.75rem;"></i>' : ($i + 1); ?>
-                            </div>
-                            <span style="font-size: 0.82rem; font-weight: <?php echo $done ? '600' : '500'; ?>; color: <?php echo $done ? '#059669' : 'var(--text-primary)'; ?>;">
-                                <?php echo htmlspecialchars((string)($label), ENT_QUOTES, 'UTF-8'); ?>
-                            </span>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="mt-3 pt-3 border-top">
-                        <p class="text-muted mb-0" style="font-size: 0.76rem; line-height: 1.6;">
-                            Submitting this form automatically creates your group and makes you the <strong>Group Leader</strong>. Members can be added or changed until the proposal is approved.
-                        </p>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 
