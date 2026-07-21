@@ -394,8 +394,8 @@ body {
 
 /* ─── Info Note ─── */
 .info-note {
-    background: rgba(59, 130, 246, 0.08);
-    border-left: 3px solid #3b82f6;
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid #10b981;
     border-radius: 0 10px 10px 0;
     padding: 14px 16px;
 }
