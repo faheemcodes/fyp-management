@@ -772,7 +772,7 @@ html.dark-theme .modal .btn-close:hover {
 
 /* ─── Hero Banner Styles ─── */
 .group-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(135deg, #1e352f 0%, #3e5641 50%, #1e352f 100%);
     border-radius: var(--border-radius-lg);
     padding: 32px;
     position: relative;

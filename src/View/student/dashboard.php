@@ -134,9 +134,6 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 
 
 @media (max-width: 768px) {
-    
-    
-    
 }
 </style>
 
