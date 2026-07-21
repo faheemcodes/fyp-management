@@ -79,36 +79,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     padding: 2.5rem;
     height: 100%;
 }
-.password-group {
-    background: var(--form-bg);
-    border: 1.5px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.password-group:focus-within {
-    border-color: #10b981;
-    box-shadow: 0 0 0 4px rgba(16,185,129,0.15);
-    transform: translateY(-1px);
-}
-.password-group .input-group-text,
-.password-group .btn {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-}
-.password-group .form-control {
-    border: none;
-    background: transparent;
-    font-size: 0.95rem;
-    color: var(--text-primary);
-}
-.password-group .form-control:focus {
-    box-shadow: none;
-}
-.password-group .btn:hover {
-    color: #10b981;
-}
+
 .cp-submit-btn {
     background: linear-gradient(135deg, #10b981, #059669);
     border: none;
@@ -170,11 +141,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <!-- Current Password -->
                 <div class="mb-4">
                     <label for="current_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">Current Password <span class="text-danger">*</span></label>
-                    <div class="input-group password-group py-1 px-2">
-                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Enter current password" autocomplete="off">
-                        <button class="btn" type="button" onclick="togglePassword('current_password', this)">
-                            <i class="bi bi-eye"></i>
+                    <div class="position-relative">
+                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Enter current password" autocomplete="off" style="padding-right: 70px;">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('current_password', this)">
+                            <span>SHOW</span>
                         </button>
                     </div>
                 </div>
@@ -182,11 +152,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <!-- New Password -->
                 <div class="mb-4">
                     <label for="new_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">New Password <span class="text-danger">*</span></label>
-                    <div class="input-group password-group py-1 px-2">
-                        <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
-                        <input type="password" class="form-control" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50" autocomplete="new-password">
-                        <button class="btn" type="button" onclick="togglePassword('new_password', this)">
-                            <i class="bi bi-eye"></i>
+                    <div class="position-relative">
+                        <input type="password" class="form-control" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px;">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('new_password', this)">
+                            <span>SHOW</span>
                         </button>
                     </div>
                 </div>
@@ -194,11 +163,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <!-- Confirm New Password -->
                 <div class="mb-5">
                     <label for="confirm_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">Confirm New Password <span class="text-danger">*</span></label>
-                    <div class="input-group password-group py-1 px-2">
-                        <span class="input-group-text"><i class="bi bi-shield-check-fill"></i></span>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50" autocomplete="new-password">
-                        <button class="btn" type="button" onclick="togglePassword('confirm_password', this)">
-                            <i class="bi bi-eye"></i>
+                    <div class="position-relative">
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px;">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('confirm_password', this)">
+                            <span>SHOW</span>
                         </button>
                     </div>
                 </div>
@@ -221,16 +189,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <script>
 function togglePassword(inputId, btn) {
     const input = document.getElementById(inputId);
-    const icon = btn.querySelector('i');
+    const textSpan = btn.querySelector('span');
     
     if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.remove('bi-eye');
-        icon.classList.add('bi-eye-slash');
+        textSpan.textContent = 'HIDE';
     } else {
         input.type = 'password';
-        icon.classList.remove('bi-eye-slash');
-        icon.classList.add('bi-eye');
+        textSpan.textContent = 'SHOW';
     }
 }
 </script>
