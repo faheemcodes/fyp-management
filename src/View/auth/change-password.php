@@ -6,9 +6,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <style>
 /* ─── Premium Change Password Styles ─── */
 .cp-info-card {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    background: linear-gradient(135deg, #1e352f 0%, #3e5641 50%, #1e352f 100%);
     border-radius: 1.5rem;
-    box-shadow: 0 20px 40px -10px rgba(30, 58, 138, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
     height: 100%;
