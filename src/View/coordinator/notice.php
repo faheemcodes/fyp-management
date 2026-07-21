@@ -14,83 +14,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 
 /* ─── Section Panel ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 24px;
-    transition: box-shadow 0.25s ease;
-}
-.grp-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
-.grp-section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-    border-top-left-radius: calc(var(--border-radius-lg) - 1px);
-    border-top-right-radius: calc(var(--border-radius-lg) - 1px);
-}
-.grp-section-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.grp-section-header h6 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-.grp-section-header small {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.grp-section-body {
-    padding: 24px;
-}
+
+
+
+
+
+
+
 
 /* ─── Modern Table Styles ─── */
-.modern-table {
-    margin: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-.modern-table thead th {
-    background: var(--form-bg);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    font-weight: 700;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-}
-.modern-table tbody td {
-    padding: 20px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--card-bg);
-    transition: background-color 0.2s ease;
-}
-.modern-table tbody tr:hover td {
-    background-color: rgba(59,130,246,0.02);
-}
-.modern-table tbody tr:last-child td {
-    border-bottom: none;
-}
+
+
+
+
+
 
 /* ─── Forms & Buttons ─── */
 .pf-group .form-label {
@@ -172,7 +109,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     
     
     
-    .modern-table { min-width: 850px; }
+    
     .modern-table .subject-col { min-width: 200px; }
     .modern-table .date-col { min-width: 130px; }
     .modern-table .target-col { min-width: 180px; }
@@ -180,10 +117,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="group-hero-icon" style="background: transparent;">
+        <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
 
@@ -199,7 +136,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
         <!-- Stats -->
         <div class="d-none d-lg-flex gap-3">
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num text-info"><?php echo count($notices); ?></span>
                 <span class="stat-label">Total Broadcasts</span>
             </div>
@@ -210,9 +147,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="row g-4">
     <!-- ═══════════════ Generate Form ═══════════════ -->
     <div class="col-lg-4">
-        <div class="grp-section h-100 mb-0">
-            <div class="grp-section-header">
-                <div class="grp-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+        <div class="page-section h-100 mb-0">
+            <div class="page-section-header">
+                <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                     <i class="bi bi-pencil-square"></i>
                 </div>
                 <div>
@@ -220,7 +157,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <small>Draft & broadcast official letters</small>
                 </div>
             </div>
-            <div class="grp-section-body">
+            <div class="page-section-body">
                 <form action="<?php echo $basePath; ?>/coordinator/notice/create" method="POST">
                     
                     <div class="pf-group mb-3">
@@ -289,9 +226,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
     <!-- ═══════════════ Notice History ═══════════════ -->
     <div class="col-lg-8">
-        <div class="grp-section h-100 mb-0">
-            <div class="grp-section-header">
-                <div class="grp-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+        <div class="page-section h-100 mb-0">
+            <div class="page-section-header">
+                <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                     <i class="bi bi-clock-history"></i>
                 </div>
                 <div>

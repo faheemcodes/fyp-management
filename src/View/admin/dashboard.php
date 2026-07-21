@@ -13,102 +13,35 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 
 /* ─── Section Panel ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 24px;
-    overflow: hidden;
-    transition: box-shadow 0.25s ease;
-}
-.grp-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
-.grp-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-}
-.grp-section-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.grp-section-header h6 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-.grp-section-header small {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
+
+
+
+
+
+
 
 /* ─── Modern Table Styles ─── */
-.modern-table {
-    margin: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-.modern-table thead th {
-    background: var(--form-bg);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    font-weight: 700;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-color);
-}
-.modern-table tbody td {
-    padding: 16px 24px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--card-bg);
-    transition: background-color 0.2s ease;
-}
-.modern-table tbody tr:hover td {
-    background-color: rgba(59,130,246,0.02);
-}
-.modern-table tbody tr:last-child td {
-    border-bottom: none;
-}
-.status-pill {
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    display: inline-block;
-}
+
+
+
+
+
+
 
 @media (max-width: 768px) {
     
     
     
-    .modern-table { min-width: 600px; }
+    
 }
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
             <!-- Icon -->
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <!-- Info -->
@@ -124,19 +57,19 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
         <!-- Stats -->
         <div class="d-flex flex-wrap hero-stats-container">
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_users']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Total Users</span>
             </div>
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['active_projects']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Active Projects</span>
             </div>
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($stats['pending_evaluations']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Pending Evals</span>
             </div>
-            <div class="group-stat-pill" style="margin-right: 0;">
+            <div class="page-stat-pill" style="margin-right: 0;">
                 <span class="stat-num text-primary"><?php echo htmlspecialchars((string)($stats['avg_marks']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Avg Grades</span>
             </div>
@@ -147,10 +80,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="row g-4">
     <!-- ═══════════════ Recent Users ═══════════════ -->
     <div class="col-xl-6">
-        <div class="grp-section h-100 mb-0">
-            <div class="grp-section-header">
+        <div class="page-section h-100 mb-0">
+            <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="grp-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                         <i class="bi bi-person-plus-fill"></i>
                     </div>
                     <div>
@@ -200,10 +133,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
     <!-- ═══════════════ Recent Groups ═══════════════ -->
     <div class="col-xl-6">
-        <div class="grp-section h-100 mb-0">
-            <div class="grp-section-header">
+        <div class="page-section h-100 mb-0">
+            <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="grp-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
                         <i class="bi bi-diagram-3-fill"></i>
                     </div>
                     <div>
@@ -256,10 +189,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="row g-4 mt-0 mb-4">
     <!-- ═══════════════ Supervisor Slots ═══════════════ -->
     <div class="col-12">
-        <div class="grp-section mb-0">
-            <div class="grp-section-header">
+        <div class="page-section mb-0">
+            <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="grp-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                    <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>

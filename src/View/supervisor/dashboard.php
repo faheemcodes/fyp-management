@@ -6,27 +6,13 @@ $fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Pro
 $firstName = explode(' ', $fullName)[0];
 ?>
 
-<style>
 
-
-
-
-
-
-
-
-@media (max-width: 768px) {
-    
-    
-    
-}
-</style>
 
 <!-- Top Hero Banner -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-person-workspace"></i>
             </div>
             <div>
@@ -42,13 +28,13 @@ $firstName = explode(' ', $fullName)[0];
 
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none">
-                <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num text-primary"><?php echo htmlspecialchars((string)($groupCount), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Assigned Groups</span>
                 </div>
             </a>
             <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
-                <div class="group-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($pendingProposals), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Proposals</span>
                 </div>

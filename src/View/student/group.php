@@ -12,66 +12,19 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 
 
 
-.group-hero-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-}
+
 
 
 
 
 /* ─── Section Panel (reuse profile pattern) ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.25s ease;
-}
-.grp-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
-.grp-section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-}
-.grp-section-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.grp-section-header h6 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-.grp-section-header small {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.grp-section-body {
-    padding: 24px;
-}
+
+
+
+
+
+
+
 
 /* ─── Member Row Card ─── */
 .member-row {
@@ -234,7 +187,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 @media (max-width: 768px) {
     
     
-    .grp-section-body { padding: 16px; }
+    
     .member-row { padding: 12px; gap: 12px; }
     .member-row .m-avatar { width: 42px; height: 42px; border-radius: 12px; }
 }
@@ -258,10 +211,10 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 <?php else: ?>
 
     <!-- ═══════════════ Hero Banner ═══════════════ -->
-    <div class="group-hero">
+    <div class="page-hero">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
             <!-- Icon -->
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
 
@@ -274,15 +227,15 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                     <?php echo htmlspecialchars($group['project_title'] ?? 'Your FYP Group'); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="group-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
+                    <span class="page-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
                         <?php echo htmlspecialchars($group['group_code'] ?? 'ID PENDING'); ?>
                     </span>
                     <?php if ($isLeader): ?>
-                        <span class="group-hero-chip" style="background: rgba(59,130,246,0.2); color: #93c5fd;">
+                        <span class="page-hero-chip" style="background: rgba(59,130,246,0.2); color: #93c5fd;">
                             <i class="bi bi-shield-fill-check"></i> Group Leader
                         </span>
                     <?php endif; ?>
-                    <span class="group-hero-chip" style="background: rgba(16,185,129,0.15); color: #6ee7b7;">
+                    <span class="page-hero-chip" style="background: rgba(16,185,129,0.15); color: #6ee7b7;">
                         <i class="bi bi-activity"></i> <?php echo htmlspecialchars($group['progress_stage']); ?>
                     </span>
                 </div>
@@ -290,7 +243,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 
             <!-- Stats Pills -->
             <div class="d-none d-lg-flex gap-3">
-                <div class="group-stat-pill">
+                <div class="page-stat-pill">
                     <span class="stat-num"><?php echo count($members); ?></span>
                     <span class="stat-label">Member<?php echo count($members) != 1 ? 's' : ''; ?></span>
                 </div>
@@ -304,9 +257,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
         <div class="col-lg-7">
 
             <!-- Members Directory -->
-            <div class="grp-section">
-                <div class="grp-section-header">
-                    <div class="grp-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                         <i class="bi bi-people-fill"></i>
                     </div>
                     <div>
@@ -314,7 +267,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         <small><?php echo count($members); ?> member<?php echo count($members) != 1 ? 's' : ''; ?> in this group</small>
                     </div>
                 </div>
-                <div class="grp-section-body">
+                <div class="page-section-body">
                     <div class="d-flex flex-column gap-3">
                         <?php foreach ($members as $idx => $m):
                             $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
@@ -360,9 +313,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 
             <!-- Manage Members (Leader only) -->
             <?php if ($isLeader): ?>
-            <div class="grp-section">
-                <div class="grp-section-header">
-                    <div class="grp-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
                         <i class="bi bi-person-gear"></i>
                     </div>
                     <div>
@@ -370,7 +323,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         <small>Add or remove members by Roll No or email</small>
                     </div>
                 </div>
-                <div class="grp-section-body">
+                <div class="page-section-body">
                     <form action="<?php echo $basePath; ?>/student/group/update-members" method="POST">
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
@@ -407,9 +360,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
         <div class="col-lg-5">
 
             <!-- Group Information -->
-            <div class="grp-section">
-                <div class="grp-section-header">
-                    <div class="grp-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
                         <i class="bi bi-info-circle-fill"></i>
                     </div>
                     <div>
@@ -417,7 +370,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                         <small>Project and supervision info</small>
                     </div>
                 </div>
-                <div class="grp-section-body">
+                <div class="page-section-body">
                     <div class="grp-info-item">
                         <div class="info-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
                             <i class="bi bi-person-workspace"></i>

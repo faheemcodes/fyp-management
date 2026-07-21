@@ -103,10 +103,10 @@ $firstName = explode(' ', $fullName)[0];
 </style>
 
 <!-- ── Top Hero Banner ── -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
             <div>
@@ -126,16 +126,16 @@ $firstName = explode(' ', $fullName)[0];
 
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
-                <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)'; ?>;"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Approvals</span>
                 </div>
             </a>
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['total_students']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Active Students</span>
             </div>
-            <div class="group-stat-pill" style="margin-right: 0;">
+            <div class="page-stat-pill" style="margin-right: 0;">
                 <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_notices']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Notices Generated</span>
             </div>

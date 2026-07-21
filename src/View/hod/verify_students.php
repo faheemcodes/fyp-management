@@ -2,67 +2,13 @@
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
-<style>
 
-
-
-
-
-
-/* ─── Section Panel ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 24px;
-    transition: box-shadow 0.25s ease;
-}
-.grp-section-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-    border-top-left-radius: calc(var(--border-radius-lg) - 1px);
-    border-top-right-radius: calc(var(--border-radius-lg) - 1px);
-}
-
-/* ─── Modern Table Styles ─── */
-.modern-table {
-    margin: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-.modern-table thead th {
-    background: var(--form-bg);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    font-weight: 700;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-color);
-}
-.modern-table tbody td {
-    padding: 16px 24px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--card-bg);
-    transition: background-color 0.2s ease;
-}
-.modern-table tbody tr:hover td {
-    background: var(--hover-bg);
-}
-.modern-table tbody tr:last-child td {
-    border-bottom: none;
-}
-</style>
 
 <!-- Top Hero Banner -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-building-fill"></i>
             </div>
             <div>
@@ -73,8 +19,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
-<div class="grp-section">
-    <div class="grp-section-header">
+<div class="page-section">
+    <div class="page-section-header">
         <div class="row g-3 align-items-center w-100 m-0">
             <!-- Search Input -->
             <div class="col-md-6 ps-0">

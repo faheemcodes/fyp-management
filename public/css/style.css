@@ -771,7 +771,7 @@ html.dark-theme .modal .btn-close:hover {
 }
 
 /* ─── Hero Banner Styles ─── */
-.group-hero {
+.page-hero {
     background: linear-gradient(135deg, #1e352f 0%, #3e5641 50%, #1e352f 100%);
     border-radius: var(--border-radius-lg);
     padding: 32px;
@@ -780,7 +780,7 @@ html.dark-theme .modal .btn-close:hover {
     margin-bottom: 24px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
-.group-hero::before {
+.page-hero::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -791,7 +791,7 @@ html.dark-theme .modal .btn-close:hover {
     border-radius: 50%;
     pointer-events: none;
 }
-.group-hero::after {
+.page-hero::after {
     content: '';
     position: absolute;
     bottom: -40%;
@@ -802,7 +802,7 @@ html.dark-theme .modal .btn-close:hover {
     border-radius: 50%;
     pointer-events: none;
 }
-.group-hero-icon {
+.page-hero-icon {
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -816,7 +816,7 @@ html.dark-theme .modal .btn-close:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     flex-shrink: 0;
 }
-.group-stat-pill {
+.page-stat-pill {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -828,14 +828,14 @@ html.dark-theme .modal .btn-close:hover {
     min-width: 90px;
     margin-right: 12px;
 }
-.group-stat-pill .stat-num {
+.page-stat-pill .stat-num {
     font-size: 1.6rem;
     font-weight: 800;
     color: #fff;
     line-height: 1;
     letter-spacing: -0.03em;
 }
-.group-stat-pill .stat-label {
+.page-stat-pill .stat-label {
     font-size: 0.62rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -843,8 +843,182 @@ html.dark-theme .modal .btn-close:hover {
     color: rgba(255,255,255,0.8);
     margin-top: 4px;
 }
+
+/* ─── Generic Section Panel ─── */
+.page-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease;
+}
+.page-section:hover {
+    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
+}
+.page-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--form-bg);
+}
+.page-section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.page-section-header h6 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+.page-section-header small {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+.page-section-body {
+    padding: 24px;
+}
+
 @media (max-width: 768px) {
-    .group-hero { padding: 24px 16px; }
-    .group-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
+    .page-hero { padding: 24px 16px; }
+    .page-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
     .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
 }
+
+/* ─── Modern Table Styles ─── */
+.modern-table {
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.modern-table thead th {
+    background: var(--form-bg);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    font-weight: 700;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tbody td {
+    padding: 16px 24px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    transition: background-color 0.2s ease;
+}
+.modern-table tbody tr:hover td {
+    background-color: rgba(59,130,246,0.02);
+}
+.modern-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.status-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* ─── Shared Profile & Proposal Components ─── */
+.profile-avatar-ring {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+    padding: 3px;
+    flex-shrink: 0;
+}
+.profile-avatar-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0f172a;
+}
+.profile-completion {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+    width: 140px;
+}
+.profile-completion-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #60a5fa, #3b82f6);
+    transition: width 0.6s ease;
+}
+.profile-quick-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+.profile-quick-stat i {
+    color: #60a5fa;
+    font-size: 0.9rem;
+}
+
+.prop-hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.prop-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-color);
+    background: var(--form-bg);
+    transition: border-color 0.2s ease;
+}
+.prop-step.done {
+    border-color: rgba(5,150,105,0.3);
+    background: rgba(5,150,105,0.04);
+}
+.prop-step.active {
+    border-color: rgba(59,130,246,0.3);
+    background: rgba(59,130,246,0.04);
+}
+.step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+.prop-step.done .step-circle { background: #059669; color: #fff; }
+.prop-step.active .step-circle { background: #3b82f6; color: #fff; }
+.prop-step:not(.done):not(.active) .step-circle { background: var(--border-color); color: var(--text-secondary); }

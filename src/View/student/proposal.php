@@ -24,145 +24,28 @@ foreach (($supervisors ?? []) as $s) {
 
 <style>
 /* ─── Proposal Page Scoped Styles ─── */
-.prop-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.prop-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.prop-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -5%;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.prop-hero-icon {
-    width: 56px;
-    height: 56px;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    color: #fff;
-    flex-shrink: 0;
-}
-.prop-hero-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-}
+
+
+
+
+
 
 /* ─── Section Panel ─── */
-.prop-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.25s ease;
-}
-.prop-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
-.prop-section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-}
-.prop-section-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.prop-section-header h6 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
-}
-.prop-section-header small {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.prop-section-body {
-    padding: 24px;
-}
+
+
+
+
+
+
+
 
 /* ─── Step Cards ─── */
-.prop-step {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1.5px solid var(--border-color);
-    background: var(--form-bg);
-    transition: border-color 0.2s ease;
-}
-.prop-step.done {
-    border-color: rgba(5,150,105,0.3);
-    background: rgba(5,150,105,0.04);
-}
-.prop-step.active {
-    border-color: rgba(59,130,246,0.3);
-    background: rgba(59,130,246,0.04);
-}
-.step-circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.78rem;
-    flex-shrink: 0;
-    background: var(--border-color);
-    color: var(--text-secondary);
-}
-.prop-step.done .step-circle {
-    background: #059669;
-    color: #fff;
-}
-.prop-step.active .step-circle {
-    background: #3b82f6;
-    color: #fff;
-}
+
+
+
+
+.prop-step.done 
+.prop-step.active 
 
 /* ─── Member Input Slots ─── */
 .prop-member-input {
@@ -265,8 +148,8 @@ foreach (($supervisors ?? []) as $s) {
 }
 
 @media (max-width: 768px) {
-    .prop-hero { padding: 24px 16px; }
-    .prop-section-body { padding: 16px; }
+    
+    
 }
 </style>
 
@@ -274,9 +157,9 @@ foreach (($supervisors ?? []) as $s) {
 <!-- ─── GROUP MEMBER READ-ONLY VIEW ─── -->
 
     <!-- Hero Banner -->
-    <div class="prop-hero">
+    <div class="page-hero">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-            <div class="prop-hero-icon">
+            <div class="page-hero-icon">
                 <i class="bi bi-file-earmark-text-fill"></i>
             </div>
             <div class="flex-grow-1 text-center text-md-start">
@@ -287,10 +170,10 @@ foreach (($supervisors ?? []) as $s) {
                     <?php echo htmlspecialchars($project['title'] ?? 'FYP Project'); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="prop-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
                         <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
-                    <span class="prop-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
+                    <span class="page-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
                         <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                     </span>
                 </div>
@@ -316,9 +199,9 @@ foreach (($supervisors ?? []) as $s) {
     <div class="row g-4">
         <div class="col-lg-7">
             <!-- Abstract -->
-            <div class="prop-section">
-                <div class="prop-section-header">
-                    <div class="prop-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                         <i class="bi bi-file-text-fill"></i>
                     </div>
                     <div>
@@ -326,7 +209,7 @@ foreach (($supervisors ?? []) as $s) {
                         <small>Research summary and objectives</small>
                     </div>
                 </div>
-                <div class="prop-section-body">
+                <div class="page-section-body">
                     <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.8; text-align: justify;">
                         <?php echo $abstractVal ? nl2br(htmlspecialchars($abstractVal)) : '<em>No abstract added yet.</em>'; ?>
                     </p>
@@ -336,14 +219,14 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Members + Details -->
             <div class="row g-4">
                 <div class="col-md-6">
-                    <div class="prop-section">
-                        <div class="prop-section-header">
-                            <div class="prop-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
                                 <i class="bi bi-people-fill"></i>
                             </div>
                             <div><h6>Group Members</h6></div>
                         </div>
-                        <div class="prop-section-body">
+                        <div class="page-section-body">
                             <div class="d-flex flex-column gap-3">
                                 <!-- Leader -->
                                 <div class="d-flex align-items-center gap-3">
@@ -367,14 +250,14 @@ foreach (($supervisors ?? []) as $s) {
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="prop-section">
-                        <div class="prop-section-header">
-                            <div class="prop-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
                                 <i class="bi bi-info-circle-fill"></i>
                             </div>
                             <div><h6>Details</h6></div>
                         </div>
-                        <div class="prop-section-body">
+                        <div class="page-section-body">
                             <div class="mb-3">
                                 <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Supervisor</div>
                                 <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($supName); ?></div>
@@ -399,9 +282,9 @@ foreach (($supervisors ?? []) as $s) {
 
         <div class="col-lg-5">
             <!-- Feedback -->
-            <div class="prop-section">
-                <div class="prop-section-header">
-                    <div class="prop-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
                     <div>
@@ -409,7 +292,7 @@ foreach (($supervisors ?? []) as $s) {
                         <small>Review comments from your supervisor</small>
                     </div>
                 </div>
-                <div class="prop-section-body">
+                <div class="page-section-body">
                     <?php if ($proposal && $proposal['feedback']): ?>
                         <div class="prop-feedback-bubble">
                             <p class="mb-2" style="font-size: 0.82rem; line-height: 1.65; color: var(--text-primary);"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
@@ -430,9 +313,9 @@ foreach (($supervisors ?? []) as $s) {
 <!-- ─── LEADER SUBMISSION FORM VIEW ─── -->
 
     <!-- Hero Banner -->
-    <div class="prop-hero">
+    <div class="page-hero">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
-            <div class="prop-hero-icon">
+            <div class="page-hero-icon">
                 <i class="bi bi-file-earmark-plus-fill"></i>
             </div>
             <div class="flex-grow-1 text-center text-md-start">
@@ -443,7 +326,7 @@ foreach (($supervisors ?? []) as $s) {
                     <?php echo $proposal ? htmlspecialchars($project['title'] ?? 'Project Proposal') : 'New Project Proposal'; ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="prop-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
                         <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
@@ -464,8 +347,8 @@ foreach (($supervisors ?? []) as $s) {
         <div class="col-lg-7">
             <?php if ($proposal && $proposal['status'] === 'Approved'): ?>
                 <!-- Approved State -->
-                <div class="prop-section">
-                    <div class="prop-section-body prop-approved-card">
+                <div class="page-section">
+                    <div class="page-section-body prop-approved-card">
                         <div class="prop-approved-icon">
                             <i class="bi bi-patch-check-fill"></i>
                         </div>
@@ -479,9 +362,9 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
 
                 <!-- Abstract (read-only) -->
-                <div class="prop-section">
-                    <div class="prop-section-header">
-                        <div class="prop-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                <div class="page-section">
+                    <div class="page-section-header">
+                        <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                             <i class="bi bi-file-text-fill"></i>
                         </div>
                         <div>
@@ -489,7 +372,7 @@ foreach (($supervisors ?? []) as $s) {
                             <small>Final approved project summary</small>
                         </div>
                     </div>
-                    <div class="prop-section-body">
+                    <div class="page-section-body">
                         <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.8; text-align: justify;">
                             <?php echo nl2br(htmlspecialchars($abstractVal)); ?>
                         </p>
@@ -508,9 +391,9 @@ foreach (($supervisors ?? []) as $s) {
                 <form action="<?php echo $basePath; ?>/student/proposal/submit" method="POST" enctype="multipart/form-data">
 
                     <!-- Project Details -->
-                    <div class="prop-section">
-                        <div class="prop-section-header">
-                            <div class="prop-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                                 <i class="bi bi-journal-text"></i>
                             </div>
                             <div>
@@ -518,7 +401,7 @@ foreach (($supervisors ?? []) as $s) {
                                 <small>Title, supervisor, and abstract</small>
                             </div>
                         </div>
-                        <div class="prop-section-body">
+                        <div class="page-section-body">
                             <div class="row g-3">
                                 <div class="col-12 prop-field">
                                     <label class="form-label">Project Title <span class="text-danger">*</span></label>
@@ -552,9 +435,9 @@ foreach (($supervisors ?? []) as $s) {
                     </div>
 
                     <!-- Team Members -->
-                    <div class="prop-section">
-                        <div class="prop-section-header">
-                            <div class="prop-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
                                 <i class="bi bi-people-fill"></i>
                             </div>
                             <div>
@@ -562,7 +445,7 @@ foreach (($supervisors ?? []) as $s) {
                                 <small>Optional — add up to 2 members</small>
                             </div>
                         </div>
-                        <div class="prop-section-body">
+                        <div class="page-section-body">
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <div class="prop-member-input">
@@ -597,9 +480,9 @@ foreach (($supervisors ?? []) as $s) {
         <div class="col-lg-5">
 
             <!-- Feedback -->
-            <div class="prop-section">
-                <div class="prop-section-header">
-                    <div class="prop-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
                     <div>
@@ -607,7 +490,7 @@ foreach (($supervisors ?? []) as $s) {
                         <small>Review comments and remarks</small>
                     </div>
                 </div>
-                <div class="prop-section-body">
+                <div class="page-section-body">
                     <?php if ($proposal && $proposal['feedback']): ?>
                         <div class="prop-feedback-bubble">
                             <div class="d-flex align-items-center gap-2 mb-2">
@@ -627,9 +510,9 @@ foreach (($supervisors ?? []) as $s) {
             </div>
 
             <!-- Submission Steps -->
-            <div class="prop-section">
-                <div class="prop-section-header">
-                    <div class="prop-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
                         <i class="bi bi-list-check"></i>
                     </div>
                     <div>
@@ -637,7 +520,7 @@ foreach (($supervisors ?? []) as $s) {
                         <small>Track your proposal progress</small>
                     </div>
                 </div>
-                <div class="prop-section-body">
+                <div class="page-section-body">
                     <div class="d-flex flex-column gap-2">
                         <?php
                         $steps = [

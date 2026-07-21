@@ -14,54 +14,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 
 /* ─── Section Panel ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 24px;
-    transition: box-shadow 0.25s ease;
-}
+
 
 @media (min-width: 769px) {
     .table-responsive {
         overflow: visible;
     }
 }
-.grp-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
+
 
 /* ─── Modern Table Styles ─── */
-.modern-table {
-    margin: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: 950px;
-}
-.modern-table thead th {
-    background: var(--form-bg);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    font-weight: 700;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-}
-.modern-table tbody td {
-    padding: 20px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--card-bg);
-    transition: background-color 0.2s ease;
-}
-.modern-table tbody tr:hover td {
-    background-color: rgba(59,130,246,0.02);
-}
-.modern-table tbody tr:last-child td {
-    border-bottom: none;
-}
+
+
+
+
+
 .group-code-badge {
     display: inline-flex;
     align-items: center;
@@ -136,10 +103,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="group-hero-icon" style="background: transparent;">
+        <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-person-workspace"></i>
             </div>
 
@@ -155,7 +122,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
         <!-- Stats -->
         <div class="d-none d-lg-flex gap-3">
-            <div class="group-stat-pill">
+            <div class="page-stat-pill">
                 <span class="stat-num"><?php echo count($proposals); ?></span>
                 <span class="stat-label">Total Proposals</span>
             </div>
@@ -168,7 +135,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             }
             if ($pendingCount > 0):
             ?>
-            <div class="group-stat-pill" style="background: rgba(245,158,11,0.15);">
+            <div class="page-stat-pill" style="background: rgba(245,158,11,0.15);">
                 <span class="stat-num" style="color: #fcd34d;"><?php echo htmlspecialchars((string)($pendingCount), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Action Required</span>
             </div>
@@ -190,7 +157,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
 <?php else: ?>
-    <div class="grp-section">
+    <div class="page-section">
         <div class="table-responsive">
             <table class="table modern-table">
                 <thead>

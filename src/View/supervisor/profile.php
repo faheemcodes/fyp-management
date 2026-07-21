@@ -25,44 +25,10 @@ if ($basePath === '/') {
 
 <style>
 /* ─── Profile Page Scoped Styles ─── */
-.profile-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.profile-hero::before {
-    content: '';
-    position: absolute;
-    top: -60%;
-    right: -15%;
-    width: 340px;
-    height: 340px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.profile-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -10%;
-    width: 260px;
-    height: 260px;
-    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.profile-avatar-ring {
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
-    padding: 3px;
-    flex-shrink: 0;
-}
+
+
+
+
 .profile-avatar-ring .avatar-inner {
     width: 100%;
     height: 100%;
@@ -76,81 +42,19 @@ if ($basePath === '/') {
     font-weight: bold;
     border: 3px solid #0f172a;
 }
-.profile-quick-stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 10px;
-    color: rgba(255,255,255,0.7);
-    font-size: 0.78rem;
-    white-space: nowrap;
-}
-.profile-quick-stat i {
-    color: #60a5fa;
-    font-size: 0.9rem;
-}
-.profile-completion {
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 99px;
-    overflow: hidden;
-    width: 140px;
-}
-.profile-completion-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: linear-gradient(90deg, #3b82f6, #6366f1);
-    transition: width 0.6s ease;
-}
+
+
+
+
 
 /* ─── Section Panel ─── */
-.profile-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.25s ease;
-}
-.profile-section:hover {
-    box-shadow: 0 4px 20px rgba(59,130,246,0.06);
-}
-.profile-section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-}
-.profile-section-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.profile-section-header h6 {
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-.profile-section-header small {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-.profile-section-body {
-    padding: 24px;
-}
+
+
+
+
+
+
+
 
 /* ─── Modern Form Group ─── */
 .pf-group {
@@ -282,15 +186,15 @@ if ($basePath === '/') {
 }
 
 @media (max-width: 768px) {
-    .profile-hero { padding: 24px 16px; }
-    .profile-section-body { padding: 16px; }
-    .profile-avatar-ring { width: 68px; height: 68px; }
-    .profile-quick-stat { display: none; }
+    
+    
+    
+    
 }
 </style>
 
 <!-- ═══════════════ Hero Banner ═══════════════ -->
-<div class="profile-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Avatar -->
         <div class="profile-avatar-ring">
@@ -366,9 +270,9 @@ if ($basePath === '/') {
 
         <!-- ═══════════════ COLUMN 1: Professional Identity ═══════════════ -->
         <div class="col-lg-6">
-            <div class="profile-section h-100">
-                <div class="profile-section-header">
-                    <div class="profile-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
+            <div class="page-section h-100">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>
@@ -376,7 +280,7 @@ if ($basePath === '/') {
                         <small>Your official academic identity details</small>
                     </div>
                 </div>
-                <div class="profile-section-body">
+                <div class="page-section-body">
                     <div class="row g-3">
                         <div class="col-4 pf-group">
                             <label class="form-label">Prefix <span class="text-danger">*</span></label>
@@ -425,9 +329,9 @@ if ($basePath === '/') {
 
         <!-- ═══════════════ COLUMN 2: Contact & Research ═══════════════ -->
         <div class="col-lg-6">
-            <div class="profile-section h-100">
-                <div class="profile-section-header">
-                    <div class="profile-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+            <div class="page-section h-100">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
                     <div>
@@ -435,7 +339,7 @@ if ($basePath === '/') {
                         <small>Email, phone, and research focus</small>
                     </div>
                 </div>
-                <div class="profile-section-body">
+                <div class="page-section-body">
                     <div class="row g-3">
                         <div class="col-12 pf-group">
                             <label class="form-label">Email Address</label>

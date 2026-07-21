@@ -7,59 +7,16 @@
 
 
 /* ─── Section Panel ─── */
-.grp-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 24px;
-    overflow: hidden;
-    transition: box-shadow 0.25s ease;
-}
-.grp-section-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-}
+
+
 
 /* ─── Modern Table Styles ─── */
-.modern-table {
-    margin: 0;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-.modern-table thead th {
-    background: var(--form-bg);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    font-weight: 700;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-color);
-}
-.modern-table tbody td {
-    padding: 16px 24px;
-    vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--card-bg);
-    transition: background-color 0.2s ease;
-}
-.modern-table tbody tr:hover td {
-    background-color: rgba(59,130,246,0.02);
-}
-.modern-table tbody tr:last-child td {
-    border-bottom: none;
-}
-.status-pill {
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    display: inline-block;
-}
+
+
+
+
+
+
 
 @media (max-width: 768px) {
 /* ─── Evaluation Info Cards ─── */
@@ -125,10 +82,10 @@ html.dark-theme, body.dark-theme {
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
@@ -145,8 +102,8 @@ html.dark-theme, body.dark-theme {
 <div class="row g-4 mb-4">
     <!-- Progress Stage Distribution -->
     <div class="col-md-5">
-        <div class="grp-section h-100 mb-0 d-flex flex-column">
-            <div class="grp-section-header">
+        <div class="page-section h-100 mb-0 d-flex flex-column">
+            <div class="page-section-header">
                 <h6 class="fw-bold m-0" style="color: var(--text-primary);"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Group Progress Distribution</h6>
             </div>
             <div class="p-4 flex-grow-1 d-flex flex-column justify-content-start">
@@ -172,7 +129,7 @@ html.dark-theme, body.dark-theme {
 
     <!-- Overview details -->
     <div class="col-md-7">
-        <div class="grp-section h-100 mb-0 position-relative eval-container">
+        <div class="page-section h-100 mb-0 position-relative eval-container">
             <div class="p-4 position-relative z-1">
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
                     <div>
@@ -294,8 +251,8 @@ html.dark-theme, body.dark-theme {
 </div>
 
 <!-- Detailed Grading Report -->
-<div class="grp-section">
-    <div class="grp-section-header">
+<div class="page-section">
+    <div class="page-section-header">
         <h6 class="fw-bold text-dark m-0">Cumulative Final Grading Report</h6>
     </div>
     

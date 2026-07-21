@@ -138,10 +138,10 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 </style>
 
 <!-- ── Top Hero Banner ── -->
-<div class="group-hero">
+<div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="group-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent;">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
             <div>
@@ -164,7 +164,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="#supervisor-section" class="text-decoration-none">
-                <div class="group-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num text-info">
                         <?php if($group['supervisor_name']): ?>
                             <i class="bi bi-person-check-fill" style="font-size: 1.2rem;"></i>
@@ -176,7 +176,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
                 </div>
             </a>
             <a href="#progress-section" class="text-decoration-none">
-                <div class="group-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num text-primary">
                         <?php echo round((($currentIdx) / (count($stagesList) - 1)) * 100); ?>%
                     </span>
