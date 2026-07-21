@@ -980,7 +980,7 @@ html.dark-theme .modal .btn-close:hover {
     font-size: 0.9rem;
 }
 
-.prop-hero-chip {
+.page-hero-chip {
     display: inline-flex;
     align-items: center;
     gap: 5px;
