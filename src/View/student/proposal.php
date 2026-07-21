@@ -216,40 +216,9 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
             </div>
 
-            <!-- Members + Details -->
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="page-section">
-                        <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-                            <div><h6>Group Members</h6></div>
-                        </div>
-                        <div class="page-section-body">
-                            <div class="d-flex flex-column gap-3">
-                                <!-- Leader -->
-                                <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #34d399, #10b981); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 0.85rem; flex-shrink: 0;">L</div>
-                                    <div>
-                                        <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($group['creator_name'] ?? 'Group Leader'); ?> <span style="font-size: 0.6rem; background: rgba(16,185,129,0.12); color: #10b981; padding: 2px 7px; border-radius: 8px; font-weight: 700;">Leader</span></div>
-                                        <div class="font-monospace text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($group['creator_student_id'] ?? '—'); ?></div>
-                                    </div>
-                                </div>
-                                <?php foreach ($groupMembers as $m): ?>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div style="width: 38px; height: 38px; background: var(--table-header-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-secondary); font-size: 0.85rem; flex-shrink: 0; border: 1.5px solid var(--border-color);">M</div>
-                                    <div>
-                                        <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($m['name']); ?></div>
-                                        <div class="font-monospace text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($m['student_id']); ?></div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
+            <!-- Details -->
+            <div class="row">
+                <div class="col-12">
                     <div class="page-section">
                         <div class="page-section-header">
                             <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
@@ -257,12 +226,12 @@ foreach (($supervisors ?? []) as $s) {
                             </div>
                             <div><h6>Details</h6></div>
                         </div>
-                        <div class="page-section-body">
-                            <div class="mb-3">
+                        <div class="page-section-body d-flex flex-wrap gap-5 align-items-start">
+                            <div>
                                 <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Supervisor</div>
                                 <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($supName); ?></div>
                             </div>
-                            <div class="mb-3">
+                            <div>
                                 <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Group Code</div>
                                 <div class="fw-bold font-monospace" style="color: #10b981;"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
                             </div>
