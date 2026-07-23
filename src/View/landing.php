@@ -431,14 +431,66 @@
         .theme-emerald:hover { box-shadow: 0 35px 60px rgba(16, 185, 129, 0.4); }
         .theme-emerald .card-number { color: #10b981; }
 
-        /* HOW IT WORKS TIMELINE */
-        .timeline { display: flex; justify-content: space-between; position: relative; gap: 20px; margin-top: 40px; flex-wrap: wrap; }
-        .timeline::before { content: ''; position: absolute; top: 30px; left: 0; right: 0; height: 2px; background: var(--lp-border); z-index: 0; }
-        @media (max-width: 768px) { .timeline::before { display: none; } }
-        .timeline-step { flex: 1; min-width: 200px; position: relative; z-index: 1; text-align: center; margin-bottom: 20px; }
-        .step-number { width: 60px; height: 60px; background: var(--lp-bg); border: 2px solid var(--lp-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--lp-text); margin: 0 auto 20px; }
-        .timeline-step h5 { font-size: 1.1rem; font-weight: 700; color: var(--lp-text); margin-bottom: 10px; }
-        .timeline-step p { color: var(--lp-text-muted); font-size: 0.85rem; }
+        /* HOW IT WORKS PROCESS FLOW */
+        .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 50px; max-width: 900px; margin-left: auto; margin-right: auto; }
+        @media (min-width: 768px) {
+            .timeline-grid { grid-template-columns: 1fr 1fr; gap: 40px 60px; position: relative; }
+            .timeline-card:nth-child(even) { transform: translateY(60px); }
+            
+            /* Connecting Arrow: Odd -> Even (e.g. 1 to 2) */
+            .timeline-card:nth-child(odd):not(:last-child)::after {
+                content: ''; position: absolute;
+                top: 40px; left: 100%;
+                width: calc(50% + 60px); height: 60px;
+                border-top: 2px dashed var(--lp-text-muted);
+                border-right: 2px dashed var(--lp-text-muted);
+                border-top-right-radius: 20px;
+                opacity: 0.4; z-index: -1;
+            }
+            .timeline-card:nth-child(odd):not(:last-child)::before {
+                content: ''; position: absolute;
+                top: 98px; left: calc(150% + 60px - 5px);
+                border: 6px solid transparent;
+                border-top-color: var(--lp-text-muted);
+                opacity: 0.4; z-index: -1;
+            }
+
+            /* Connecting Arrow: Even -> Odd (e.g. 2 to 3) */
+            .timeline-card:nth-child(even):not(:last-child)::after {
+                content: ''; position: absolute;
+                top: calc(100% - 40px); right: 100%;
+                width: calc(50% + 60px); height: 60px;
+                border-top: 2px dashed var(--lp-text-muted);
+                border-left: 2px dashed var(--lp-text-muted);
+                border-top-left-radius: 20px;
+                opacity: 0.4; z-index: -1;
+            }
+            .timeline-card:nth-child(even):not(:last-child)::before {
+                content: ''; position: absolute;
+                top: calc(100% + 20px - 2px); right: calc(150% + 60px - 5px);
+                border: 6px solid transparent;
+                border-top-color: var(--lp-text-muted);
+                opacity: 0.4; z-index: -1;
+            }
+        }
+
+        .timeline-card { position: relative; border-radius: 24px; padding: 30px 30px 30px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 1; border: 1px solid var(--lp-border); }
+        
+        .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
+
+        .timeline-card .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
+        .timeline-card p { font-size: 0.95rem; line-height: 1.6; margin: 0; color: var(--lp-text-muted); }
+
+        /* Styles */
+        .tl-style-green { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
+        .tl-style-green .card-pill { background: #064e3b; color: #fff; }
+        .tl-style-green .icon-circle { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+
+        .tl-style-grey { background: var(--lp-card); }
+        .tl-style-grey .card-pill { background: var(--lp-mac-face); color: #fff; }
+        .tl-style-grey .icon-circle { background: var(--lp-bg-alt); color: var(--lp-text); border: 1px solid var(--lp-border); }
 
         /* FACULTY PREVIEW */
         .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
@@ -885,26 +937,41 @@
             <p class="section-sub mx-auto">Your final year project journey from start to finish.</p>
         </div>
         
-        <div class="timeline">
-            <div class="timeline-step">
-                <div class="step-number">1</div>
-                <h5>Propose</h5>
-                <p>Form a group and submit your initial project idea.</p>
+        <div class="timeline-grid">
+            <div class="timeline-card tl-style-green">
+                <div class="card-pill">Week 1</div>
+                <div class="card-header">
+                    <div class="icon-circle"><i class="bi bi-search"></i></div>
+                    <h4>1 Propose</h4>
+                </div>
+                <p>Form a group, brainstorm innovative ideas, and submit your initial project proposal for approval.</p>
             </div>
-            <div class="timeline-step">
-                <div class="step-number">2</div>
-                <h5>Supervision</h5>
-                <p>Get assigned to an expert faculty member.</p>
+            
+            <div class="timeline-card tl-style-grey">
+                <div class="card-pill">Week 2</div>
+                <div class="card-header">
+                    <div class="icon-circle"><i class="bi bi-person-badge"></i></div>
+                    <h4>2 Supervision</h4>
+                </div>
+                <p>Get assigned to an expert faculty member who will guide and mentor your project development.</p>
             </div>
-            <div class="timeline-step">
-                <div class="step-number">3</div>
-                <h5>Development</h5>
-                <p>Iterate through bi-weekly assessments.</p>
+
+            <div class="timeline-card tl-style-grey">
+                <div class="card-pill">Months 1-3</div>
+                <div class="card-header">
+                    <div class="icon-circle"><i class="bi bi-code-slash"></i></div>
+                    <h4>3 Development</h4>
+                </div>
+                <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
-            <div class="timeline-step">
-                <div class="step-number">4</div>
-                <h5>Defense</h5>
-                <p>Present and finalize your graduation project.</p>
+
+            <div class="timeline-card tl-style-green">
+                <div class="card-pill">Month 4</div>
+                <div class="card-header">
+                    <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
+                    <h4>4 Defense</h4>
+                </div>
+                <p>Present and finalize your graduation project in front of the evaluation committee.</p>
             </div>
         </div>
     </div>
