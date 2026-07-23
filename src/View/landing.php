@@ -24,7 +24,7 @@
     <!-- Google Fonts including modern fallbacks for Chuner/Pierknife -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Oswald:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <?php
     $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
@@ -35,7 +35,7 @@
     <style>
         /* BASE THEME & VARIABLES */
         :root {
-            --font-heading-main: 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
+            --font-heading-main: 'Jost', 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
             --font-heading-alt: 'Pierknife', 'Oswald', 'Arial Narrow', sans-serif;
             --font-body: 'Inter', -apple-system, sans-serif;
         }
@@ -106,8 +106,6 @@
             max-width: 100%;
             margin: 0;
             padding: 0;
-        }
-
         /* TYPOGRAPHY */
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
         .heading-alt { font-family: var(--font-heading-alt); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -344,8 +342,29 @@
         .section-label.emerald { background: rgba(16,185,129,0.1); color: var(--lp-accent); }
         .section-label.amber { background: rgba(245,158,11,0.1); color: var(--lp-amber); }
         .section-label.violet { background: rgba(139,92,246,0.1); color: var(--lp-violet); }
-        .section-heading { font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: 12px; color: var(--lp-text); }
-        .section-sub { font-size: 1.1rem; color: var(--lp-text-muted); max-width: 600px; margin-bottom: 40px; }
+        .section-heading { 
+            font-size: clamp(2.2rem, 4.5vw, 3.2rem); 
+            margin-bottom: 16px; 
+            color: var(--lp-text); 
+            position: relative;
+            padding-bottom: 20px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        .section-heading::after {
+            content: ''; 
+            position: absolute; 
+            bottom: 0; 
+            left: 0;
+            width: 60px; 
+            height: 5px; 
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--lp-accent), var(--lp-violet));
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+        }
+        .text-center .section-heading::after { left: 50%; transform: translateX(-50%); }
+
+        .section-sub { font-size: 1.15rem; line-height: 1.6; color: var(--lp-text-muted); max-width: 600px; margin-bottom: 40px; }
 
         /* CARDS & BENTO */
         .card-modern {
@@ -539,9 +558,48 @@
         .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
 
         /* CTA */
-        .cta-box { background: var(--lp-text); border-radius: 30px; padding: 80px 40px; text-align: center; color: var(--lp-bg); position: relative; overflow: hidden; }
-        .cta-box h2 { color: var(--lp-bg); font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px; }
-        .cta-box p { color: var(--lp-bg); opacity: 0.8; font-size: 1.1rem; margin-bottom: 40px; }
+        .cta-wrapper { position: relative; }
+        
+        :root[data-theme="light"] .cta-wrapper {
+            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(45, 45, 45, 0.7), rgba(15, 15, 15, 0.85));
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.45);
+            border-left: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 2px 20px rgba(255, 255, 255, 0.05);
+            border-radius: 32px; 
+            padding: 80px 40px; 
+            text-align: center; 
+            position: relative; 
+            overflow: hidden; 
+            transition: all 0.3s ease;
+        }
+        
+        .cta-box h2 { color: #ffffff; font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: color 0.3s; }
+        .cta-box p { color: rgba(255, 255, 255, 0.7); font-size: 1.1rem; margin-bottom: 40px; transition: color 0.3s; }
+
+        /* Neumorphic Light Theme Overrides */
+        :root[data-theme="light"] .cta-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            border: 1px solid #ffffff;
+            box-shadow: -10px -10px 20px rgba(255, 255, 255, 0.8), 15px 15px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: none;
+        }
+        :root[data-theme="light"] .cta-box h2 {
+            color: #1e293b;
+            text-shadow: none;
+        }
+        :root[data-theme="light"] .cta-box p {
+            color: #475569;
+        }
         .btn-cta { background: var(--lp-bg); color: var(--lp-text) !important; padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: transform 0.3s; }
         .btn-cta:hover { transform: translateY(-3px); }
 
@@ -1048,7 +1106,7 @@
 </section>
 
 <!-- CTA -->
-<section class="section">
+<section class="section cta-wrapper">
     <div class="container">
         <div class="cta-box">
             <h2 class="heading-main">Start Building Today</h2>
