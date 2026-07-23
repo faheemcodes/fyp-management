@@ -528,6 +528,15 @@
         .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
         .timeline-card p { font-size: 0.95rem; line-height: 1.6; margin: 0; color: var(--lp-text-muted); }
 
+        .section-separator {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--lp-border), transparent);
+            margin: 0 auto;
+            width: 100%;
+            max-width: 800px;
+            opacity: 0.5;
+        }
+
         /* Styles */
         .tl-style-green { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
         .tl-style-green .card-pill { background: #064e3b; color: #fff; }
@@ -577,30 +586,7 @@
         /* FACULTY PREVIEW */
         .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
 
-        /* CTA */
-        .cta-box {
-            background: linear-gradient(135deg, rgba(45, 45, 45, 0.7), rgba(15, 15, 15, 0.85));
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-top: 1.5px solid rgba(255, 255, 255, 0.45);
-            border-left: 1.5px solid rgba(255, 255, 255, 0.25);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 2px 20px rgba(255, 255, 255, 0.05);
-            border-radius: 32px; 
-            padding: 80px 40px; 
-            text-align: center; 
-            position: relative; 
-            overflow: hidden; 
-            transition: all 0.3s ease;
-        }
-        
-        .cta-box h2 { color: #ffffff; font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: color 0.3s; }
-        .cta-box p { color: rgba(255, 255, 255, 0.7); font-size: 1.1rem; margin-bottom: 40px; transition: color 0.3s; }
 
-
-        .btn-cta { background: var(--lp-bg); color: var(--lp-text) !important; padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: transform 0.3s; }
-        .btn-cta:hover { transform: translateY(-3px); }
 
         /* FOOTER */
         .footer { background: var(--lp-bg-alt); padding: 60px 0 30px; border-top: 1px solid var(--lp-border); }
@@ -1104,16 +1090,7 @@
     </div>
 </section>
 
-<!-- CTA -->
-<section class="section">
-    <div class="container">
-        <div class="cta-box">
-            <h2 class="heading-main">Start Building Today</h2>
-            <p>Register your group and take the first step towards your FYP.</p>
-            <a href="<?php echo $basePath; ?>/register" class="btn-cta">Get Started</a>
-        </div>
-    </div>
-</section>
+
 
 <!-- Notice Modal -->
 <style>
