@@ -366,24 +366,9 @@
             font-size: clamp(2.2rem, 4.5vw, 3.2rem); 
             margin-bottom: 16px; 
             color: var(--lp-text); 
-            position: relative;
-            padding-bottom: 20px;
             letter-spacing: -1px;
             line-height: 1.1;
         }
-        .section-heading::after {
-            content: ''; 
-            position: absolute; 
-            bottom: 0; 
-            left: 0;
-            width: 60px; 
-            height: 5px; 
-            border-radius: 5px;
-            background: linear-gradient(90deg, var(--lp-accent), var(--lp-violet));
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
-        }
-        .text-center .section-heading::after { left: 50%; transform: translateX(-50%); }
-
         .section-sub { font-size: 1.15rem; line-height: 1.6; color: var(--lp-text-muted); max-width: 600px; margin-bottom: 40px; }
 
         /* CARDS & BENTO */
@@ -583,8 +568,70 @@
             }
         }
 
-        /* FACULTY PREVIEW */
-        .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
+        /* FACULTY PREVIEW REDESIGN */
+        .faculty-card-wrapper {
+            position: relative;
+            padding-bottom: 12px;
+            padding-right: 12px;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .faculty-card-wrapper:hover {
+            transform: translateY(-5px);
+        }
+        .faculty-card-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 0;
+            bottom: 0;
+            left: 10px;
+            background-color: #ffd8a8;
+            border-radius: 20px;
+            z-index: 0;
+        }
+        .faculty-card-ref {
+            position: relative;
+            z-index: 1;
+            background-color: #FAF6F0;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: left;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .fc-name {
+            color: #5c3a21;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: var(--font-heading-main);
+            letter-spacing: -0.5px;
+        }
+        .fc-role {
+            color: #b5894b;
+            font-size: 0.9rem;
+            margin-bottom: 50px;
+            font-weight: 500;
+        }
+        .fc-detail {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+        .fc-detail:last-child {
+            margin-bottom: 0;
+        }
+        .fc-label {
+            color: #b5894b;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        .fc-value {
+            color: #374151;
+            font-weight: 500;
+        }
 
 
 
@@ -1073,12 +1120,22 @@
             <?php if (!empty($supervisors)): ?>
                 <?php foreach (array_slice($supervisors, 0, 4) as $supervisor): ?>
                 <div class="col-lg-3 col-md-4 col-6">
-                    <div class="card-modern">
-                        <div class="faculty-avatar">
-                            <?php echo strtoupper(substr($supervisor['name'], 0, 1)); ?>
+                    <div class="faculty-card-wrapper">
+                        <div class="faculty-card-ref">
+                            <div class="fc-name"><?php echo htmlspecialchars($supervisor['name']); ?></div>
+                            <div class="fc-role">Faculty Member</div>
+                            
+                            <div class="mt-auto">
+                                <div class="fc-detail">
+                                    <span class="fc-label">Dept &mdash;</span> 
+                                    <span class="fc-value"><?php echo htmlspecialchars($supervisor['department']); ?></span>
+                                </div>
+                                <div class="fc-detail">
+                                    <span class="fc-label">Mail &mdash;</span> 
+                                    <span class="fc-value"><?php echo strtolower(str_replace(' ', '.', $supervisor['name'])) . '@fyp.edu'; ?></span>
+                                </div>
+                            </div>
                         </div>
-                        <h6 class="mb-1" style="color: var(--lp-text);"><?php echo htmlspecialchars($supervisor['name']); ?></h6>
-                        <small style="color: var(--lp-text-muted);"><?php echo htmlspecialchars($supervisor['department']); ?></small>
                     </div>
                 </div>
                 <?php endforeach; ?>
