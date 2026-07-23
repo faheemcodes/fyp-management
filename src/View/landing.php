@@ -61,6 +61,8 @@
             --lp-mac-body: #1e293b; /* Rich Midnight Slate */
             --lp-mac-face: #0f172a; /* Deep Slate */
             --lp-mac-touchpad: #334155; /* Medium Slate */
+            
+            --lp-circle-bg: #ffffff; /* True white for high contrast */
         }
 
         :root[data-theme="dark"] {
@@ -84,6 +86,8 @@
             --lp-mac-body: #f8fafc; /* Premium Ice Silver */
             --lp-mac-face: #e2e8f0; /* Frosted Silver */
             --lp-mac-touchpad: #cbd5e1; /* Deep Silver */
+            
+            --lp-circle-bg: #000000; /* True black for high contrast */
         }
 
         html, body {
@@ -390,40 +394,41 @@
         .item-info p { margin: 0; font-size: 0.85rem; color: var(--lp-text-muted); }
 
         /* BENTO DEPARTMENTS */
-        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 40px 30px; padding-top: 30px; padding-left: 20px; }
+        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 40px; padding-top: 50px; padding-left: 30px; }
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 992px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
         
-        .bento-item { position: relative; border-radius: 24px; padding: 30px; display: flex; flex-direction: column; transition: all 0.3s; color: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: none; z-index: 1; }
-        .bento-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .bento-item { position: relative; border-radius: 36px; padding: 40px 30px 30px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; }
+        .bento-item:hover { transform: translateY(-8px); }
         
-        .card-number { position: absolute; top: -30px; left: -20px; width: 80px; height: 80px; background: var(--lp-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 2; }
+        .card-number { position: absolute; top: -20px; left: -20px; width: 120px; height: 120px; background: var(--lp-circle-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: 800; box-shadow: 12px 12px 30px rgba(0,0,0,0.15); z-index: 2; }
         
         .card-header { margin-left: 50px; margin-bottom: 20px; text-transform: uppercase; text-align: right; }
         .card-header h4 { color: inherit; font-size: 1rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
         .card-header span { font-size: 0.75rem; opacity: 0.8; letter-spacing: 0.5px; }
         
-        .dept-icon { font-size: 2.5rem; opacity: 0.9; text-align: right; margin-bottom: 20px; }
-        
-        .card-body { flex-grow: 1; margin: 0; padding: 0; }
+        .card-body { flex-grow: 1; margin-top: 20px; padding: 0; }
         .card-body p { color: inherit; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: left; opacity: 0.95; }
 
-        /* Themes matching the image */
-        .theme-orange { background: #f05a30; }
+        /* Themes matching the image with 3D tinted shadows */
+        .theme-orange { background: #f05a30; box-shadow: 0 25px 50px rgba(240, 90, 48, 0.3); }
+        .theme-orange:hover { box-shadow: 0 35px 60px rgba(240, 90, 48, 0.4); }
         .theme-orange .card-number { color: #f05a30; }
         
-        .theme-slate { background: #4a5568; }
+        .theme-slate { background: #4a5568; box-shadow: 0 25px 50px rgba(74, 85, 104, 0.3); }
+        .theme-slate:hover { box-shadow: 0 35px 60px rgba(74, 85, 104, 0.4); }
         .theme-slate .card-number { color: #4a5568; }
         
-        .theme-yellow { background: #facc15; }
+        .theme-yellow { background: #facc15; box-shadow: 0 25px 50px rgba(250, 204, 21, 0.3); }
+        .theme-yellow:hover { box-shadow: 0 35px 60px rgba(250, 204, 21, 0.4); }
         .theme-yellow .card-number { color: #eab308; }
-        .theme-yellow .card-header h4, .theme-yellow .card-header span, .theme-yellow .card-body p, .theme-yellow .dept-icon { color: #27272a; }
         
-        .theme-blue { background: #7dd3fc; }
+        .theme-blue { background: #7dd3fc; box-shadow: 0 25px 50px rgba(125, 211, 252, 0.3); }
+        .theme-blue:hover { box-shadow: 0 35px 60px rgba(125, 211, 252, 0.4); }
         .theme-blue .card-number { color: #0284c7; }
-        .theme-blue .card-header h4, .theme-blue .card-header span, .theme-blue .card-body p, .theme-blue .dept-icon { color: #0f172a; }
         
-        .theme-emerald { background: #10b981; }
+        .theme-emerald { background: #10b981; box-shadow: 0 25px 50px rgba(16, 185, 129, 0.3); }
+        .theme-emerald:hover { box-shadow: 0 35px 60px rgba(16, 185, 129, 0.4); }
         .theme-emerald .card-number { color: #10b981; }
 
         /* HOW IT WORKS TIMELINE */
@@ -819,58 +824,53 @@
         
         <div class="bento-grid">
             <div class="bento-item theme-orange">
-                <div class="card-number">01</div>
+                <div class="card-number"><i class="bi bi-pc-display"></i></div>
                 <div class="card-header">
                     <h4>Information Technology</h4>
                     <span>Department</span>
                 </div>
-                <div class="dept-icon"><i class="bi bi-pc-display"></i></div>
                 <div class="card-body">
                     <p>Established in 1998, the IT department provides an NCEAC-accredited program emphasizing critical thinking. Students learn to provide practical IT solutions for the nation's administrative challenges using state-of-the-art facilities.</p>
                 </div>
             </div>
             <div class="bento-item theme-slate">
-                <div class="card-number">02</div>
+                <div class="card-number"><i class="bi bi-code-square"></i></div>
                 <div class="card-header">
                     <h4>Software Engineering</h4>
                     <span>Department</span>
                 </div>
-                <div class="dept-icon"><i class="bi bi-code-square"></i></div>
                 <div class="card-body">
                     <p>One of Pakistan's first programs of its kind, offering NCEAC-accredited education. The curriculum focuses on engineering complex systems through research, design, and testing to build robust software architectures.</p>
                 </div>
             </div>
             <div class="bento-item theme-yellow">
-                <div class="card-number">03</div>
+                <div class="card-number"><i class="bi bi-broadcast-pin"></i></div>
                 <div class="card-header">
                     <h4>Telecommunication</h4>
                     <span>Department</span>
                 </div>
-                <div class="dept-icon"><i class="bi bi-broadcast-pin"></i></div>
                 <div class="card-body">
                     <p>Operating under an Outcome-Based Education framework, this PEC-accredited program produces graduates equipped with a vision for modern telecommunications. Students master next-generation networks and technologies.</p>
                 </div>
             </div>
             <div class="bento-item theme-blue">
-                <div class="card-number">04</div>
+                <div class="card-number"><i class="bi bi-cpu"></i></div>
                 <div class="card-header">
                     <h4>Electronic Engineering</h4>
                     <span>Department</span>
                 </div>
-                <div class="dept-icon"><i class="bi bi-cpu"></i></div>
                 <div class="card-body">
                     <p>With roots dating back to 1979, this PEC-accredited department bridges theoretical concepts with practical application. Students engage in experimental learning using modern hardware to meet socio-economic needs.</p>
                 </div>
             </div>
             <div class="bento-item theme-emerald">
-                <div class="card-number">05</div>
+                <div class="card-number"><i class="bi bi-bar-chart-line"></i></div>
                 <div class="card-header">
-                    <h4>Telemedicine & e-Health</h4>
+                    <h4>Data Science</h4>
                     <span>Department</span>
                 </div>
-                <div class="dept-icon"><i class="bi bi-heart-pulse"></i></div>
                 <div class="card-body">
-                    <p>Part of the university's initiative to integrate technology into modern healthcare. The department focuses on the intersection of engineering and medical sciences, training students to develop innovative e-health solutions.</p>
+                    <p>Harnessing the immense power of big data, machine learning, and artificial intelligence. Students learn to extract actionable insights from complex datasets, build predictive models, and implement AI-driven automation.</p>
                 </div>
             </div>
         </div>
