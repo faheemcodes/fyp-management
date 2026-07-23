@@ -116,6 +116,15 @@
             background-attachment: fixed;
             background-repeat: no-repeat;
         }
+
+        /* Dark theme texture background */
+        :root[data-theme="dark"] body {
+            background-image: url('<?php echo $basePath; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
         
         /* TYPOGRAPHY */
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
