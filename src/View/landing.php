@@ -87,7 +87,13 @@
             --lp-mac-face: #e2e8f0; /* Frosted Silver */
             --lp-mac-touchpad: #cbd5e1; /* Deep Silver */
             
-            --lp-circle-bg: #000000; /* True black for high contrast */
+            --lp-circle-bg: #1e293b; /* Elevated Slate Dark */
+        }
+
+        /* Make the circle pop in dark mode with a faint border */
+        :root[data-theme="dark"] .card-number {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 12px 12px 30px rgba(0,0,0,0.6);
         }
 
         html, body {
