@@ -434,14 +434,14 @@
         /* HOW IT WORKS PROCESS FLOW */
         .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 50px; max-width: 900px; margin-left: auto; margin-right: auto; }
         @media (min-width: 768px) {
-            .timeline-grid { grid-template-columns: 1fr 1fr; gap: 40px 60px; position: relative; }
-            .timeline-card:nth-child(even) { transform: translateY(60px); }
+            .timeline-grid { grid-template-columns: 1fr 1fr; gap: 40px 60px; position: relative; align-items: start; }
+            .timeline-card:nth-child(even) { margin-top: 100px; }
             
             /* Connecting Arrow: Odd -> Even (e.g. 1 to 2) */
             .timeline-card:nth-child(odd):not(:last-child)::after {
                 content: ''; position: absolute;
-                top: 40px; left: 100%;
-                width: calc(50% + 60px); height: 60px;
+                top: 50px; left: 100%;
+                width: calc(50% + 60px); height: 30px;
                 border-top: 2px dashed var(--lp-text-muted);
                 border-right: 2px dashed var(--lp-text-muted);
                 border-top-right-radius: 20px;
@@ -449,7 +449,7 @@
             }
             .timeline-card:nth-child(odd):not(:last-child)::before {
                 content: ''; position: absolute;
-                top: 98px; left: calc(150% + 60px - 5px);
+                top: 78px; left: calc(150% + 60px - 5px);
                 border: 6px solid transparent;
                 border-top-color: var(--lp-text-muted);
                 opacity: 0.4; z-index: -1;
@@ -458,8 +458,8 @@
             /* Connecting Arrow: Even -> Odd (e.g. 2 to 3) */
             .timeline-card:nth-child(even):not(:last-child)::after {
                 content: ''; position: absolute;
-                top: calc(100% - 40px); right: 100%;
-                width: calc(50% + 60px); height: 60px;
+                top: calc(100% - 40px); right: calc(100% + 30px);
+                width: calc(50% + 30px); height: 60px;
                 border-top: 2px dashed var(--lp-text-muted);
                 border-left: 2px dashed var(--lp-text-muted);
                 border-top-left-radius: 20px;
@@ -491,6 +491,43 @@
         .tl-style-grey { background: var(--lp-card); }
         .tl-style-grey .card-pill { background: var(--lp-mac-face); color: #fff; }
         .tl-style-grey .icon-circle { background: var(--lp-bg-alt); color: var(--lp-text); border: 1px solid var(--lp-border); }
+        
+        /* Ensure pill text is readable against the light silver pill background in dark mode */
+        :root[data-theme="dark"] .tl-style-grey .card-pill { color: #334155; }
+
+        /* Mobile Responsive Fixes */
+        @media (max-width: 767px) {
+            /* Notice Board */
+            .card-notice-board::before { width: 100px; height: 100px; top: -30px; right: -30px; }
+
+            /* Departments */
+            .bento-grid { padding-left: 15px; gap: 50px 20px; }
+            .card-number { width: 80px; height: 80px; font-size: 2rem; top: -20px; left: -15px; }
+            .bento-item { padding: 30px 20px 20px; }
+            .bento-item .card-header { margin-left: 55px; }
+
+            /* Process */
+            .timeline-grid { padding-left: 15px; gap: 30px; }
+            .timeline-card { padding: 20px 20px 20px 40px; }
+            .card-pill { left: -15px; padding: 10px 5px; font-size: 0.75rem; min-height: 80px; }
+
+            /* Mobile arrows */
+            .timeline-card:not(:last-child)::after {
+                content: ''; position: absolute;
+                bottom: -22px; left: 50%;
+                width: 2px; height: 18px;
+                border-left: 2px dashed var(--lp-text-muted);
+                opacity: 0.4; z-index: -1;
+            }
+            .timeline-card:not(:last-child)::before {
+                content: ''; position: absolute;
+                bottom: -28px; left: calc(50% - 5px);
+                border-width: 6px 6px 0 6px;
+                border-style: solid;
+                border-color: var(--lp-text-muted) transparent transparent transparent;
+                opacity: 0.4; z-index: -1;
+            }
+        }
 
         /* FACULTY PREVIEW */
         .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
@@ -939,37 +976,37 @@
         
         <div class="timeline-grid">
             <div class="timeline-card tl-style-green">
-                <div class="card-pill">Week 1</div>
+                <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
-                    <h4>1 Propose</h4>
+                    <h4>Propose</h4>
                 </div>
                 <p>Form a group, brainstorm innovative ideas, and submit your initial project proposal for approval.</p>
             </div>
             
             <div class="timeline-card tl-style-grey">
-                <div class="card-pill">Week 2</div>
+                <div class="card-pill">Phase 2</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-person-badge"></i></div>
-                    <h4>2 Supervision</h4>
+                    <h4>Supervision</h4>
                 </div>
                 <p>Get assigned to an expert faculty member who will guide and mentor your project development.</p>
             </div>
 
             <div class="timeline-card tl-style-grey">
-                <div class="card-pill">Months 1-3</div>
+                <div class="card-pill">Phase 3</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-code-slash"></i></div>
-                    <h4>3 Development</h4>
+                    <h4>Development</h4>
                 </div>
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
             <div class="timeline-card tl-style-green">
-                <div class="card-pill">Month 4</div>
+                <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
-                    <h4>4 Defense</h4>
+                    <h4>Defense</h4>
                 </div>
                 <p>Present and finalize your graduation project in front of the evaluation committee.</p>
             </div>
