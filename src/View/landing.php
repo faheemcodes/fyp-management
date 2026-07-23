@@ -106,6 +106,17 @@
             max-width: 100%;
             margin: 0;
             padding: 0;
+        }
+
+        /* Light theme texture background */
+        :root[data-theme="light"] body {
+            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        
         /* TYPOGRAPHY */
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
         .heading-alt { font-family: var(--font-heading-alt); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -558,14 +569,6 @@
         .faculty-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--lp-bg-alt); border: 1px solid var(--lp-border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--lp-text); margin: 0 auto 16px; font-size: 1.2rem; }
 
         /* CTA */
-        .cta-wrapper { position: relative; }
-        
-        :root[data-theme="light"] .cta-wrapper {
-            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
-            background-size: cover;
-            background-position: center;
-        }
-
         .cta-box {
             background: linear-gradient(135deg, rgba(45, 45, 45, 0.7), rgba(15, 15, 15, 0.85));
             backdrop-filter: blur(30px);
@@ -586,20 +589,7 @@
         .cta-box h2 { color: #ffffff; font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: color 0.3s; }
         .cta-box p { color: rgba(255, 255, 255, 0.7); font-size: 1.1rem; margin-bottom: 40px; transition: color 0.3s; }
 
-        /* Neumorphic Light Theme Overrides */
-        :root[data-theme="light"] .cta-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
-            border: 1px solid #ffffff;
-            box-shadow: -10px -10px 20px rgba(255, 255, 255, 0.8), 15px 15px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: none;
-        }
-        :root[data-theme="light"] .cta-box h2 {
-            color: #1e293b;
-            text-shadow: none;
-        }
-        :root[data-theme="light"] .cta-box p {
-            color: #475569;
-        }
+
         .btn-cta { background: var(--lp-bg); color: var(--lp-text) !important; padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; transition: transform 0.3s; }
         .btn-cta:hover { transform: translateY(-3px); }
 
@@ -1106,7 +1096,7 @@
 </section>
 
 <!-- CTA -->
-<section class="section cta-wrapper">
+<section class="section">
     <div class="container">
         <div class="cta-box">
             <h2 class="heading-main">Start Building Today</h2>
