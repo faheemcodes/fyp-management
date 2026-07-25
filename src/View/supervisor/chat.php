@@ -934,8 +934,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             console.error("Firestore Listen Error:", error);
             chatMessages.innerHTML = '<div class="text-center text-danger my-auto">Error loading messages. Check Firebase rules.</div>';
         });
+    } // End of loadChat function
 
-        // Handle Edit and Delete clicks
+    // Handle Edit and Delete clicks
         editingMsgId = null;
 
         chatMessages.addEventListener('click', async (e) => {
@@ -1040,7 +1041,6 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             messageInput.style.overflowY = sh > 112 ? 'auto' : 'hidden';
         }
         messageInput.addEventListener('input', autoResize);
-    }
 
     // Send message
     chatForm.addEventListener('submit', async (e) => {
