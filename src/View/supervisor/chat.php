@@ -1116,7 +1116,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     }).catch(console.error);
                 }
                 
-                clearFile();
+                clearFileChip();
                 return;
             }
 
