@@ -1,4 +1,3 @@
-<!-- Coordinator Verify Students View (Redesigned) -->
 <style>
 /* ─── Hero Section ─── */
 .eval-hero {
@@ -178,6 +177,8 @@ html.dark-theme .modal .btn-close:hover {
     }
 }
 </style>
+<!-- Coordinator Verify Students View (Redesigned) -->
+
 
 
 <!-- Hero Section -->
@@ -185,7 +186,7 @@ html.dark-theme .modal .btn-close:hover {
     <div class="d-flex justify-content-between align-items-center position-relative z-1">
         <div>
             <h4 class="fw-bold mb-1 text-white">Verify Students</h4>
-            <p class="mb-0 text-white-50" style="font-size: 0.9rem;">Review and approve self-registered student accounts securely.</p>
+            <p class="mb-0 text-white-50" style="font-size: 0.9rem">Review and approve self-registered student accounts securely.</p>
         </div>
         <div class="eval-hero-icon">
             <i class="bi bi-person-check-fill"></i>
@@ -197,7 +198,7 @@ html.dark-theme .modal .btn-close:hover {
     <!-- Header -->
     <div class="eval-section-header">
         <div class="d-flex align-items-center gap-3">
-            <div class="eval-section-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+            <div class="eval-section-icon" style="background: rgba(16, 185, 129, 0.1);color: #10b981">
                 <i class="bi bi-inbox-fill"></i>
             </div>
             <div>
@@ -206,9 +207,9 @@ html.dark-theme .modal .btn-close:hover {
             </div>
         </div>
         <!-- Search Box -->
-        <div class="input-group" style="max-width: 250px;">
-            <span class="input-group-text bg-transparent border-end-0 border-light-subtle" style="border-radius: 50rem 0 0 50rem;"><i class="bi bi-search text-muted" style="font-size: 0.8rem;"></i></span>
-            <input type="text" class="form-control bg-transparent border-start-0 border-light-subtle table-search shadow-none" placeholder="Search pending..." data-target="pending-table" style="border-radius: 0 50rem 50rem 0; font-size: 0.85rem; color: var(--text-primary);">
+        <div class="input-group" style="max-width: 250px">
+            <span class="input-group-text bg-transparent border-end-0 border-light-subtle" style="border-radius: 50rem 0 0 50rem"><i class="bi bi-search text-muted" style="font-size: 0.8rem"></i></span>
+            <input type="text" class="form-control bg-transparent border-start-0 border-light-subtle table-search shadow-none" placeholder="Search pending..." data-target="pending-table" style="border-radius: 0 50rem 50rem 0;font-size: 0.85rem;color: var(--text-primary)">
         </div>
     </div>
 
@@ -230,14 +231,14 @@ html.dark-theme .modal .btn-close:hover {
                     <td>
                         <div class="d-flex align-items-center gap-3">
                             <?php $avatarFile = !empty($s['avatar']) ? $s['avatar'] : 'default_avatar.svg'; ?>
-                            <img src="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px; height: 42px; object-fit: cover; border: 2px solid var(--card-bg);" alt="Avatar">
+                            <img src="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px;height: 42px;object-fit: cover;border: 2px solid var(--card-bg)" alt="Avatar">
                             <div>
-                                <div class="fw-bold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($s['name']); ?></div>
-                                <div style="color: var(--text-secondary); font-size: 0.8rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($s['email']); ?></div>
+                                <div class="fw-bold" style="color: var(--text-primary);font-size: 0.95rem"><?php echo htmlspecialchars($s['name']); ?></div>
+                                <div style="color: var(--text-secondary);font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($s['email']); ?></div>
                             </div>
                         </div>
                     </td>
-                    <td class="fw-bold" style="color: var(--primary-color); font-size: 0.9rem;"><?php echo htmlspecialchars($s['student_id']); ?></td>
+                    <td class="fw-bold" style="color: var(--primary-color);font-size: 0.9rem"><?php echo htmlspecialchars($s['student_id']); ?></td>
                     <td>
                         <span class="group-code-badge"><i class="bi bi-clock-history me-1"></i><?php echo htmlspecialchars($s['shift']); ?></span>
                     </td>
@@ -246,14 +247,14 @@ html.dark-theme .modal .btn-close:hover {
                     </td>
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1); color: #047fb0; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                <i class="bi bi-info-circle-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Details</span>
+                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1);color: #047fb0;border: none;font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                <i class="bi bi-info-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Details</span>
                             </button>
-                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(16, 185, 129, 0.18)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)';" onclick="confirmAction(event, 'Approve this student?')">
-                                <i class="bi bi-check-circle-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Approve</span>
+                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.1);color: #10b981;border: none;font-weight: 600" onmouseover="this.style.background='rgba(16, 185, 129, 0.18)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)';" onclick="confirmAction(event, 'Approve this student?')">
+                                <i class="bi bi-check-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Approve</span>
                             </a>
-                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/reject?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1); color: #a80a34; border: none; font-weight: 600;" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Reject and delete this registration?')">
-                                <i class="bi bi-x-circle-fill" style="font-size: 0.85rem;"></i> <span class="d-none d-md-inline ms-2">Reject</span>
+                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/reject?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;border: none;font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Reject and delete this registration?')">
+                                <i class="bi bi-x-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Reject</span>
                             </a>
                         </div>
                     </td>
@@ -262,24 +263,24 @@ html.dark-theme .modal .btn-close:hover {
                  <!-- Details Modal -->
                 <div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0" style="border-radius: 1.5rem; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                        <div class="modal-content border-0" style="border-radius: 1.5rem;overflow: hidden;box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)">
                             <!-- Header with Gradient & Avatar -->
-                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem; border-bottom: 1px solid var(--border-color) !important;">
+                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem;border-bottom: 1px solid var(--border-color) !important">
                                 <div class="position-absolute top-0 end-0 p-3">
                                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 
                                 <div class="position-relative d-inline-block mb-3">
-                                    <div class="rounded-circle p-1" style="background: var(--card-bg); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                        <img src="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;" alt="Avatar">
+                                    <div class="rounded-circle p-1" style="background: var(--card-bg);box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)">
+                                        <img src="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle" style="width: 100px;height: 100px;object-fit: cover" alt="Avatar">
                                     </div>
-                                    <span class="position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 28px; height: 28px; background: #f59e0b; border: 3px solid var(--card-bg); transform: translate(-10%, -10%);" title="Pending Approval">
-                                        <i class="bi bi-hourglass-split text-white" style="font-size: 0.75rem;"></i>
+                                    <span class="position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 28px;height: 28px;background: #f59e0b;border: 3px solid var(--card-bg);transform: translate(-10%, -10%)" title="Pending Approval">
+                                        <i class="bi bi-hourglass-split text-white" style="font-size: 0.75rem"></i>
                                     </span>
                                 </div>
                                 
-                                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($s['name']); ?></h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.4rem 0.8rem; font-weight: 600;">
+                                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem;letter-spacing: -0.02em"><?php echo htmlspecialchars($s['name']); ?></h5>
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1);font-size: 0.85rem;padding: 0.4rem 0.8rem;font-weight: 600">
                                     <?php echo htmlspecialchars($s['student_id']); ?>
                                 </div>
                             </div>
@@ -289,24 +290,24 @@ html.dark-theme .modal .btn-close:hover {
                                 <div class="row g-3">
                                     <!-- Contact Info Card -->
                                     <div class="col-12">
-                                        <div class="p-3 rounded-4" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                        <div class="p-3 rounded-4" style="background: var(--form-bg);border: 1px solid var(--border-color)">
                                             <div class="d-flex align-items-center mb-3">
-                                                <div class="text-primary shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; background: var(--card-bg);">
-                                                    <i class="bi bi-envelope-fill" style="font-size: 1rem;"></i>
+                                                <div class="text-primary shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px;height: 36px;background: var(--card-bg)">
+                                                    <i class="bi bi-envelope-fill" style="font-size: 1rem"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 0.5px;">Email Address</div>
-                                                    <div class="fw-semibold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['email']); ?></div>
+                                                    <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;letter-spacing: 0.5px">Email Address</div>
+                                                    <div class="fw-semibold" style="font-size: 0.95rem;color: var(--text-primary)"><?php echo htmlspecialchars($s['email']); ?></div>
                                                 </div>
                                             </div>
                                             
                                             <div class="d-flex align-items-center">
-                                                <div class="text-primary shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; background: var(--card-bg);">
-                                                    <i class="bi bi-telephone-fill" style="font-size: 1rem;"></i>
+                                                <div class="text-primary shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px;height: 36px;background: var(--card-bg)">
+                                                    <i class="bi bi-telephone-fill" style="font-size: 1rem"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 0.5px;">Contact Phone</div>
-                                                    <div class="fw-semibold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['phone'] ?? 'N/A'); ?></div>
+                                                    <div class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;letter-spacing: 0.5px">Contact Phone</div>
+                                                    <div class="fw-semibold" style="font-size: 0.95rem;color: var(--text-primary)"><?php echo htmlspecialchars($s['phone'] ?? 'N/A'); ?></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -314,19 +315,19 @@ html.dark-theme .modal .btn-close:hover {
                                     
                                     <!-- Department Card -->
                                     <div class="col-6">
-                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.1);">
-                                            <i class="bi bi-building text-primary mb-2 d-block" style="font-size: 1.25rem;"></i>
-                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Department</div>
-                                            <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['department']); ?></div>
+                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(16, 185, 129, 0.05);border: 1px solid rgba(16, 185, 129, 0.1)">
+                                            <i class="bi bi-building text-primary mb-2 d-block" style="font-size: 1.25rem"></i>
+                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Department</div>
+                                            <div class="fw-bold" style="font-size: 0.95rem;color: var(--text-primary)"><?php echo htmlspecialchars($s['department']); ?></div>
                                         </div>
                                     </div>
                                     
                                     <!-- Shift Card -->
                                     <div class="col-6">
-                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.1);">
-                                            <i class="bi bi-brightness-high-fill text-warning mb-2 d-block" style="font-size: 1.25rem;"></i>
-                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Shift</div>
-                                            <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($s['shift']); ?></div>
+                                        <div class="p-3 rounded-4 h-100 text-center" style="background: rgba(245, 158, 11, 0.05);border: 1px solid rgba(245, 158, 11, 0.1)">
+                                            <i class="bi bi-brightness-high-fill text-warning mb-2 d-block" style="font-size: 1.25rem"></i>
+                                            <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Shift</div>
+                                            <div class="fw-bold" style="font-size: 0.95rem;color: var(--text-primary)"><?php echo htmlspecialchars($s['shift']); ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -335,10 +336,10 @@ html.dark-theme .modal .btn-close:hover {
                             <!-- Action Buttons -->
                             <div class="modal-footer border-0 p-4 pt-0">
                                 <div class="d-flex w-100 gap-2">
-                                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.9rem; padding: 0.5rem 0;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';" onclick="confirmAction(event, 'Approve this student?')">
+                                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669);font-size: 0.9rem;padding: 0.5rem 0" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';" onclick="confirmAction(event, 'Approve this student?')">
                                         <i class="bi bi-check-circle-fill me-2 fs-6"></i> Approve
                                     </a>
-                                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/reject?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold transition-all d-flex align-items-center justify-content-center" style="background: rgba(168, 10, 52, 0.1); color: #a80a34; font-size: 0.9rem; padding: 0.5rem 0;" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Reject and delete this registration?')">
+                                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/reject?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold transition-all d-flex align-items-center justify-content-center" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;font-size: 0.9rem;padding: 0.5rem 0" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Reject and delete this registration?')">
                                         <i class="bi bi-x-circle-fill me-2 fs-6"></i> Reject
                                     </a>
                                 </div>
@@ -350,9 +351,9 @@ html.dark-theme .modal .btn-close:hover {
                 <?php if (empty($students)): ?>
                     <tr>
                         <td colspan="5" class="text-center py-5">
-                            <div style="color: var(--text-secondary); font-size: 3rem; opacity: 0.3; margin-bottom: 15px;"><i class="bi bi-inbox"></i></div>
-                            <h5 class="fw-bold" style="color: var(--text-primary);">All Caught Up!</h5>
-                            <p class="mb-0" style="color: var(--text-secondary);">There are no pending student registrations to review.</p>
+                            <div style="color: var(--text-secondary);font-size: 3rem;opacity: 0.3;margin-bottom: 15px"><i class="bi bi-inbox"></i></div>
+                            <h5 class="fw-bold" style="color: var(--text-primary)">All Caught Up!</h5>
+                            <p class="mb-0" style="color: var(--text-secondary)">There are no pending student registrations to review.</p>
                         </td>
                     </tr>
                 <?php endif; ?>

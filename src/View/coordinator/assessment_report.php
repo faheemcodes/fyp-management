@@ -7,8 +7,9 @@
     <!-- Include Bootstrap for base styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        body {
+    
+<style>
+body {
             background-color: #f8fafc;
             color: #0f172a;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -94,7 +95,7 @@
                 break-inside: avoid;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
@@ -121,19 +122,19 @@
     <table class="eval-table">
         <thead>
             <tr>
-                <th rowspan="2" style="width: 40px;">Sr. No</th>
-                <th rowspan="2" style="width: 80px;">Project ID</th>
+                <th rowspan="2" style="width: 40px">Sr. No</th>
+                <th rowspan="2" style="width: 80px">Project ID</th>
                 <th rowspan="2">Title of Project</th>
-                <th rowspan="2" style="width: 140px;">Primary Supervisor</th>
+                <th rowspan="2" style="width: 140px">Primary Supervisor</th>
                 <th colspan="2">Group Members</th>
                 <?php foreach ($attributes as $attr): ?>
-                    <th rowspan="2" style="width: 60px;"><?php echo htmlspecialchars($attr['name']); ?><br><small>(<?php echo htmlspecialchars((string)($attr['marks']), ENT_QUOTES, 'UTF-8'); ?> marks)</small></th>
+                    <th rowspan="2" style="width: 60px"><?php echo htmlspecialchars($attr['name']); ?><br><small>(<?php echo htmlspecialchars((string)($attr['marks']), ENT_QUOTES, 'UTF-8'); ?> marks)</small></th>
                 <?php endforeach; ?>
-                <th rowspan="2" style="width: 60px;">Total<br><small>(50 marks)</small></th>
+                <th rowspan="2" style="width: 60px">Total<br><small>(50 marks)</small></th>
             </tr>
             <tr>
-                <th style="width: 100px;">Roll No</th>
-                <th style="width: 160px;">Name</th>
+                <th style="width: 100px">Roll No</th>
+                <th style="width: 160px">Name</th>
             </tr>
         </thead>
         <tbody>

@@ -1,14 +1,4 @@
-<!-- Admin FYP Groups View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
 <style>
-
-
-
-
-
-
 /* ─── Section Panel ─── */
 
 
@@ -85,23 +75,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 .action-btn.btn-edit-grades:hover { background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
 .action-btn.btn-delete-group:hover { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
 </style>
+<!-- Admin FYP Groups View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">Project Groups Overview</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Monitor project status, edit team details, and manage supervisors</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Project Groups Overview</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Monitor project status, edit team details, and manage supervisors</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="page-section" style="overflow: visible !important;">
+<div class="page-section" style="overflow: visible !important">
     <!-- Filters and Search Controls -->
     <div class="page-section-header">
         <div class="row g-3 align-items-center w-100 m-0">
@@ -154,12 +149,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <tbody>
                 <?php foreach($groups as $g): ?>
                 <tr data-supervisor="<?php echo htmlspecialchars($g['supervisor_id'] ? $g['supervisor_name'] : 'unassigned'); ?>" data-stage="<?php echo htmlspecialchars($g['progress_stage']); ?>">
-                    <td class="ps-4 fw-bold" style="color: #10b981; font-size: 0.95rem; font-family: monospace;">
+                    <td class="ps-4 fw-bold" style="color: #10b981;font-size: 0.95rem;font-family: monospace">
                         <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
                     </td>
                     <td>
-                        <div class="fw-semibold text-dark mb-1" style="max-width: 250px; font-size: 0.9rem;"><?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?></div>
-                        <small class="text-muted d-block" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.75rem;" title="<?php echo htmlspecialchars($g['project_description'] ?? ''); ?>">
+                        <div class="fw-semibold text-dark mb-1" style="max-width: 250px;font-size: 0.9rem"><?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?></div>
+                        <small class="text-muted d-block" style="max-width: 250px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-size: 0.75rem" title="<?php echo htmlspecialchars($g['project_description'] ?? ''); ?>">
                             <?php echo htmlspecialchars($g['project_description'] ?? 'No abstract/description'); ?>
                         </small>
                     </td>
@@ -173,7 +168,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <?php if(count($g['members']) > 3): ?>
-                                <div class="avatar-circle" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                                <div class="avatar-circle" style="background: rgba(16,185,129,0.1);color: #10b981">
                                     +<?php echo count($g['members']) - 3; ?>
                                 </div>
                             <?php endif; ?>
@@ -182,11 +177,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td>
                         <?php if($g['supervisor_id']): ?>
                             <div class="d-flex flex-column">
-                                <span class="fw-semibold text-dark" style="font-size: 0.85rem;"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
-                                <button class="btn btn-link p-0 text-decoration-none text-start text-primary" style="font-size: 0.7rem; margin-top: 2px;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">Change Supervisor</button>
+                                <span class="fw-semibold text-dark" style="font-size: 0.85rem"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
+                                <button class="btn btn-link p-0 text-decoration-none text-start text-primary" style="font-size: 0.7rem;margin-top: 2px" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">Change Supervisor</button>
                             </div>
                         <?php else: ?>
-                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" style="font-size: 0.75rem" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 Assign Supervisor
                             </button>
                         <?php endif; ?>
@@ -227,11 +222,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                     </td>
                     <td>
-                        <span class="status-pill" style="background: rgba(16,185,129,0.1); color: #059669;">
+                        <span class="status-pill" style="background: rgba(16,185,129,0.1);color: #059669">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
                         </span>
                         <?php if($g['project_status'] === 'Submitted'): ?>
-                            <small class="d-block text-warning mt-1 fw-bold" style="font-size: 0.65rem;"><i class="bi bi-exclamation-circle-fill me-1"></i>Proposal Pending</small>
+                            <small class="d-block text-warning mt-1 fw-bold" style="font-size: 0.65rem"><i class="bi bi-exclamation-circle-fill me-1"></i>Proposal Pending</small>
                         <?php endif; ?>
                     </td>
                     <td class="text-end pe-4">
@@ -378,7 +373,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-secondary">Group Members</label>
-                        <select class="form-select bg-light" id="manageMembersSelect" name="members[]" multiple size="8" style="height: auto;">
+                        <select class="form-select bg-light" id="manageMembersSelect" name="members[]" multiple size="8" style="height: auto">
                             <?php foreach($students as $st): ?>
                                 <option value="<?php echo htmlspecialchars((string)($st['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($st['name']); ?> (<?php echo htmlspecialchars($st['student_id']); ?>)

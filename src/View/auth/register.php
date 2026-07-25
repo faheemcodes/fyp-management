@@ -95,7 +95,7 @@ include __DIR__ . '/../layout/auth_header.php';
                             <div class="col-md-6">
                                 <label for="cnic" class="form-label-sm">CNIC No. / B-Form No. <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control form-control-sm" id="cnic" name="cnic" placeholder="Numbers only (e.g. 3520112345671)" pattern="[0-9]+" title="Enter numbers only, without dashes" value="<?php echo htmlspecialchars($old['cnic'] ?? ''); ?>">
-                                <div class="form-text" style="font-size: 0.65rem; color: #9ca3af;">Cannot be changed after registration.</div>
+                                <div class="form-text" style="font-size: 0.65rem;color: #9ca3af">Cannot be changed after registration.</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirm_cnic" class="form-label-sm">Re-Type CNIC No. / B-Form No. <span class="text-danger">*</span></label>
@@ -172,14 +172,14 @@ include __DIR__ . '/../layout/auth_header.php';
                             <div class="col-md-6">
                                 <label for="student_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
                                 <div class="position-relative">
-                                    <input type="password" class="form-control form-control-sm" id="student_password" name="password" placeholder="Min 8 characters/digits" style="padding-right: 56px;">
+                                    <input type="password" class="form-control form-control-sm" id="student_password" name="password" placeholder="Min 8 characters/digits" style="padding-right: 56px">
                                     <button class="pw-toggle" type="button" onclick="const el = document.getElementById('student_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirm_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
                                 <div class="position-relative">
-                                    <input type="password" class="form-control form-control-sm" id="confirm_password" name="confirm_password" placeholder="Confirm your password" style="padding-right: 56px;">
+                                    <input type="password" class="form-control form-control-sm" id="confirm_password" name="confirm_password" placeholder="Confirm your password" style="padding-right: 56px">
                                     <button class="pw-toggle" type="button" onclick="const el = document.getElementById('confirm_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
@@ -193,14 +193,14 @@ include __DIR__ . '/../layout/auth_header.php';
                         </div>
                         <div class="mb-2">
                             <div id="avatar-dropzone" class="avatar-dropzone">
-                                <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
+                                <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg, image/jpg" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer">
                                 
                                 <!-- Default placeholder -->
                                 <div id="dropzone-placeholder" class="d-flex flex-column align-items-center">
-                                    <i class="bi bi-cloud-arrow-up fs-1 mb-2" style="color: var(--lp-text);"></i>
-                                    <span class="fw-semibold small mb-1">Drag & drop your photo here, or <span style="color: var(--lp-text); text-decoration: underline;">Browse</span></span>
-                                    <span class="small" style="font-size: 0.75rem; color: #9ca3af;">Supports JPG, JPEG, PNG (Max 500KB)</span>
-                                    <span class="badge mt-3" style="font-size: 0.65rem; background: rgba(16,185,129,0.08); color: var(--lp-text); border: 1px solid rgba(16,185,129,0.2);"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
+                                    <i class="bi bi-cloud-arrow-up fs-1 mb-2" style="color: var(--lp-text)"></i>
+                                    <span class="fw-semibold small mb-1">Drag & drop your photo here, or <span style="color: var(--lp-text);text-decoration: underline">Browse</span></span>
+                                    <span class="small" style="font-size: 0.75rem;color: #9ca3af">Supports JPG, JPEG, PNG (Max 500KB)</span>
+                                    <span class="badge mt-3" style="font-size: 0.65rem;background: rgba(16,185,129,0.08);color: var(--lp-text);border: 1px solid rgba(16,185,129,0.2)"><i class="bi bi-clipboard-check me-1"></i> You can also paste (Ctrl+V) image here</span>
                                 </div>
                                 
                                 <!-- Preview State -->
@@ -211,17 +211,17 @@ include __DIR__ . '/../layout/auth_header.php';
                                             <i class="bi bi-x fs-5"></i>
                                         </button>
                                     </div>
-                                    <span id="preview-filename" class="d-block small fw-semibold mt-2" style="color: #16a34a;">filename.png</span>
+                                    <span id="preview-filename" class="d-block small fw-semibold mt-2" style="color: #16a34a">filename.png</span>
                                 </div>
                             </div>
-                            <div class="form-text mt-1" style="font-size: 0.72rem; color: #9ca3af;">Passport-size photo with a white background. JPG, JPEG, or PNG. Max 500KB. Cannot be changed after upload.</div>
+                            <div class="form-text mt-1" style="font-size: 0.72rem;color: #9ca3af">Passport-size photo with a white background. JPG, JPEG, or PNG. Max 500KB. Cannot be changed after upload.</div>
                         </div>
                     </div>
 
                     <!-- Info Alert -->
                     <div class="info-note mb-3">
-                        <p class="small fw-medium mb-1" style="color: var(--lp-text);"><i class="bi bi-info-circle-fill"></i> Important Note</p>
-                        <p class="small m-0" style="font-size: 0.75rem; color: #6b7280;">If you have already registered with your CNIC or B-Form number, you do not need to register again. You can simply log in to access your existing application form.</p>
+                        <p class="small fw-medium mb-1" style="color: var(--lp-text)"><i class="bi bi-info-circle-fill"></i> Important Note</p>
+                        <p class="small m-0" style="font-size: 0.75rem;color: #6b7280">If you have already registered with your CNIC or B-Form number, you do not need to register again. You can simply log in to access your existing application form.</p>
                     </div>
                 </div>
 
@@ -299,14 +299,14 @@ include __DIR__ . '/../layout/auth_header.php';
                             <div class="col-md-6">
                                 <label for="staff_password" class="form-label-sm">Password <span class="text-danger">*</span></label>
                                 <div class="position-relative">
-                                    <input type="password" class="form-control form-control-sm" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits" style="padding-right: 56px;">
+                                    <input type="password" class="form-control form-control-sm" id="staff_password" name="staff_password" placeholder="Min 8 characters/digits" style="padding-right: 56px">
                                     <button class="pw-toggle" type="button" onclick="const el = document.getElementById('staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirm_staff_password" class="form-label-sm">Re-Type Password <span class="text-danger">*</span></label>
                                 <div class="position-relative">
-                                    <input type="password" class="form-control form-control-sm" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password" style="padding-right: 56px;">
+                                    <input type="password" class="form-control form-control-sm" id="confirm_staff_password" name="confirm_staff_password" placeholder="Confirm your password" style="padding-right: 56px">
                                     <button class="pw-toggle" type="button" onclick="const el = document.getElementById('confirm_staff_password'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                                 </div>
                             </div>

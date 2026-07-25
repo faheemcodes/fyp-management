@@ -1,8 +1,3 @@
-<!-- User Change Password Form View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
-
 <style>
 /* ─── Premium Change Password Styles ─── */
 .cp-info-card {
@@ -95,6 +90,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     color: #fff;
 }
 </style>
+<!-- User Change Password Form View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
 
 <div class="row g-4 justify-content-center">
     <!-- Left: Security Info Column -->
@@ -104,13 +105,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <i class="bi bi-shield-check"></i>
             </div>
             
-            <h4 class="fw-bold mb-3 text-white" style="letter-spacing: -0.02em;">Secure Your Account</h4>
-            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 2rem;">
+            <h4 class="fw-bold mb-3 text-white" style="letter-spacing: -0.02em">Secure Your Account</h4>
+            <p style="font-size: 0.9rem;color: rgba(255,255,255,0.75);line-height: 1.6;margin-bottom: 2rem">
                 Regularly updating your password ensures your FYP portal data and personal information remain fully protected against unauthorized access.
             </p>
             
             <div class="cp-checklist-box">
-                <h6 class="fw-bold mb-3 text-white" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <h6 class="fw-bold mb-3 text-white" style="font-size: 0.85rem;text-transform: uppercase;letter-spacing: 0.05em">
                     Password Requirements
                 </h6>
                 <ul class="list-unstyled m-0 cp-checklist">
@@ -127,12 +128,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-7 col-md-7">
         <div class="cp-form-card">
             <div class="d-flex align-items-center gap-3 border-bottom pb-4 mb-4">
-                <div style="width: 48px; height: 48px; background: rgba(16,185,129,0.1); color: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                <div style="width: 48px;height: 48px;background: rgba(16,185,129,0.1);color: #10b981;border-radius: 12px;display: flex;align-items: center;justify-content: center;font-size: 1.4rem">
                     <i class="bi bi-key-fill"></i>
                 </div>
                 <div>
-                    <h4 class="fw-bold m-0" style="color: var(--text-primary); letter-spacing: -0.01em;">Change Password</h4>
-                    <p class="m-0 mt-1" style="color: var(--text-secondary); font-size: 0.85rem;">Update your credentials to maintain account security</p>
+                    <h4 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Change Password</h4>
+                    <p class="m-0 mt-1" style="color: var(--text-secondary);font-size: 0.85rem">Update your credentials to maintain account security</p>
                 </div>
             </div>
 
@@ -140,10 +141,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 
                 <!-- Current Password -->
                 <div class="mb-4">
-                    <label for="current_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">Current Password <span class="text-danger">*</span></label>
+                    <label for="current_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary);letter-spacing: 0.05em">Current Password <span class="text-danger">*</span></label>
                     <div class="position-relative">
-                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Enter current password" autocomplete="off" style="padding-right: 70px;">
-                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('current_password', this)">
+                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Enter current password" autocomplete="off" style="padding-right: 70px">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem;letter-spacing: 0.05em;z-index: 5" type="button" onclick="togglePassword('current_password', this)">
                             <span>SHOW</span>
                         </button>
                     </div>
@@ -151,10 +152,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                 <!-- New Password -->
                 <div class="mb-4">
-                    <label for="new_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">New Password <span class="text-danger">*</span></label>
+                    <label for="new_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary);letter-spacing: 0.05em">New Password <span class="text-danger">*</span></label>
                     <div class="position-relative">
-                        <input type="password" class="form-control" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px;">
-                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('new_password', this)">
+                        <input type="password" class="form-control" id="new_password" name="new_password" required placeholder="Min 8, Max 50 characters" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem;letter-spacing: 0.05em;z-index: 5" type="button" onclick="togglePassword('new_password', this)">
                             <span>SHOW</span>
                         </button>
                     </div>
@@ -162,17 +163,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                 <!-- Confirm New Password -->
                 <div class="mb-5">
-                    <label for="confirm_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary); letter-spacing: 0.05em;">Confirm New Password <span class="text-danger">*</span></label>
+                    <label for="confirm_password" class="form-label small fw-bold text-uppercase" style="color: var(--text-secondary);letter-spacing: 0.05em">Confirm New Password <span class="text-danger">*</span></label>
                     <div class="position-relative">
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px;">
-                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem; letter-spacing: 0.05em; z-index: 5;" type="button" onclick="togglePassword('confirm_password', this)">
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Verify new password" minlength="8" maxlength="50" autocomplete="new-password" style="padding-right: 70px">
+                        <button class="btn border-0 text-primary fw-bold position-absolute top-50 end-0 translate-middle-y me-1" style="font-size: 0.75rem;letter-spacing: 0.05em;z-index: 5" type="button" onclick="togglePassword('confirm_password', this)">
                             <span>SHOW</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end border-top pt-4">
-                    <a href="<?php echo $basePath; ?>/<?php echo htmlspecialchars($_SESSION['role'] ?? 'login'); ?>/dashboard" class="btn btn-light rounded-pill px-4 py-2 fw-bold order-2 order-sm-1" style="color: var(--text-secondary); border: 1px solid var(--border-color);">
+                    <a href="<?php echo $basePath; ?>/<?php echo htmlspecialchars($_SESSION['role'] ?? 'login'); ?>/dashboard" class="btn btn-light rounded-pill px-4 py-2 fw-bold order-2 order-sm-1" style="color: var(--text-secondary);border: 1px solid var(--border-color)">
                         Cancel
                     </a>
                     <button type="submit" class="btn cp-submit-btn px-4 py-2 order-1 order-sm-2">

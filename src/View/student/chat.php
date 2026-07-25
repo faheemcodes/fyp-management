@@ -1,10 +1,3 @@
-<?php
-$title = 'Chat with Supervisor';
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-$studentName = $_SESSION['name'] ?? 'Student';
-$studentAvatar = $_SESSION['avatar'] ?? '';
-?>
-
 <style>
 /* Modern Chat UI */
 .chat-container {
@@ -486,8 +479,15 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     .file-img-wrap { max-width: 240px; }
     .file-doc-card { min-width: 190px; max-width: 250px; }
 }
-
 </style>
+<?php
+$title = 'Chat with Supervisor';
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+$studentName = $_SESSION['name'] ?? 'Student';
+$studentAvatar = $_SESSION['avatar'] ?? '';
+?>
+
+
 
 
 
@@ -496,7 +496,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
         <div>
             <h6 class="fw-bold mb-1">Access Denied</h6>
-            <p class="mb-0 text-muted" style="font-size: 0.9rem;">Only Group Leaders of approved projects can access the Supervisor chat. If your project is still pending or you are not the leader, this feature is disabled.</p>
+            <p class="mb-0 text-muted" style="font-size: 0.9rem">Only Group Leaders of approved projects can access the Supervisor chat. If your project is still pending or you are not the leader, this feature is disabled.</p>
         </div>
     </div>
 <?php else: ?>
@@ -504,7 +504,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
     <div class="chat-container">
         <!-- Header -->
         <div class="chat-header">
-            <div class="chat-header-icon" style="overflow: hidden;">
+            <div class="chat-header-icon" style="overflow: hidden">
                 <?php 
                 $supervisorInitial = strtoupper(substr($supervisor['name'], 0, 1));
                 ?>
@@ -518,7 +518,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
         <!-- Messages -->
         <div class="chat-messages" id="chatMessages">
-            <div class="text-center text-muted" style="font-size: 0.85rem; margin-top: auto; margin-bottom: auto;" id="chatLoading">
+            <div class="text-center text-muted" style="font-size: 0.85rem;margin-top: auto;margin-bottom: auto" id="chatLoading">
                 <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div><br>
                 Loading messages...
             </div>
@@ -531,8 +531,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     <label for="fileInput" class="btn-icon" title="Attach file">
                         <i class="bi bi-paperclip"></i>
                     </label>
-                    <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display: none;">
-                    <div class="chat-textarea-wrap" id="textareaWrap" style="position: relative;">
+                    <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display: none">
+                    <div class="chat-textarea-wrap" id="textareaWrap" style="position: relative">
                         <div class="drag-overlay" id="dragOverlay"><span><i class="bi bi-cloud-arrow-up me-1"></i>Drop file here</span></div>
                         <div class="file-chip" id="fileChip">
                             <div id="fileChipVisual"></div>
@@ -661,7 +661,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
             chatMessages.innerHTML = '';
             
             if (snapshot.empty) {
-                chatMessages.innerHTML = '<div class="text-center text-muted my-auto" style="font-size: 0.85rem;">No messages yet. Send a message to start the conversation!</div>';
+                chatMessages.innerHTML = '<div class="text-center text-muted my-auto" style="font-size: 0.85rem">No messages yet. Send a message to start the conversation!</div>';
                 return;
             }
 
@@ -694,7 +694,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `chat-message ${isSentByMe ? 'sent' : 'received'}`;
                 const textContent = data.text ? data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
-                const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem; opacity: 0.8;">(edited)</span>' : '';
+                const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem;opacity: 0.8">(edited)</span>' : '';
                 
                 let fileContent = '';
                 if (data.fileUrl) {
@@ -732,10 +732,10 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 
                 let actionsMenu = `
                     <div class="dropdown d-inline-block ms-1">
-                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
-                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
+                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none;color: inherit;display: flex;align-items: center">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px;font-size: 0.85rem">
                             ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
                             ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
                             ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}

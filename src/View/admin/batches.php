@@ -10,15 +10,15 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
         <div class="d-flex align-items-center gap-4 text-center text-md-start">
             <!-- Icon -->
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <!-- Info -->
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     System Administration
                 </p>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                     Academic Batches
                 </h4>
             </div>
@@ -26,7 +26,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         
         <!-- Action Button -->
         <div>
-            <button class="btn btn-primary rounded-pill px-4 shadow-sm" style="font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createBatchModal">
+            <button class="btn btn-primary rounded-pill px-4 shadow-sm" style="font-weight: 600" data-bs-toggle="modal" data-bs-target="#createBatchModal">
                 <i class="bi bi-plus-lg me-2"></i>Create New Batch
             </button>
         </div>
@@ -38,7 +38,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         <i class="bi bi-info-circle-fill fs-4 mt-1 text-info"></i>
         <div>
             <h6 class="fw-bold mb-1">How Batches Work</h6>
-            <ul class="mb-0 ps-3" style="font-size: 0.9rem;">
+            <ul class="mb-0 ps-3" style="font-size: 0.9rem">
                 <li><strong>Registration:</strong> Only one batch can be open. New groups automatically join it.</li>
                 <li><strong>Status:</strong> Active batches are visible to faculty. Archiving a batch hides it from their dashboards and frees up their project slots.</li>
             </ul>
@@ -52,11 +52,11 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="px-4 py-3 text-muted" style="font-weight: 600; font-size: 0.85rem;">Batch Name</th>
-                        <th class="py-3 text-muted" style="font-weight: 600; font-size: 0.85rem;">Created On</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600; font-size: 0.85rem;">Status (Visible to Faculty)</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600; font-size: 0.85rem;">Registration (New Groups)</th>
-                        <th class="px-4 py-3 text-muted text-end" style="font-weight: 600; font-size: 0.85rem;">Actions</th>
+                        <th class="px-4 py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Batch Name</th>
+                        <th class="py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Created On</th>
+                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Status (Visible to Faculty)</th>
+                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Registration (New Groups)</th>
+                        <th class="px-4 py-3 text-muted text-end" style="font-weight: 600;font-size: 0.85rem">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,7 +70,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <td class="px-4 py-3 fw-bold text-dark">
                                 <?php echo htmlspecialchars($b['name']); ?>
                             </td>
-                            <td class="py-3 text-muted" style="font-size: 0.9rem;">
+                            <td class="py-3 text-muted" style="font-size: 0.9rem">
                                 <?php echo date('M d, Y', strtotime($b['created_at'])); ?>
                             </td>
                             <td class="py-3 text-center">
@@ -134,7 +134,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             <form action="<?php echo $bp; ?>/admin/batches/create" method="POST">
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold text-muted" style="font-size: 0.85rem;">Batch Name (e.g., Fall 2026)</label>
+                        <label class="form-label fw-semibold text-muted" style="font-size: 0.85rem">Batch Name (e.g., Fall 2026)</label>
                         <input type="text" class="form-control" name="name" required placeholder="Enter batch name...">
                     </div>
                 </div>

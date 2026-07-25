@@ -1,68 +1,3 @@
-<!-- AI Chatbot Widget -->
-<div id="ai-chatbot-widget">
-    <!-- Chat Window -->
-    <div id="ai-chat-window" style="display:none;">
-        <!-- Header -->
-        <div class="ai-chat-header">
-            <div class="d-flex align-items-center gap-3">
-                <div class="ai-avatar-ring">
-                    <div class="ai-avatar">
-                        <i class="bi bi-stars"></i>
-                    </div>
-                </div>
-                <div>
-                    <h6 class="mb-0 fw-bold" style="font-size:0.95rem;">FYP Buddy</h6>
-                    <span class="ai-status-text"><span class="ai-status-dot"></span>Online</span>
-                </div>
-            </div>
-            <div class="ai-header-actions">
-                <button id="ai-chat-clear" class="ai-header-btn" title="Clear chat"><i class="bi bi-arrow-counterclockwise"></i></button>
-                <button id="ai-chat-close" class="ai-header-btn" title="Close"><i class="bi bi-x-lg"></i></button>
-            </div>
-        </div>
-        
-        <!-- Body -->
-        <div id="ai-chat-body">
-            <div class="ai-welcome-card">
-                <div class="ai-welcome-icon" style="background: transparent;"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
-                <p class="ai-welcome-title">Hi there! 👋</p>
-                <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
-                <div class="ai-quick-actions">
-                    <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
-                    <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                    <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
-                    <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="ai-chat-footer">
-            <form id="ai-chat-form">
-                <div class="ai-input-wrapper">
-                    <input type="text" id="ai-chat-input" placeholder="Type your message..." autocomplete="off">
-                    <button type="submit" id="ai-send-btn" disabled>
-                        <i class="bi bi-send-fill"></i>
-                    </button>
-                </div>
-            
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-</form>
-            <p class="ai-disclaimer">AI can make mistakes. Verify important info.</p>
-        </div>
-    </div>
-
-    <!-- Floating Action Button - inline styles prevent FOUC -->
-    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(16,185,129,0.45);">
-        <i class="bi bi-chat-dots-fill ai-fab-icon-open"></i>
-        <i class="bi bi-x-lg ai-fab-icon-close" style="display:none;"></i>
-        <span class="ai-fab-pulse"></span>
-    </button>
-</div>
-
-<!-- marked.js for rendering markdown -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
 <style>
 /* ═══════════════════════════════════════════
    AI CHATBOT - Glassmorphism Premium Design
@@ -513,6 +448,72 @@ html.dark-theme .ai-input-wrapper:focus-within {
     .ai-quick-actions { grid-template-columns: 1fr; }
 }
 </style>
+<!-- AI Chatbot Widget -->
+<div id="ai-chatbot-widget">
+    <!-- Chat Window -->
+    <div id="ai-chat-window" style="display:none">
+        <!-- Header -->
+        <div class="ai-chat-header">
+            <div class="d-flex align-items-center gap-3">
+                <div class="ai-avatar-ring">
+                    <div class="ai-avatar">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold" style="font-size:0.95rem">FYP Buddy</h6>
+                    <span class="ai-status-text"><span class="ai-status-dot"></span>Online</span>
+                </div>
+            </div>
+            <div class="ai-header-actions">
+                <button id="ai-chat-clear" class="ai-header-btn" title="Clear chat"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button id="ai-chat-close" class="ai-header-btn" title="Close"><i class="bi bi-x-lg"></i></button>
+            </div>
+        </div>
+        
+        <!-- Body -->
+        <div id="ai-chat-body">
+            <div class="ai-welcome-card">
+                <div class="ai-welcome-icon" style="background: transparent"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%;height: 100%;object-fit: contain"></div>
+                <p class="ai-welcome-title">Hi there! 👋</p>
+                <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
+                <div class="ai-quick-actions">
+                    <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
+                    <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
+                    <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
+                    <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="ai-chat-footer">
+            <form id="ai-chat-form">
+                <div class="ai-input-wrapper">
+                    <input type="text" id="ai-chat-input" placeholder="Type your message..." autocomplete="off">
+                    <button type="submit" id="ai-send-btn" disabled>
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
+            <p class="ai-disclaimer">AI can make mistakes. Verify important info.</p>
+        </div>
+    </div>
+
+    <!-- Floating Action Button - inline styles prevent FOUC -->
+    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(16,185,129,0.45)">
+        <i class="bi bi-chat-dots-fill ai-fab-icon-open"></i>
+        <i class="bi bi-x-lg ai-fab-icon-close" style="display:none"></i>
+        <span class="ai-fab-pulse"></span>
+    </button>
+</div>
+
+<!-- marked.js for rendering markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -566,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const welcome = document.createElement('div');
         welcome.className = 'ai-welcome-card';
         welcome.innerHTML = `
-            <div class="ai-welcome-icon" style="background: transparent;"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%; height: 100%; object-fit: contain;"></div>
+            <div class="ai-welcome-icon" style="background: transparent"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%;height: 100%;object-fit: contain"></div>
             <p class="ai-welcome-title">Hi there! 👋</p>
             <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
             <div class="ai-quick-actions">

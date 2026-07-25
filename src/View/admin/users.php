@@ -1,14 +1,4 @@
-<!-- Admin User Management View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
 <style>
-
-
-
-
-
-
 /* ─── Section Panel ─── */
 
 
@@ -51,20 +41,25 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     
 }
 </style>
+<!-- Admin User Management View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">User Account Management</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Approve self-registered accounts or add academic staff directly</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">User Account Management</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Approve self-registered accounts or add academic staff directly</p>
             </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669);" data-bs-toggle="modal" data-bs-target="#createUserModal">
+        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669)" data-bs-toggle="modal" data-bs-target="#createUserModal">
             <i class="bi bi-person-plus-fill me-2"></i> Add New User
         </button>
     </div>
@@ -134,17 +129,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="d-flex align-items-center gap-3">
                             <?php if ($u['role'] === 'student'): ?>
                                 <?php $avatarFile = !empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px; height: 42px; object-fit: cover; border: 2px solid var(--card-bg);" alt="Avatar">
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px;height: 42px;object-fit: cover;border: 2px solid var(--card-bg)" alt="Avatar">
                             <?php else: ?>
-                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; font-weight: bold; background: rgba(16,185,129,0.1); color: #10b981; border: 2px solid var(--card-bg);">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px;height: 42px;font-weight: bold;background: rgba(16,185,129,0.1);color: #10b981;border: 2px solid var(--card-bg)">
                                     <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
                                 </div>
                             <?php endif; ?>
                             <div>
-                                <div class="fw-semibold" style="font-size: 0.9rem;"><?php echo htmlspecialchars($u['name']); ?></div>
-                                <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
+                                <div class="fw-semibold" style="font-size: 0.9rem"><?php echo htmlspecialchars($u['name']); ?></div>
+                                <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
                                 <?php if($u['student_id']): ?>
-                                    <div class="mt-1 fw-bold" style="color: var(--primary-color); font-size: 0.75rem;"><?php echo htmlspecialchars($u['student_id']); ?></div>
+                                    <div class="mt-1 fw-bold" style="color: var(--primary-color);font-size: 0.75rem"><?php echo htmlspecialchars($u['student_id']); ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -155,23 +150,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td>
-                        <div class="fw-medium" style="font-size: 0.85rem;"><?php echo htmlspecialchars($u['department']); ?></div>
+                        <div class="fw-medium" style="font-size: 0.85rem"><?php echo htmlspecialchars($u['department']); ?></div>
                         <?php if($u['designation']): ?>
-                            <small class="text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($u['designation']); ?></small>
+                            <small class="text-muted" style="font-size: 0.75rem"><?php echo htmlspecialchars($u['designation']); ?></small>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if($u['status'] === 'approved'): ?>
-                            <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Approved</span>
+                            <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Approved</span>
                         <?php elseif($u['status'] === 'pending'): ?>
-                            <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15); color: #d97706;">Pending</span>
+                            <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15);color: #d97706">Pending</span>
                         <?php else: ?>
-                            <span class="status-pill" style="background: rgba(239,68,68,0.15); color: #dc2626;">Rejected</span>
+                            <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Rejected</span>
                         <?php endif; ?>
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-view-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='var(--border-color)';" onmouseout="this.style.background='var(--form-bg)';"
+                            <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-view-user" style="background: var(--form-bg);border: 1px solid var(--border-color);color: var(--text-primary);border-radius: 8px;font-weight: 500;transition: all 0.2s" onmouseover="this.style.background='var(--border-color)';" onmouseout="this.style.background='var(--form-bg)';"
                                 data-bs-toggle="modal" data-bs-target="#viewUserModal"
                                 data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
@@ -193,10 +188,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <i class="bi bi-eye"></i> Details
                             </button>
                             <?php if($u['status'] === 'pending'): ?>
-                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 10px rgba(16,185,129,0.2);">Approve</a>
-                                <a href="<?php echo $basePath; ?>/admin/users/reject?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;">Reject</a>
+                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669);color: white;border: none;border-radius: 8px;font-weight: 500;box-shadow: 0 4px 10px rgba(16,185,129,0.2)">Approve</a>
+                                <a href="<?php echo $basePath; ?>/admin/users/reject?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;font-weight: 500">Reject</a>
                             <?php else: ?>
-                                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-edit-user" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px; font-weight: 500;"
+                                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-edit-user" style="background: var(--form-bg);border: 1px solid var(--border-color);color: var(--text-primary);border-radius: 8px;font-weight: 500"
                                     data-bs-toggle="modal" data-bs-target="#editUserModal"
                                     data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                     data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
@@ -211,7 +206,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <?php if($u['role'] !== 'admin'): ?>
-                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; font-weight: 500;" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
+                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;font-weight: 500" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 <?php endif; ?>
@@ -229,16 +224,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Create User Modal -->
 <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
-                <h6 class="modal-title fw-semibold" id="createUserModalLabel" style="color: var(--text-primary);">Add Academic / Student User</h6>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="createUserModalLabel" style="color: var(--text-primary)">Add Academic / Student User</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/create" method="POST">
                 <div class="modal-body p-4">
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="modalRole" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Account Role</label>
+                            <label for="modalRole" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Account Role</label>
                             <select class="form-select" id="modalRole" name="role" required>
                                 <option value="student">Student</option>
                                 <option value="supervisor">Supervisor</option>
@@ -248,7 +243,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="modalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Department</label>
+                            <label for="modalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Department</label>
                             <select class="form-select" id="modalDepartment" name="department" required>
                                 <option value="Software Engineering">Software Engineering</option>
                                 <option value="Information Technology">Information Technology</option>
@@ -261,22 +256,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">First Name</label>
+                            <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">First Name</label>
                             <input type="text" class="form-control" id="modalName" name="name" required placeholder="e.g. Faheem">
                         </div>
                         <div class="col-md-6">
-                            <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Surname / Last Name</label>
+                            <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Surname / Last Name</label>
                             <input type="text" class="form-control" id="modalSurname" name="surname" required placeholder="e.g. Soomro">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="modalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Email Address</label>
+                            <label for="modalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Email Address</label>
                             <input type="email" class="form-control" id="modalEmail" name="email" required placeholder="ali.khan@university.edu">
                         </div>
                         <div class="col-md-6">
-                            <label for="modalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">CNIC (Without dashes)</label>
+                            <label for="modalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">CNIC (Without dashes)</label>
                             <input type="text" class="form-control" id="modalCnic" name="cnic" required placeholder="4220112345671">
                         </div>
                     </div>
@@ -284,11 +279,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <!-- Student Specific -->
                     <div id="modalStudentFields" class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="modalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Registration ID</label>
+                            <label for="modalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Registration ID</label>
                             <input type="text" class="form-control" id="modalStudentId" name="student_id" placeholder="2023-CS-100" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="modalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Shift</label>
+                            <label for="modalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Shift</label>
                             <select class="form-select" id="modalShift" name="shift">
                                 <option value="Morning">Morning</option>
                                 <option value="Evening">Evening</option>
@@ -299,7 +294,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <!-- Supervisor Specific -->
                     <div id="modalSupervisorFields" class="row g-3 mb-3 d-none">
                         <div class="col-md-12">
-                            <label for="modalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Designation</label>
+                            <label for="modalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Designation</label>
                             <select class="form-select" id="modalDesignation" name="designation">
                                 <option value="Lecturer">Lecturer</option>
                                 <option value="Assistant Professor">Assistant Professor</option>
@@ -310,16 +305,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
 
                     <div class="mb-3">
-                        <label for="modalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Password</label>
+                        <label for="modalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Password</label>
                         <div class="position-relative">
-                            <input type="password" class="form-control" id="modalPassword" name="password" required placeholder="••••••••" style="padding-right: 56px;">
-                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                            <input type="password" class="form-control" id="modalPassword" name="password" required placeholder="••••••••" style="padding-right: 56px">
+                            <button type="button" style="position: absolute;right: 14px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.8rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981; border-color: #10b981;">Create Account</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981;border-color: #10b981">Create Account</button>
                 </div>
             
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
@@ -331,9 +326,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Edit User Modal -->
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
-                <h6 class="modal-title fw-semibold" id="editUserModalLabel" style="color: var(--text-primary);">Edit User Account</h6>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="editUserModalLabel" style="color: var(--text-primary)">Edit User Account</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/edit" method="POST">
@@ -343,11 +338,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Role</label>
-                            <input type="text" class="form-control" id="editModalRoleDisplay" readonly style="font-weight: bold; text-transform: uppercase;">
+                            <label class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Role</label>
+                            <input type="text" class="form-control" id="editModalRoleDisplay" readonly style="font-weight: bold;text-transform: uppercase">
                         </div>
                         <div class="col-md-6" id="editModalDeptGroup">
-                            <label for="editModalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Department</label>
+                            <label for="editModalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Department</label>
                             <select class="form-select" id="editModalDepartment" name="department">
                                 <option value="Software Engineering">Software Engineering</option>
                                 <option value="Information Technology">Information Technology</option>
@@ -359,17 +354,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
 
                     <div class="mb-3">
-                        <label for="editModalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Full Name</label>
+                        <label for="editModalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Full Name</label>
                         <input type="text" class="form-control" id="editModalName" name="name" required>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="editModalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Email Address</label>
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Email Address</label>
                             <input type="email" class="form-control" id="editModalEmail" name="email" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="editModalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">CNIC (no dashes)</label>
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">CNIC (no dashes)</label>
                             <input type="text" class="form-control" id="editModalCnic" name="cnic" required>
                         </div>
                     </div>
@@ -377,11 +372,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <!-- Student Specific -->
                     <div id="editModalStudentFields" class="row g-3 mb-3 d-none">
                         <div class="col-md-6">
-                            <label for="editModalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Registration ID</label>
+                            <label for="editModalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Registration ID</label>
                             <input type="text" class="form-control" id="editModalStudentId" name="student_id">
                         </div>
                         <div class="col-md-6">
-                            <label for="editModalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Shift</label>
+                            <label for="editModalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Shift</label>
                             <select class="form-select" id="editModalShift" name="shift">
                                 <option value="Morning">Morning</option>
                                 <option value="Evening">Evening</option>
@@ -392,7 +387,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <!-- Supervisor Specific -->
                     <div id="editModalSupervisorFields" class="row g-3 mb-3 d-none">
                         <div class="col-md-6">
-                            <label for="editModalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Designation</label>
+                            <label for="editModalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Designation</label>
                             <select class="form-select" id="editModalDesignation" name="designation">
                                 <option value="Lecturer">Lecturer</option>
                                 <option value="Assistant Professor">Assistant Professor</option>
@@ -401,22 +396,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="editModalInterests" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">Research Interests</label>
+                            <label for="editModalInterests" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Research Interests</label>
                             <input type="text" class="form-control" id="editModalInterests" name="research_interest">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editModalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem;">New Password (leave blank to keep current)</label>
+                        <label for="editModalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">New Password (leave blank to keep current)</label>
                         <div class="position-relative">
-                            <input type="password" class="form-control" id="editModalPassword" name="password" placeholder="••••••••" style="padding-right: 56px;">
-                            <button type="button" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; padding: 0; z-index: 5;" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                            <input type="password" class="form-control" id="editModalPassword" name="password" placeholder="••••••••" style="padding-right: 56px">
+                            <button type="button" style="position: absolute;right: 14px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.8rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981; border-color: #10b981;">Save Changes</button>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981;border-color: #10b981">Save Changes</button>
                 </div>
             
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
@@ -428,9 +423,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- View User Details Modal -->
 <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important;">
-                <h6 class="modal-title fw-semibold" id="viewUserModalLabel" style="color: var(--text-primary);"><i class="bi bi-person-lines-fill me-2"></i>User Account Details</h6>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="viewUserModalLabel" style="color: var(--text-primary)"><i class="bi bi-person-lines-fill me-2"></i>User Account Details</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
@@ -438,8 +433,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <!-- Left column: Avatar and status -->
                     <div class="col-md-4 text-center border-end">
                         <div class="mb-3 position-relative d-inline-block">
-                            <img id="detailAvatar" src="#" class="rounded-circle border border-primary border-opacity-25 shadow" style="width: 140px; height: 140px; object-fit: cover;" alt="Profile Picture">
-                            <div id="detailInitials" class="rounded-circle bg-light text-primary d-none align-items-center justify-content-center shadow mx-auto" style="width: 140px; height: 140px; font-size: 4rem; font-weight: bold;">
+                            <img id="detailAvatar" src="#" class="rounded-circle border border-primary border-opacity-25 shadow" style="width: 140px;height: 140px;object-fit: cover" alt="Profile Picture">
+                            <div id="detailInitials" class="rounded-circle bg-light text-primary d-none align-items-center justify-content-center shadow mx-auto" style="width: 140px;height: 140px;font-size: 4rem;font-weight: bold">
                                 X
                             </div>
 
@@ -460,24 +455,24 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="table-responsive">
                             <table class="table table-sm table-borderless align-middle m-0">
                                 <tbody>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="width: 35%; font-size: 0.85rem;">Email Address:</td><td id="detailEmail" class="py-2">email@domain.com</td></tr>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">CNIC / B-Form No:</td><td id="detailCnic" class="py-2">3520112345671</td></tr>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Department:</td><td id="detailDept" class="py-2">Software Engineering</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="width: 35%;font-size: 0.85rem">Email Address:</td><td id="detailEmail" class="py-2">email@domain.com</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">CNIC / B-Form No:</td><td id="detailCnic" class="py-2">3520112345671</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Department:</td><td id="detailDept" class="py-2">Software Engineering</td></tr>
                                     
                                     <!-- Student details -->
-                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Roll Number:</td><td id="detailStudentId" class="py-2">2k23/SWE/001</td></tr>
-                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Shift:</td><td id="detailShift" class="py-2">Morning</td></tr>
-                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Father's Name:</td><td id="detailFather" class="py-2">Father Name</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Roll Number:</td><td id="detailStudentId" class="py-2">2k23/SWE/001</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Shift:</td><td id="detailShift" class="py-2">Morning</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Father's Name:</td><td id="detailFather" class="py-2">Father Name</td></tr>
                                     
                                     <!-- Staff details -->
-                                    <tr class="border-bottom staff-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Designation:</td><td id="detailDesignation" class="py-2">Assistant Professor</td></tr>
+                                    <tr class="border-bottom staff-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Designation:</td><td id="detailDesignation" class="py-2">Assistant Professor</td></tr>
                                     
                                     <!-- Common details -->
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Contact Number:</td><td id="detailPhone" class="py-2">+923001234567</td></tr>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Gender:</td><td id="detailGender" class="py-2">Male</td></tr>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Date of Birth:</td><td id="detailDob" class="py-2">2000-01-01</td></tr>
-                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Domicile Location:</td><td id="detailDomicile" class="py-2">Sindh / Jamshoro</td></tr>
-                                    <tr><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem;">Home Address:</td><td id="detailAddress" class="text-wrap py-2">Not Provided Yet</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Contact Number:</td><td id="detailPhone" class="py-2">+923001234567</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Gender:</td><td id="detailGender" class="py-2">Male</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Date of Birth:</td><td id="detailDob" class="py-2">2000-01-01</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Domicile Location:</td><td id="detailDomicile" class="py-2">Sindh / Jamshoro</td></tr>
+                                    <tr><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Home Address:</td><td id="detailAddress" class="text-wrap py-2">Not Provided Yet</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -492,8 +487,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Close</button>
             </div>
         </div>
     </div>

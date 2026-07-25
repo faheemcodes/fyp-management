@@ -32,138 +32,22 @@
     ?>
     <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
     
-    <style>
-        /* BASE THEME & VARIABLES */
+    
+<style>
+        html { scroll-behavior: smooth; }
+/* LANDING SPECIFIC VARIABLES */
         :root {
-            --font-heading-main: 'Jost', 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
-            --font-heading-alt: 'Pierknife', 'Oswald', 'Arial Narrow', sans-serif;
-            --font-body: 'Inter', -apple-system, sans-serif;
+            --lp-mac-body: #e2e8f0;
+            --lp-mac-face: #cbd5e1;
+            --lp-mac-touchpad: #94a3b8;
         }
-
-        :root[data-theme="light"] {
-            --lp-bg: #ffffff;
-            --lp-bg-alt: #f8fafc;
-            --lp-card: #ffffff;
-            --lp-card-hover: #f1f5f9;
-            --lp-border: rgba(0,0,0,0.06);
-            --lp-text: #111827;
-            --lp-text-muted: #64748b;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #059669;
-            --lp-violet: #8b5cf6;
-            --lp-rose: #f43f5e;
-            --lp-amber: #f59e0b;
-            --lp-teal: #14b8a6;
-            
-            --lp-nav-bg: rgba(255,255,255,0.9);
-            
-            --lp-mac-body: #1e293b; /* Rich Midnight Slate */
-            --lp-mac-face: #0f172a; /* Deep Slate */
-            --lp-mac-touchpad: #334155; /* Medium Slate */
-            
-            --lp-circle-bg: #ffffff; /* True white for high contrast */
-        }
-
         :root[data-theme="dark"] {
-            --lp-bg: #121212;
-            --lp-bg-alt: #18181b;
-            --lp-card: #27272a;
-            --lp-card-hover: #3f3f46;
-            --lp-border: rgba(255,255,255,0.08);
-            --lp-text: #f8fafc;
-            --lp-text-muted: #a1a1aa;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #34d399;
-            --lp-violet: #a78bfa;
-            --lp-rose: #fb7185;
-            --lp-amber: #fbbf24;
-            --lp-teal: #2dd4bf;
-            
-            --lp-nav-bg: rgba(18,18,18,0.9);
-
-            --lp-mac-body: #f8fafc; /* Premium Ice Silver */
-            --lp-mac-face: #e2e8f0; /* Frosted Silver */
-            --lp-mac-touchpad: #cbd5e1; /* Deep Silver */
-            
-            --lp-circle-bg: #1e293b; /* Elevated Slate Dark */
-        }
-
-        /* Make the circle pop in dark mode with a faint border */
-        :root[data-theme="dark"] .card-number {
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 12px 12px 30px rgba(0,0,0,0.6);
-        }
-
-        html, body {
-            background-color: var(--lp-bg);
-            color: var(--lp-text);
-            font-family: var(--font-body);
-            transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Light theme texture background */
-        :root[data-theme="light"] body {
-            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-        }
-
-        /* Dark theme texture background */
-        :root[data-theme="dark"] body {
-            background-image: url('<?php echo $basePath; ?>/images/bg-dark.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            --lp-mac-body: #475569;
+            --lp-mac-face: #64748b;
+            --lp-mac-touchpad: #334155;
         }
         
-        /* TYPOGRAPHY */
-        .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
-        .heading-alt { font-family: var(--font-heading-alt); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* NAVBAR OVERRIDES */
-        .lp-navbar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            padding: 20px 0;
-            transition: all 0.3s ease;
-            background: transparent !important;
-        }
-        .lp-navbar.scrolled {
-            background: var(--lp-nav-bg) !important;
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--lp-border);
-            padding: 12px 0;
-        }
-        .lp-navbar .brand-text h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--lp-text) !important; font-family: var(--font-heading-alt); }
-        .lp-navbar .brand-text p { font-size: 0.75rem; margin: 0; color: var(--lp-text-muted) !important; }
-        .lp-navbar .brand { text-decoration: none; display: flex; align-items: center; gap: 14px; }
-        .lp-navbar .brand img { width: 40px; height: 40px; object-fit: contain; }
-        .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-        .nav-actions { display: flex; align-items: center; gap: 10px; }
-        
-        .btn-nav { padding: 9px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; border: none; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-nav-ghost { color: var(--lp-text-muted); background: transparent; }
-        .btn-nav-ghost:hover { color: var(--lp-text); background: var(--lp-bg-alt); }
-        .btn-nav-primary { background: var(--lp-accent); color: white !important; }
-        .btn-nav-primary:hover { background: var(--lp-accent-hover); transform: translateY(-1px); }
-
-        /* BUTTONS */
-        .btn-hero { padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .btn-hero-fill { background: var(--lp-text); color: var(--lp-bg) !important; }
-        .btn-hero-fill:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .btn-hero-outline { background: rgba(128, 128, 128, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--lp-text) !important; border: 2px solid var(--lp-text); }
-        .btn-hero-outline:hover { background: var(--lp-text); color: var(--lp-bg) !important; transform: translateY(-3px); }
-
-        /* HERO SECTION */
+/* HERO SECTION */
         .lp-hero {
             min-height: 100vh;
             min-height: 100dvh;
@@ -424,41 +308,41 @@
         .item-info p { margin: 0; font-size: 0.85rem; color: var(--lp-text-muted); }
 
         /* BENTO DEPARTMENTS */
-        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 40px; padding-top: 50px; padding-left: 30px; }
+        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 992px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
         
-        .bento-item { position: relative; border-radius: 36px; padding: 40px 30px 30px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; }
-        .bento-item:hover { transform: translateY(-8px); }
+        .bento-item { position: relative; border-radius: 28px; padding: 30px 24px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; height: 100%; }
+        .bento-item:hover { transform: translateY(-6px); }
         
-        .card-number { position: absolute; top: -20px; left: -20px; width: 120px; height: 120px; background: var(--lp-circle-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; font-weight: 800; box-shadow: 12px 12px 30px rgba(0,0,0,0.15); z-index: 2; }
+        .card-number { position: absolute; top: -20px; left: -25px; width: 105px; height: 105px; background: var(--lp-bg) !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.2rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2; }
         
-        .card-header { margin-left: 50px; margin-bottom: 20px; text-transform: uppercase; text-align: right; }
-        .card-header h4 { color: inherit; font-size: 1rem; font-weight: 700; margin: 0; letter-spacing: 1px; }
-        .card-header span { font-size: 0.75rem; opacity: 0.8; letter-spacing: 0.5px; }
+        .card-header { margin-left: 65px; margin-bottom: 15px; text-transform: uppercase; text-align: right; }
+        .card-header h4 { color: inherit; font-size: 1.05rem; font-weight: 800; margin: 0; letter-spacing: 1px; }
+        .card-header span { font-size: 0.8rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.5px; }
         
-        .card-body { flex-grow: 1; margin-top: 20px; padding: 0; }
-        .card-body p { color: inherit; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: left; opacity: 0.95; }
+        .card-body { flex-grow: 1; margin-top: 5px; padding: 0; display: flex; flex-direction: column; }
+        .card-body p { color: #fff; font-size: 0.95rem; line-height: 1.6; margin: 0; text-align: left; opacity: 0.95; }
 
         /* Themes matching the image with 3D tinted shadows */
-        .theme-orange { background: #f05a30; box-shadow: 0 25px 50px rgba(240, 90, 48, 0.3); }
-        .theme-orange:hover { box-shadow: 0 35px 60px rgba(240, 90, 48, 0.4); }
+        .theme-orange { background: #f05a30; box-shadow: 0 15px 40px rgba(240, 90, 48, 0.35); }
+        .theme-orange:hover { box-shadow: 0 25px 50px rgba(240, 90, 48, 0.45); }
         .theme-orange .card-number { color: #f05a30; }
         
-        .theme-slate { background: #4a5568; box-shadow: 0 25px 50px rgba(74, 85, 104, 0.3); }
-        .theme-slate:hover { box-shadow: 0 35px 60px rgba(74, 85, 104, 0.4); }
+        .theme-slate { background: #4a5568; box-shadow: 0 15px 40px rgba(74, 85, 104, 0.35); }
+        .theme-slate:hover { box-shadow: 0 25px 50px rgba(74, 85, 104, 0.45); }
         .theme-slate .card-number { color: #4a5568; }
         
-        .theme-yellow { background: #facc15; box-shadow: 0 25px 50px rgba(250, 204, 21, 0.3); }
-        .theme-yellow:hover { box-shadow: 0 35px 60px rgba(250, 204, 21, 0.4); }
-        .theme-yellow .card-number { color: #eab308; }
+        .theme-crimson { background: #e11d48; box-shadow: 0 15px 40px rgba(225, 29, 72, 0.35); }
+        .theme-crimson:hover { box-shadow: 0 25px 50px rgba(225, 29, 72, 0.45); }
+        .theme-crimson .card-number { color: #e11d48; }
         
-        .theme-blue { background: #7dd3fc; box-shadow: 0 25px 50px rgba(125, 211, 252, 0.3); }
-        .theme-blue:hover { box-shadow: 0 35px 60px rgba(125, 211, 252, 0.4); }
+        .theme-blue { background: #7dd3fc; box-shadow: 0 15px 40px rgba(125, 211, 252, 0.35); }
+        .theme-blue:hover { box-shadow: 0 25px 50px rgba(125, 211, 252, 0.45); }
         .theme-blue .card-number { color: #0284c7; }
         
-        .theme-emerald { background: #10b981; box-shadow: 0 25px 50px rgba(16, 185, 129, 0.3); }
-        .theme-emerald:hover { box-shadow: 0 35px 60px rgba(16, 185, 129, 0.4); }
+        .theme-emerald { background: #10b981; box-shadow: 0 15px 40px rgba(16, 185, 129, 0.35); }
+        .theme-emerald:hover { box-shadow: 0 25px 50px rgba(16, 185, 129, 0.45); }
         .theme-emerald .card-number { color: #10b981; }
 
         /* HOW IT WORKS PROCESS FLOW */
@@ -528,7 +412,7 @@
         .tl-style-green .icon-circle { background: rgba(16, 185, 129, 0.15); color: #10b981; }
 
         .tl-style-grey { background: var(--lp-card); }
-        .tl-style-grey .card-pill { background: var(--lp-mac-face); color: #fff; }
+        .tl-style-grey .card-pill { background: var(--lp-text); color: var(--lp-bg); }
         .tl-style-grey .icon-circle { background: var(--lp-bg-alt); color: var(--lp-text); border: 1px solid var(--lp-border); }
         
         /* Ensure pill text is readable against the light silver pill background in dark mode */
@@ -540,10 +424,10 @@
             .card-notice-board::before { width: 100px; height: 100px; top: -30px; right: -30px; }
 
             /* Departments */
-            .bento-grid { padding-left: 15px; gap: 50px 20px; }
-            .card-number { width: 80px; height: 80px; font-size: 2rem; top: -20px; left: -15px; }
-            .bento-item { padding: 30px 20px 20px; }
-            .bento-item .card-header { margin-left: 55px; }
+            .bento-grid { padding-left: 10px; gap: 55px 25px; }
+            .card-number { width: 80px; height: 80px; font-size: 2.3rem; top: -15px; left: -15px; }
+            .bento-item { padding: 25px 20px 20px; border-radius: 20px; }
+            .bento-item .card-header { margin-left: 55px; margin-bottom: 10px; }
 
             /* Process */
             .timeline-grid { padding-left: 15px; gap: 30px; }
@@ -568,81 +452,8 @@
             }
         }
 
-        /* FACULTY PREVIEW REDESIGN */
-        .faculty-card-wrapper {
-            position: relative;
-            padding-bottom: 12px;
-            padding-right: 12px;
-            height: 100%;
-            transition: transform 0.3s ease;
-        }
-        .faculty-card-wrapper:hover {
-            transform: translateY(-5px);
-        }
-        .faculty-card-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            right: 0;
-            bottom: 0;
-            left: 10px;
-            background-color: #ffd8a8;
-            border-radius: 20px;
-            z-index: 0;
-        }
-        .faculty-card-ref {
-            position: relative;
-            z-index: 1;
-            background-color: #FAF6F0;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: left;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .fc-name {
-            color: #5c3a21;
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            font-family: var(--font-heading-main);
-            letter-spacing: -0.5px;
-        }
-        .fc-role {
-            color: #b5894b;
-            font-size: 0.9rem;
-            margin-bottom: 50px;
-            font-weight: 500;
-        }
-        .fc-detail {
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-        }
-        .fc-detail:last-child {
-            margin-bottom: 0;
-        }
-        .fc-label {
-            color: #b5894b;
-            font-weight: 600;
-            margin-right: 4px;
-        }
-        .fc-value {
-            color: #374151;
-            font-weight: 500;
-        }
 
 
-
-        /* FOOTER */
-        .footer { background: var(--lp-bg-alt); padding: 60px 0 30px; border-top: 1px solid var(--lp-border); }
-        .footer h6 { font-size: 1rem; font-weight: 700; color: var(--lp-text); margin-bottom: 20px; }
-        .footer-links { list-style: none; padding: 0; margin: 0; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: var(--lp-text-muted); text-decoration: none; transition: color 0.2s; font-size: 0.9rem; }
-        .footer-links a:hover { color: var(--lp-text); }
-        .footer-bottom { border-top: 1px solid var(--lp-border); margin-top: 40px; padding-top: 20px; text-align: center; color: var(--lp-text-muted); font-size: 0.8rem; }
 
         /* 3D LAPTOP */
         .laptop-scene { position: relative; inset: auto; pointer-events: none; display: flex; justify-content: center; align-items: center; overflow: visible; z-index: 10; }
@@ -790,8 +601,12 @@
             opacity: 1;
             transform: translateX(0);
         }
-
-    </style>
+</style>
+<style>
+:root[data-theme="dark"] .modal .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+</style>
 </head>
 <body>
 
@@ -868,13 +683,13 @@
                     <div class="orbit-dot dot-7"></div>
                 </div>
                 <div class="floating-badge badge-1">
-                    <div class="icon-wrap" style="background: rgba(139,92,246,0.2); color: var(--lp-violet);"><i class="bi bi-people-fill"></i></div> Supervisor Allocation
+                    <div class="icon-wrap" style="background: rgba(139,92,246,0.2);color: var(--lp-violet)"><i class="bi bi-people-fill"></i></div> Supervisor Allocation
                 </div>
                 <div class="floating-badge badge-2">
-                    <div class="icon-wrap" style="background: rgba(16,185,129,0.2); color: var(--lp-accent);"><i class="bi bi-bar-chart-steps"></i></div> Milestone Tracking
+                    <div class="icon-wrap" style="background: rgba(16,185,129,0.2);color: var(--lp-accent)"><i class="bi bi-bar-chart-steps"></i></div> Milestone Tracking
                 </div>
                 <div class="floating-badge badge-3">
-                    <div class="icon-wrap" style="background: rgba(245,158,11,0.2); color: var(--lp-amber);"><i class="bi bi-file-earmark-text-fill"></i></div> Thesis Submissions
+                    <div class="icon-wrap" style="background: rgba(245,158,11,0.2);color: var(--lp-amber)"><i class="bi bi-file-earmark-text-fill"></i></div> Thesis Submissions
                 </div>
 
                 <!-- 3D Laptop -->
@@ -889,18 +704,18 @@
                                             <div class="lb-main">
                                                 <div class="lb-header"><div class="lb-header-text"></div></div>
                                                 <div class="lb-cards">
-                                                    <div class="lb-card" style="background:rgba(16,185,129,0.15);"><div class="lb-card-num" style="color:#10b981;">24</div><div class="lb-card-label" style="color:#94a3b8;">Groups</div></div>
-                                                    <div class="lb-card" style="background:rgba(139,92,246,0.15);"><div class="lb-card-num" style="color:#8b5cf6;">52</div><div class="lb-card-label" style="color:#94a3b8;">Projects</div></div>
-                                                    <div class="lb-card" style="background:rgba(245,158,11,0.15);"><div class="lb-card-num" style="color:#f59e0b;">18</div><div class="lb-card-label" style="color:#94a3b8;">Faculty</div></div>
-                                                    <div class="lb-card" style="background:rgba(244,63,94,0.15);"><div class="lb-card-num" style="color:#f43f5e;">31</div><div class="lb-card-label" style="color:#94a3b8;">Done</div></div>
+                                                    <div class="lb-card" style="background:rgba(16,185,129,0.15)"><div class="lb-card-num" style="color:#10b981">24</div><div class="lb-card-label" style="color:#94a3b8">Groups</div></div>
+                                                    <div class="lb-card" style="background:rgba(139,92,246,0.15)"><div class="lb-card-num" style="color:#8b5cf6">52</div><div class="lb-card-label" style="color:#94a3b8">Projects</div></div>
+                                                    <div class="lb-card" style="background:rgba(245,158,11,0.15)"><div class="lb-card-num" style="color:#f59e0b">18</div><div class="lb-card-label" style="color:#94a3b8">Faculty</div></div>
+                                                    <div class="lb-card" style="background:rgba(244,63,94,0.15)"><div class="lb-card-num" style="color:#f43f5e">31</div><div class="lb-card-label" style="color:#94a3b8">Done</div></div>
                                                 </div>
                                                 <div class="lb-table">
-                                                    <div class="lb-row"><div class="lb-bar" style="width:22px;background:#cbd5e1;"></div><div class="lb-bar" style="width:12px;"></div><div class="lb-bar" style="width:14px;"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981;">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:18px;background:#cbd5e1;"></div><div class="lb-bar" style="width:10px;"></div><div class="lb-bar" style="width:16px;"></div><div class="lb-status" style="background:rgba(245,158,11,0.3);color:#f59e0b;">...</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:25px;background:#cbd5e1;"></div><div class="lb-bar" style="width:14px;"></div><div class="lb-bar" style="width:12px;"></div><div class="lb-status" style="background:rgba(139,92,246,0.3);color:#8b5cf6;">Rev</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:20px;background:#cbd5e1;"></div><div class="lb-bar" style="width:11px;"></div><div class="lb-bar" style="width:15px;"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981;">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:16px;background:#cbd5e1;"></div><div class="lb-bar" style="width:13px;"></div><div class="lb-bar" style="width:11px;"></div><div class="lb-status" style="background:rgba(244,63,94,0.3);color:#f43f5e;">No</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:24px;background:#cbd5e1;"></div><div class="lb-bar" style="width:10px;"></div><div class="lb-bar" style="width:13px;"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981;">OK</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:22px;background:#cbd5e1"></div><div class="lb-bar" style="width:12px"></div><div class="lb-bar" style="width:14px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:18px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:16px"></div><div class="lb-status" style="background:rgba(245,158,11,0.3);color:#f59e0b">...</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:25px;background:#cbd5e1"></div><div class="lb-bar" style="width:14px"></div><div class="lb-bar" style="width:12px"></div><div class="lb-status" style="background:rgba(139,92,246,0.3);color:#8b5cf6">Rev</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:20px;background:#cbd5e1"></div><div class="lb-bar" style="width:11px"></div><div class="lb-bar" style="width:15px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:16px;background:#cbd5e1"></div><div class="lb-bar" style="width:13px"></div><div class="lb-bar" style="width:11px"></div><div class="lb-status" style="background:rgba(244,63,94,0.3);color:#f43f5e">No</div></div>
+                                                    <div class="lb-row"><div class="lb-bar" style="width:24px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:13px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -979,10 +794,10 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6><?php echo htmlspecialchars($notice['subject']); ?></h6>
                                     </div>
-                                    <p class="text-truncate mb-2" style="max-width: 90%; font-size: 0.8rem; color: var(--lp-text-muted);"><?php echo htmlspecialchars(strip_tags($notice['body'])); ?></p>
+                                    <p class="text-truncate mb-2" style="max-width: 90%;font-size: 0.8rem;color: var(--lp-text-muted)"><?php echo htmlspecialchars(strip_tags($notice['body'])); ?></p>
                                     <div class="d-flex flex-wrap align-items-center mt-2 gap-3">
-                                        <span class="badge" style="background-color: var(--lp-border); color: var(--lp-text); font-weight: 500; font-size: 0.7rem; padding: 4px 8px;"><?php echo htmlspecialchars($notice['department'] ?? 'General'); ?></span>
-                                        <small style="color: var(--lp-text); opacity: 0.7; font-size: 0.7rem;"><i class="bi bi-calendar3 me-1"></i><?php echo date('M d, Y', strtotime($notice['notice_date'])); ?></small>
+                                        <span class="badge" style="background-color: var(--lp-border);color: var(--lp-text);font-weight: 500;font-size: 0.7rem;padding: 4px 8px"><?php echo htmlspecialchars($notice['department'] ?? 'General'); ?></span>
+                                        <small style="color: var(--lp-text);opacity: 0.7;font-size: 0.7rem"><i class="bi bi-calendar3 me-1"></i><?php echo date('M d, Y', strtotime($notice['notice_date'])); ?></small>
                                     </div>
                                 </div>
                                 <div class="chevron-icon">
@@ -1028,7 +843,7 @@
                     <p>One of Pakistan's first programs of its kind, offering NCEAC-accredited education. The curriculum focuses on engineering complex systems through research, design, and testing to build robust software architectures.</p>
                 </div>
             </div>
-            <div class="bento-item theme-yellow">
+            <div class="bento-item theme-crimson">
                 <div class="card-number"><i class="bi bi-broadcast-pin"></i></div>
                 <div class="card-header">
                     <h4>Telecommunication</h4>
@@ -1120,21 +935,14 @@
             <?php if (!empty($supervisors)): ?>
                 <?php foreach (array_slice($supervisors, 0, 4) as $supervisor): ?>
                 <div class="col-lg-3 col-md-4 col-6">
-                    <div class="faculty-card-wrapper">
-                        <div class="faculty-card-ref">
-                            <div class="fc-name"><?php echo htmlspecialchars($supervisor['name']); ?></div>
-                            <div class="fc-role">Faculty Member</div>
-                            
-                            <div class="mt-auto">
-                                <div class="fc-detail">
-                                    <span class="fc-label">Dept &mdash;</span> 
-                                    <span class="fc-value"><?php echo htmlspecialchars($supervisor['department']); ?></span>
-                                </div>
-                                <div class="fc-detail">
-                                    <span class="fc-label">Mail &mdash;</span> 
-                                    <span class="fc-value"><?php echo strtolower(str_replace(' ', '.', $supervisor['name'])) . '@fyp.edu'; ?></span>
-                                </div>
-                            </div>
+                    <div class="card-modern text-center h-100 p-4">
+                        <div class="avatar mx-auto mb-3" style="width: 80px;height: 80px;background: rgba(16, 185, 129, 0.1);color: var(--lp-accent);border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 2.5rem;font-weight: 700">
+                            <?php echo strtoupper(substr($supervisor['name'], 0, 1)); ?>
+                        </div>
+                        <h5 style="font-weight: 700;margin-bottom: 5px"><?php echo htmlspecialchars($supervisor['name']); ?></h5>
+                        <p style="color: var(--lp-text-muted);font-size: 0.9rem;margin-bottom: 15px">Faculty Member</p>
+                        <div style="font-size: 0.85rem;color: var(--lp-text-muted)">
+                            <div class="mb-1"><i class="bi bi-building me-1"></i> <?php echo htmlspecialchars($supervisor['department']); ?></div>
                         </div>
                     </div>
                 </div>
@@ -1150,25 +958,21 @@
 
 
 <!-- Notice Modal -->
-<style>
-    :root[data-theme="dark"] .modal .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
-</style>
+
 <div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: var(--lp-card);">
-            <div class="modal-header" style="border-bottom: 1px solid var(--lp-border); padding: 24px;">
-                <h5 class="modal-title fw-bold" id="noticeModalLabel" style="color: var(--lp-text);">Notice Details</h5>
+        <div class="modal-content" style="border-radius: 16px;border: none;box-shadow: 0 10px 30px rgba(0,0,0,0.1);background: var(--lp-card)">
+            <div class="modal-header" style="border-bottom: 1px solid var(--lp-border);padding: 24px">
+                <h5 class="modal-title fw-bold" id="noticeModalLabel" style="color: var(--lp-text)">Notice Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="padding: 32px 24px;">
-                <h4 id="modalNoticeSubject" class="fw-bold mb-4" style="color: var(--lp-text);"></h4>
-                <div id="modalNoticeBody" class="notice-body-content mb-4" style="color: var(--lp-text); line-height: 1.8; white-space: pre-wrap; font-size: 0.95rem;">
+            <div class="modal-body" style="padding: 32px 24px">
+                <h4 id="modalNoticeSubject" class="fw-bold mb-4" style="color: var(--lp-text)"></h4>
+                <div id="modalNoticeBody" class="notice-body-content mb-4" style="color: var(--lp-text);line-height: 1.8;white-space: pre-wrap;font-size: 0.95rem">
                 </div>
-                <div class="d-flex flex-wrap align-items-center border-top pt-3 mt-2 gap-3" style="border-color: var(--lp-border) !important;">
-                    <span id="modalNoticeDept" class="badge px-3 py-2 rounded-pill" style="background-color: var(--lp-border); color: var(--lp-text);"></span>
-                    <div class="small" style="color: var(--lp-text); opacity: 0.7;">
+                <div class="d-flex flex-wrap align-items-center border-top pt-3 mt-2 gap-3" style="border-color: var(--lp-border) !important">
+                    <span id="modalNoticeDept" class="badge px-3 py-2 rounded-pill" style="background-color: var(--lp-border);color: var(--lp-text)"></span>
+                    <div class="small" style="color: var(--lp-text);opacity: 0.7">
                         <i class="bi bi-calendar3 me-1"></i> Published on <span id="modalNoticeDate"></span>
                     </div>
                 </div>

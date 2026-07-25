@@ -36,7 +36,7 @@ include __DIR__ . '/../layout/auth_header.php';
                 </div>
                 
                 <div class="input-wrap">
-                    <input type="password" id="password" name="password" placeholder=" " required style="padding-right: 56px;">
+                    <input type="password" id="password" name="password" placeholder=" " required style="padding-right: 56px">
                     <label for="password">Password</label>
                     <button class="pw-toggle" type="button" onclick="const el=document.getElementById('password');el.type=el.type==='password'?'text':'password';this.innerText=el.type==='password'?'Show':'Hide';">Show</button>
                 </div>
@@ -54,15 +54,15 @@ include __DIR__ . '/../layout/auth_header.php';
             </div>
             
             <!-- Forgot Password View (Hidden by default) -->
-            <div id="forgot-form-view" style="display: none;">
+            <div id="forgot-form-view" style="display: none">
                 <form action="<?php echo $basePath; ?>/forgot-password" method="POST" autocomplete="off">
-                    <p style="color: var(--lp-text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;">Enter your email to receive a password reset link.</p>
+                    <p style="color: var(--lp-text-muted);font-size: 0.9rem;margin-bottom: 20px;text-align: center">Enter your email to receive a password reset link.</p>
                     <div class="input-wrap">
                         <input type="email" id="reset-email" name="email" placeholder=" " required>
                         <label for="reset-email">Email Address</label>
                     </div>
                     <button type="submit" class="btn-login">Send Reset Link</button>
-                    <div style="text-align: center; margin-top: 15px;">
+                    <div style="text-align: center;margin-top: 15px">
                         <a href="javascript:void(0);" class="forgot-link" onclick="document.getElementById('forgot-form-view').style.display='none'; document.getElementById('login-form-view').style.display='block';">Back to Login</a>
                     </div>
                 

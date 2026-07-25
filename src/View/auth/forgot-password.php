@@ -33,9 +33,9 @@ include __DIR__ . '/../layout/auth_header.php';
                     <label for="email">Email Address</label>
                 </div>
 
-                <button type="submit" class="btn-login" style="margin-bottom: 20px;">Send Reset Instructions</button>
+                <button type="submit" class="btn-login" style="margin-bottom: 20px">Send Reset Instructions</button>
                 
-                <div style="text-align: center;">
+                <div style="text-align: center">
                     <a href="<?php echo $basePath; ?>/login" class="forgot-link">Back to Login</a>
                 </div>
             

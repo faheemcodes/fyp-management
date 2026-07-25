@@ -1,12 +1,5 @@
-<!-- Global Page Loader -->
-<div id="global-loader" class="global-loader hidden">
-    <div class="loader-content">
-        <div class="loader"></div>
-    </div>
-</div>
-
 <style>
-    /* Loader Overlay - Dim light gray background */
+/* Loader Overlay - Dim light gray background */
     .global-loader {
         position: fixed;
         top: 0;
@@ -75,6 +68,14 @@
         }
     }
 </style>
+<!-- Global Page Loader -->
+<div id="global-loader" class="global-loader hidden">
+    <div class="loader-content">
+        <div class="loader"></div>
+    </div>
+</div>
+
+
 
 <script>
     // Ensure loader is hidden when coming back via browser back button (bfcache)

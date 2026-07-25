@@ -1,8 +1,3 @@
-<!-- Coordinator Project Proposals View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
-
 <style>
 /* ─── Group Page Scoped Styles ─── */
 
@@ -96,21 +91,27 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     
 }
 </style>
+<!-- Coordinator Project Proposals View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="page-hero-icon" style="background: transparent;">
+        <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
 
         <!-- Info -->
         <div class="flex-grow-1 text-center text-md-start">
-            <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+            <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                 Department View
             </p>
-            <h4 class="text-white fw-bold" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+            <h4 class="text-white fw-bold" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                 Project Proposals
             </h4>
         </div>
@@ -130,8 +131,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             }
             if ($approvedCount > 0):
             ?>
-            <div class="page-stat-pill" style="background: rgba(16,185,129,0.15);">
-                <span class="stat-num" style="color: #34d399;"><?php echo htmlspecialchars((string)($approvedCount), ENT_QUOTES, 'UTF-8'); ?></span>
+            <div class="page-stat-pill" style="background: rgba(16,185,129,0.15)">
+                <span class="stat-num" style="color: #34d399"><?php echo htmlspecialchars((string)($approvedCount), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Approved</span>
             </div>
             <?php endif; ?>
@@ -142,12 +143,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <?php if (empty($proposals)): ?>
     <div class="row justify-content-center mt-4">
         <div class="col-lg-6">
-            <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg);">
-                <div style="width: 72px; height: 72px; background: rgba(16,185,129,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #10b981;">
+            <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg)">
+                <div style="width: 72px;height: 72px;background: rgba(16,185,129,0.08);border-radius: 20px;display: flex;align-items: center;justify-content: center;margin: 0 auto 20px;font-size: 1.8rem;color: #10b981">
                     <i class="bi bi-file-earmark-text"></i>
                 </div>
                 <h5 class="fw-bold mb-2">No Proposals Found</h5>
-                <p class="text-muted mb-0" style="font-size: 0.875rem; max-width: 380px; margin: 0 auto;">No project proposals have been submitted by students in your department yet.</p>
+                <p class="text-muted mb-0" style="font-size: 0.875rem;max-width: 380px;margin: 0 auto">No project proposals have been submitted by students in your department yet.</p>
             </div>
         </div>
     </div>
@@ -181,15 +182,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                                 <?php if($ext === 'pdf'): ?>
                                     <!-- Laptop Offcanvas trigger -->
-                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem;cursor: pointer" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
                                     </span>
                                     <!-- Mobile new tab trigger -->
-                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem;">
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem">
                                         <i class="bi bi-box-arrow-up-right me-1"></i>View PDF
                                     </a>
                                 <?php else: ?>
-                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem;">
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem">
                                         <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
                                     </a>
                                 <?php endif; ?>
@@ -197,7 +198,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div class="fw-semibold text-dark" style="font-size: 0.85rem;">
+                                <div class="fw-semibold text-dark" style="font-size: 0.85rem">
                                     <?php echo htmlspecialchars($pr['supervisor_name'] ?? 'Not Assigned'); ?>
                                 </div>
                             </div>
@@ -229,7 +230,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
                             $color = $statusMap[$st][1] ?? '#6b7280';
                             ?>
-                            <span style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; font-size: 0.7rem; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center;">
+                            <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 5px 12px;border-radius: 20px;display: inline-flex;align-items: center">
                                 <?php echo htmlspecialchars($st); ?>
                             </span>
                         </td>
@@ -249,47 +250,47 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Modals rendered outside the table to prevent z-index/backdrop issues -->
 <?php foreach($proposals as $pr): ?>
 <!-- DETAILS MODAL -->
-<div class="modal fade" id="proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade" id="proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
                 <h6 class="modal-title fw-bold">Proposal Details - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
-                    <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?></h5>
+                    <h5 class="fw-bold mb-2" style="color: var(--text-primary)"><?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?></h5>
                     <div class="text-muted small fw-semibold mb-3">Supervisor: <?php echo htmlspecialchars($pr['supervisor_name'] ?? 'Not Assigned'); ?></div>
                     <?php 
                     $st = $pr['status'];
                     $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
                     $color = $statusMap[$st][1] ?? '#6b7280';
                     ?>
-                    <span class="badge" style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                    <span class="badge" style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;padding: 6px 12px;border-radius: 20px">
                         Status: <?php echo htmlspecialchars($st); ?>
                     </span>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em;">Project Abstract</label>
-                    <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.65; text-align: justify; max-height: 250px; overflow-y: auto;">
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em">Project Abstract</label>
+                    <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg);border: 1px solid var(--border-color);font-size: 0.85rem;line-height: 1.65;text-align: justify;max-height: 250px;overflow-y: auto">
                         <?php echo nl2br(htmlspecialchars($pr['abstract'])); ?>
                     </div>
                 </div>
 
                 <div>
-                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em;">Team Members</label>
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em">Team Members</label>
                     <div class="row g-3">
                         <?php foreach($pr['members'] as $m): ?>
                         <div class="col-md-6">
-                            <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color); background: var(--card-bg);">
+                            <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color);background: var(--card-bg)">
                                 <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar">
                                 <div>
-                                    <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
+                                    <div class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
                                         <?php echo htmlspecialchars($m['student_name']); ?>
                                     </div>
-                                    <div class="text-muted font-monospace" style="font-size: 0.75rem;"><?php echo htmlspecialchars($m['roll_no']); ?></div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.75rem"><?php echo htmlspecialchars($m['roll_no']); ?></div>
                                 </div>
                             </div>
                         </div>
@@ -297,8 +298,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Close</button>
             </div>
         </div>
     </div>
@@ -306,13 +307,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
 <!-- PDF Offcanvas (Right Side) -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw; min-width: 320px; z-index: 1060;">
-  <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw;min-width: 320px;z-index: 1060">
+  <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
     <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body p-0">
-    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none;"></iframe>
+    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none"></iframe>
   </div>
 </div>
 <?php endif; ?>

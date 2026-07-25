@@ -1,27 +1,3 @@
-<!-- Committee Member Profile View -->
-<?php
-$prefixVal = $profile['prefix'] ?? '';
-$surnameVal = $profile['surname'] ?? '';
-$cnicVal = $committee['cnic'] ?? $profile['cnic'] ?? '';
-$mobileCodeVal = $profile['mobile_code'] ?? '';
-$mobileNoVal = $profile['mobile_no'] ?? '';
-$homeAddressVal = $profile['home_address'] ?? '';
-$departmentVal = $committee['department'] ?? '';
-
-$isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
-
-$editableFields = [$prefixVal, $surnameVal, $cnicVal, $mobileNoVal, $homeAddressVal];
-$filledCount = 0;
-foreach ($editableFields as $f) { if (!empty($f) && $f !== 'Not Provided Yet') $filledCount++; }
-$totalEditable = count($editableFields);
-$completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 100) : 0;
-
-$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-if ($basePath === '/') {
-    $basePath = '';
-}
-?>
-
 <style>
 /* ─── Profile Page Scoped Styles ─── */
 
@@ -191,6 +167,31 @@ if ($basePath === '/') {
     
 }
 </style>
+<!-- Committee Member Profile View -->
+<?php
+$prefixVal = $profile['prefix'] ?? '';
+$surnameVal = $profile['surname'] ?? '';
+$cnicVal = $committee['cnic'] ?? $profile['cnic'] ?? '';
+$mobileCodeVal = $profile['mobile_code'] ?? '';
+$mobileNoVal = $profile['mobile_no'] ?? '';
+$homeAddressVal = $profile['home_address'] ?? '';
+$departmentVal = $committee['department'] ?? '';
+
+$isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
+
+$editableFields = [$prefixVal, $surnameVal, $cnicVal, $mobileNoVal, $homeAddressVal];
+$filledCount = 0;
+foreach ($editableFields as $f) { if (!empty($f) && $f !== 'Not Provided Yet') $filledCount++; }
+$totalEditable = count($editableFields);
+$completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 100) : 0;
+
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+if ($basePath === '/') {
+    $basePath = '';
+}
+?>
+
+
 
 <!-- ═══════════════ Hero Banner ═══════════════ -->
 <div class="page-hero">
@@ -205,12 +206,12 @@ if ($basePath === '/') {
         <!-- Info -->
         <div class="flex-grow-1 text-center text-md-start">
             <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem; letter-spacing: -0.02em;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem;letter-spacing: -0.02em">
                     <?php echo htmlspecialchars(($prefixVal ? $prefixVal . ' ' : '') . $committee['name']); ?>
                 </h4>
-                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Committee</span>
+                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Committee</span>
             </div>
-            <p class="mb-2" style="color: rgba(255,255,255,0.7); font-size: 0.82rem;">
+            <p class="mb-2" style="color: rgba(255,255,255,0.7);font-size: 0.82rem">
                 <i class="bi bi-shield-lock me-1"></i>Evaluation Committee Member
                 <span class="d-none d-md-inline">
                     &nbsp;·&nbsp;
@@ -219,11 +220,11 @@ if ($basePath === '/') {
             </p>
 
             <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
-                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 600;">PROFILE SETUP</span>
+                <span style="font-size: 0.75rem;color: rgba(255,255,255,0.6);font-weight: 600">PROFILE SETUP</span>
                 <div class="profile-completion">
-                    <div class="profile-completion-fill" style="width: <?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%;"></div>
+                    <div class="profile-completion-fill" style="width: <?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8');?>%"></div>
                 </div>
-                <span class="text-white fw-bold" style="font-size: 0.75rem;"><?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%</span>
+                <span class="text-white fw-bold" style="font-size: 0.75rem"><?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%</span>
             </div>
         </div>
 
@@ -243,8 +244,8 @@ if ($basePath === '/') {
 
 <!-- ═══════════════ Status Alert ═══════════════ -->
 <?php if ($isLocked): ?>
-<div class="profile-alert" style="background: rgba(16,185,129,0.06); color: #059669;">
-    <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+<div class="profile-alert" style="background: rgba(16,185,129,0.06);color: #059669">
+    <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
         <i class="bi bi-shield-check"></i>
     </div>
     <div>
@@ -253,8 +254,8 @@ if ($basePath === '/') {
     </div>
 </div>
 <?php else: ?>
-<div class="profile-alert" style="background: rgba(239,68,68,0.06); color: #dc2626;">
-    <div class="profile-alert-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;">
+<div class="profile-alert" style="background: rgba(239,68,68,0.06);color: #dc2626">
+    <div class="profile-alert-icon" style="background: rgba(239,68,68,0.1);color: #ef4444">
         <i class="bi bi-exclamation-triangle-fill"></i>
     </div>
     <div>
@@ -267,11 +268,11 @@ if ($basePath === '/') {
 <?php
 // Display flash messages
 if (isset($_SESSION['flash']['success'])) {
-    echo '<div class="profile-alert" style="background: rgba(16,185,129,0.06); color: #059669; border: 1px solid rgba(16,185,129,0.2);"><div class="profile-alert-icon" style="background: rgba(16,185,129,0.1); color: #10b981;"><i class="bi bi-check-circle-fill"></i></div><div><h6>Success</h6><p>' . htmlspecialchars($_SESSION['flash']['success']) . '</p></div></div>';
+    echo '<div class="profile-alert" style="background: rgba(16,185,129,0.06);color: #059669;border: 1px solid rgba(16,185,129,0.2)"><div class="profile-alert-icon" style="background: rgba(16,185,129,0.1);color: #10b981"><i class="bi bi-check-circle-fill"></i></div><div><h6>Success</h6><p>' . htmlspecialchars($_SESSION['flash']['success']) . '</p></div></div>';
     unset($_SESSION['flash']['success']);
 }
 if (isset($_SESSION['flash']['error'])) {
-    echo '<div class="profile-alert" style="background: rgba(239,68,68,0.06); color: #dc2626; border: 1px solid rgba(239,68,68,0.2);"><div class="profile-alert-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;"><i class="bi bi-x-circle-fill"></i></div><div><h6>Error</h6><p>' . htmlspecialchars($_SESSION['flash']['error']) . '</p></div></div>';
+    echo '<div class="profile-alert" style="background: rgba(239,68,68,0.06);color: #dc2626;border: 1px solid rgba(239,68,68,0.2)"><div class="profile-alert-icon" style="background: rgba(239,68,68,0.1);color: #ef4444"><i class="bi bi-x-circle-fill"></i></div><div><h6>Error</h6><p>' . htmlspecialchars($_SESSION['flash']['error']) . '</p></div></div>';
     unset($_SESSION['flash']['error']);
 }
 ?>
@@ -283,7 +284,7 @@ if (isset($_SESSION['flash']['error'])) {
         <div class="col-lg-6">
             <div class="page-section h-100">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>
@@ -352,7 +353,7 @@ if (isset($_SESSION['flash']['error'])) {
         <div class="col-lg-6">
             <div class="page-section h-100">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
                     <div>
@@ -365,10 +366,10 @@ if (isset($_SESSION['flash']['error'])) {
                         <div class="col-12 pf-group">
                             <label class="form-label">Email Address</label>
                             <div class="input-group">
-                                <span class="input-group-text" style="border-radius: 10px 0 0 10px; border: 1.5px solid var(--border-color); border-right: 0; background: var(--form-bg); color: var(--text-secondary); font-size: 0.85rem;">
+                                <span class="input-group-text" style="border-radius: 10px 0 0 10px;border: 1.5px solid var(--border-color);border-right: 0;background: var(--form-bg);color: var(--text-secondary);font-size: 0.85rem">
                                     <i class="bi bi-envelope"></i>
                                 </span>
-                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($committee['email']); ?>" disabled readonly style="border-radius: 0 10px 10px 0;">
+                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($committee['email']); ?>" disabled readonly style="border-radius: 0 10px 10px 0">
                             </div>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                         </div>
@@ -385,7 +386,7 @@ if (isset($_SESSION['flash']['error'])) {
                             <label class="form-label">Contact Number <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="mobile_no" value="<?php echo htmlspecialchars($mobileNoVal); ?>" placeholder="e.g. 3001234567" required <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
-                        <hr style="border-color: var(--border-color); opacity: 0.5; margin: 12px 0;">
+                        <hr style="border-color: var(--border-color);opacity: 0.5;margin: 12px 0">
                         <div class="col-12">
                             <div class="address-card">
                                 <label><i class="bi bi-house-door-fill"></i> Office / Home Address <span class="text-danger">*</span></label>
@@ -397,7 +398,7 @@ if (isset($_SESSION['flash']['error'])) {
 
                 <!-- Sticky Save Footer -->
                 <div class="profile-save-footer">
-                    <span style="font-size: 0.78rem; color: var(--text-secondary);">
+                    <span style="font-size: 0.78rem;color: var(--text-secondary)">
                         <i class="bi bi-info-circle me-1"></i>Review editable fields
                     </span>
                     <?php if ($isLocked): ?>

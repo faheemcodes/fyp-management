@@ -1,11 +1,4 @@
-<!-- Admin Reports & Analytics View -->
 <style>
-
-
-
-
-
-
 /* ─── Section Panel ─── */
 
 
@@ -80,20 +73,22 @@ html.dark-theme, body.dark-theme {
     opacity: 0.04 !important;
 }
 </style>
+<!-- Admin Reports & Analytics View -->
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">Reports & Analytics</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">View group progress, evaluation criteria, and cumulative final grades</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Reports & Analytics</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">View group progress, evaluation criteria, and cumulative final grades</p>
             </div>
         </div>
-        <button onclick="window.print()" class="btn btn-outline-light rounded-pill px-4 align-self-stretch align-self-md-center border-2" style="background: rgba(255,255,255,0.1);">
+        <button onclick="window.print()" class="btn btn-outline-light rounded-pill px-4 align-self-stretch align-self-md-center border-2" style="background: rgba(255,255,255,0.1)">
             <i class="bi bi-printer me-2"></i> Print Report
         </button>
     </div>
@@ -104,7 +99,7 @@ html.dark-theme, body.dark-theme {
     <div class="col-md-5">
         <div class="page-section h-100 mb-0 d-flex flex-column">
             <div class="page-section-header">
-                <h6 class="fw-bold m-0" style="color: var(--text-primary);"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Group Progress Distribution</h6>
+                <h6 class="fw-bold m-0" style="color: var(--text-primary)"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Group Progress Distribution</h6>
             </div>
             <div class="p-4 flex-grow-1 d-flex flex-column justify-content-start">
                 <?php if(empty($progressStages)): ?>
@@ -112,11 +107,11 @@ html.dark-theme, body.dark-theme {
                 <?php else: ?>
                     <div class="d-flex flex-column gap-3">
                         <?php foreach($progressStages as $ps): ?>
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-4" style="background: var(--form-bg); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-                            <span class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded-4" style="background: var(--form-bg);border: 1px solid var(--border-color);transition: all 0.2s ease">
+                            <span class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
                                 <?php echo htmlspecialchars($ps['progress_stage']); ?>
                             </span>
-                            <span class="badge rounded-pill shadow-sm px-3 py-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 0.85rem;">
+                            <span class="badge rounded-pill shadow-sm px-3 py-2" style="background: rgba(16,185,129,0.1);color: #10b981;border: 1px solid rgba(16,185,129,0.2);font-size: 0.85rem">
                                 <?php echo htmlspecialchars((string)($ps['count']), ENT_QUOTES, 'UTF-8'); ?> Groups
                             </span>
                         </div>
@@ -133,32 +128,32 @@ html.dark-theme, body.dark-theme {
             <div class="p-4 position-relative z-1">
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
                     <div>
-                        <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="letter-spacing: -0.02em;">
-                            <i class="bi bi-shield-check" style="color: #10b981; font-size: 1.3rem;"></i> 
+                        <h5 class="fw-bold mb-1 d-flex align-items-center gap-2" style="letter-spacing: -0.02em">
+                            <i class="bi bi-shield-check" style="color: #10b981;font-size: 1.3rem"></i> 
                             Evaluation Criteria
                         </h5>
-                        <p class="m-0" style="opacity: 0.6;">Systematic breakdown of the final grading components.</p>
+                        <p class="m-0" style="opacity: 0.6">Systematic breakdown of the final grading components.</p>
                     </div>
                     <div class="text-sm-end">
-                        <span class="badge rounded-pill fw-bold px-3 py-2 shadow-sm" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-size: 0.85rem; letter-spacing: 0.03em;">200 TOTAL MARKS</span>
+                        <span class="badge rounded-pill fw-bold px-3 py-2 shadow-sm" style="background: rgba(16,185,129,0.15);color: #10b981;border: 1px solid rgba(16,185,129,0.3);font-size: 0.85rem;letter-spacing: 0.03em">200 TOTAL MARKS</span>
                     </div>
                 </div>
 
                 <div class="row g-3">
                     <!-- Stage 1 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #f59e0b;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #f59e0b">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(245,158,11,0.15); color: #f59e0b;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px;height: 44px;background: rgba(245,158,11,0.15);color: #f59e0b">
                                     <i class="bi bi-file-earmark-text-fill fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
                                     <div>
-                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem;">1. Proposal Submission</h6>
-                                        <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded automatically upon supervisor proposal approval.</p>
+                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem">1. Proposal Submission</h6>
+                                        <p class="m-0 mt-1" style="font-size: 0.8rem;opacity: 0.6">Awarded automatically upon supervisor proposal approval.</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(245,158,11,0.1); color: #f59e0b; font-size: 0.85rem;">10 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(245,158,11,0.1);color: #f59e0b;font-size: 0.85rem">10 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -167,18 +162,18 @@ html.dark-theme, body.dark-theme {
 
                     <!-- Stage 2 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #10b981;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #10b981">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(16,185,129,0.15); color: #10b981;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px;height: 44px;background: rgba(16,185,129,0.15);color: #10b981">
                                     <i class="bi bi-easel-fill fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
                                     <div>
-                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem;">2. Proposal Defence</h6>
-                                        <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded manually by committee on presentation defence.</p>
+                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem">2. Proposal Defence</h6>
+                                        <p class="m-0 mt-1" style="font-size: 0.8rem;opacity: 0.6">Awarded manually by committee on presentation defence.</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.85rem;">30 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(16,185,129,0.1);color: #10b981;font-size: 0.85rem">30 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -187,18 +182,18 @@ html.dark-theme, body.dark-theme {
 
                     <!-- Stage 3 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #8b5cf6;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #8b5cf6">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(139,92,246,0.15); color: #8b5cf6;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px;height: 44px;background: rgba(139,92,246,0.15);color: #8b5cf6">
                                     <i class="bi bi-graph-up-arrow fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
                                     <div>
-                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem;">3. FYP Progress</h6>
-                                        <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded manually by committee based on progress presentation score.</p>
+                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem">3. FYP Progress</h6>
+                                        <p class="m-0 mt-1" style="font-size: 0.8rem;opacity: 0.6">Awarded manually by committee based on progress presentation score.</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(139,92,246,0.1); color: #8b5cf6; font-size: 0.85rem;">40 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(139,92,246,0.1);color: #8b5cf6;font-size: 0.85rem">40 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -207,18 +202,18 @@ html.dark-theme, body.dark-theme {
 
                     <!-- Stage 4 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #10b981;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #10b981">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(16,185,129,0.15); color: #10b981;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px;height: 44px;background: rgba(16,185,129,0.15);color: #10b981">
                                     <i class="bi bi-person-workspace fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
                                     <div>
-                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem;">4. Supervision</h6>
-                                        <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded by supervisor for student guidance and overall performance.</p>
+                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem">4. Supervision</h6>
+                                        <p class="m-0 mt-1" style="font-size: 0.8rem;opacity: 0.6">Awarded by supervisor for student guidance and overall performance.</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.85rem;">45 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(16,185,129,0.1);color: #10b981;font-size: 0.85rem">45 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -227,18 +222,18 @@ html.dark-theme, body.dark-theme {
 
                     <!-- Stage 5 -->
                     <div class="col-12">
-                        <div class="eval-card p-3 rounded-4" style="--accent-color: #ec4899;">
+                        <div class="eval-card p-3 rounded-4" style="--accent-color: #ec4899">
                             <div class="d-flex flex-column flex-md-row align-items-md-center gap-3">
-                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px; height: 44px; background: rgba(236,72,153,0.15); color: #ec4899;">
+                                <div class="flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 44px;height: 44px;background: rgba(236,72,153,0.15);color: #ec4899">
                                     <i class="bi bi-stars fs-5"></i>
                                 </div>
                                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center w-100 gap-2">
                                     <div>
-                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem;">5. Final Presentation</h6>
-                                        <p class="m-0 mt-1" style="font-size: 0.8rem; opacity: 0.6;">Awarded manually by committee: Project Demo (25) + Thesis (25) + Presentation (25).</p>
+                                        <h6 class="fw-bold m-0" style="font-size: 0.95rem">5. Final Presentation</h6>
+                                        <p class="m-0 mt-1" style="font-size: 0.8rem;opacity: 0.6">Awarded manually by committee: Project Demo (25) + Thesis (25) + Presentation (25).</p>
                                     </div>
                                     <div class="text-md-end flex-shrink-0">
-                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(236,72,153,0.1); color: #ec4899; font-size: 0.85rem;">75 PTS</span>
+                                        <span class="fw-bold font-monospace badge px-3 py-2" style="background: rgba(236,72,153,0.1);color: #ec4899;font-size: 0.85rem">75 PTS</span>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +252,7 @@ html.dark-theme, body.dark-theme {
     </div>
     
     <!-- Filters and Search Controls -->
-    <div class="p-3 border-bottom" style="background: var(--form-bg);">
+    <div class="p-3 border-bottom" style="background: var(--form-bg)">
         <div class="row g-3 align-items-center w-100 m-0">
             <!-- Search Input -->
             <div class="col-md-4 ps-0">
@@ -315,7 +310,7 @@ html.dark-theme, body.dark-theme {
                     <th class="text-center">Prog. Pres. (40)</th>
                     <th class="text-center">Supv. (45)</th>
                     <th class="text-center">Final Pres. (75)</th>
-                    <th class="text-center" style="background: rgba(16,185,129,0.1); color: #1e3a5f;">Total (200)</th>
+                    <th class="text-center" style="background: rgba(16,185,129,0.1);color: #1e3a5f">Total (200)</th>
                     <th class="text-center">Grade</th>
                     <th class="text-end pe-4">Status</th>
                 </tr>
@@ -324,25 +319,25 @@ html.dark-theme, body.dark-theme {
                 <?php foreach($studentGrades as $sg): ?>
                 <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>">
                     <td class="ps-4">
-                        <div class="fw-bold text-primary" style="font-size: 0.95rem;"><?php echo htmlspecialchars($sg['student_name'] ?? 'Unknown'); ?> (<?php echo htmlspecialchars($sg['roll_no'] ?? ''); ?>)</div>
-                        <div class="small text-truncate text-dark mt-1" style="max-width: 180px; font-weight: 500;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
-                        <div class="text-muted" style="font-size: 0.75rem; margin-top: 2px;"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
+                        <div class="fw-bold text-primary" style="font-size: 0.95rem"><?php echo htmlspecialchars($sg['student_name'] ?? 'Unknown'); ?> (<?php echo htmlspecialchars($sg['roll_no'] ?? ''); ?>)</div>
+                        <div class="small text-truncate text-dark mt-1" style="max-width: 180px;font-weight: 500" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
+                        <div class="text-muted" style="font-size: 0.75rem;margin-top: 2px"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
                     </td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569;"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-bold fs-5" style="background: rgba(16,185,129,0.02); color: #1e3a5f;"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center font-monospace fw-bold fs-5" style="background: rgba(16,185,129,0.02);color: #1e3a5f"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
                     <td class="text-center">
-                        <span class="badge font-monospace rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; font-size: 0.95rem; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff;">
+                        <span class="badge font-monospace rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 36px;height: 36px;font-size: 0.95rem;background: linear-gradient(135deg, #1e293b, #0f172a);color: #fff">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>
                         </span>
                     </td>
                     <td class="text-end pe-4">
                         <?php if($sg['status'] === 'Pass'): ?>
-                            <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Pass</span>
+                            <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Pass</span>
                         <?php else: ?>
-                            <span class="status-pill" style="background: rgba(239,68,68,0.15); color: #dc2626;">Fail</span>
+                            <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Fail</span>
                         <?php endif; ?>
                     </td>
                 </tr>

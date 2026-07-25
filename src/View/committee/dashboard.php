@@ -1,20 +1,4 @@
-<!-- Committee Dashboard View -->
-<?php 
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
-$fullName = trim($_SESSION['name'] ?? 'Committee Member');
-$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
-$firstName = explode(' ', $fullName)[0];
-?>
-
 <style>
-
-
-
-
-
-
-
-
 @media (max-width: 768px) {
     
     
@@ -67,23 +51,32 @@ $firstName = explode(' ', $fullName)[0];
     border-bottom: none;
 }
 </style>
+<!-- Committee Dashboard View -->
+<?php 
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
+$fullName = trim($_SESSION['name'] ?? 'Committee Member');
+$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
+$firstName = explode(' ', $fullName)[0];
+?>
+
+
 
 <!-- ── Top Hero Banner ── -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-people-fill"></i>
             </div>
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     Evaluation Committee
                 </p>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                     Welcome back, <?php echo htmlspecialchars($firstName); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.8);padding: 4px 12px;border-radius: 20px;font-weight: 600">
                         <?php echo htmlspecialchars($committee['department'] ?? 'Department'); ?>
                     </span>
                 </div>
@@ -96,12 +89,12 @@ $firstName = explode(' ', $fullName)[0];
                 <span class="stat-label">Assigned Projects</span>
             </div>
             <a href="<?php echo $bp; ?>/committee/evaluations" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num" style="color: <?php echo $pendingCount > 0 ? '#f59e0b' : 'var(--text-secondary)'; ?>;"><?php echo htmlspecialchars((string)($pendingCount), ENT_QUOTES, 'UTF-8'); ?></span>
+                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num" style="color: <?php echo $pendingCount > 0 ? '#f59e0b' : 'var(--text-secondary)';?>"><?php echo htmlspecialchars((string)($pendingCount), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Evals</span>
                 </div>
             </a>
-            <div class="page-stat-pill" style="margin-right: 0;">
+            <div class="page-stat-pill" style="margin-right: 0">
                 <span class="stat-num text-success"><?php echo htmlspecialchars((string)($gradedCount), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Graded Evals</span>
             </div>
@@ -136,29 +129,29 @@ $firstName = explode(' ', $fullName)[0];
                 <?php foreach($groups as $g): ?>
                 <tr>
                     <td>
-                        <span class="fw-semibold text-secondary" style="font-family: monospace; font-size: 0.8rem; background: var(--form-bg); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.8rem;background: var(--form-bg);padding: 4px 8px;border-radius: 6px;border: 1px solid var(--border-color)">
                             <?php echo htmlspecialchars($g['group_code']); ?>
                         </span>
                     </td>
                     <td>
-                        <div class="fw-semibold text-dark text-wrap" style="max-width: 320px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?>">
+                        <div class="fw-semibold text-dark text-wrap" style="max-width: 320px;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden" title="<?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?>">
                              <?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?>
                         </div>
                     </td>
                     <td>
                         <?php if($g['supervisor_name']): ?>
-                            <span class="small fw-semibold" style="color: var(--text-primary);"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
+                            <span class="small fw-semibold" style="color: var(--text-primary)"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
                         <?php else: ?>
-                            <span class="text-muted small" style="font-style: italic;">Unassigned</span>
+                            <span class="text-muted small" style="font-style: italic">Unassigned</span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
+                        <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
                         </span>
                     </td>
                     <td class="text-end">
-                        <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px; white-space: nowrap;">
+                        <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 12px;white-space: nowrap">
                             <i class="bi bi-pencil-square me-1"></i>Evaluate
                         </a>
                     </td>
@@ -179,26 +172,26 @@ $firstName = explode(' ', $fullName)[0];
     <!-- Mobile Card List -->
     <div class="d-block d-md-none p-3">
         <?php foreach($groups as $g): ?>
-            <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg);">
+            <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
                 <div class="mb-2">
-                    <span class="fw-semibold text-secondary" style="font-family: monospace; font-size: 0.75rem; background: var(--form-bg); padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border-color);">
+                    <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.75rem;background: var(--form-bg);padding: 3px 6px;border-radius: 4px;border: 1px solid var(--border-color)">
                         <?php echo htmlspecialchars($g['group_code']); ?>
                     </span>
                 </div>
-                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden">
                     <?php echo htmlspecialchars($g['project_title'] ?? 'No project title set'); ?>
                 </h6>
                 <div class="mb-3">
-                    <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; display: inline-block;">
+                    <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase;display: inline-block">
                         <?php echo htmlspecialchars($g['progress_stage']); ?>
                     </span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-2 pt-3 border-top">
-                    <div style="color: var(--text-secondary); font-size: 0.75rem; line-height: 1.2; max-width: 60%;">
+                    <div style="color: var(--text-secondary);font-size: 0.75rem;line-height: 1.2;max-width: 60%">
                         <i class="bi bi-person-badge text-success me-1"></i>
                         <?php echo $g['supervisor_name'] ? htmlspecialchars($g['supervisor_name']) : 'Unassigned'; ?>
                     </div>
-                    <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 14px;">
+                    <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 14px">
                         Evaluate
                     </a>
                 </div>

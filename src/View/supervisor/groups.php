@@ -1,8 +1,3 @@
-<!-- Supervisor Assigned Groups View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
-
 <style>
 /* ─── Group Page Scoped Styles ─── */
 
@@ -226,6 +221,12 @@ html.dark-theme .eval-input {
     outline: none;
 }
 </style>
+<!-- Supervisor Assigned Groups View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
 
 <?php
 $anySupervisionHidden = false;
@@ -245,22 +246,22 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="page-hero-icon" style="background: transparent;">
+        <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-person-workspace"></i>
             </div>
 
         <!-- Info -->
         <div class="flex-grow-1 text-center text-md-start">
-            <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+            <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                 Supervision Dashboard
             </p>
-            <h4 class="text-white fw-bold mb-3" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+            <h4 class="text-white fw-bold mb-3" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                 Assigned FYP Groups
             </h4>
             <div class="d-flex align-items-center justify-content-center justify-content-md-start">
                 <form action="<?php echo $basePath; ?>/supervisor/groups/toggle-visibility" method="POST" class="m-0">
                     <input type="hidden" name="show" value="<?php echo $globalSupervisionShowAction; ?>">
-                    <button type="submit" class="btn btn-sm <?php echo $globalSupervisionShowAction ? 'btn-outline-light' : 'btn-light text-success'; ?> rounded-pill px-4 py-1 fw-semibold" style="font-size: 0.78rem;">
+                    <button type="submit" class="btn btn-sm <?php echo $globalSupervisionShowAction ? 'btn-outline-light' : 'btn-light text-success'; ?> rounded-pill px-4 py-1 fw-semibold" style="font-size: 0.78rem">
                         <i class="bi <?php echo $globalSupervisionShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-2"></i>
                         <?php echo $globalSupervisionShowAction ? 'Publish Marks to Students' : 'Marks are Visible'; ?>
                     </button>
@@ -283,12 +284,12 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <?php if(empty($groups)): ?>
     <div class="row justify-content-center mt-4">
         <div class="col-lg-6">
-            <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg);">
-                <div style="width: 72px; height: 72px; background: rgba(16,185,129,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: #10b981;">
+            <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg)">
+                <div style="width: 72px;height: 72px;background: rgba(16,185,129,0.08);border-radius: 20px;display: flex;align-items: center;justify-content: center;margin: 0 auto 20px;font-size: 1.8rem;color: #10b981">
                     <i class="bi bi-people-fill"></i>
                 </div>
                 <h5 class="fw-bold mb-2">No Assigned Groups</h5>
-                <p class="text-muted mb-0" style="font-size: 0.875rem; max-width: 380px; margin: 0 auto;">You currently have no FYP groups assigned to you for supervision.</p>
+                <p class="text-muted mb-0" style="font-size: 0.875rem;max-width: 380px;margin: 0 auto">You currently have no FYP groups assigned to you for supervision.</p>
             </div>
         </div>
     </div>
@@ -362,47 +363,47 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <?php foreach($groups as $g): ?>
 
 <!-- DETAILS MODAL -->
-<div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg);">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff;">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
                 <h6 class="modal-title fw-bold">Project Details - <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
-                    <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></h5>
-                    <span class="badge" style="background: rgba(16,185,129,0.1); color: #10b981; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                    <h5 class="fw-bold mb-2" style="color: var(--text-primary)"><?php echo htmlspecialchars($g['project_title']); ?></h5>
+                    <span class="badge" style="background: rgba(16,185,129,0.1);color: #10b981;font-weight: 600;padding: 6px 12px;border-radius: 20px">
                         Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
                     </span>
                 </div>
                 
                 <div class="mb-4">
-                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em;">Project Abstract / Description</label>
-                    <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.65; text-align: justify; max-height: 250px; overflow-y: auto;">
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em">Project Abstract / Description</label>
+                    <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg);border: 1px solid var(--border-color);font-size: 0.85rem;line-height: 1.65;text-align: justify;max-height: 250px;overflow-y: auto">
                         <?php echo nl2br(htmlspecialchars($g['project_description'])); ?>
                     </div>
                 </div>
 
                 <div>
-                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em;">Team Members</label>
+                    <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em">Team Members</label>
                     <div class="row g-3">
                         <?php foreach($g['members'] as $m): ?>
                         <div class="col-md-6">
-                            <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color); background: var(--card-bg);">
+                            <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color);background: var(--card-bg)">
                                 <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" alt="Avatar">
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar">
                                 <div>
-                                    <div class="fw-semibold" style="font-size: 0.9rem; color: var(--text-primary);">
+                                    <div class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
                                         <?php echo htmlspecialchars($m['name']); ?>
                                         <?php if($m['user_id'] == $g['created_by']): ?>
-                                            <span class="badge ms-1" style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.6rem;">Leader</span>
+                                            <span class="badge ms-1" style="background: rgba(16,185,129,0.15);color: #10b981;font-size: 0.6rem">Leader</span>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="text-muted font-monospace" style="font-size: 0.75rem;"><?php echo htmlspecialchars($m['student_id']); ?></div>
-                                    <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($m['email']); ?></div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.75rem"><?php echo htmlspecialchars($m['student_id']); ?></div>
+                                    <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($m['email']); ?></div>
                                     <?php if(!empty($m['phone'])): ?>
-                                        <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-telephone me-1"></i><?php echo htmlspecialchars($m['phone']); ?></div>
+                                        <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-telephone me-1"></i><?php echo htmlspecialchars($m['phone']); ?></div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -411,32 +412,32 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Close</button>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Close</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- MANUAL GRADING MODAL -->
-<div class="modal fade eval-modal" id="gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+<div class="modal fade eval-modal" id="gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header eval-modal-header border-0">
-                <h5 class="modal-title fw-semibold" style="color: #0d9488; font-size: 1.05rem;"><i class="bi bi-person-check-fill me-2"></i>Supervision Marks</h5>
+                <h5 class="modal-title fw-semibold" style="color: #0d9488;font-size: 1.05rem"><i class="bi bi-person-check-fill me-2"></i>Supervision Marks</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo $basePath; ?>/supervisor/groups/grade" method="POST">
                 <input type="hidden" name="group_id" value="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="modal-body p-3 text-start">
-                    <p class="mb-3" style="font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary);">Assign individual supervision marks out of 45 for each student in the group. Overall totals and grades will be updated automatically.</p>
+                    <p class="mb-3" style="font-size: 0.82rem;line-height: 1.5;color: var(--text-secondary)">Assign individual supervision marks out of 45 for each student in the group. Overall totals and grades will be updated automatically.</p>
                     
                     <div class="eval-table-wrapper">
                         <table class="eval-table">
                             <thead>
                                 <tr>
                                     <th class="text-start ps-3">Student</th>
-                                    <th class="text-center" style="width: 30%;">Supervision Marks (45)</th>
+                                    <th class="text-center" style="width: 30%">Supervision Marks (45)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -460,9 +461,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         </table>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 d-flex justify-content-end gap-2" style="background: var(--card-bg);">
-                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Save Marks</button>
+                <div class="modal-footer border-0 p-3 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488;border-color: #0d9488">Save Marks</button>
                 </div>
             
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">

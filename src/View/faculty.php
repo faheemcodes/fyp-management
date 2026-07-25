@@ -31,83 +31,9 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
-    <style>
-        /* BASE THEME & VARIABLES */
-        :root {
-            --font-heading-main: 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
-            --font-heading-alt: 'Pierknife', 'Oswald', 'Arial Narrow', sans-serif;
-            --font-body: 'Inter', -apple-system, sans-serif;
-        }
-
-        :root[data-theme="light"] {
-            --lp-bg: #ffffff;
-            --lp-bg-alt: #f8fafc;
-            --lp-card: #ffffff;
-            --lp-card-hover: #f1f5f9;
-            --lp-border: rgba(0,0,0,0.06);
-            --lp-text: #111827;
-            --lp-text-muted: #64748b;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #059669;
-            --lp-violet: #8b5cf6;
-            --lp-rose: #f43f5e;
-            --lp-amber: #f59e0b;
-            --lp-teal: #14b8a6;
-            
-            --lp-nav-bg: rgba(255,255,255,0.9);
-        }
-
-        :root[data-theme="dark"] {
-            --lp-bg: #121212;
-            --lp-bg-alt: #18181b;
-            --lp-card: #27272a;
-            --lp-card-hover: #3f3f46;
-            --lp-border: rgba(255,255,255,0.08);
-            --lp-text: #f8fafc;
-            --lp-text-muted: #a1a1aa;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #34d399;
-            --lp-violet: #a78bfa;
-            --lp-rose: #fb7185;
-            --lp-amber: #fbbf24;
-            --lp-teal: #2dd4bf;
-            
-            --lp-nav-bg: rgba(18,18,18,0.9);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--lp-bg);
-            color: var(--lp-text);
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .heading-main { font-weight: 900; letter-spacing: -0.03em; }
-        .heading-alt { font-weight: 700; letter-spacing: -0.01em; }
-
-        /* NAVBAR */
-        .lp-navbar {
-            padding: 20px 0;
-            position: fixed;
-            top: 0; width: 100%;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--lp-border);
-            transition: all 0.3s ease;
-        }
-        .navbar-brand { font-size: 1.2rem; font-weight: 800; color: var(--lp-text) !important; display: flex; align-items: center; gap: 10px; }
-        .navbar-brand img { width: 32px; height: 32px; }
-        .nav-link { color: var(--lp-text-muted) !important; font-weight: 500; font-size: 0.95rem; margin: 0 10px; transition: color 0.2s; }
-        .nav-link:hover, .nav-link.active { color: var(--lp-text) !important; }
-
-        /* HERO SECTION */
+    
+<style>
+/* HERO SECTION */
         .lp-hero {
             position: relative;
             background: var(--lp-bg);
@@ -180,96 +106,161 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
         }
 
         .section { padding: 100px 0; position: relative; z-index: 2; }
+
+        .faculty-group {
+            margin-bottom: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--lp-border);
+        }
+        .faculty-group:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
         
         .section-title {
             font-family: 'Inter', sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 40px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 0 auto 40px auto;
             color: var(--lp-text);
             display: flex;
+            width: fit-content;
             align-items: center;
-            gap: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--lp-border);
-            letter-spacing: -0.5px;
+            gap: 12px;
+            padding: 6px 20px 6px 6px;
+            background: var(--lp-card);
+            border-radius: 50px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+            letter-spacing: -0.2px;
+            border: 1px solid var(--lp-border);
         }
         .section-title i {
-            color: var(--lp-accent);
+            color: var(--lp-bg);
+            background: var(--lp-text);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
         }
         
-        .faculty-card {
-            background: var(--lp-card);
-            border: 1px solid var(--lp-border);
-            border-radius: 20px;
-            padding: 30px 20px;
-            text-align: center;
-            height: 100%;
-            transition: all 0.3s ease;
+        /* PAPER LAYERS CARD - THEMED */
+        .stage-paper{
+            width:100%;
+            aspect-ratio:16/11;
+            position:relative;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            perspective: 1200px;
+            transform-style: preserve-3d;
         }
-        .faculty-card:hover {
-            transform: translateY(-8px);
+        .stage-paper:hover {
+            z-index: 10;
+        }
+        .stage-paper:hover .paper-back {
+            transform: rotate(-6deg) translateZ(-40px) translateY(10px) translateX(-10px);
+            opacity: 0.15;
+        }
+        .stage-paper:hover .paper-mid {
+            transform: rotate(3deg) translateZ(-20px) translateY(5px) translateX(5px);
+            opacity: 0.25;
+        }
+        .stage-paper:hover .card-paper {
+            transform: translateZ(40px) rotateX(10deg) rotateY(-10deg);
+            box-shadow: -20px 30px 50px rgba(0,0,0,0.15);
             border-color: var(--lp-text-muted);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        .faculty-avatar {
-            width: 64px; height: 64px;
-            border-radius: 50%;
-            background: var(--lp-bg-alt);
-            color: var(--lp-text);
-            font-size: 1.2rem; font-weight: 800;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 16px;
-            border: 1px solid var(--lp-border);
+        .paper-back, .paper-mid, .card-paper {
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backface-visibility: hidden;
+            will-change: transform;
         }
-        .faculty-card h5 { font-weight: 700; margin: 0 0 6px; font-size: 1.1rem; color: var(--lp-text); }
-        .faculty-designation {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 10px;
-            background: var(--lp-bg-alt);
-            color: var(--lp-text-muted);
-            border: 1px solid var(--lp-border);
+        .paper-back{
+            position:absolute;
+            width:82%;
+            height:78%;
+            background: var(--lp-accent);
+            opacity: 0.35;
+            border-radius:20px;
+            transform:rotate(-6deg) translateZ(0);
+            top:8%;
+            z-index: 1;
         }
-        .faculty-dept { color: var(--lp-text-muted); font-size: 0.85rem; margin: 0; }
-        .faculty-email {
-            display: inline-flex; align-items: center; gap: 6px;
-            color: var(--lp-text-muted); font-size: 0.8rem; font-weight: 500;
-            text-decoration: none; transition: all 0.2s;
-            margin-top: 15px;
+        .paper-mid{
+            position:absolute;
+            width:84%;
+            height:80%;
+            background: var(--lp-amber);
+            opacity: 0.35;
+            border-radius:20px;
+            transform:rotate(3deg) translateZ(0);
+            z-index: 2;
         }
-        .faculty-email:hover { color: var(--lp-text); }
-        .role-description {
+        .card-paper{
+            position:relative;
+            width:86%;
+            height:82%;
             background: var(--lp-card);
+            border-radius:18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid var(--lp-border);
-            border-left: 4px solid var(--lp-accent);
-            padding: 20px 25px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            font-size: 0.95rem;
+            padding:22px 24px;
+            color: var(--lp-text);
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            text-align:left;
+            transform: translateZ(0) rotateX(0) rotateY(0);
+            z-index: 3;
+        }
+        .paper-name{
+            font-size:19px;
+            font-weight:700;
+            color: var(--lp-text);
+        }
+        .paper-role{
+            font-size:12px;
+            color: var(--lp-accent);
+            font-weight:600;
+            margin-top:2px;
+        }
+        .paper-list{
+            margin-top:14px;
+            display:flex;
+            flex-direction:column;
+            gap:7px;
+        }
+        .paper-item{
+            font-size:12px;
             color: var(--lp-text-muted);
+            font-weight:600;
+        }
+        .paper-item span{
+            color: var(--lp-accent);
+            font-weight:700;
+        }
+        .paper-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .paper-item a:hover {
+            color: var(--lp-accent);
+            text-decoration: underline;
+        }
+        .role-description {
+            text-align: center;
+            color: var(--lp-text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 50px auto;
             line-height: 1.6;
         }
 
-        /* FOOTER */
-        .footer { background: var(--lp-bg-alt); padding: 60px 0 30px; border-top: 1px solid var(--lp-border); position: relative; z-index: 5; }
-        .footer h6 { font-size: 1rem; font-weight: 700; color: var(--lp-text); margin-bottom: 20px; }
-        .footer-links { list-style: none; padding: 0; margin: 0; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: var(--lp-text-muted); text-decoration: none; transition: color 0.2s; font-size: 0.9rem; }
-        .footer-links a:hover { color: var(--lp-text); }
-        .footer-bottom { border-top: 1px solid var(--lp-border); margin-top: 40px; padding-top: 20px; text-align: center; color: var(--lp-text-muted); font-size: 0.8rem; }
-
-        @media (max-width: 768px) {
-            .hero-desc { font-size: 1rem; }
-            .section { padding: 60px 0; }
-        }
-    </style>
+        </style>
 </head>
 <body>
 
@@ -298,102 +289,129 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
         
         <!-- Heads of Department -->
         <?php if (!empty($hods)): ?>
+        <div class="faculty-group">
         <h2 class="section-title"><i class="bi bi-bank"></i> Heads of Department</h2>
         <div class="role-description">
             HODs oversee the entire FYP process within their respective departments. They manage faculty allocations, ensure standards are maintained, and approve final project grades.
         </div>
-        <div class="row justify-content-center g-4 mb-5">
+        <div class="row justify-content-center g-4">
             <?php foreach ($hods as $hod): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="faculty-card">
-                        <div class="faculty-avatar">
-                            <?php echo strtoupper(substr($hod['name'], 0, 1)); ?>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="stage-paper">
+                        <div class="paper-back"></div>
+                        <div class="paper-mid"></div>
+                        <div class="card-paper">
+                            <div>
+                                <div class="paper-name"><?php echo htmlspecialchars($hod['name']); ?></div>
+                                <div class="paper-role">Head of Department</div>
+                            </div>
+                            <div class="paper-list">
+                                <div class="paper-item"><span>Dept &mdash; </span><?php echo htmlspecialchars(ucfirst($hod['department']) ?? 'Department'); ?></div>
+                                <div class="paper-item"><span>Mail &mdash; </span><a href="mailto:<?php echo htmlspecialchars($hod['email']); ?>"><?php echo htmlspecialchars($hod['email']); ?></a></div>
+                            </div>
                         </div>
-                        <h5><?php echo htmlspecialchars($hod['name']); ?></h5>
-                        <span class="faculty-designation">Head of Department</span>
-                        <p class="faculty-dept"><?php echo htmlspecialchars(ucfirst($hod['department']) ?? 'Department'); ?></p>
-                        <a href="mailto:<?php echo htmlspecialchars($hod['email']); ?>" class="faculty-email"><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($hod['email']); ?></a>
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
         </div>
         <?php endif; ?>
 
         <!-- Coordinators -->
         <?php if (!empty($coordinators)): ?>
+        <div class="faculty-group">
         <h2 class="section-title"><i class="bi bi-diagram-3"></i> FYP Coordinators</h2>
         <div class="role-description">
             Coordinators are responsible for the day-to-day administration of the FYP portal. They verify student accounts, manage deadlines, organize defense schedules, and handle official notices.
         </div>
-        <div class="row justify-content-center g-4 mb-5">
+        <div class="row justify-content-center g-4">
             <?php foreach ($coordinators as $coord): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="faculty-card">
-                        <div class="faculty-avatar">
-                            <?php echo strtoupper(substr($coord['name'], 0, 1)); ?>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="stage-paper">
+                        <div class="paper-back"></div>
+                        <div class="paper-mid"></div>
+                        <div class="card-paper">
+                            <div>
+                                <div class="paper-name"><?php echo htmlspecialchars($coord['name']); ?></div>
+                                <div class="paper-role">FYP Coordinator</div>
+                            </div>
+                            <div class="paper-list">
+                                <div class="paper-item"><span>Dept &mdash; </span>Coordinator</div>
+                                <div class="paper-item"><span>Mail &mdash; </span><a href="mailto:<?php echo htmlspecialchars($coord['email']); ?>"><?php echo htmlspecialchars($coord['email']); ?></a></div>
+                            </div>
                         </div>
-                        <h5><?php echo htmlspecialchars($coord['name']); ?></h5>
-                        <span class="faculty-designation">FYP Coordinator</span>
-                        <a href="mailto:<?php echo htmlspecialchars($coord['email']); ?>" class="faculty-email"><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($coord['email']); ?></a>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
+        </div>
         <?php endif; ?>
+    </div>
+</section>
 
-        <!-- Committee Members -->
-        <?php if (!empty($committee)): ?>
+<!-- Committee Members -->
+<?php if (!empty($committee)): ?>
+<section class="section" style="background-color: var(--lp-bg-alt); border-top: 1px solid var(--lp-border); border-bottom: 1px solid var(--lp-border);">
+    <div class="container">
+        <div class="faculty-group" style="margin-bottom: 0;">
         <h2 class="section-title"><i class="bi bi-clipboard-check"></i> Evaluation Committee</h2>
         <div class="role-description">
             Committee Members form the examination panels. They review project proposals, conduct mid-year and final defenses, and evaluate the overall quality and presentation of the projects.
         </div>
-        <div class="row justify-content-center g-4 mb-5">
+        <div class="row justify-content-center g-4">
             <?php foreach ($committee as $member): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="faculty-card">
-                        <div class="faculty-avatar">
-                            <?php echo strtoupper(substr($member['name'], 0, 1)); ?>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="stage-paper">
+                        <div class="paper-back"></div>
+                        <div class="paper-mid"></div>
+                        <div class="card-paper">
+                            <div>
+                                <div class="paper-name"><?php echo htmlspecialchars($member['name']); ?></div>
+                                <div class="paper-role">Committee Member</div>
+                            </div>
+                            <div class="paper-list">
+                                <div class="paper-item"><span>Dept &mdash; </span><?php echo htmlspecialchars(ucfirst($member['department']) ?? 'Department'); ?></div>
+                                <div class="paper-item"><span>Mail &mdash; </span><a href="mailto:<?php echo htmlspecialchars($member['email']); ?>"><?php echo htmlspecialchars($member['email']); ?></a></div>
+                            </div>
                         </div>
-                        <h5><?php echo htmlspecialchars($member['name']); ?></h5>
-                        <span class="faculty-designation">Committee Member</span>
-                        <p class="faculty-dept"><?php echo htmlspecialchars(ucfirst($member['department']) ?? 'Department'); ?></p>
-                        <a href="mailto:<?php echo htmlspecialchars($member['email']); ?>" class="faculty-email"><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($member['email']); ?></a>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-        <?php endif; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
-        <!-- Supervisors -->
-        <?php if (!empty($supervisors)): ?>
+<!-- Supervisors -->
+<?php if (!empty($supervisors)): ?>
+<section class="section">
+    <div class="container">
+        <div class="faculty-group">
         <h2 class="section-title"><i class="bi bi-person-workspace"></i> Project Supervisors</h2>
         <div class="role-description">
             Supervisors directly mentor student groups. They provide technical guidance, track bi-weekly progress, approve documentation, and help students overcome challenges throughout their project journey.
         </div>
-        <div class="row justify-content-center g-4 mb-5">
+        <div class="row justify-content-center g-4">
             <?php foreach ($supervisors as $supervisor): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="faculty-card">
-                        <div class="faculty-avatar">
-                            <?php
-                            $initials = '';
-                            $nameParts = explode(' ', $supervisor['name']);
-                            foreach (array_slice($nameParts, 0, 2) as $part) {
-                                $initials .= strtoupper(substr($part, 0, 1));
-                            }
-                            echo htmlspecialchars($initials);
-                            ?>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="stage-paper">
+                        <div class="paper-back"></div>
+                        <div class="paper-mid"></div>
+                        <div class="card-paper">
+                            <div>
+                                <div class="paper-name"><?php echo htmlspecialchars($supervisor['name']); ?></div>
+                                <div class="paper-role"><?php echo htmlspecialchars($supervisor['designation'] ?? 'Supervisor'); ?></div>
+                            </div>
+                            <div class="paper-list">
+                                <div class="paper-item"><span>Dept &mdash; </span><?php echo htmlspecialchars($supervisor['department']); ?></div>
+                                <div class="paper-item"><span>Mail &mdash; </span><a href="mailto:<?php echo htmlspecialchars($supervisor['email']); ?>"><?php echo htmlspecialchars($supervisor['email']); ?></a></div>
+                            </div>
                         </div>
-                        <h5><?php echo htmlspecialchars($supervisor['name']); ?></h5>
-                        <?php
-                        $desig = $supervisor['designation'] ?? 'Supervisor';
-                        ?>
-                        <span class="faculty-designation"><?php echo htmlspecialchars($desig); ?></span>
-                        <p class="faculty-dept"><?php echo htmlspecialchars($supervisor['department']); ?></p>
-                        <a href="mailto:<?php echo htmlspecialchars($supervisor['email']); ?>" class="faculty-email"><i class="bi bi-envelope"></i> <?php echo htmlspecialchars($supervisor['email']); ?></a>
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
         </div>
         <?php endif; ?>
 

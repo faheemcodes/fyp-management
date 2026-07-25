@@ -1,18 +1,15 @@
-<!-- Coordinator Notice Generator View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
-
 <style>
-
-
-
-
-
-
-
-
-
+#is_public:checked {
+                                background-color: #10b981 !important;
+                                border-color: #10b981 !important;
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+                            }
+                            #is_public {
+                                background-color: var(--pf-bg-alt);
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+                            }
+</style>
+<style>
 /* ─── Section Panel ─── */
 
 
@@ -115,21 +112,27 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     .modern-table .target-col { min-width: 180px; }
 }
 </style>
+<!-- Coordinator Notice Generator View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="page-hero-icon" style="background: transparent;">
+        <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
 
         <!-- Info -->
         <div class="flex-grow-1 text-center text-md-start">
-            <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+            <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                 Department Notifications
             </p>
-            <h4 class="text-white fw-bold" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+            <h4 class="text-white fw-bold" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                 Notice Generator
             </h4>
         </div>
@@ -149,7 +152,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-4">
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
-                <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                     <i class="bi bi-pencil-square"></i>
                 </div>
                 <div>
@@ -189,20 +192,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <div class="pf-group mb-4">
                         <label class="form-label d-block">Public Visibility</label>
-                        <style>
-                            #is_public:checked {
-                                background-color: #10b981 !important;
-                                border-color: #10b981 !important;
-                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
-                            }
-                            #is_public {
-                                background-color: var(--pf-bg-alt);
-                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
-                            }
-                        </style>
+                        
                         <div class="form-check form-switch mt-2">
-                            <input class="form-check-input" type="checkbox" role="switch" id="is_public" name="is_public" value="1" checked style="cursor: pointer; border: 1px solid #ced4da; box-shadow: none;">
-                            <label class="form-check-label ms-2" for="is_public" style="cursor: pointer;">Display on Public Home Page</label>
+                            <input class="form-check-input" type="checkbox" role="switch" id="is_public" name="is_public" value="1" checked style="cursor: pointer;border: 1px solid #ced4da;box-shadow: none">
+                            <label class="form-check-label ms-2" for="is_public" style="cursor: pointer">Display on Public Home Page</label>
                         </div>
                     </div>
 
@@ -213,10 +206,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                     <div class="pf-group mb-4">
                         <label for="body" class="form-label">Notice Content <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="body" name="body" rows="6" placeholder="Write notice details, instructions, or rules here..." required style="resize: vertical;"></textarea>
+                        <textarea class="form-control" id="body" name="body" rows="6" placeholder="Write notice details, instructions, or rules here..." required style="resize: vertical"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 12px; font-size: 0.9rem;">
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 12px;font-size: 0.9rem">
                         <i class="bi bi-broadcast me-2"></i> Broadcast Notice
                     </button>
                 </form>
@@ -228,7 +221,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-8">
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
-                <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                     <i class="bi bi-clock-history"></i>
                 </div>
                 <div>
@@ -236,9 +229,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <small>Previously sent official notices</small>
                 </div>
             </div>
-            <div class="table-responsive" style="max-height: calc(100% - 73px); overflow-y: auto;">
+            <div class="table-responsive" style="max-height: calc(100% - 73px);overflow-y: auto">
                 <table class="table modern-table m-0">
-                    <thead style="position: sticky; top: 0; z-index: 5;">
+                    <thead style="position: sticky;top: 0;z-index: 5">
                         <tr>
                             <th class="ps-4">Ref No.</th>
                             <th class="subject-col">Subject</th>
@@ -251,17 +244,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php foreach($notices as $n): ?>
                         <tr>
                             <td class="ps-4">
-                                <span class="font-monospace fw-bold text-secondary" style="font-size: 0.85rem;">
+                                <span class="font-monospace fw-bold text-secondary" style="font-size: 0.85rem">
                                     <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="fw-semibold text-dark text-truncate" style="max-width: 250px; font-size: 0.9rem;" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                                <div class="fw-semibold text-dark text-truncate" style="max-width: 250px;font-size: 0.9rem" title="<?php echo htmlspecialchars($n['subject']); ?>">
                                     <?php echo htmlspecialchars($n['subject']); ?>
                                 </div>
                             </td>
                             <td>
-                                <span class="text-muted fw-medium" style="font-size: 0.85rem;">
+                                <span class="text-muted fw-medium" style="font-size: 0.85rem">
                                     <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
                                 </span>
                             </td>
@@ -273,7 +266,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         $aud = trim($aud);
                                         if (empty($aud)) continue;
                                     ?>
-                                        <span style="background: rgba(139,92,246,0.1); color: #8b5cf6; font-size: 0.6rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
+                                        <span style="background: rgba(139,92,246,0.1);color: #8b5cf6;font-size: 0.6rem;font-weight: 700;padding: 4px 8px;border-radius: 6px;text-transform: uppercase">
                                             <?php echo htmlspecialchars($aud); ?>
                                         </span>
                                     <?php endforeach; ?>
@@ -294,7 +287,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php if (empty($notices)): ?>
                             <tr>
                                 <td colspan="5" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                                    <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;opacity: 0.3"></i>
                                     No notices broadcasted yet.
                                 </td>
                             </tr>

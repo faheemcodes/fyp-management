@@ -1,14 +1,4 @@
-<!-- HOD Dashboard View -->
-<?php
-$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
 <style>
-
-
-
-
-
-
 @media (min-width: 576px) {
     
 }
@@ -28,28 +18,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 
 /* ─── Modern Table Styles ─── */
-
-
-
-
-
 </style>
+<!-- HOD Dashboard View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
 
 <!-- Top Hero Banner -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-building-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.45rem; letter-spacing: -0.02em;">Department Overview</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Manage faculty, coordinate groups, and monitor academic progress</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.45rem;letter-spacing: -0.02em">Department Overview</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Manage faculty, coordinate groups, and monitor academic progress</p>
             </div>
         </div>
         
         <!-- Stats Row inside Hero -->
-        <div class="d-flex flex-wrap justify-content-center gap-2 w-100 mt-3 mt-lg-0" style="max-width: 480px;">
+        <div class="d-flex flex-wrap justify-content-center gap-2 w-100 mt-3 mt-lg-0" style="max-width: 480px">
             <div class="page-stat-pill">
                 <span class="stat-num"><?php echo htmlspecialchars($stats['supervisors'] ?? '0'); ?></span>
                 <span class="stat-label">Supervisors</span>
@@ -76,15 +66,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669)">
                         <i class="bi bi-person-badge"></i>
                     </div>
                     <div>
                         <h5 class="page-section-title">Recently Added Supervisors</h5>
-                        <small class="text-muted" style="font-size: 0.75rem;">Latest faculty members</small>
+                        <small class="text-muted" style="font-size: 0.75rem">Latest faculty members</small>
                     </div>
                 </div>
-                <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem; font-weight: 600;">Manage All</a>
+                <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;font-weight: 600">Manage All</a>
             </div>
             <div class="table-responsive">
                 <table class="table modern-table">
@@ -99,12 +89,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 0.9rem;">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 36px;height: 36px;font-size: 0.9rem">
                                         <?php echo strtoupper(substr($rs['name'], 0, 1)); ?>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($rs['name']); ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rs['email']); ?></small>
+                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($rs['name']); ?></div>
+                                        <small class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rs['email']); ?></small>
                                     </div>
                                 </div>
                             </td>
@@ -129,15 +119,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <div class="page-section-icon shadow-sm" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)">
                         <i class="bi bi-shield-check"></i>
                     </div>
                     <div>
                         <h5 class="page-section-title">Active Committee Members</h5>
-                        <small class="text-muted" style="font-size: 0.75rem;">Evaluation panel</small>
+                        <small class="text-muted" style="font-size: 0.75rem">Evaluation panel</small>
                     </div>
                 </div>
-                <a href="<?php echo $basePath; ?>/hod/committee" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem; font-weight: 600;">Manage All</a>
+                <a href="<?php echo $basePath; ?>/hod/committee" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;font-weight: 600">Manage All</a>
             </div>
             <div class="table-responsive">
                 <table class="table modern-table">
@@ -152,12 +142,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 0.9rem;">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 36px;height: 36px;font-size: 0.9rem">
                                         <?php echo strtoupper(substr($rc['name'], 0, 1)); ?>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($rc['name']); ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rc['email']); ?></small>
+                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($rc['name']); ?></div>
+                                        <small class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rc['email']); ?></small>
                                     </div>
                                 </div>
                             </td>

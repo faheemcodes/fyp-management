@@ -265,8 +265,8 @@ function fetchNotifications() {
                 const target = notif.redirect_url ? 'target="_blank"' : '';
                 
                 let iconClass = 'bi-bell-fill';
-                let iconColor = '#3b82f6';
-                let iconBg = 'rgba(59,130,246,0.15)';
+                let iconColor = '#10b981';
+                let iconBg = 'rgba(16, 185, 129, 0.15)';
                 
                 const titleLower = notif.title.toLowerCase();
                 if (titleLower.includes('success') || titleLower.includes('approved')) {
@@ -291,7 +291,7 @@ function fetchNotifications() {
                 item.className = 'px-1 py-0';
                 item.innerHTML = `
                     <div class="dropdown-item d-flex align-items-start gap-2 p-2 rounded-3 position-relative" style="background: ${isUnread ? 'var(--form-bg)' : 'transparent'}; transition: all 0.2s ease; margin-bottom: 2px;">
-                        ${isUnread ? '<div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 4px rgba(59,130,246,0.6);"></div>' : ''}
+                        ${isUnread ? '<div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; background: #10b981; border-radius: 50%; box-shadow: 0 0 4px rgba(16,185,129,0.6);"></div>' : ''}
                         
                         <div style="width: 30px; height: 30px; background: ${iconBg}; color: ${iconColor}; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; ${isUnread ? 'margin-left: 6px;' : ''}">
                             <i class="bi ${iconClass}"></i>

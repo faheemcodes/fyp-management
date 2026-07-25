@@ -1,27 +1,3 @@
-<!-- Student Proposal Submission View -->
-<?php
-$titleVal       = $project['title'] ?? '';
-$abstractVal    = $proposal['abstract'] ?? $project['description'] ?? '';
-$supervisorIdVal = $project['supervisor_id'] ?? '';
-$member1Val     = isset($groupMembers[0]) ? $groupMembers[0]['student_id'] : '';
-$member2Val     = isset($groupMembers[1]) ? $groupMembers[1]['student_id'] : '';
-$basePath       = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-
-$statusMap = [
-    'Draft'    => ['rgba(107,114,128,0.1)', '#6b7280',  'bi-pencil-fill'],
-    'Pending'  => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
-    'Approved' => ['rgba(16,185,129,0.1)',  '#059669',  'bi-patch-check-fill'],
-    'Rejected' => ['rgba(239,68,68,0.1)',   '#dc2626',  'bi-x-circle-fill'],
-];
-$st  = $proposal['status'] ?? 'Draft';
-$sc  = $statusMap[$st] ?? $statusMap['Draft'];
-
-$supName = 'Unassigned';
-foreach (($supervisors ?? []) as $s) {
-    if ($s['user_id'] == $supervisorIdVal) { $supName = $s['name']; break; }
-}
-?>
-
 <style>
 /* ─── Proposal Page Scoped Styles ─── */
 
@@ -152,6 +128,31 @@ foreach (($supervisors ?? []) as $s) {
     
 }
 </style>
+<!-- Student Proposal Submission View -->
+<?php
+$titleVal       = $project['title'] ?? '';
+$abstractVal    = $proposal['abstract'] ?? $project['description'] ?? '';
+$supervisorIdVal = $project['supervisor_id'] ?? '';
+$member1Val     = isset($groupMembers[0]) ? $groupMembers[0]['student_id'] : '';
+$member2Val     = isset($groupMembers[1]) ? $groupMembers[1]['student_id'] : '';
+$basePath       = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+
+$statusMap = [
+    'Draft'    => ['rgba(107,114,128,0.1)', '#6b7280',  'bi-pencil-fill'],
+    'Pending'  => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
+    'Approved' => ['rgba(16,185,129,0.1)',  '#059669',  'bi-patch-check-fill'],
+    'Rejected' => ['rgba(239,68,68,0.1)',   '#dc2626',  'bi-x-circle-fill'],
+];
+$st  = $proposal['status'] ?? 'Draft';
+$sc  = $statusMap[$st] ?? $statusMap['Draft'];
+
+$supName = 'Unassigned';
+foreach (($supervisors ?? []) as $s) {
+    if ($s['user_id'] == $supervisorIdVal) { $supName = $s['name']; break; }
+}
+?>
+
+
 
 <?php if ($group && !$isLeader): ?>
 <!-- ─── GROUP MEMBER READ-ONLY VIEW ─── -->
@@ -163,37 +164,37 @@ foreach (($supervisors ?? []) as $s) {
                 <i class="bi bi-file-earmark-text-fill"></i>
             </div>
             <div class="flex-grow-1 text-center text-md-start">
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     Your Group Project
                 </p>
-                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.35;">
+                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem;letter-spacing: -0.02em;line-height: 1.35">
                     <?php echo htmlspecialchars($project['title'] ?? 'FYP Project'); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8');?>;color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8');?>">
                         <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
-                    <span class="page-hero-chip" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: monospace;">
+                    <span class="page-hero-chip" style="background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.7);font-family: monospace">
                         <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                     </span>
                 </div>
             </div>
-            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06);">
-                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem; color: #34d399;"></i>
+            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06)">
+                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem;color: #34d399"></i>
                 <div>
-                    <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.04em;">Supervisor</div>
-                    <div class="text-white fw-semibold" style="font-size: 0.88rem;"><?php echo htmlspecialchars($supName); ?></div>
+                    <div style="font-size: 0.65rem;color: rgba(255,255,255,0.4);text-transform: uppercase;letter-spacing: 0.04em">Supervisor</div>
+                    <div class="text-white fw-semibold" style="font-size: 0.88rem"><?php echo htmlspecialchars($supName); ?></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Info Alert -->
-    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15);">
-        <div style="width: 32px; height: 32px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #10b981; font-size: 0.9rem;">
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06);border: 1px solid rgba(16,185,129,0.15)">
+        <div style="width: 32px;height: 32px;background: rgba(16,185,129,0.1);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #10b981;font-size: 0.9rem">
             <i class="bi bi-info-circle-fill"></i>
         </div>
-        <span style="font-size: 0.85rem; color: #059669; line-height: 1.5;">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
+        <span style="font-size: 0.85rem;color: #059669;line-height: 1.5">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
     </div>
 
     <div class="row g-4">
@@ -201,7 +202,7 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Abstract -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                         <i class="bi bi-file-text-fill"></i>
                     </div>
                     <div>
@@ -210,7 +211,7 @@ foreach (($supervisors ?? []) as $s) {
                     </div>
                 </div>
                 <div class="page-section-body">
-                    <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.8; text-align: justify;">
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.8;text-align: justify">
                         <?php echo $abstractVal ? nl2br(htmlspecialchars($abstractVal)) : '<em>No abstract added yet.</em>'; ?>
                     </p>
                 </div>
@@ -221,23 +222,23 @@ foreach (($supervisors ?? []) as $s) {
                 <div class="col-12">
                     <div class="page-section">
                         <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+                            <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
                                 <i class="bi bi-info-circle-fill"></i>
                             </div>
                             <div><h6>Details</h6></div>
                         </div>
                         <div class="page-section-body d-flex flex-wrap gap-5 align-items-start">
                             <div>
-                                <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Supervisor</div>
-                                <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo htmlspecialchars($supName); ?></div>
+                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Supervisor</div>
+                                <div class="fw-semibold" style="font-size: 0.875rem"><?php echo htmlspecialchars($supName); ?></div>
                             </div>
                             <div>
-                                <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">Group Code</div>
-                                <div class="fw-bold font-monospace" style="color: #10b981;"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
+                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Group Code</div>
+                                <div class="fw-bold font-monospace" style="color: #10b981"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
                             </div>
                             <?php if ($proposal && $proposal['file_path']): ?>
                             <div>
-                                <div style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 6px;">Proposal File</div>
+                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 6px">Proposal File</div>
                                 <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-3 px-3">
                                     <i class="bi bi-download me-1"></i>Download
                                 </a>
@@ -253,7 +254,7 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Feedback -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1);color: #f59e0b">
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
                     <div>
@@ -264,13 +265,13 @@ foreach (($supervisors ?? []) as $s) {
                 <div class="page-section-body">
                     <?php if ($proposal && $proposal['feedback']): ?>
                         <div class="prop-feedback-bubble">
-                            <p class="mb-2" style="font-size: 0.82rem; line-height: 1.65; color: var(--text-primary);"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
-                            <div class="text-end"><small class="text-muted" style="font-size: 0.7rem;">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
+                            <p class="mb-2" style="font-size: 0.82rem;line-height: 1.65;color: var(--text-primary)"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
+                            <div class="text-end"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
                         </div>
                     <?php else: ?>
                         <div class="text-center py-5">
-                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2.2rem; opacity: 0.2;"></i>
-                            <p class="text-muted mt-3 mb-0" style="font-size: 0.82rem;">No feedback from supervisor yet.</p>
+                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2.2rem;opacity: 0.2"></i>
+                            <p class="text-muted mt-3 mb-0" style="font-size: 0.82rem">No feedback from supervisor yet.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -288,24 +289,24 @@ foreach (($supervisors ?? []) as $s) {
                 <i class="bi bi-file-earmark-plus-fill"></i>
             </div>
             <div class="flex-grow-1 text-center text-md-start">
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     Phase 1 — Proposal Submission
                 </p>
-                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem; letter-spacing: -0.02em;">
+                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem;letter-spacing: -0.02em">
                     <?php echo $proposal ? htmlspecialchars($project['title'] ?? 'Project Proposal') : 'New Project Proposal'; ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>;">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8');?>;color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8');?>">
                         <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
             </div>
             <?php if ($proposal): ?>
-            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06);">
-                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem; color: #34d399;"></i>
+            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06)">
+                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem;color: #34d399"></i>
                 <div>
-                    <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.04em;">Supervisor</div>
-                    <div class="text-white fw-semibold" style="font-size: 0.88rem;"><?php echo htmlspecialchars($supName); ?></div>
+                    <div style="font-size: 0.65rem;color: rgba(255,255,255,0.4);text-transform: uppercase;letter-spacing: 0.04em">Supervisor</div>
+                    <div class="text-white fw-semibold" style="font-size: 0.88rem"><?php echo htmlspecialchars($supName); ?></div>
                 </div>
             </div>
             <?php endif; ?>
@@ -321,11 +322,11 @@ foreach (($supervisors ?? []) as $s) {
                         <div class="prop-approved-icon">
                             <i class="bi bi-patch-check-fill"></i>
                         </div>
-                        <h5 class="fw-bold mb-2" style="color: #059669;">Proposal Approved!</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.875rem; max-width: 380px; margin: 0 auto 16px;">Your FYP proposal has been formally approved by your supervisor. You may now proceed to the next stage.</p>
-                        <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.2);">
-                            <i class="bi bi-person-badge-fill" style="color: #059669;"></i>
-                            <span class="fw-semibold" style="font-size: 0.875rem; color: #059669;"><?php echo htmlspecialchars($supName); ?></span>
+                        <h5 class="fw-bold mb-2" style="color: #059669">Proposal Approved!</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 380px;margin: 0 auto 16px">Your FYP proposal has been formally approved by your supervisor. You may now proceed to the next stage.</p>
+                        <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(5,150,105,0.08);border: 1px solid rgba(5,150,105,0.2)">
+                            <i class="bi bi-person-badge-fill" style="color: #059669"></i>
+                            <span class="fw-semibold" style="font-size: 0.875rem;color: #059669"><?php echo htmlspecialchars($supName); ?></span>
                         </div>
                     </div>
                 </div>
@@ -333,7 +334,7 @@ foreach (($supervisors ?? []) as $s) {
                 <!-- Abstract (read-only) -->
                 <div class="page-section">
                     <div class="page-section-header">
-                        <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                        <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                             <i class="bi bi-file-text-fill"></i>
                         </div>
                         <div>
@@ -342,7 +343,7 @@ foreach (($supervisors ?? []) as $s) {
                         </div>
                     </div>
                     <div class="page-section-body">
-                        <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.8; text-align: justify;">
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.8;text-align: justify">
                             <?php echo nl2br(htmlspecialchars($abstractVal)); ?>
                         </p>
                         <?php if ($proposal['file_path']): ?>
@@ -362,7 +363,7 @@ foreach (($supervisors ?? []) as $s) {
                     <!-- Project Details -->
                     <div class="page-section">
                         <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                            <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                                 <i class="bi bi-journal-text"></i>
                             </div>
                             <div>
@@ -389,9 +390,9 @@ foreach (($supervisors ?? []) as $s) {
                                     <label class="form-label">Upload Proposal (PDF/DOC) <?php echo $proposal ? '' : '<span class="text-danger">*</span>'; ?></label>
                                     <input type="file" class="form-control" id="proposal_file" name="proposal_file" <?php echo $proposal ? '' : 'required'; ?>>
                                     <?php if ($proposal && $proposal['file_path']): ?>
-                                        <div class="mt-1" style="font-size: 0.75rem; color: var(--text-secondary);">
+                                        <div class="mt-1" style="font-size: 0.75rem;color: var(--text-secondary)">
                                             <i class="bi bi-file-earmark-check text-primary me-1"></i>
-                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #10b981;">Current file uploaded</a>
+                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #10b981">Current file uploaded</a>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -406,7 +407,7 @@ foreach (($supervisors ?? []) as $s) {
                     <!-- Team Members -->
                     <div class="page-section">
                         <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1); color: #8b5cf6;">
+                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1);color: #8b5cf6">
                                 <i class="bi bi-people-fill"></i>
                             </div>
                             <div>
@@ -431,7 +432,7 @@ foreach (($supervisors ?? []) as $s) {
                             </div>
                         </div>
                         <div class="prop-save-footer">
-                            <span style="font-size: 0.75rem; color: var(--text-secondary);">
+                            <span style="font-size: 0.75rem;color: var(--text-secondary)">
                                 <i class="bi bi-info-circle me-1"></i>Members receive view access to the proposal
                             </span>
                             <button type="submit" class="btn btn-primary">
@@ -451,7 +452,7 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Feedback -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1);color: #f59e0b">
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
                     <div>
@@ -463,16 +464,16 @@ foreach (($supervisors ?? []) as $s) {
                     <?php if ($proposal && $proposal['feedback']): ?>
                         <div class="prop-feedback-bubble">
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <i class="bi bi-person-badge-fill" style="color: #0d9488;"></i>
-                                <span class="fw-semibold" style="font-size: 0.82rem;">Review Comments</span>
+                                <i class="bi bi-person-badge-fill" style="color: #0d9488"></i>
+                                <span class="fw-semibold" style="font-size: 0.82rem">Review Comments</span>
                             </div>
-                            <p class="mb-1" style="font-size: 0.82rem; line-height: 1.65; color: var(--text-primary);"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
-                            <div class="text-end mt-2"><small class="text-muted" style="font-size: 0.7rem;">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
+                            <p class="mb-1" style="font-size: 0.82rem;line-height: 1.65;color: var(--text-primary)"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
+                            <div class="text-end mt-2"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
                         </div>
                     <?php else: ?>
                         <div class="text-center py-4">
-                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2rem; opacity: 0.2;"></i>
-                            <p class="text-muted mt-2 mb-0" style="font-size: 0.82rem;">No feedback yet.</p>
+                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2rem;opacity: 0.2"></i>
+                            <p class="text-muted mt-2 mb-0" style="font-size: 0.82rem">No feedback yet.</p>
                         </div>
                     <?php endif; ?>
                 </div>

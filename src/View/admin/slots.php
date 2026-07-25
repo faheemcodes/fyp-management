@@ -16,11 +16,11 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="px-4 py-3 text-muted" style="font-weight: 600; font-size: 0.85rem;">Supervisor Name</th>
-                        <th class="py-3 text-muted" style="font-weight: 600; font-size: 0.85rem;">Department</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600; font-size: 0.85rem;">Slot Allocation (Current/8)</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600; font-size: 0.85rem;">Remaining Slots</th>
-                        <th class="px-4 py-3 text-muted text-end" style="font-weight: 600; font-size: 0.85rem;">Status</th>
+                        <th class="px-4 py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Supervisor Name</th>
+                        <th class="py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Department</th>
+                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Slot Allocation (Current/8)</th>
+                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Remaining Slots</th>
+                        <th class="px-4 py-3 text-muted text-end" style="font-weight: 600;font-size: 0.85rem">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,22 +41,22 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <td class="px-4 py-3 fw-bold text-dark">
                                 <?php echo htmlspecialchars($sup['name']); ?>
                             </td>
-                            <td class="py-3 text-muted" style="font-size: 0.9rem;">
+                            <td class="py-3 text-muted" style="font-size: 0.9rem">
                                 <?php echo htmlspecialchars($sup['department'] ?? '-'); ?>
                             </td>
                             <td class="py-3">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <div class="progress flex-grow-1" style="height: 6px; max-width: 120px; background: rgba(0,0,0,0.05);">
-                                        <div class="progress-bar bg-<?php echo $statusColor; ?>" style="width: <?php echo min(100, $percentage); ?>%"></div>
+                                    <div class="progress flex-grow-1" style="height: 6px;max-width: 120px;background: rgba(0,0,0,0.05)">
+                                        <div class="progress-bar bg-<?php echo $statusColor; ?>" style="width: <?php echo min(100, $percentage);?>%"></div>
                                     </div>
-                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem; min-width: 20px; text-align: right;"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem;min-width: 20px;text-align: right"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
                                 </div>
                             </td>
                             <td class="py-3 text-center">
                                 <span class="fw-bold text-<?php echo $statusColor; ?> fs-5"><?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?></span>
                             </td>
                             <td class="px-4 py-3 text-end">
-                                <span class="badge bg-<?php echo $statusColor; ?> bg-opacity-10 text-<?php echo $statusColor; ?> px-3 py-2 rounded-pill" style="letter-spacing: 0.05em;">
+                                <span class="badge bg-<?php echo $statusColor; ?> bg-opacity-10 text-<?php echo $statusColor; ?> px-3 py-2 rounded-pill" style="letter-spacing: 0.05em">
                                     <?php echo htmlspecialchars((string)($statusText), ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>

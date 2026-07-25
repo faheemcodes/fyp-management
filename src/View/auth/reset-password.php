@@ -31,20 +31,20 @@ include __DIR__ . '/../layout/auth_header.php';
                 <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
                 
                 <div class="input-wrap">
-                    <input type="password" id="password" name="password" placeholder=" " minlength="8" required style="padding-right: 56px;">
+                    <input type="password" id="password" name="password" placeholder=" " minlength="8" required style="padding-right: 56px">
                     <label for="password">New Password</label>
                     <button class="pw-toggle" type="button" onclick="const el=document.getElementById('password');el.type=el.type==='password'?'text':'password';this.innerText=el.type==='password'?'Show':'Hide';">Show</button>
                 </div>
                 
                 <div class="input-wrap">
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder=" " minlength="8" required style="padding-right: 56px;">
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder=" " minlength="8" required style="padding-right: 56px">
                     <label for="confirm_password">Confirm Password</label>
                     <button class="pw-toggle" type="button" onclick="const el=document.getElementById('confirm_password');el.type=el.type==='password'?'text':'password';this.innerText=el.type==='password'?'Show':'Hide';">Show</button>
                 </div>
 
-                <button type="submit" class="btn-login" style="margin-bottom: 20px;">Save New Password</button>
+                <button type="submit" class="btn-login" style="margin-bottom: 20px">Save New Password</button>
                 
-                <div style="text-align: center;">
+                <div style="text-align: center">
                     <a href="<?php echo $basePath; ?>/login" class="forgot-link">Back to Login</a>
                 </div>
             

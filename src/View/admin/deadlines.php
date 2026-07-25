@@ -1,11 +1,4 @@
-<!-- Admin Deadlines View -->
 <style>
-
-
-
-
-
-
 /* ─── Section Panel ─── */
 
 
@@ -22,17 +15,19 @@
     
 }
 </style>
+<!-- Admin Deadlines View -->
+
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em;">Timeline & Deadlines</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Set and manage submission deadlines for various FYP stages</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Timeline & Deadlines</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Set and manage submission deadlines for various FYP stages</p>
             </div>
         </div>
     </div>
@@ -41,8 +36,8 @@
 <!-- Department Selector -->
 <div class="d-flex justify-content-end mb-4">
     <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 gap-md-3 w-100 justify-content-md-end">
-        <label for="departmentFilter" class="fw-bold text-secondary m-0 text-nowrap" style="font-size: 0.9rem;">Select Department:</label>
-        <select class="form-select border-0 shadow-sm fw-semibold text-primary w-100 w-md-auto" style="background: var(--card-bg); max-width: 350px; border-radius: 12px; cursor: pointer;" id="departmentFilter" onchange="window.location.href='?department='+encodeURIComponent(this.value)">
+        <label for="departmentFilter" class="fw-bold text-secondary m-0 text-nowrap" style="font-size: 0.9rem">Select Department:</label>
+        <select class="form-select border-0 shadow-sm fw-semibold text-primary w-100 w-md-auto" style="background: var(--card-bg);max-width: 350px;border-radius: 12px;cursor: pointer" id="departmentFilter" onchange="window.location.href='?department='+encodeURIComponent(this.value)">
             <?php
             $depts = ['Information Technology', 'Software Engineering', 'Data Science', 'Electronic Engineering', 'Telecommunication Engineering'];
             foreach($depts as $d) {
@@ -86,7 +81,7 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Update Deadline</button>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill" style="background: linear-gradient(135deg, #10b981, #059669);border: none">Update Deadline</button>
                 
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </form>
@@ -112,20 +107,20 @@
                     <tbody>
                         <?php foreach($deadlines as $dl): ?>
                         <tr>
-                            <td class="ps-4 fw-bold text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($dl['stage']); ?></td>
+                            <td class="ps-4 fw-bold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($dl['stage']); ?></td>
                             <td>
-                                <div class="fw-semibold text-primary" style="font-size: 0.85rem;"><i class="bi bi-clock me-1"></i><?php echo date('M d, Y h:i A', strtotime($dl['deadline_date'])); ?></div>
-                                <small class="text-muted" style="font-size: 0.75rem;">Last modified: <?php echo date('m/d/y', strtotime($dl['updated_at'])); ?></small>
+                                <div class="fw-semibold text-primary" style="font-size: 0.85rem"><i class="bi bi-clock me-1"></i><?php echo date('M d, Y h:i A', strtotime($dl['deadline_date'])); ?></div>
+                                <small class="text-muted" style="font-size: 0.75rem">Last modified: <?php echo date('m/d/y', strtotime($dl['updated_at'])); ?></small>
                             </td>
                             <td>
                                 <?php if($dl['status'] === 'Active'): ?>
-                                    <span class="status-pill" style="background: rgba(16,185,129,0.15); color: #059669;">Active</span>
+                                    <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Active</span>
                                 <?php else: ?>
-                                    <span class="status-pill" style="background: rgba(107,114,128,0.15); color: #4b5563;">Inactive</span>
+                                    <span class="status-pill" style="background: rgba(107,114,128,0.15);color: #4b5563">Inactive</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-end pe-4">
-                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>&department=<?php echo urlencode($dl['department'] ?? ($department ?? 'Software Engineering')); ?>" class="btn btn-sm d-inline-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; width: 32px; height: 32px;" onclick="return confirm('Are you sure you want to delete this deadline?');">
+                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>&department=<?php echo urlencode($dl['department'] ?? ($department ?? 'Software Engineering')); ?>" class="btn btn-sm d-inline-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;width: 32px;height: 32px" onclick="return confirm('Are you sure you want to delete this deadline?');">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </td>

@@ -1,8 +1,3 @@
-<?php
-$title = 'Messages';
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-?>
-
 <style>
 /* Modern Chat UI */
 .chat-wrapper {
@@ -576,8 +571,13 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     .file-img-wrap { max-width: 240px; }
     .file-doc-card { min-width: 190px; max-width: 250px; }
 }
-
 </style>
+<?php
+$title = 'Messages';
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
 
 
 
@@ -589,7 +589,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         </div>
         <div class="contacts-list">
             <?php if (empty($leaders)): ?>
-                <div class="p-4 text-center text-muted" style="font-size: 0.85rem;">
+                <div class="p-4 text-center text-muted" style="font-size: 0.85rem">
                     No approved projects yet.
                 </div>
             <?php else: ?>
@@ -599,9 +599,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     $initial = strtoupper(substr($leader['leader_name'], 0, 1));
                 ?>
                     <div class="contact-item" data-leader-id="<?php echo $leader['leader_id']; ?>" data-leader-name="<?php echo htmlspecialchars($leader['leader_name']); ?>" data-avatar="<?php echo htmlspecialchars($avatarUrl); ?>" data-initial="<?php echo $initial; ?>">
-                        <div class="contact-avatar" style="overflow: hidden;">
+                        <div class="contact-avatar" style="overflow: hidden">
                             <?php if ($hasAvatar): ?>
-                                <img src="<?php echo $avatarUrl; ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="<?php echo $avatarUrl; ?>" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">
                             <?php else: ?>
                                 <span class="fw-bold"><?php echo $initial; ?></span>
                             <?php endif; ?>
@@ -619,16 +619,16 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     <!-- Main Chat Area -->
     <div class="chat-main">
         <div id="emptyState" class="empty-state">
-            <i class="bi bi-chat-square-dots fs-1 mb-3 text-muted" style="opacity: 0.5;"></i>
+            <i class="bi bi-chat-square-dots fs-1 mb-3 text-muted" style="opacity: 0.5"></i>
             <h5>Select a chat to start messaging</h5>
         </div>
 
-        <div id="activeChat" style="display: none; height: 100%; flex-direction: column;">
+        <div id="activeChat" style="display: none;height: 100%;flex-direction: column">
             <div class="chat-header">
                 <button id="backToContacts" class="back-btn" title="Back to contacts">
                     <i class="bi bi-arrow-left"></i>
                 </button>
-                <div class="contact-avatar" id="chatHeaderAvatar" style="width: 36px; height: 36px; font-size: 1rem; overflow: hidden;">
+                <div class="contact-avatar" id="chatHeaderAvatar" style="width: 36px;height: 36px;font-size: 1rem;overflow: hidden">
                     <!-- Avatar injected here -->
                 </div>
                 <div>
@@ -647,8 +647,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                         <label for="fileInput" class="btn-icon" title="Attach file">
                             <i class="bi bi-paperclip"></i>
                         </label>
-                        <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display: none;">
-                        <div class="chat-textarea-wrap" id="textareaWrap" style="position: relative;">
+                        <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display: none">
+                        <div class="chat-textarea-wrap" id="textareaWrap" style="position: relative">
                             <div class="drag-overlay" id="dragOverlay"><span><i class="bi bi-cloud-arrow-up me-1"></i>Drop file here</span></div>
                             <div class="file-chip" id="fileChip">
                                 <div id="fileChipVisual"></div>
@@ -790,7 +790,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             chatHeaderName.textContent = leaderName;
             
             if (avatarUrl) {
-                chatHeaderAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">`;
+                chatHeaderAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">`;
             } else {
                 chatHeaderAvatar.innerHTML = `<span class="fw-bold">${initial}</span>`;
             }
@@ -821,7 +821,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             chatMessages.innerHTML = '';
             
             if (snapshot.empty) {
-                chatMessages.innerHTML = '<div class="text-center text-muted my-auto" style="font-size: 0.85rem;">No messages yet. Send a message to start the conversation!</div>';
+                chatMessages.innerHTML = '<div class="text-center text-muted my-auto" style="font-size: 0.85rem">No messages yet. Send a message to start the conversation!</div>';
                 return;
             }
 
@@ -854,7 +854,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `chat-message ${isSentByMe ? 'sent' : 'received'}`;
                 const textContent = data.text ? data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
-                const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem; opacity: 0.8;">(edited)</span>' : '';
+                const editedMark = data.isEdited ? '<span class="ms-1" style="font-size: 0.55rem;opacity: 0.8">(edited)</span>' : '';
                 
                 let fileContent = '';
                 if (data.fileUrl) {
@@ -892,10 +892,10 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 
                 let actionsMenu = `
                     <div class="dropdown d-inline-block ms-1">
-                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none; color: inherit; display: flex; align-items: center;">
-                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem;"></i>
+                        <button class="btn btn-sm p-0 border-0 msg-actions-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none;color: inherit;display: flex;align-items: center">
+                            <i class="bi bi-three-dots-vertical" style="font-size: 0.8rem"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px; font-size: 0.85rem;">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 120px;font-size: 0.85rem">
                             ${textContent ? `<li><a class="dropdown-item copy-msg-btn" href="#" data-text="${textContent}"><i class="bi bi-clipboard me-2"></i>Copy</a></li>` : ''}
                             ${data.fileUrl ? `<li><a class="dropdown-item" href="${data.fileUrl}" target="_blank" download="${data.fileName || 'file'}"><i class="bi bi-download me-2"></i>Download</a></li>` : ''}
                             ${isSentByMe && !data.fileUrl ? `<li><a class="dropdown-item edit-msg-btn" href="#" data-id="${doc.id}" data-text="${textContent}"><i class="bi bi-pencil me-2"></i>Edit</a></li>` : ''}

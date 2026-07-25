@@ -1,28 +1,3 @@
-<?php 
-$title = "Online Grading Sheet - " . htmlspecialchars($stage);
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-
-// Determine hero icon and color scheme based on stage
-$heroIcon = 'bi-file-earmark-text';
-$heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
-$heroIconGradient = 'conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399)';
-$heroSubtitle = 'Assign and manage marks for all assigned groups.';
-$stageBadgeColor = '#10b981';
-
-if ($stage === 'Proposal Defence Presentation') {
-    $heroIcon = 'bi-file-earmark-text';
-    $heroSubtitle = 'Grade project proposals and provide initial feedback.';
-} elseif ($stage === 'FYP Progress Presentation') {
-    $heroIcon = 'bi-graph-up-arrow';
-    $heroSubtitle = 'Evaluate project progress and development milestones.';
-} elseif ($stage === 'Final Presentation') {
-    $heroIcon = 'bi-trophy';
-    $heroSubtitle = 'Complete final evaluation including presentation, thesis, and demo.';
-}
-
-$groupCount = count($grouped ?? []);
-?>
-
 <style>
 /* ─── Hero Section ─── */
 .gs-hero {
@@ -375,17 +350,43 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
     }
 }
 </style>
+<?php 
+$title = "Online Grading Sheet - " . htmlspecialchars($stage);
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+
+// Determine hero icon and color scheme based on stage
+$heroIcon = 'bi-file-earmark-text';
+$heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
+$heroIconGradient = 'conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399)';
+$heroSubtitle = 'Assign and manage marks for all assigned groups.';
+$stageBadgeColor = '#10b981';
+
+if ($stage === 'Proposal Defence Presentation') {
+    $heroIcon = 'bi-file-earmark-text';
+    $heroSubtitle = 'Grade project proposals and provide initial feedback.';
+} elseif ($stage === 'FYP Progress Presentation') {
+    $heroIcon = 'bi-graph-up-arrow';
+    $heroSubtitle = 'Evaluate project progress and development milestones.';
+} elseif ($stage === 'Final Presentation') {
+    $heroIcon = 'bi-trophy';
+    $heroSubtitle = 'Complete final evaluation including presentation, thesis, and demo.';
+}
+
+$groupCount = count($grouped ?? []);
+?>
+
+
 
 <!-- Hero Section -->
 <div class="gs-hero">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative" style="z-index: 1;">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative" style="z-index: 1">
         <div class="d-flex align-items-center gap-3">
             <div class="gs-hero-icon shadow-sm">
                 <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold mb-1" style="font-size: 1.3rem; letter-spacing: -0.02em;"><?php echo htmlspecialchars($stage); ?> Grading</h4>
-                <p class="mb-0" style="color: rgba(255,255,255,0.6); font-size: 0.82rem;"><?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?></p>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.3rem;letter-spacing: -0.02em"><?php echo htmlspecialchars($stage); ?> Grading</h4>
+                <p class="mb-0" style="color: rgba(255,255,255,0.6);font-size: 0.82rem"><?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
         </div>
 
@@ -394,7 +395,7 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
             <div class="custom-search-bar">
                 <i class="bi bi-search search-icon"></i>
                 <input type="text" id="gradingSearch" class="search-input" placeholder="Find in page...">
-                <span id="searchCount" class="search-count" style="display: none;">0/0</span>
+                <span id="searchCount" class="search-count" style="display: none">0/0</span>
                 <div class="search-nav">
                     <button type="button" id="searchPrev" class="search-btn"><i class="bi bi-chevron-up"></i></button>
                     <button type="button" id="searchNext" class="search-btn"><i class="bi bi-chevron-down"></i></button>
@@ -402,7 +403,7 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
             </div>
 
             <!-- Print Button -->
-            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem; white-space: nowrap;">
+            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;white-space: nowrap">
                 <i class="bi bi-printer me-1"></i> Print
             </a>
         </div>
@@ -410,13 +411,13 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
 </div>
 
 <?php if (isset($_SESSION['flash_success'])): ?>
-    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg); border: none;">
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg);border: none">
         <i class="bi bi-check-circle-fill me-2"></i><?php echo $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 <?php if (isset($_SESSION['flash_error'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg); border: none;">
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg);border: none">
         <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -428,16 +429,16 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
     <div class="gs-section">
         <div class="gs-section-header">
             <div class="gs-section-title">
-                <div class="gs-section-icon" style="background: rgba(16,185,129,0.1); color: <?php echo htmlspecialchars((string)($stageBadgeColor), ENT_QUOTES, 'UTF-8'); ?>;">
+                <div class="gs-section-icon" style="background: rgba(16,185,129,0.1);color: <?php echo htmlspecialchars((string)($stageBadgeColor), ENT_QUOTES, 'UTF-8');?>">
                     <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem; color: var(--text-primary);">Grading Sheet</h6>
-                    <small class="text-muted" style="font-size: 0.78rem;">Enter marks for each student below</small>
+                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;color: var(--text-primary)">Grading Sheet</h6>
+                    <small class="text-muted" style="font-size: 0.78rem">Enter marks for each student below</small>
                 </div>
             </div>
             <div>
-                <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-light rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.8rem;">
+                <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-light rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.8rem">
                     <i class="bi bi-arrow-left me-1"></i> Back to Evaluations
                 </a>
             </div>
@@ -448,20 +449,20 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
                 <?php if ($stage === 'FYP Progress Presentation' || $stage === 'Proposal Defence Presentation'): ?>
                     <thead>
                         <tr>
-                            <th rowspan="2" style="width: 40px;">Sr.No</th>
-                            <th rowspan="2" style="width: 100px;">Project ID</th>
-                            <th rowspan="2" style="width: 200px;">Title of Project</th>
-                            <th rowspan="2" style="width: 150px;">Primary Supervisor</th>
+                            <th rowspan="2" style="width: 40px">Sr.No</th>
+                            <th rowspan="2" style="width: 100px">Project ID</th>
+                            <th rowspan="2" style="width: 200px">Title of Project</th>
+                            <th rowspan="2" style="width: 150px">Primary Supervisor</th>
                             <th colspan="2">Group Members</th>
                             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                                <th rowspan="2" style="width: 250px;">Previous comments</th>
+                                <th rowspan="2" style="width: 250px">Previous comments</th>
                             <?php endif; ?>
-                            <th rowspan="2" style="width: 100px;">Marks (Out of 40)</th>
-                            <th rowspan="2" style="width: 200px;">Your Group Remarks</th>
+                            <th rowspan="2" style="width: 100px">Marks (Out of 40)</th>
+                            <th rowspan="2" style="width: 200px">Your Group Remarks</th>
                         </tr>
                         <tr>
-                            <th style="width: 100px;">Roll No</th>
-                            <th style="width: 150px;">Full Name</th>
+                            <th style="width: 100px">Roll No</th>
+                            <th style="width: 150px">Full Name</th>
                         </tr>
                     </thead>
                     <?php 
@@ -483,7 +484,7 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
                                 <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
                                 
                                 <?php if ($stage === 'FYP Progress Presentation'): ?>
-                                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem;color: var(--text-secondary)">
                                         <?php echo htmlspecialchars($firstMember['previous_comments'] ?: 'None'); ?>
                                     </td>
                                 <?php endif; ?>
@@ -513,7 +514,7 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
                         <?php if (empty($grouped)): ?>
                             <tr>
                                 <td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="text-center py-5 text-muted">
-                                    <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+                                    <i class="bi bi-inbox" style="font-size: 2rem;display: block;margin-bottom: 8px;opacity: 0.4"></i>
                                     No approved projects assigned to you for evaluation.
                                 </td>
                             </tr>
@@ -523,19 +524,19 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
                 <?php elseif ($stage === 'Final Presentation'): ?>
                     <thead>
                         <tr>
-                            <th rowspan="2" style="width: 40px;">Sr.No</th>
-                            <th rowspan="2" style="width: 90px;">Project ID</th>
-                            <th rowspan="2" style="width: 150px;">Title of Project</th>
-                            <th rowspan="2" style="width: 120px;">Primary Supervisor</th>
+                            <th rowspan="2" style="width: 40px">Sr.No</th>
+                            <th rowspan="2" style="width: 90px">Project ID</th>
+                            <th rowspan="2" style="width: 150px">Title of Project</th>
+                            <th rowspan="2" style="width: 120px">Primary Supervisor</th>
                             <th colspan="2">Group Members</th>
                             <th colspan="5">Presentation<br>(25 marks)</th>
                             <th colspan="5">Thesis<br>(25 marks)</th>
                             <th rowspan="2" class="vertical-text text-center">Project<br>Demo<br>(25 marks)</th>
-                            <th rowspan="2" style="width: 150px;">Your Group Remarks</th>
+                            <th rowspan="2" style="width: 150px">Your Group Remarks</th>
                         </tr>
                         <tr>
-                            <th style="width: 90px;">Roll No</th>
-                            <th style="width: 140px;">Full Name</th>
+                            <th style="width: 90px">Roll No</th>
+                            <th style="width: 140px">Full Name</th>
                             
                             <!-- Presentation Sub -->
                             <th class="vertical-text">Contents (5)</th>
@@ -618,7 +619,7 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
                         <?php if (empty($grouped)): ?>
                             <tr>
                                 <td colspan="18" class="text-center py-5 text-muted">
-                                    <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.4;"></i>
+                                    <i class="bi bi-inbox" style="font-size: 2rem;display: block;margin-bottom: 8px;opacity: 0.4"></i>
                                     No approved projects assigned to you for evaluation.
                                 </td>
                             </tr>

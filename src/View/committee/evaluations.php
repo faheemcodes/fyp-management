@@ -1,8 +1,3 @@
-<!-- Student Portal Inspired Evaluations View -->
-<?php 
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
-?>
-
 <style>
 /* ─── Hero Section ─── */
 .eval-hero {
@@ -381,17 +376,23 @@ html.dark-theme .eval-input {
     font-size: 0.85rem;
 }
 </style>
+<!-- Student Portal Inspired Evaluations View -->
+<?php 
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
+?>
+
+
 
 <!-- Hero Section -->
 <div class="eval-hero">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 position-relative" style="z-index: 1;">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 position-relative" style="z-index: 1">
         <div class="d-flex align-items-center gap-3">
             <div class="eval-hero-icon shadow-sm">
                 <i class="bi bi-clipboard-data"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold mb-1" style="font-size: 1.4rem; letter-spacing: -0.02em;">Group Evaluations</h4>
-                <p class="mb-0" style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Review project abstracts and submit presentation grades.</p>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.4rem;letter-spacing: -0.02em">Group Evaluations</h4>
+                <p class="mb-0" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Review project abstracts and submit presentation grades.</p>
             </div>
         </div>
         
@@ -421,7 +422,7 @@ html.dark-theme .eval-input {
         <div class="d-flex gap-2">
             <form action="<?php echo $bp; ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
                 <input type="hidden" name="show" value="<?php echo htmlspecialchars((string)($globalShowAction), ENT_QUOTES, 'UTF-8'); ?>">
-                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-black' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;">
+                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-black' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem">
                     <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-1"></i>
                     <?php echo $globalShowAction ? 'Publish Marks' : 'Hide Marks'; ?>
                 </button>
@@ -436,7 +437,7 @@ html.dark-theme .eval-input {
 <div class="eval-section">
     <div class="eval-section-header flex-column flex-md-row gap-3">
         <div class="d-flex align-items-center gap-3">
-            <div class="eval-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+            <div class="eval-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
                 <i class="bi bi-card-list"></i>
             </div>
             <div>
@@ -445,9 +446,9 @@ html.dark-theme .eval-input {
             </div>
         </div>
         
-        <div class="input-group" style="width: 250px; max-width: 100%;">
-            <span class="input-group-text bg-transparent border-end-0 border-light-subtle text-muted" style="border-radius: 50rem 0 0 50rem; padding-left: 1rem;"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control bg-transparent border-start-0 border-light-subtle table-search shadow-none" placeholder="Search groups..." data-target="evals-table" style="border-radius: 0 50rem 50rem 0; font-size: 0.85rem; color: var(--text-primary);">
+        <div class="input-group" style="width: 250px;max-width: 100%">
+            <span class="input-group-text bg-transparent border-end-0 border-light-subtle text-muted" style="border-radius: 50rem 0 0 50rem;padding-left: 1rem"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control bg-transparent border-start-0 border-light-subtle table-search shadow-none" placeholder="Search groups..." data-target="evals-table" style="border-radius: 0 50rem 50rem 0;font-size: 0.85rem;color: var(--text-primary)">
         </div>
     </div>
 
@@ -456,11 +457,11 @@ html.dark-theme .eval-input {
         <table class="table eval-table m-0" id="evals-table">
             <thead>
                 <tr>
-                    <th style="width: 15%;">Group</th>
-                    <th style="width: 25%;">Project Details</th>
-                    <th style="width: 20%;">Proposal Defence</th>
-                    <th style="width: 20%;">FYP Progress</th>
-                    <th style="width: 20%;">Final Presentation</th>
+                    <th style="width: 15%">Group</th>
+                    <th style="width: 25%">Project Details</th>
+                    <th style="width: 20%">Proposal Defence</th>
+                    <th style="width: 20%">FYP Progress</th>
+                    <th style="width: 20%">Final Presentation</th>
                 </tr>
             </thead>
             <tbody>
@@ -470,13 +471,13 @@ html.dark-theme .eval-input {
                         <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
                     </td>
                     <td>
-                        <div class="fw-bold mb-1" style="font-size: 0.9rem; line-height: 1.4; color: var(--text-primary);">
+                        <div class="fw-bold mb-1" style="font-size: 0.9rem;line-height: 1.4;color: var(--text-primary)">
                             <?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?>
                         </div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;">
+                        <div style="font-size: 0.75rem;color: var(--text-secondary);margin-bottom: 8px">
                             <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
                         </div>
-                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem;">
+                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.8rem">
                             View Abstract
                         </button>
                     </td>
@@ -484,34 +485,34 @@ html.dark-theme .eval-input {
                     <!-- 1. Proposal Defence -->
                     <td>
                         <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>
                     </td>
                     
                     <!-- 2. FYP Progress -->
                     <td>
                         <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>
                     </td>
 
                     <!-- 3. Final Presentation -->
                     <td>
                         <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if(empty($groups)): ?>
                     <tr>
-                        <td colspan="5" class="text-center py-5 text-muted" style="font-size: 0.9rem;">
+                        <td colspan="5" class="text-center py-5 text-muted" style="font-size: 0.9rem">
                             <i class="bi bi-inbox fs-2 mb-2 d-block"></i>No project groups available for evaluation yet.
                         </td>
                     </tr>
@@ -526,43 +527,43 @@ html.dark-theme .eval-input {
             <div class="eval-mobile-card">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <span class="group-code-badge"><?php echo htmlspecialchars($g['group_code']); ?></span>
-                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem;" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                    <button class="btn btn-link p-0 text-primary fw-bold text-decoration-none" style="font-size: 0.8rem" data-bs-toggle="modal" data-bs-target="#abstractModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                         Abstract
                     </button>
                 </div>
-                <h6 class="fw-bold mb-1" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?></h6>
-                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                <h6 class="fw-bold mb-1" style="font-size: 0.95rem;color: var(--text-primary)"><?php echo htmlspecialchars($g['project_title'] ?? 'Untitled Project'); ?></h6>
+                <div style="font-size: 0.8rem;color: var(--text-secondary);margin-bottom: 1rem">
                     <i class="bi bi-person text-primary me-1"></i>Sup: <?php echo htmlspecialchars($g['supervisor_name'] ?? 'Unassigned'); ?>
                 </div>
 
                 <div class="eval-mobile-grade">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Proposal (30)</span>
+                    <span style="font-size: 0.8rem;font-weight: 600;color: var(--text-secondary)">Proposal (30)</span>
                     <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Graded</a>
                     <?php else: ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                     <?php endif; ?>
                 </div>
                 <div class="eval-mobile-grade">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progress (40)</span>
+                    <span style="font-size: 0.8rem;font-weight: 600;color: var(--text-secondary)">Progress (40)</span>
                     <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Graded</a>
                     <?php else: ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                     <?php endif; ?>
                 </div>
                 <div class="eval-mobile-grade">
-                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Final (25)</span>
+                    <span style="font-size: 0.8rem;font-weight: 600;color: var(--text-secondary)">Final (25)</span>
                     <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Graded</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Graded</a>
                     <?php else: ?>
-                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">Evaluate</a>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                     <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>
         <?php if(empty($groups)): ?>
-            <div class="text-center py-4 text-muted" style="font-size: 0.9rem;">No projects assigned.</div>
+            <div class="text-center py-4 text-muted" style="font-size: 0.9rem">No projects assigned.</div>
         <?php endif; ?>
     </div>
 </div>
@@ -577,11 +578,11 @@ html.dark-theme .eval-input {
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem;"><i class="bi bi-file-earmark-text text-primary me-2"></i>Project Abstract</h5>
+                    <h5 class="modal-title fw-bold" style="font-size: 1.1rem"><i class="bi bi-file-earmark-text text-primary me-2"></i>Project Abstract</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div style="font-size: 0.95rem; line-height: 1.7; max-height: 60vh; overflow-y: auto; background: var(--form-bg); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.95rem;line-height: 1.7;max-height: 60vh;overflow-y: auto;background: var(--form-bg);padding: 1.25rem;border-radius: 8px;border: 1px solid var(--border-color)">
                         <?php echo nl2br(htmlspecialchars($g['proposal_abstract'] ?? 'No abstract/summary submitted yet.')); ?>
                     </div>
                 </div>

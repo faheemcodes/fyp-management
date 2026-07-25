@@ -30,65 +30,105 @@ if ($basePath === '\\' || $basePath === '/') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
+    
+<style>
+/* HERO SECTION */
+        .lp-hero {
+            position: relative;
+            background: var(--lp-bg);
+            padding: 160px 0 80px;
+            overflow: hidden;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Distributed Line Grid Patches */
+        .lp-hero::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background-image: 
+                linear-gradient(to right, var(--lp-border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--lp-border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.7;
+            -webkit-mask-image: 
+                radial-gradient(circle at 12% 25%, black 2%, transparent 25%),
+                radial-gradient(circle at 88% 75%, black 5%, transparent 30%),
+                radial-gradient(circle at 45% 90%, black 1%, transparent 20%);
+            mask-image: 
+                radial-gradient(circle at 12% 25%, black 2%, transparent 25%),
+                radial-gradient(circle at 88% 75%, black 5%, transparent 30%),
+                radial-gradient(circle at 45% 90%, black 1%, transparent 20%);
+        }
+        /* Distributed Dotted Grid Patches */
+        .lp-hero::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(var(--lp-text-muted) 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+            opacity: 0.45;
+            -webkit-mask-image: 
+                radial-gradient(circle at 82% 18%, black 4%, transparent 28%),
+                radial-gradient(circle at 18% 80%, black 2%, transparent 25%),
+                radial-gradient(circle at 65% 35%, black 1%, transparent 18%);
+            mask-image: 
+                radial-gradient(circle at 82% 18%, black 4%, transparent 28%),
+                radial-gradient(circle at 18% 80%, black 2%, transparent 25%),
+                radial-gradient(circle at 65% 35%, black 1%, transparent 18%);
+        }
+
+        .hero-shape {
+            position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(15,23,42,0) 70%);
+            top: -20vw; right: -20vw; pointer-events: none; z-index: 0;
+        }
+        .hero-shape-2 {
+            position: absolute; width: 40vw; height: 40vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, rgba(15,23,42,0) 70%);
+            bottom: -10vw; left: -10vw; pointer-events: none; z-index: 0;
+        }
+
+        .about-content { position: relative; z-index: 5; max-width: 800px; margin: 0 auto; text-align: center; }
+        
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin-bottom: 24px; color: var(--lp-text); }
+        .highlight {
+            background: linear-gradient(135deg, var(--lp-accent), var(--lp-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']);
+if ($basePath === '\\' || $basePath === '/') {
+    $basePath = '';
+}
+?>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($pageTitle ?? 'Contact Us - FYP Portal'); ?></title>
+    
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+    
+    <!-- Preconnections for Performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
     <style>
-        /* BASE THEME & VARIABLES */
-        :root {
-            --font-heading-main: 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
-            --font-heading-alt: 'Pierknife', 'Oswald', 'Arial Narrow', sans-serif;
-            --font-body: 'Inter', -apple-system, sans-serif;
-        }
-
-        :root[data-theme="light"] {
-            --lp-bg: #ffffff;
-            --lp-bg-alt: #f8fafc;
-            --lp-card: #ffffff;
-            --lp-card-hover: #f1f5f9;
-            --lp-border: rgba(0,0,0,0.06);
-            --lp-text: #111827;
-            --lp-text-muted: #64748b;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #059669;
-            --lp-violet: #8b5cf6;
-            --lp-rose: #f43f5e;
-            --lp-amber: #f59e0b;
-            --lp-teal: #14b8a6;
-            
-            --lp-nav-bg: rgba(255,255,255,0.9);
-        }
-
-        :root[data-theme="dark"] {
-            --lp-bg: #121212;
-            --lp-bg-alt: #18181b;
-            --lp-card: #27272a;
-            --lp-card-hover: #3f3f46;
-            --lp-border: rgba(255,255,255,0.08);
-            --lp-text: #f8fafc;
-            --lp-text-muted: #a1a1aa;
-            
-            --lp-accent: #10b981; /* Emerald */
-            --lp-accent-hover: #34d399;
-            --lp-violet: #a78bfa;
-            --lp-rose: #fb7185;
-            --lp-amber: #fbbf24;
-            --lp-teal: #2dd4bf;
-            
-            --lp-nav-bg: rgba(18,18,18,0.9);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--lp-bg);
-            color: var(--lp-text);
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .heading-main { font-weight: 900; letter-spacing: -0.03em; }
-        .heading-alt { font-weight: 700; letter-spacing: -0.01em; }
-
         /* HERO SECTION */
         .lp-hero {
             position: relative;
@@ -159,43 +199,45 @@ if ($basePath === '\\' || $basePath === '/') {
         .section { padding: 100px 0; position: relative; z-index: 5; }
         .section-alt { background: var(--lp-bg-alt); }
         
-        .card-modern {
-            background: var(--lp-card);
-            border: 1px solid var(--lp-border);
-            border-radius: 20px;
-            padding: 40px;
-            height: 100%;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        .card-modern:hover { transform: translateY(-5px); border-color: var(--lp-text-muted); }
-        
-        .icon-box {
-            width: 60px; height: 60px; border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin-bottom: 24px;
-        }
-        .icon-box.emerald { background: rgba(16,185,129,0.1); color: var(--lp-accent); }
-        .icon-box.violet { background: rgba(139,92,246,0.1); color: var(--lp-violet); }
-        .icon-box.amber { background: rgba(245,158,11,0.1); color: var(--lp-amber); }
+        /* CONTACT CARDS NEW DESIGN */
+        .contact-cards-wrapper { display: grid; grid-template-columns: 1fr; gap: 30px; padding-top: 20px; }
+        @media (min-width: 992px) { .contact-cards-wrapper { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
 
-        .card-modern h3 { font-size: 1.5rem; font-weight: 800; color: var(--lp-text); margin-bottom: 15px; }
-        .card-modern p { color: var(--lp-text-muted); line-height: 1.7; margin-bottom: 0; }
+        .contact-card { position: relative; border-radius: 45px; padding: 40px 30px; display: flex; flex-direction: column; color: #fff; transition: transform 0.3s ease; }
+        .contact-card:hover { transform: translateY(-5px); }
 
-        /* FOOTER */
-        .footer { background: var(--lp-bg-alt); padding: 60px 0 30px; border-top: 1px solid var(--lp-border); position: relative; z-index: 5; }
-        .footer h6 { font-size: 1rem; font-weight: 700; color: var(--lp-text); margin-bottom: 20px; }
-        .footer-links { list-style: none; padding: 0; margin: 0; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: var(--lp-text-muted); text-decoration: none; transition: color 0.2s; font-size: 0.9rem; }
-        .footer-links a:hover { color: var(--lp-text); }
-        .footer-bottom { border-top: 1px solid var(--lp-border); margin-top: 40px; padding-top: 20px; text-align: center; color: var(--lp-text-muted); font-size: 0.8rem; }
+        .contact-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 30px; }
+        .contact-icon-circle { width: 90px; height: 90px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: all 0.3s; }
 
-        @media (max-width: 768px) {
-            .hero-desc { font-size: 1rem; }
-            .section { padding: 60px 0; }
+        .contact-header { text-transform: uppercase; text-align: right; }
+        .contact-header h4 { font-size: 1.4rem; font-weight: 800; margin: 0 0 2px 0; color: #fff; letter-spacing: 1px; }
+        .contact-header span { font-size: 0.85rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.5px; }
+
+        .contact-body { flex-grow: 1; display: flex; flex-direction: column; }
+        .contact-body p { font-size: 0.95rem; line-height: 1.6; margin: 0 0 30px 0; opacity: 0.95; }
+
+        .contact-pill { border-radius: 50px; padding: 14px 20px; margin-top: auto; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s; }
+        .contact-pill a { text-decoration: none !important; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; letter-spacing: 0.5px; }
+
+        /* Themes - Solid Punchy with Dark Insets */
+        .cc-emerald { background: #10b981; box-shadow: 0 15px 40px rgba(16, 185, 129, 0.25); }
+        .cc-yellow { background: #facc15; box-shadow: 0 15px 40px rgba(250, 204, 21, 0.25); }
+        .cc-rose { background: #f43f5e; box-shadow: 0 15px 40px rgba(244, 63, 94, 0.25); }
+
+        .cc-emerald .contact-icon-circle, .cc-emerald .contact-pill,
+        .cc-yellow .contact-icon-circle, .cc-yellow .contact-pill,
+        .cc-rose .contact-icon-circle, .cc-rose .contact-pill {
+            background: rgba(0, 0, 0, 0.25); 
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
-    </style>
+
+        .cc-emerald .contact-icon-circle, .cc-emerald .contact-pill a,
+        .cc-yellow .contact-icon-circle, .cc-yellow .contact-pill a,
+        .cc-rose .contact-icon-circle, .cc-rose .contact-pill a {
+            color: #ffffff;
+        }
+
+        </style>
 </head>
 <body>
 
@@ -221,31 +263,52 @@ if ($basePath === '\\' || $basePath === '/') {
 <!-- CONTACT PILLARS -->
 <section class="section">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card-modern">
-                    <div class="icon-box emerald"><i class="bi bi-geo-alt-fill"></i></div>
-                    <h3>Visit Us</h3>
+        <div class="contact-cards-wrapper">
+            <div class="contact-card cc-emerald">
+                <div class="contact-card-top">
+                    <div class="contact-icon-circle"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div class="contact-header">
+                        <h4>VISIT US</h4>
+                        <span>Location & Directions</span>
+                    </div>
+                </div>
+                <div class="contact-body">
                     <p>Faculty of Engineering & Technology<br>University of Sindh<br>Jamshoro, 76080, Pakistan</p>
-                    <a href="https://maps.app.goo.gl/2equBvBv4dWupdY6A" target="_blank" class="btn btn-outline-success mt-3" style="border-radius: 8px; font-weight: 500; font-size: 0.9rem;">
-                        Get Directions <i class="bi bi-box-arrow-up-right ms-1"></i>
-                    </a>
+                    <div class="contact-pill">
+                        <a href="https://maps.app.goo.gl/2equBvBv4dWupdY6A" target="_blank"><i class="bi bi-geo-alt-fill me-2 fs-5"></i> Get Directions</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card-modern">
-                    <div class="icon-box violet"><i class="bi bi-telephone-fill"></i></div>
-                    <h3>Call Us</h3>
-                    <p>Reach out to the Dean's Office for administrative inquiries or urgent portal support.<br><br>
-                        <strong><a href="tel:+923378001160" style="color: inherit; text-decoration: none;">+92 337-8001160</a></strong>
-                    </p>
+            
+            <div class="contact-card cc-yellow">
+                <div class="contact-card-top">
+                    <div class="contact-icon-circle"><i class="bi bi-telephone-fill"></i></div>
+                    <div class="contact-header">
+                        <h4>CALL US</h4>
+                        <span>Portal Support</span>
+                    </div>
+                </div>
+                <div class="contact-body">
+                    <p>Reach out to the Dean's Office for administrative inquiries or urgent portal support.</p>
+                    <div class="contact-pill">
+                        <a href="#" onclick="copyContact(event, '+92 337-8001160', 'phone')"><i class="bi bi-telephone-fill me-2 fs-5"></i> +92 337-8001160</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card-modern">
-                    <div class="icon-box amber"><i class="bi bi-envelope-fill"></i></div>
-                    <h3>Email Us</h3>
-                    <p>Drop us an email for general questions, project proposals feedback, or technical issues.<br><br><strong>fyp.support@usindh.edu.pk</strong></p>
+            
+            <div class="contact-card cc-rose">
+                <div class="contact-card-top">
+                    <div class="contact-icon-circle"><i class="bi bi-envelope-fill"></i></div>
+                    <div class="contact-header">
+                        <h4>EMAIL US</h4>
+                        <span>General Inquiries</span>
+                    </div>
+                </div>
+                <div class="contact-body">
+                    <p>Drop us an email for general questions, proposals, or technical issues.</p>
+                    <div class="contact-pill">
+                        <a href="mailto:fyp.support@usindh.edu.pk" target="_blank" onclick="copyContact(event, 'fyp.support@usindh.edu.pk', 'email')"><i class="bi bi-envelope-fill me-2 fs-5"></i> fyp.support@usindh.edu.pk</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -253,3 +316,51 @@ if ($basePath === '\\' || $basePath === '/') {
 </section>
 
 <?php include __DIR__ . '/layout/lp_footer.php'; ?>
+
+<script>
+function copyContact(e, text, type) {
+    if (type === 'phone') {
+        e.preventDefault(); // Only prevent default for phone, let email natively trigger mailto:
+    }
+    navigator.clipboard.writeText(text).then(() => {
+        // Create and style the tooltip
+        const tooltip = document.createElement('div');
+        tooltip.textContent = type === 'email' ? 'Email Copied!' : 'Number Copied!';
+        tooltip.style.position = 'fixed';
+        tooltip.style.left = (e.clientX + 15) + 'px';
+        tooltip.style.top = (e.clientY + 15) + 'px';
+        tooltip.style.background = 'var(--lp-text)';
+        tooltip.style.color = 'var(--lp-bg)';
+        tooltip.style.padding = '6px 12px';
+        tooltip.style.borderRadius = '8px';
+        tooltip.style.fontSize = '0.85rem';
+        tooltip.style.fontWeight = '600';
+        tooltip.style.zIndex = '9999';
+        tooltip.style.pointerEvents = 'none';
+        tooltip.style.opacity = '0';
+        tooltip.style.transform = 'translateY(5px)';
+        tooltip.style.transition = 'all 0.2s ease-out';
+        tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        
+        document.body.appendChild(tooltip);
+        
+        // Trigger fade in
+        requestAnimationFrame(() => {
+            tooltip.style.opacity = '1';
+            tooltip.style.transform = 'translateY(0)';
+        });
+        
+        // Fade out and remove
+        setTimeout(() => {
+            tooltip.style.opacity = '0';
+            tooltip.style.transform = 'translateY(-5px)';
+            setTimeout(() => tooltip.remove(), 200);
+        }, 1500);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+</script>
+
+</body>
+</html>

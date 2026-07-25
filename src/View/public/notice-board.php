@@ -1,7 +1,5 @@
-<?php include __DIR__ . '/../layout/auth_header.php'; ?>
-
 <style>
-    .notice-header {
+.notice-header {
         background: linear-gradient(135deg, #0f172a, #020617);
         padding: 80px 0 40px;
         text-align: center;
@@ -101,6 +99,9 @@
         border-color: #10b981;
     }
 </style>
+<?php include __DIR__ . '/../layout/auth_header.php'; ?>
+
+
 
 <div class="notice-header">
     <div class="container">
@@ -109,7 +110,7 @@
     </div>
 </div>
 
-<div class="container" style="padding-bottom: 80px;">
+<div class="container" style="padding-bottom: 80px">
     <div class="notice-list">
         
         <?php if (!empty($error)): ?>
@@ -117,7 +118,7 @@
                 <?php echo htmlspecialchars($error); ?>
             </div>
         <?php elseif (empty($notices)): ?>
-            <div class="text-center" style="padding: 60px 20px; color: #94a3b8;">
+            <div class="text-center" style="padding: 60px 20px;color: #94a3b8">
                 <i class="bi bi-inbox fs-1 d-block mb-3" style="opacity:0.3"></i>
                 <p>No notices available at this time.</p>
             </div>

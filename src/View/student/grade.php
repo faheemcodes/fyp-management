@@ -1,6 +1,6 @@
 <!-- Student Grade View -->
 <?php if (!$group): ?>
-    <div class="alert border-0 rounded-3 d-flex align-items-center gap-3" style="background: rgba(245,158,11,0.08); color: #d97706;" role="alert">
+    <div class="alert border-0 rounded-3 d-flex align-items-center gap-3" style="background: rgba(245,158,11,0.08);color: #d97706" role="alert">
         <i class="bi bi-exclamation-triangle-fill fs-5 flex-shrink-0"></i>
         <span>You must first create or join a group to view your results.</span>
     </div>
@@ -133,14 +133,14 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
             <div class="section-title"><i class="bi bi-table"></i> Grade Breakdown</div>
 
             <?php if ($hasHiddenMarks): ?>
-                <div class="alert border-0 rounded-3 d-flex align-items-center gap-2 mb-4 py-2 px-3" style="background: rgba(16,185,129,0.07); color: #059669; font-size: 0.82rem;" role="alert">
+                <div class="alert border-0 rounded-3 d-flex align-items-center gap-2 mb-4 py-2 px-3" style="background: rgba(16,185,129,0.07);color: #059669;font-size: 0.82rem" role="alert">
                     <i class="bi bi-info-circle-fill flex-shrink-0"></i>
                     Some component marks are currently hidden by evaluators. Results only include published marks.
                 </div>
             <?php endif; ?>
 
             <div class="table-responsive">
-                <table class="table align-middle border-0 m-0" style="box-shadow: none;">
+                <table class="table align-middle border-0 m-0" style="box-shadow: none">
                     <thead>
                         <tr>
                             <th>Evaluation Component</th>
@@ -160,20 +160,20 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                         ?>
                         <tr>
                             <td>
-                                <div class="fw-semibold" style="font-size: 0.875rem;"><?php echo ($i+1) . '. ' . $r['label']; ?></div>
-                                <small class="text-muted d-none d-md-block" style="font-size: 0.75rem;"><?php echo htmlspecialchars((string)($r['desc']), ENT_QUOTES, 'UTF-8'); ?></small>
+                                <div class="fw-semibold" style="font-size: 0.875rem"><?php echo ($i+1) . '. ' . $r['label']; ?></div>
+                                <small class="text-muted d-none d-md-block" style="font-size: 0.75rem"><?php echo htmlspecialchars((string)($r['desc']), ENT_QUOTES, 'UTF-8'); ?></small>
                             </td>
-                            <td style="font-size: 0.875rem; color: var(--text-secondary);"><?php echo htmlspecialchars((string)($r['max']), ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td style="font-size: 0.875rem;color: var(--text-secondary)"><?php echo htmlspecialchars((string)($r['max']), ENT_QUOTES, 'UTF-8'); ?></td>
                             <td class="text-end">
-                                <span class="font-monospace fw-bold" style="font-size: 0.9rem;"><?php echo number_format($r['val'], 0); ?></span>
+                                <span class="font-monospace fw-bold" style="font-size: 0.9rem"><?php echo number_format($r['val'], 0); ?></span>
                             </td>
                         </tr>
                         <?php endforeach; ?>
-                        <tr style="background: var(--table-header-bg); border-top: 2px solid var(--border-color) !important;">
-                            <td><strong style="font-size: 0.9rem;">Cumulative Total</strong></td>
-                            <td><strong style="font-size: 0.9rem;">200</strong></td>
+                        <tr style="background: var(--table-header-bg);border-top: 2px solid var(--border-color) !important">
+                            <td><strong style="font-size: 0.9rem">Cumulative Total</strong></td>
+                            <td><strong style="font-size: 0.9rem">200</strong></td>
                             <td class="text-end">
-                                <span class="font-monospace fw-bold" style="font-size: 1.15rem; color: <?php echo $gradeColor; ?>;"><?php echo number_format($showTotalMarks, 0); ?></span>
+                                <span class="font-monospace fw-bold" style="font-size: 1.15rem;color: <?php echo $gradeColor;?>"><?php echo number_format($showTotalMarks, 0); ?></span>
                             </td>
                         </tr>
                     </tbody>
@@ -210,7 +210,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                         <div class="accordion-item border-bottom">
                             <h2 class="accordion-header" id="heading<?php echo $accordionIndex; ?>">
                                 <button class="accordion-button collapsed px-0 fw-semibold d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $accordionIndex; ?>" aria-expanded="false" aria-controls="collapse<?php echo $accordionIndex; ?>">
-                                    <i class="bi bi-calendar2-check-fill text-primary" style="font-size: 0.9rem;"></i>
+                                    <i class="bi bi-calendar2-check-fill text-primary" style="font-size: 0.9rem"></i>
                                     <?php echo htmlspecialchars($stageName); ?>
                                 </button>
                             </h2>
@@ -219,20 +219,20 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                                     <div class="row g-3">
                                         <?php foreach ($stageEvals as $se): ?>
                                             <div class="col-12">
-                                                <div class="p-3 rounded-3" style="background: var(--form-bg); border-left: 3px solid #10b981;">
+                                                <div class="p-3 rounded-3" style="background: var(--form-bg);border-left: 3px solid #10b981">
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                                        <div class="fw-semibold d-flex align-items-center gap-2" style="font-size: 0.85rem;">
+                                                        <div class="fw-semibold d-flex align-items-center gap-2" style="font-size: 0.85rem">
                                                             <i class="bi bi-person-fill text-muted"></i>
                                                             <?php echo htmlspecialchars($se['evaluator_name']); ?>
                                                         </div>
                                                     </div>
-                                                    <div style="font-size: 0.82rem; color: var(--text-secondary);">
-                                                        <strong style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;">Remarks:</strong>
-                                                        <div class="mt-1 p-2 rounded-2" style="background: var(--card-bg); border: 1px solid var(--border-color); line-height: 1.6;">
+                                                    <div style="font-size: 0.82rem;color: var(--text-secondary)">
+                                                        <strong style="font-size: 0.75rem;text-transform: uppercase;letter-spacing: 0.04em">Remarks:</strong>
+                                                        <div class="mt-1 p-2 rounded-2" style="background: var(--card-bg);border: 1px solid var(--border-color);line-height: 1.6">
                                                             <?php if ($se['show_to_student'] == 1): ?>
                                                                 <?php echo nl2br(htmlspecialchars(trim($se['remarks']))); ?>
                                                             <?php else: ?>
-                                                                <em style="color: var(--text-secondary);">Feedback is hidden by the evaluator.</em>
+                                                                <em style="color: var(--text-secondary)">Feedback is hidden by the evaluator.</em>
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
@@ -247,8 +247,8 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                 </div>
             <?php else: ?>
                 <div class="text-center py-5">
-                    <i class="bi bi-chat-left-dots-fill text-muted" style="font-size: 2.5rem; opacity: 0.25;"></i>
-                    <p class="text-muted mt-3 mb-0" style="font-size: 0.875rem;">No committee evaluations or remarks recorded yet.</p>
+                    <i class="bi bi-chat-left-dots-fill text-muted" style="font-size: 2.5rem;opacity: 0.25"></i>
+                    <p class="text-muted mt-3 mb-0" style="font-size: 0.875rem">No committee evaluations or remarks recorded yet.</p>
                 </div>
             <?php endif; ?>
         </div>
@@ -256,31 +256,31 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
 
     <!-- Right: Result Card -->
     <div class="col-lg-4">
-        <div class="card border-0 text-center p-4 mb-4 overflow-hidden" style="position: relative;">
-            <div style="position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: <?php echo $gradeColor; ?>; opacity: 0.05; border-radius: 50%;"></div>
-            <div style="position: absolute; bottom: -30px; left: -30px; width: 100px; height: 100px; background: <?php echo $gradeColor; ?>; opacity: 0.05; border-radius: 50%;"></div>
+        <div class="card border-0 text-center p-4 mb-4 overflow-hidden" style="position: relative">
+            <div style="position: absolute;top: -40px;right: -40px;width: 160px;height: 160px;background: <?php echo $gradeColor;?>;opacity: 0.05;border-radius: 50%"></div>
+            <div style="position: absolute;bottom: -30px;left: -30px;width: 100px;height: 100px;background: <?php echo $gradeColor;?>;opacity: 0.05;border-radius: 50%"></div>
 
-            <div class="section-title justify-content-center" style="border: none; padding: 0; margin-bottom: 20px;"><i class="bi bi-trophy-fill"></i> Overall Result</div>
+            <div class="section-title justify-content-center" style="border: none;padding: 0;margin-bottom: 20px"><i class="bi bi-trophy-fill"></i> Overall Result</div>
 
             <!-- Grade Circle -->
-            <div class="d-inline-flex align-items-center justify-content-center mb-3 rounded-circle" style="width: 90px; height: 90px; background: <?php echo $gradeColor; ?>; font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; box-shadow: 0 8px 20px <?php echo $gradeColor; ?>55;">
+            <div class="d-inline-flex align-items-center justify-content-center mb-3 rounded-circle" style="width: 90px;height: 90px;background: <?php echo $gradeColor;?>;font-size: 2.2rem;font-weight: 800;color: #fff;letter-spacing: -0.02em;box-shadow: 0 8px 20px <?php echo $gradeColor;?>55">
                 <?php echo htmlspecialchars($showGrade); ?>
             </div>
 
-            <h2 class="fw-bold mb-1" style="font-size: 2rem; letter-spacing: -0.03em;"><?php echo number_format($showPercentage, 1); ?>%</h2>
-            <p class="text-muted mb-4" style="font-size: 0.82rem;">Aggregate Percentage Score</p>
+            <h2 class="fw-bold mb-1" style="font-size: 2rem;letter-spacing: -0.03em"><?php echo number_format($showPercentage, 1); ?>%</h2>
+            <p class="text-muted mb-4" style="font-size: 0.82rem">Aggregate Percentage Score</p>
 
             <div class="border-top pt-3 row g-2">
                 <div class="col-6">
-                    <div class="p-3 rounded-3" style="background: var(--table-header-bg);">
-                        <small class="text-muted d-block" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;">Status</small>
-                        <span class="fw-bold" style="font-size: 1.1rem; color: <?php echo $showStatus === 'Pass' ? '#059669' : '#dc2626'; ?>;"><?php echo $showStatus; ?></span>
+                    <div class="p-3 rounded-3" style="background: var(--table-header-bg)">
+                        <small class="text-muted d-block" style="font-size: 0.7rem;text-transform: uppercase;letter-spacing: 0.04em">Status</small>
+                        <span class="fw-bold" style="font-size: 1.1rem;color: <?php echo $showStatus === 'Pass' ? '#059669' : '#dc2626';?>"><?php echo $showStatus; ?></span>
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="p-3 rounded-3" style="background: var(--table-header-bg);">
-                        <small class="text-muted d-block" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;">Scale</small>
-                        <span class="fw-bold" style="font-size: 1.1rem;">A+ to F</span>
+                    <div class="p-3 rounded-3" style="background: var(--table-header-bg)">
+                        <small class="text-muted d-block" style="font-size: 0.7rem;text-transform: uppercase;letter-spacing: 0.04em">Scale</small>
+                        <span class="fw-bold" style="font-size: 1.1rem">A+ to F</span>
                     </div>
                 </div>
             </div>
@@ -304,11 +304,11 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
             foreach ($scale as $row):
                 $isCurrentGrade = $row[0] === $showGrade;
             ?>
-            <div class="d-flex align-items-center justify-content-between py-1" style="font-size: 0.78rem; <?php echo $isCurrentGrade ? 'background: ' . $row[1] . '15; border-radius: 6px; padding: 6px 8px;' : ''; ?>">
-                <span class="fw-bold" style="color: <?php echo htmlspecialchars((string)($row[1]), ENT_QUOTES, 'UTF-8'); ?>; min-width: 28px;"><?php echo htmlspecialchars((string)($row[0]), ENT_QUOTES, 'UTF-8'); ?></span>
+            <div class="d-flex align-items-center justify-content-between py-1" style="font-size: 0.78rem;<?php echo $isCurrentGrade ? 'background: ' . $row[1] . '15;border-radius: 6px;padding: 6px 8px;' : '';?>">
+                <span class="fw-bold" style="color: <?php echo htmlspecialchars((string)($row[1]), ENT_QUOTES, 'UTF-8');?>;min-width: 28px"><?php echo htmlspecialchars((string)($row[0]), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="text-muted"><?php echo htmlspecialchars((string)($row[2]), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="font-monospace text-muted" style="font-size: 0.72rem;"><?php echo htmlspecialchars((string)($row[3]), ENT_QUOTES, 'UTF-8'); ?></span>
-                <?php if ($isCurrentGrade): ?><i class="bi bi-arrow-left text-muted" style="font-size: 0.7rem;"></i><?php endif; ?>
+                <span class="font-monospace text-muted" style="font-size: 0.72rem"><?php echo htmlspecialchars((string)($row[3]), ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php if ($isCurrentGrade): ?><i class="bi bi-arrow-left text-muted" style="font-size: 0.7rem"></i><?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>

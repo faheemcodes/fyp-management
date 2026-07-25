@@ -1,20 +1,14 @@
-<!-- Coordinator Dashboard View -->
-<?php 
-$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
-$fullName = trim($_SESSION['name'] ?? 'Coordinator');
-$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
-$firstName = explode(' ', $fullName)[0];
-?>
-
 <style>
-
-
-
-
-
-
-
-
+/* Add hover effect for horizontal action cards */
+.modern-table-card[onclick]:hover {
+    border-color: #10b981 !important;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.15) !important;
+}
+html.dark-theme .text-dark {
+    color: #f8fafc !important;
+}
+</style>
+<style>
 @media (max-width: 768px) {
     
     
@@ -101,23 +95,32 @@ $firstName = explode(' ', $fullName)[0];
     }
 }
 </style>
+<!-- Coordinator Dashboard View -->
+<?php 
+$bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
+$fullName = trim($_SESSION['name'] ?? 'Coordinator');
+$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
+$firstName = explode(' ', $fullName)[0];
+?>
+
+
 
 <!-- ── Top Hero Banner ── -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     Department Coordinator
                 </p>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                     Welcome back, <?php echo htmlspecialchars($firstName); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.8);padding: 4px 12px;border-radius: 20px;font-weight: 600">
                         <?php echo htmlspecialchars($department); ?>
                     </span>
                 </div>
@@ -126,8 +129,8 @@ $firstName = explode(' ', $fullName)[0];
 
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)'; ?>;"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></span>
+                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)';?>"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Approvals</span>
                 </div>
             </a>
@@ -135,7 +138,7 @@ $firstName = explode(' ', $fullName)[0];
                 <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['total_students']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Active Students</span>
             </div>
-            <div class="page-stat-pill" style="margin-right: 0;">
+            <div class="page-stat-pill" style="margin-right: 0">
                 <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_notices']), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Notices Generated</span>
             </div>
@@ -146,15 +149,15 @@ $firstName = explode(' ', $fullName)[0];
 <!-- ── Quick Actions Row ── -->
 <div class="row g-3 mb-4">
     <div class="col-md-6">
-        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s; cursor: pointer;" onclick="window.location.href='<?php echo $bp; ?>/coordinator/users'">
+        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s;cursor: pointer" onclick="window.location.href='<?php echo $bp; ?>/coordinator/users'">
             <div class="d-flex align-items-center gap-3">
-                <div style="width: 48px; height: 48px; background: rgba(245,158,11,0.1); color: #f59e0b; font-size: 1.4rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 48px;height: 48px;background: rgba(245,158,11,0.1);color: #f59e0b;font-size: 1.4rem;border-radius: 12px;display: flex;align-items: center;justify-content: center;flex-shrink: 0">
                     <i class="bi bi-shield-lock-fill"></i>
                 </div>
                 <div>
-                    <h6 class="fw-bold mb-1" style="color: var(--text-primary);">Verify Students</h6>
-                    <p class="mb-0 text-muted" style="font-size: 0.8rem;">
-                        <strong style="color: #f59e0b;"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></strong> pending registrations
+                    <h6 class="fw-bold mb-1" style="color: var(--text-primary)">Verify Students</h6>
+                    <p class="mb-0 text-muted" style="font-size: 0.8rem">
+                        <strong style="color: #f59e0b"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></strong> pending registrations
                     </p>
                 </div>
             </div>
@@ -163,14 +166,14 @@ $firstName = explode(' ', $fullName)[0];
     </div>
 
     <div class="col-md-6">
-        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s; cursor: pointer;" onclick="window.location.href='<?php echo $bp; ?>/coordinator/assessment'">
+        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s;cursor: pointer" onclick="window.location.href='<?php echo $bp; ?>/coordinator/assessment'">
             <div class="d-flex align-items-center gap-3">
-                <div style="width: 48px; height: 48px; background: rgba(16,185,129,0.1); color: #10b981; font-size: 1.4rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 48px;height: 48px;background: rgba(16,185,129,0.1);color: #10b981;font-size: 1.4rem;border-radius: 12px;display: flex;align-items: center;justify-content: center;flex-shrink: 0">
                     <i class="bi bi-file-earmark-excel-fill"></i>
                 </div>
                 <div>
-                    <h6 class="fw-bold mb-1" style="color: var(--text-primary);">External Assessment</h6>
-                    <p class="mb-0 text-muted" style="font-size: 0.8rem;">Generate dynamic grading sheets</p>
+                    <h6 class="fw-bold mb-1" style="color: var(--text-primary)">External Assessment</h6>
+                    <p class="mb-0 text-muted" style="font-size: 0.8rem">Generate dynamic grading sheets</p>
                 </div>
             </div>
             <i class="bi bi-chevron-right text-muted"></i>
@@ -208,27 +211,27 @@ $firstName = explode(' ', $fullName)[0];
                         <?php foreach($recentNotices as $n): ?>
                         <tr>
                             <td>
-                                <span class="fw-semibold text-secondary" style="font-family: monospace; font-size: 0.8rem; background: var(--form-bg); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+                                <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.8rem;background: var(--form-bg);padding: 4px 8px;border-radius: 6px;border: 1px solid var(--border-color)">
                                     <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="fw-semibold text-dark text-wrap" title="<?php echo htmlspecialchars($n['subject']); ?>" style="max-width: 400px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                <div class="fw-semibold text-dark text-wrap" title="<?php echo htmlspecialchars($n['subject']); ?>" style="max-width: 400px;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden">
                                     <?php echo htmlspecialchars($n['subject']); ?>
                                 </div>
                             </td>
-                            <td style="white-space: nowrap;">
-                                <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                            <td style="white-space: nowrap">
+                                <span style="font-size: 0.8rem;color: var(--text-secondary)">
                                     <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
                                 </span>
                             </td>
                             <td>
-                                <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase;">
+                                <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase">
                                     <?php echo htmlspecialchars($n['target_audience']); ?>
                                 </span>
                             </td>
                             <td class="text-end">
-                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1); border-radius: 8px; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
+                                <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 12px">
                                     <i class="bi bi-eye-fill me-1"></i>View
                                 </a>
                             </td>
@@ -249,23 +252,23 @@ $firstName = explode(' ', $fullName)[0];
             <!-- Mobile Cards View -->
             <div class="d-md-none p-3 pb-4">
                 <?php foreach($recentNotices as $n): ?>
-                <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg); border-radius: 16px; border: 1px solid var(--border-color); transition: transform 0.2s;">
+                <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold" style="font-family: monospace; font-size: 0.75rem; color: var(--text-secondary); background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px;">
+                        <span class="fw-bold" style="font-family: monospace;font-size: 0.75rem;color: var(--text-secondary);background: rgba(0,0,0,0.05);padding: 4px 8px;border-radius: 6px">
                             <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
                         </span>
-                        <span style="font-size: 0.65rem; background: rgba(16,185,129,0.1); color: #059669; padding: 4px 10px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 800;text-transform: uppercase;letter-spacing: 0.05em">
                             <?php echo htmlspecialchars($n['target_audience']); ?>
                         </span>
                     </div>
-                    <h6 class="fw-bold mb-3 text-dark lh-base" style="font-size: 0.95rem;">
+                    <h6 class="fw-bold mb-3 text-dark lh-base" style="font-size: 0.95rem">
                         <?php echo htmlspecialchars($n['subject']); ?>
                     </h6>
-                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--border-color);">
-                        <span class="fw-semibold" style="font-size: 0.75rem; color: var(--text-secondary);">
+                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--border-color)">
+                        <span class="fw-semibold" style="font-size: 0.75rem;color: var(--text-secondary)">
                             <i class="bi bi-calendar3 me-2"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
                         </span>
-                        <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem;">
+                        <a href="<?php echo $bp; ?>/notice/view?id=<?php echo htmlspecialchars((string)($n['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem">
                             View
                         </a>
                     </div>
@@ -282,13 +285,4 @@ $firstName = explode(' ', $fullName)[0];
     </div>
 </div>
 
-<style>
-/* Add hover effect for horizontal action cards */
-.modern-table-card[onclick]:hover {
-    border-color: #10b981 !important;
-    box-shadow: 0 8px 24px rgba(16,185,129,0.15) !important;
-}
-html.dark-theme .text-dark {
-    color: #f8fafc !important;
-}
-</style>
+

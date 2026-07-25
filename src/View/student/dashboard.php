@@ -1,41 +1,3 @@
-<!-- Student Dashboard -->
-<?php if (!$group): ?>
-    <div class="card border-0 text-center">
-        <div class="empty-state">
-            <div class="empty-icon text-primary"><i class="bi bi-people-fill"></i></div>
-            <h5>You're Not in an FYP Group Yet</h5>
-            <p>To begin your Final Year Project journey, submit your project proposal — it will automatically create your group.</p>
-            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/student/proposal" class="btn btn-primary px-4 py-2 rounded-3">
-                <i class="bi bi-file-earmark-plus-fill me-2"></i>Submit Project Proposal
-            </a>
-        </div>
-    </div>
-<?php else: ?>
-
-<?php
-$stagesList = [
-    'Account Created',
-    'Group Created',
-    'Proposal Submitted',
-    'Proposal Approved',
-    'Proposal Defence Presentation Completed',
-    'FYP Progress Presentation Completed',
-    'Final Presentation Completed',
-    'Final Grading Completed'
-];
-$currentIdx = array_search($group['progress_stage'], $stagesList);
-if ($currentIdx === false) $currentIdx = 1;
-
-$statusColors = [
-    'Active'   => ['rgba(16,185,129,0.1)',  '#059669'],
-    'Pending'  => ['rgba(245,158,11,0.1)',   '#d97706'],
-    'Approved' => ['rgba(16,185,129,0.1)',   '#059669'],
-    'Rejected' => ['rgba(239,68,68,0.1)',    '#dc2626'],
-];
-$st = $group['project_status'] ?? 'Pending';
-$sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
-?>
-
 <style>
 /* ── Horizontal Stepper ── */
 .h-stepper {
@@ -76,7 +38,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     background: linear-gradient(90deg, #059669, #0d9488);
 }
 .h-step.active:not(:last-child)::after {
-    background: linear-gradient(90deg, #10b981 0%, var(--border-color) 100%);
+    background: linear-gradient(90deg, #3b82f6 0%, var(--border-color) 100%);
 }
 
 .h-step-dot {
@@ -102,15 +64,15 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     box-shadow: 0 0 0 4px rgba(5,150,105,0.12);
 }
 .h-step.active .h-step-dot {
-    background: #10b981;
-    border-color: #10b981;
+    background: #3b82f6;
+    border-color: #3b82f6;
     color: #fff;
-    box-shadow: 0 0 0 5px rgba(16,185,129,0.18);
+    box-shadow: 0 0 0 5px rgba(59,130,246,0.18);
     animation: pulse-dot 2s ease-in-out infinite;
 }
 @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 0 5px rgba(16,185,129,0.18); }
-    50%       { box-shadow: 0 0 0 8px rgba(16,185,129,0.08); }
+    0%, 100% { box-shadow: 0 0 0 5px rgba(59,130,246,0.18); }
+    50%       { box-shadow: 0 0 0 8px rgba(59,130,246,0.08); }
 }
 
 .h-step-label {
@@ -123,7 +85,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     word-break: break-word;
 }
 .h-step.completed .h-step-label { color: #059669; font-weight: 600; }
-.h-step.active    .h-step-label { color: #10b981; font-weight: 700; }
+.h-step.active    .h-step-label { color: #3b82f6; font-weight: 700; }
 
 
 
@@ -136,26 +98,65 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 @media (max-width: 768px) {
 }
 </style>
+<!-- Student Dashboard -->
+<?php if (!$group): ?>
+    <div class="card border-0 text-center">
+        <div class="empty-state">
+            <div class="empty-icon text-primary"><i class="bi bi-people-fill"></i></div>
+            <h5>You're Not in an FYP Group Yet</h5>
+            <p>To begin your Final Year Project journey, submit your project proposal — it will automatically create your group.</p>
+            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/student/proposal" class="btn btn-primary px-4 py-2 rounded-3">
+                <i class="bi bi-file-earmark-plus-fill me-2"></i>Submit Project Proposal
+            </a>
+        </div>
+    </div>
+<?php else: ?>
+
+<?php
+$stagesList = [
+    'Account Created',
+    'Group Created',
+    'Proposal Submitted',
+    'Proposal Approved',
+    'Proposal Defence Presentation Completed',
+    'FYP Progress Presentation Completed',
+    'Final Presentation Completed',
+    'Final Grading Completed'
+];
+$currentIdx = array_search($group['progress_stage'], $stagesList);
+if ($currentIdx === false) $currentIdx = 1;
+
+$statusColors = [
+    'Active'   => ['rgba(16,185,129,0.1)',  '#059669'],
+    'Pending'  => ['rgba(245,158,11,0.1)',   '#d97706'],
+    'Approved' => ['rgba(16,185,129,0.1)',   '#059669'],
+    'Rejected' => ['rgba(239,68,68,0.1)',    '#dc2626'],
+];
+$st = $group['project_status'] ?? 'Pending';
+$sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
+?>
+
+
 
 <!-- ── Top Hero Banner ── -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent;">
+            <div class="page-hero-icon" style="background: transparent">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35);">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
                     Final Year Project Portal
                 </p>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2;">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                     <?php echo htmlspecialchars($group['project_title']); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span style="font-size: 0.75rem; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.8);padding: 4px 12px;border-radius: 20px;font-weight: 600">
                         Group Code: <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
                     </span>
-                    <span style="font-size: 0.75rem; background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8'); ?>; color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8'); ?>; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                    <span style="font-size: 0.75rem;background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8');?>;color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8');?>;padding: 4px 12px;border-radius: 20px;font-weight: 600">
                         <?php echo htmlspecialchars($st); ?>
                     </span>
                 </div>
@@ -164,20 +165,20 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 
         <div class="d-flex flex-wrap hero-stats-container">
             <a href="#supervisor-section" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num text-info">
+                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-white">
                         <?php if($group['supervisor_name']): ?>
-                            <i class="bi bi-person-check-fill" style="font-size: 1.2rem;"></i>
+                            <i class="bi bi-person-check-fill" style="font-size: 1.2rem"></i>
                         <?php else: ?>
-                            <i class="bi bi-person-x-fill" style="font-size: 1.2rem; color: var(--text-secondary);"></i>
+                            <i class="bi bi-person-x-fill" style="font-size: 1.2rem;color: var(--text-secondary)"></i>
                         <?php endif; ?>
                     </span>
                     <span class="stat-label text-white">Supervisor</span>
                 </div>
             </a>
             <a href="#progress-section" class="text-decoration-none">
-                <div class="page-stat-pill" style="margin-right: 0; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num text-primary">
+                <div class="page-stat-pill" style="margin-right: 0;transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-white">
                         <?php echo round((($currentIdx) / (count($stagesList) - 1)) * 100); ?>%
                     </span>
                     <span class="stat-label text-white">Progress</span>
@@ -199,14 +200,14 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             $desc = $group['project_description'] ?? '';
             if ($desc): 
             ?>
-                <div id="abstractText" style="font-size: 0.875rem; line-height: 1.75; text-align: justify; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.3s ease;">
+                <div id="abstractText" style="font-size: 0.875rem;line-height: 1.75;text-align: justify;color: var(--text-secondary);display: -webkit-box;-webkit-line-clamp: 6;-webkit-box-orient: vertical;overflow: hidden;transition: all 0.3s ease">
                     <?php echo nl2br(htmlspecialchars($desc)); ?>
                 </div>
-                <button class="btn btn-link p-0 mt-2 text-decoration-none fw-semibold" id="toggleAbstractBtn" style="font-size: 0.8rem; display: none;" onclick="toggleAbstract()">
-                    Show more <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
+                <button class="btn btn-link p-0 mt-2 text-decoration-none fw-semibold" id="toggleAbstractBtn" style="font-size: 0.8rem;display: none" onclick="toggleAbstract()">
+                    Show more <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem"></i>
                 </button>
             <?php else: ?>
-                <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.75; text-align: justify;">
+                <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.75;text-align: justify">
                     <em>No project description has been added yet.</em>
                 </p>
             <?php endif; ?>
@@ -227,10 +228,10 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             window.toggleAbstract = function() {
                 if (abstractContainer.style.webkitLineClamp === '6') {
                     abstractContainer.style.webkitLineClamp = 'unset';
-                    toggleBtn.innerHTML = 'Show less <i class="bi bi-chevron-up ms-1" style="font-size: 0.7rem;"></i>';
+                    toggleBtn.innerHTML = 'Show less <i class="bi bi-chevron-up ms-1" style="font-size: 0.7rem"></i>';
                 } else {
                     abstractContainer.style.webkitLineClamp = '6';
-                    toggleBtn.innerHTML = 'Show more <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>';
+                    toggleBtn.innerHTML = 'Show more <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem"></i>';
                 }
             };
         }
@@ -243,8 +244,8 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             <div class="section-title"><i class="bi bi-calendar-event-fill"></i> Upcoming Deadlines</div>
             <?php if (empty($deadlines)): ?>
                 <div class="text-center py-3">
-                    <i class="bi bi-calendar-x text-muted" style="font-size: 1.8rem; opacity: 0.3;"></i>
-                    <p class="text-muted mb-0 mt-2" style="font-size: 0.82rem;">No deadlines published yet.</p>
+                    <i class="bi bi-calendar-x text-muted" style="font-size: 1.8rem;opacity: 0.3"></i>
+                    <p class="text-muted mb-0 mt-2" style="font-size: 0.82rem">No deadlines published yet.</p>
                 </div>
             <?php else: ?>
                 <ul class="list-unstyled m-0 p-0">
@@ -253,15 +254,15 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
                         $isLast = ($i === count($deadlines) - 1);
                     ?>
                         <li class="d-flex align-items-start gap-3 <?php echo !$isLast ? 'pb-3 mb-3 border-bottom' : ''; ?>">
-                            <div style="width: 8px; height: 8px; border-radius: 50%; background: <?php echo $isPast ? '#dc2626' : '#059669'; ?>; margin-top: 5px; flex-shrink: 0;"></div>
-                            <div style="flex: 1; min-width: 0;">
+                            <div style="width: 8px;height: 8px;border-radius: 50%;background: <?php echo $isPast ? '#dc2626' : '#059669';?>;margin-top: 5px;flex-shrink: 0"></div>
+                            <div style="flex: 1;min-width: 0">
                                 <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <span class="fw-semibold text-truncate" style="font-size: 0.82rem;"><?php echo htmlspecialchars($dl['stage']); ?></span>
-                                    <span style="font-size: 0.62rem; padding: 2px 7px; border-radius: 20px; white-space: nowrap; background: <?php echo $isPast ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)'; ?>; color: <?php echo $isPast ? '#dc2626' : '#059669'; ?>; font-weight: 600;">
+                                    <span class="fw-semibold text-truncate" style="font-size: 0.82rem"><?php echo htmlspecialchars($dl['stage']); ?></span>
+                                    <span style="font-size: 0.62rem;padding: 2px 7px;border-radius: 20px;white-space: nowrap;background: <?php echo $isPast ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)';?>;color: <?php echo $isPast ? '#dc2626' : '#059669';?>;font-weight: 600">
                                         <?php echo $isPast ? 'Closed' : 'Open'; ?>
                                     </span>
                                 </div>
-                                <div class="text-muted mt-1" style="font-size: 0.72rem;">
+                                <div class="text-muted mt-1" style="font-size: 0.72rem">
                                     <i class="bi bi-clock me-1"></i><?php echo date('M d, Y — h:i A', strtotime($dl['deadline_date'])); ?>
                                 </div>
                             </div>
@@ -295,9 +296,9 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
         <div class="h-step <?php echo $cls; ?>">
             <div class="h-step-dot">
                 <?php if ($cls === 'completed'): ?>
-                    <i class="bi bi-check-lg" style="font-size: 0.8rem;"></i>
+                    <i class="bi bi-check-lg" style="font-size: 0.8rem"></i>
                 <?php elseif ($cls === 'active'): ?>
-                    <i class="bi bi-arrow-right" style="font-size: 0.75rem;"></i>
+                    <i class="bi bi-arrow-right" style="font-size: 0.75rem"></i>
                 <?php else: ?>
                     <?php echo $index + 1; ?>
                 <?php endif; ?>
@@ -306,20 +307,20 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
         </div>
         <?php endforeach; ?>
     </div>
-    <div class="d-flex align-items-center gap-4 mt-3 pt-3 border-top flex-wrap" style="font-size: 0.75rem;">
+    <div class="d-flex align-items-center gap-4 mt-3 pt-3 border-top flex-wrap" style="font-size: 0.75rem">
         <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background: #059669; display: inline-block;"></span>
+            <span style="width: 10px;height: 10px;border-radius: 50%;background: #059669;display: inline-block"></span>
             <span class="text-muted">Completed</span>
         </span>
         <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+            <span style="width: 10px;height: 10px;border-radius: 50%;background: #3b82f6;display: inline-block"></span>
             <span class="text-muted">Current Stage</span>
         </span>
         <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--border-color); display: inline-block;"></span>
+            <span style="width: 10px;height: 10px;border-radius: 50%;background: var(--border-color);display: inline-block"></span>
             <span class="text-muted">Upcoming</span>
         </span>
-        <span class="ms-auto fw-semibold" style="color: #10b981;">
+        <span class="ms-auto fw-semibold" style="color: #10b981">
             <?php echo $currentIdx + 1; ?> of <?php echo count($stagesList); ?> stages complete
         </span>
     </div>

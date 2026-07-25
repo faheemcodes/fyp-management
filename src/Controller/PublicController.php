@@ -85,12 +85,6 @@ class PublicController extends BaseController {
         }
     }
     
-    public function about() {
-        $this->render('about', [
-            'pageTitle' => 'About - FYP Management Portal'
-        ]);
-    }
-    
     public function contact() {
         $this->render('contact', [
             'pageTitle' => 'Contact Us - FYP Management Portal'

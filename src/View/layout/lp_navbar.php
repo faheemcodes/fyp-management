@@ -13,7 +13,7 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
 
 <style>
         :root {
-            --font-heading-main: 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
+            --font-heading-main: 'Jost', 'Chuner', 'Bebas Neue', 'Impact', sans-serif;
             --font-heading-alt: 'Pierknife', 'Oswald', 'Arial Narrow', sans-serif;
             --font-body: 'Inter', -apple-system, sans-serif;
         }
@@ -47,6 +47,47 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             --lp-amber: #fbbf24;
             --lp-teal: #2dd4bf;
         }
+
+        html, body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--lp-bg);
+            color: var(--lp-text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Light theme texture background */
+        :root[data-theme="light"] body {
+            background-image: url('<?php echo $basePath ?? ""; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Dark theme texture background */
+        :root[data-theme="dark"] body {
+            background-image: url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
+        .heading-alt { font-family: var(--font-heading-alt); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* BUTTONS */
+        .btn-hero { padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-hero-fill { background: var(--lp-text); color: var(--lp-bg) !important; }
+        .btn-hero-fill:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .btn-hero-outline { background: rgba(128, 128, 128, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--lp-text) !important; border: 2px solid var(--lp-text); }
+        .btn-hero-outline:hover { background: var(--lp-text); color: var(--lp-bg) !important; transform: translateY(-3px); }
         
         .lp-navbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -61,6 +102,9 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             border-bottom: 1px solid var(--lp-border);
             padding: 12px 0;
         }
+        .lp-navbar.nav-hidden {
+            transform: translateY(-100%);
+        }
         .lp-navbar .brand-text h1 { font-family: 'Inter', -apple-system, sans-serif; font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--lp-text) !important; letter-spacing: -0.5px; line-height: 1.1; }
         .lp-navbar .brand-text p { font-size: 0.75rem; margin: 0; color: var(--lp-text-muted) !important; font-family: var(--font-body); }
         .lp-navbar .brand { text-decoration: none; display: flex; align-items: center; gap: 14px; }
@@ -68,11 +112,34 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
         .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
         .lp-navbar .nav-actions { display: flex; align-items: center; gap: 10px; }
         
-        .lp-navbar .btn-nav { padding: 9px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; border: none; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-body); }
+        .lp-navbar .btn-nav { padding: 9px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.25s ease; border: none; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-body); white-space: nowrap; }
         .lp-navbar .btn-nav-ghost { color: var(--lp-text-muted); background: transparent; }
         .lp-navbar .btn-nav-ghost:hover { color: var(--lp-text); background: var(--lp-bg-alt); }
-        .lp-navbar .btn-nav-primary { background: var(--lp-accent); color: white !important; }
-        .lp-navbar .btn-nav-primary:hover { background: #059669; transform: translateY(-1px); }
+        .lp-navbar .btn-nav-primary { 
+            background: transparent; 
+            color: var(--lp-text) !important; 
+            border: 2px solid var(--lp-text);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .lp-navbar .btn-nav-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--lp-text);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        .lp-navbar .btn-nav-primary:hover::before {
+            width: 100%;
+        }
+        .lp-navbar .btn-nav-primary:hover { 
+            color: var(--lp-bg) !important; 
+        }
 
     /* Mobile Responsiveness for Navbar */
     @media (max-width: 576px) {
@@ -129,6 +196,10 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
     }
 </style>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Bebas+Neue&family=Oswald:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <nav class="<?php echo htmlspecialchars((string)($navbarClass), ENT_QUOTES, 'UTF-8'); ?>" id="lpNavbar" <?php echo $alwaysSolidAttr; ?>>
     <div class="container">
         <div class="nav-inner">
@@ -141,12 +212,12 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             </a>
             <div class="nav-actions">
                 <?php if (strpos($currentUri, 'register') === false): ?>
-                    <a href="<?php echo $basePath; ?>/register" class="btn-nav btn-nav-ghost d-none d-sm-inline-flex">Register</a>
+                    <a href="<?php echo $basePath; ?>/register" class="btn-nav btn-nav-ghost d-none d-sm-inline-flex">Sign Up</a>
                 <?php endif; ?>
                 
                 <?php if (strpos($currentUri, 'login') === false): ?>
                     <a href="<?php echo $basePath; ?>/login" class="btn-nav btn-nav-primary">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
+                        Sign In &rarr;
                     </a>
                 <?php endif; ?>
             </div>
@@ -189,9 +260,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const navbar = document.getElementById('lpNavbar');
-    if (navbar && !navbar.hasAttribute('data-always-solid')) {
+    let lastScrollY = window.scrollY;
+
+    if (navbar) {
         const handleScroll = () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 40);
+            const currentScrollY = window.scrollY;
+            
+            if (!navbar.hasAttribute('data-always-solid')) {
+                navbar.classList.toggle('scrolled', currentScrollY > 40);
+            }
+            
+            if (currentScrollY > 150 && currentScrollY > lastScrollY) {
+                navbar.classList.add('nav-hidden');
+            } else {
+                navbar.classList.remove('nav-hidden');
+            }
+            lastScrollY = currentScrollY;
         };
         window.addEventListener('scroll', handleScroll);
         handleScroll(); // Trigger on initial load

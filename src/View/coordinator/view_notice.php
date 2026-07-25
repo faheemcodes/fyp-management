@@ -16,8 +16,9 @@ if (!isset($basePath)) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts for letterhead, serif body, and handwritten signatures -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
-    <style>
-        body {
+    
+<style>
+body {
             background-color: #0f172a;
             background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             font-family: 'Lora', Georgia, serif;
@@ -262,12 +263,12 @@ if (!isset($basePath)) {
                 print-color-adjust: exact;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
 <!-- Floating Control Bar -->
-<div class="container text-center mb-4 no-print" style="max-width: 820px;">
+<div class="container text-center mb-4 no-print" style="max-width: 820px">
     <div class="d-flex justify-content-between align-items-center bg-dark bg-opacity-75 rounded-pill p-2 px-3 shadow-lg border border-secondary border-opacity-25">
         <a href="javascript:void(0);" onclick="closeNotice()" class="btn btn-sm btn-outline-light rounded-pill px-3"><i class="bi bi-x-circle me-1"></i> Close Notice</a>
         <span class="text-light small fw-bold d-none d-sm-inline-block"><i class="bi bi-file-earmark-text-fill text-warning me-1"></i> Official Notice Letterhead</span>
@@ -278,19 +279,19 @@ if (!isset($basePath)) {
 <div class="letterhead-container">
     <!-- Watermark Seal -->
     <div class="watermark">
-        <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Watermark" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%);">
+        <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Watermark" style="width: 100%;height: 100%;object-fit: contain;filter: grayscale(100%)">
     </div>
 
     <div class="letterhead-content">
         <!-- Faculty Header -->
         <div class="header-logo-section">
             <!-- Colored Crest Emblem -->
-            <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Logo" width="80" height="80" class="d-inline-block align-top" style="object-fit: contain;">
+            <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Logo" width="80" height="80" class="d-inline-block align-top" style="object-fit: contain">
             <div class="header-text">
                 <h3 class="uni-title m-0">University of Sindh</h3>
                 <h5 class="fac-title m-0">Faculty of Engineering & Technology</h5>
                 <h6 class="dept-title m-0">Department of <?php echo htmlspecialchars($coordDept); ?></h6>
-                <small class="text-muted" style="font-size: 0.78rem; display: block; margin-top: 3px; font-family: sans-serif; letter-spacing: 0.3px;">Jamshoro, Sindh, Pakistan</small>
+                <small class="text-muted" style="font-size: 0.78rem;display: block;margin-top: 3px;font-family: sans-serif;letter-spacing: 0.3px">Jamshoro, Sindh, Pakistan</small>
             </div>
         </div>
 
@@ -298,7 +299,7 @@ if (!isset($basePath)) {
         <div class="meta-section d-flex justify-content-between align-items-center">
             <div>
                 <strong>Ref No:</strong> 
-                <span class="font-monospace text-uppercase" style="letter-spacing: 0.5px;"><?php echo htmlspecialchars(!empty($notice['ref_no']) ? $notice['ref_no'] : '--'); ?></span>
+                <span class="font-monospace text-uppercase" style="letter-spacing: 0.5px"><?php echo htmlspecialchars(!empty($notice['ref_no']) ? $notice['ref_no'] : '--'); ?></span>
             </div>
             <div>
                 <strong>Date:</strong> 
@@ -332,7 +333,7 @@ if (!isset($basePath)) {
                 <div class="signature-line">
                     <div class="sign-title">Coordinator FYP</div>
                     <div class="small text-dark font-weight-normal mt-1"><?php echo htmlspecialchars($coordName); ?></div>
-                    <div class="x-small text-muted" style="font-size: 0.72rem; font-weight: normal; font-family: sans-serif;">Dept. of <?php echo htmlspecialchars($coordDept); ?></div>
+                    <div class="x-small text-muted" style="font-size: 0.72rem;font-weight: normal;font-family: sans-serif">Dept. of <?php echo htmlspecialchars($coordDept); ?></div>
                 </div>
             </div>
         </div>
@@ -348,7 +349,7 @@ if (!isset($basePath)) {
                 <div class="signature-line">
                     <div class="sign-title">Head of Department (HOD)</div>
                     <div class="small text-dark font-weight-normal mt-1"><?php echo htmlspecialchars($hodName); ?></div>
-                    <div class="x-small text-muted" style="font-size: 0.72rem; font-weight: normal; font-family: sans-serif;">Faculty of Engineering & Tech</div>
+                    <div class="x-small text-muted" style="font-size: 0.72rem;font-weight: normal;font-family: sans-serif">Faculty of Engineering & Tech</div>
                 </div>
             </div>
         </div>

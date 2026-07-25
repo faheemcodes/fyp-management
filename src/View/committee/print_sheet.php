@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Committee Evaluation Sheet - <?php echo htmlspecialchars($stage); ?></title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: #fff;
             color: #000;
@@ -143,7 +144,7 @@
                 break-inside: avoid !important;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
@@ -160,7 +161,7 @@
 
 <div class="evaluator-row">
     <div>Dated: <?php echo date('d-m-Y'); ?></div>
-    <div>Evaluators' Name: <span style="text-decoration: underline; padding: 0 50px;"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
+    <div>Evaluators' Name: <span style="text-decoration: underline;padding: 0 50px"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
     <div>Evaluators' Signature: _______________</div>
 </div>
 
@@ -168,20 +169,20 @@
 <?php if ($stage === 'Proposal Defence Presentation' || $stage === 'FYP Progress Presentation'): ?>
     <thead>
         <tr>
-            <th rowspan="2" style="width: 22px;">S.<br>No</th>
-            <th rowspan="2" style="width: 58px;">Project ID</th>
+            <th rowspan="2" style="width: 22px">S.<br>No</th>
+            <th rowspan="2" style="width: 58px">Project ID</th>
             <th rowspan="2">Title of Project</th>
-            <th rowspan="2" style="width: 100px;">Primary Supervisor</th>
+            <th rowspan="2" style="width: 100px">Primary Supervisor</th>
             <th colspan="2">Group Members</th>
             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                <th rowspan="2" style="width: 130px;">Previous comments</th>
+                <th rowspan="2" style="width: 130px">Previous comments</th>
             <?php endif; ?>
-            <th rowspan="2" style="width: 45px;">Marks<br>(40)</th>
-            <th rowspan="2" style="width: 80px;">Remarks</th>
+            <th rowspan="2" style="width: 45px">Marks<br>(40)</th>
+            <th rowspan="2" style="width: 80px">Remarks</th>
         </tr>
         <tr>
-            <th style="width: 80px;">Roll No</th>
-            <th style="min-width: 130px; width: auto;">Full Name</th>
+            <th style="width: 80px">Roll No</th>
+            <th style="min-width: 130px;width: auto">Full Name</th>
         </tr>
     </thead>
     <tbody>
@@ -193,13 +194,13 @@
     ?>
         <tr>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
             <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
             <?php if ($stage === 'FYP Progress Presentation'): ?>
-                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 6.5pt;"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
+                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 6.5pt"><?php echo htmlspecialchars($firstMember['previous_comments'] ?: ''); ?></td>
             <?php endif; ?>
             <td class="mark"></td>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"></td>
@@ -213,25 +214,25 @@
         <?php endfor; ?>
     <?php endforeach; ?>
     <?php if (empty($grouped)): ?>
-        <tr><td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
+        <tr><td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="center" style="padding: 20px;color: #999">No approved projects found.</td></tr>
     <?php endif; ?>
     </tbody>
 
 <?php elseif ($stage === 'Final Presentation'): ?>
     <thead>
         <tr>
-            <th rowspan="2" style="width: 22px;">S.<br>No</th>
-            <th rowspan="2" style="width: 55px;">Project ID</th>
+            <th rowspan="2" style="width: 22px">S.<br>No</th>
+            <th rowspan="2" style="width: 55px">Project ID</th>
             <th rowspan="2">Title of Project</th>
-            <th rowspan="2" style="width: 95px;">Primary Supervisor</th>
+            <th rowspan="2" style="width: 95px">Primary Supervisor</th>
             <th colspan="2">Group Members</th>
             <th colspan="5">Presentation<br>(25 marks)</th>
             <th colspan="5">Thesis<br>(25 marks)</th>
             <th rowspan="2" class="vtext">Project Demo (25 marks)</th>
         </tr>
         <tr>
-            <th style="width: 75px;">Roll No</th>
-            <th style="min-width: 130px; width: auto;">Full Name</th>
+            <th style="width: 75px">Roll No</th>
+            <th style="min-width: 130px;width: auto">Full Name</th>
             <!-- Presentation -->
             <th class="vtext">Contents (5)</th>
             <th class="vtext">Time spent (5)</th>
@@ -255,7 +256,7 @@
     ?>
         <tr>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center"><?php echo $srNo++; ?></td>
-            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt;"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7pt"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
             <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
             <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
@@ -271,7 +272,7 @@
         <?php endfor; ?>
     <?php endforeach; ?>
     <?php if (empty($grouped)): ?>
-        <tr><td colspan="17" class="center" style="padding: 20px; color: #999;">No approved projects found.</td></tr>
+        <tr><td colspan="17" class="center" style="padding: 20px;color: #999">No approved projects found.</td></tr>
     <?php endif; ?>
     </tbody>
 <?php endif; ?>
