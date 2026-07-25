@@ -683,7 +683,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 <!-- Firebase Integration -->
 <script type="module">
-        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL } from '<?php echo $bp; ?>/js/firebase-config.js';
+        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, getDocs, where } from '<?php echo $bp; ?>/js/firebase-config.js';
 
     const supervisorId = "<?php echo $supervisorId; ?>";
     let currentLeaderId = null;
@@ -990,8 +990,23 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 
                 if (confirm("Are you sure you want to delete this message?")) {
                     try {
-                        const msgRef = doc(db, 'chats', chatId, 'messages', msgId);
-                        await deleteDoc(msgRef);
+                        if (currentLeaderId === 'broadcast') {
+                            const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', msgId);
+                            await deleteDoc(bMsgRef);
+                            // Fan-out delete
+                            for (const lId of allLeaderIds) {
+                                const cId = `chat_${lId}_${supervisorId}`;
+                                const cMsgsRef = collection(db, 'chats', cId, 'messages');
+                                const q = query(cMsgsRef, where('originalBroadcastId', '==', msgId));
+                                const qSnap = await getDocs(q);
+                                qSnap.forEach(async (d) => {
+                                    await deleteDoc(d.ref);
+                                });
+                            }
+                        } else {
+                            const msgRef = doc(db, 'chats', chatId, 'messages', msgId);
+                            await deleteDoc(msgRef);
+                        }
                     } catch (error) {
                         console.error("Error deleting message:", error);
                         alert("Could not delete message. " + error.message);
@@ -1067,7 +1082,21 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
             if (currentLeaderId === 'broadcast') {
                 if (editingMsgId) {
-                    alert("Editing broadcast messages is not supported.");
+                    const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', editingMsgId);
+                    await updateDoc(bMsgRef, { text: text, isEdited: true });
+                    
+                    for (const lId of allLeaderIds) {
+                        const cId = `chat_${lId}_${supervisorId}`;
+                        const cMsgsRef = collection(db, 'chats', cId, 'messages');
+                        const q = query(cMsgsRef, where('originalBroadcastId', '==', editingMsgId));
+                        const qSnap = await getDocs(q);
+                        qSnap.forEach(async (d) => {
+                            await updateDoc(d.ref, { text: text, isEdited: true });
+                        });
+                    }
+                    
+                    editingMsgId = null;
+                    clearFileChip();
                     return;
                 }
                 // Save to broadcast history
