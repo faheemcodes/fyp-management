@@ -992,17 +992,31 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 if (confirm("Are you sure you want to delete this message?")) {
                     try {
                         if (currentLeaderId === 'broadcast') {
-                            const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', msgId);
-                            await deleteDoc(bMsgRef);
-                            // Fan-out delete
+                            let deletedCount = 0;
+                            let errors = [];
                             for (const lId of allLeaderIds) {
-                                const cId = `chat_${lId}_${supervisorId}`;
-                                const cMsgsRef = collection(db, 'chats', cId, 'messages');
-                                const q = query(cMsgsRef, where('originalBroadcastId', '==', msgId));
-                                const qSnap = await getDocs(q);
-                                qSnap.forEach(async (d) => {
-                                    await deleteDoc(d.ref);
-                                });
+                                try {
+                                    const cId = `chat_${lId}_${supervisorId}`;
+                                    const cMsgsRef = collection(db, 'chats', cId, 'messages');
+                                    const q = query(cMsgsRef, where('originalBroadcastId', '==', msgId));
+                                    const qSnap = await getDocs(q);
+                                    if(qSnap.empty) {
+                                        console.log("No fan-out msg found in " + cId);
+                                    }
+                                    for (const d of qSnap.docs) {
+                                        await deleteDoc(d.ref);
+                                        deletedCount++;
+                                    }
+                                } catch (e) {
+                                    errors.push(e.message);
+                                }
+                            }
+                            
+                            if (errors.length > 0) {
+                                alert("Error deleting from some groups: " + errors[0]);
+                            } else {
+                                const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', msgId);
+                                await deleteDoc(bMsgRef);
                             }
                         } else {
                             const msgRef = doc(db, 'chats', chatId, 'messages', msgId);
@@ -1082,17 +1096,26 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
             if (currentLeaderId === 'broadcast') {
                 if (editingMsgId) {
-                    const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', editingMsgId);
-                    await updateDoc(bMsgRef, { text: text, isEdited: true });
-                    
+                    let errors = [];
                     for (const lId of allLeaderIds) {
-                        const cId = `chat_${lId}_${supervisorId}`;
-                        const cMsgsRef = collection(db, 'chats', cId, 'messages');
-                        const q = query(cMsgsRef, where('originalBroadcastId', '==', editingMsgId));
-                        const qSnap = await getDocs(q);
-                        qSnap.forEach(async (d) => {
-                            await updateDoc(d.ref, { text: text, isEdited: true });
-                        });
+                        try {
+                            const cId = `chat_${lId}_${supervisorId}`;
+                            const cMsgsRef = collection(db, 'chats', cId, 'messages');
+                            const q = query(cMsgsRef, where('originalBroadcastId', '==', editingMsgId));
+                            const qSnap = await getDocs(q);
+                            for (const d of qSnap.docs) {
+                                await updateDoc(d.ref, { text: text, isEdited: true });
+                            }
+                        } catch(e) {
+                            errors.push(e.message);
+                        }
+                    }
+                    
+                    if (errors.length > 0) {
+                        alert("Error editing in some groups: " + errors[0]);
+                    } else {
+                        const bMsgRef = doc(db, 'chats', `chat_broadcast_${supervisorId}`, 'messages', editingMsgId);
+                        await updateDoc(bMsgRef, { text: text, isEdited: true });
                     }
                     
                     editingMsgId = null;
