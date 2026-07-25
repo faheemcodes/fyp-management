@@ -772,7 +772,7 @@ html.dark-theme .modal .btn-close:hover {
 
 /* ─── Hero Banner Styles ─── */
 .page-hero {
-    background: linear-gradient(135deg, #1e352f 0%, #3e5641 50%, #1e352f 100%);
+    background: linear-gradient(135deg, #2b4034 0%, #3a5244 100%);
     border-radius: var(--border-radius-lg);
     padding: 32px;
     position: relative;
@@ -787,7 +787,7 @@ html.dark-theme .modal .btn-close:hover {
     right: -10%;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -798,7 +798,7 @@ html.dark-theme .modal .btn-close:hover {
     left: -5%;
     width: 220px;
     height: 220px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -806,7 +806,7 @@ html.dark-theme .modal .btn-close:hover {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15) !important;
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;

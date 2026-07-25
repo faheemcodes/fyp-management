@@ -123,7 +123,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="page-hero-icon" style="background: transparent">
+        <div class="page-hero-icon">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
 

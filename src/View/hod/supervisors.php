@@ -8,7 +8,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent">
+            <div class="page-hero-icon">
                 <i class="bi bi-building-fill"></i>
             </div>
             <div>

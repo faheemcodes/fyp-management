@@ -31,11 +31,7 @@
     border-radius: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
-.admin-modal .modal-header {
-    border-bottom: 1px solid var(--border-color);
-    background: var(--form-bg);
-    color: var(--text-primary) !important;
-}
+
 
 @media (max-width: 768px) {
     
@@ -51,7 +47,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent">
+            <div class="page-hero-icon">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>

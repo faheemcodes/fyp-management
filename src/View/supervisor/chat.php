@@ -587,7 +587,18 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         <div class="sidebar-header">
             <h6 class="fw-bold mb-0">Group Leaders</h6>
         </div>
+        
         <div class="contacts-list">
+            <div class="contact-item" data-leader-id="broadcast" data-leader-name="Broadcast to All Groups" data-avatar="" data-initial="B">
+                <div class="contact-avatar" style="overflow: hidden; background: linear-gradient(135deg, var(--primary-color), #2b4034);">
+                    <i class="bi bi-megaphone-fill"></i>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name text-success fw-bold">Broadcast to All Groups</div>
+                    <div class="contact-project text-muted">Send announcement to all students</div>
+                </div>
+            </div>
+
             <?php if (empty($leaders)): ?>
                 <div class="p-4 text-center text-muted" style="font-size: 0.85rem">
                     No approved projects yet.
@@ -679,7 +690,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     let unsubscribeSnapshot = null;
     let editingMsgId = null;
 
-    const contactItems = document.querySelectorAll('.contact-item');
+    const allContactItems = document.querySelectorAll('.contact-item');
+    const studentContactItems = document.querySelectorAll('.contact-item:not([data-leader-id="broadcast"])');
+    const allLeaderIds = Array.from(studentContactItems).map(item => item.getAttribute('data-leader-id'));
     const emptyState = document.getElementById('emptyState');
     const activeChat = document.getElementById('activeChat');
     const chatHeaderName = document.getElementById('chatHeaderName');
@@ -772,10 +785,10 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         }
     });
 
-    contactItems.forEach(item => {
+    allContactItems.forEach(item => {
         item.addEventListener('click', () => {
             // UI Selection
-            contactItems.forEach(i => i.classList.remove('active'));
+            allContactItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
 
             // Mobile toggle
@@ -1028,6 +1041,85 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         sendBtn.disabled = true;
 
         try {
+            let fileUrl = null;
+            let fileName = null;
+            let fileType = null;
+            
+            if (selectedFile) {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch('<?php echo $bp; ?>/api/upload-chat-file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to upload file.');
+                }
+                
+                fileUrl = data.fileUrl;
+                fileName = data.fileName;
+                fileType = data.fileType;
+            }
+
+            if (currentLeaderId === 'broadcast') {
+                if (editingMsgId) {
+                    alert("Editing broadcast messages is not supported.");
+                    return;
+                }
+                // Save to broadcast history
+                const broadcastChatId = `chat_broadcast_${supervisorId}`;
+                const broadcastDocRef = doc(db, 'chats', broadcastChatId);
+                await setDoc(broadcastDocRef, {
+                    lastMessage: text || (selectedFile ? 'Attachment' : ''),
+                    lastUpdated: serverTimestamp()
+                }, { merge: true });
+                const broadcastMsgsRef = collection(db, 'chats', broadcastChatId, 'messages');
+                const docRef = await addDoc(broadcastMsgsRef, {
+                    senderId: supervisorId,
+                    text: text,
+                    fileUrl: fileUrl,
+                    fileName: fileName,
+                    fileType: fileType,
+                    timestamp: serverTimestamp(),
+                    isEdited: false
+                });
+                
+                // Fan-out to all leaders
+                for (const lId of allLeaderIds) {
+                    const cId = `chat_${lId}_${supervisorId}`;
+                    const cDocRef = doc(db, 'chats', cId);
+                    await setDoc(cDocRef, {
+                        participants: [lId.toString(), supervisorId.toString()],
+                        lastMessage: text || (selectedFile ? 'Attachment' : ''),
+                        lastUpdated: serverTimestamp()
+                    }, { merge: true });
+                    const cMsgsRef = collection(db, 'chats', cId, 'messages');
+                    await addDoc(cMsgsRef, {
+                        senderId: supervisorId,
+                        text: text,
+                        fileUrl: fileUrl,
+                        fileName: fileName,
+                        fileType: fileType,
+                        timestamp: serverTimestamp(),
+                        isEdited: false,
+                        originalBroadcastId: docRef.id
+                    });
+                    
+                    fetch('<?php echo $bp; ?>/api/chat/notify', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ chat_id: cId, sender_id: supervisorId, message: text || 'Sent a file' })
+                    }).catch(console.error);
+                }
+                
+                clearFile();
+                return;
+            }
+
             const chatId = `chat_${currentLeaderId}_${supervisorId}`;
             const chatDocRef = doc(db, 'chats', chatId);
 
@@ -1041,30 +1133,6 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 await setDoc(chatDocRef, { lastUpdated: serverTimestamp() }, { merge: true });
                 editingMsgId = null;
             } else {
-                let fileUrl = null;
-                let fileName = null;
-                let fileType = null;
-                
-                if (selectedFile) {
-                    const formData = new FormData();
-                    formData.append('file', selectedFile);
-
-                    const response = await fetch('<?php echo $bp; ?>/api/upload-chat-file', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    
-                    if (!data.success) {
-                        throw new Error(data.error || 'Failed to upload file.');
-                    }
-                    
-                    fileUrl = data.fileUrl;
-                    fileName = data.fileName;
-                    fileType = data.fileType;
-                }
-                
                 // Send new message
                 await setDoc(chatDocRef, {
                     participants: [currentLeaderId.toString(), supervisorId.toString()],

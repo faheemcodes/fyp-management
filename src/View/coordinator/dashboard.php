@@ -109,7 +109,7 @@ $firstName = explode(' ', $fullName)[0];
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent">
+            <div class="page-hero-icon">
                 <i class="bi bi-diagram-3-fill"></i>
             </div>
             <div>

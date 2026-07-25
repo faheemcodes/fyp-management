@@ -85,7 +85,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon" style="background: transparent">
+            <div class="page-hero-icon">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
@@ -274,9 +274,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
+            <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold">Create New Student Group</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/create" method="POST">
                 <div class="modal-body p-4">
@@ -321,9 +321,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="editGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
+            <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold">Edit Group Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/edit" method="POST">
                 <div class="modal-body p-4">
@@ -362,9 +362,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="manageMembersModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
+            <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold">Manage Group Members</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/members/update" method="POST">
                 <div class="modal-body p-4">
@@ -398,9 +398,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="editProjectModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
+            <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold">Edit Project / Proposal details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/projects/edit" method="POST">
                 <div class="modal-body p-4">
@@ -456,9 +456,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="editGradesModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content rounded-3 border-0">
-            <div class="modal-header bg-dark text-white border-0 py-3">
+            <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold">Edit Group Grades & Marks</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/grades/edit" method="POST">
                 <div class="modal-body p-4">

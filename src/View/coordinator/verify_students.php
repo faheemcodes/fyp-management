@@ -1,48 +1,4 @@
 <style>
-/* ─── Hero Section ─── */
-.eval-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.eval-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.eval-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -5%;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-}
-.eval-hero-icon {
-    width: 56px;
-    height: 56px;
-    background: conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    color: #fff;
-    flex-shrink: 0;
-}
-
 /* ─── Section Panel ─── */
 .eval-section {
     background: var(--card-bg);
@@ -141,12 +97,7 @@ html.dark-theme .status-badge-pending {
     border-radius: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
-.eval-modal .modal-header {
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
-    background: var(--form-bg);
-    color: var(--text-primary);
-}
+
 .eval-modal .modal-body {
     padding: 1.5rem;
     color: var(--text-primary);
@@ -182,13 +133,13 @@ html.dark-theme .modal .btn-close:hover {
 
 
 <!-- Hero Section -->
-<div class="eval-hero">
+<div class="page-hero">
     <div class="d-flex justify-content-between align-items-center position-relative z-1">
         <div>
             <h4 class="fw-bold mb-1 text-white">Verify Students</h4>
             <p class="mb-0 text-white-50" style="font-size: 0.9rem">Review and approve self-registered student accounts securely.</p>
         </div>
-        <div class="eval-hero-icon">
+        <div class="page-hero-icon">
             <i class="bi bi-person-check-fill"></i>
         </div>
     </div>

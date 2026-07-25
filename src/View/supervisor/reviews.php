@@ -109,7 +109,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Icon -->
-        <div class="page-hero-icon" style="background: transparent">
+        <div class="page-hero-icon">
                 <i class="bi bi-person-workspace"></i>
             </div>
 
@@ -260,9 +260,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
+            <div class="modal-header border-bottom py-3">
                 <h6 class="modal-title fw-bold">Proposal Details - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
@@ -318,9 +318,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="proposalReviewModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
+            <div class="modal-header border-bottom py-3">
                 <h6 class="modal-title fw-bold">Submit Review - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo $basePath; ?>/supervisor/proposal/action" method="POST">
                 <div class="modal-body p-4 text-start">
@@ -356,7 +356,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw;min-width: 320px;z-index: 1060">
   <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
     <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body p-0">
     <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none"></iframe>

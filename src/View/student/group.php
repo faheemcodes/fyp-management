@@ -215,7 +215,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
     <div class="page-hero">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4">
             <!-- Icon -->
-            <div class="page-hero-icon" style="background: transparent">
+            <div class="page-hero-icon">
                 <i class="bi bi-mortarboard-fill"></i>
             </div>
 

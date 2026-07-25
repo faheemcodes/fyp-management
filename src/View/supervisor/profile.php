@@ -8,14 +8,14 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: #0f172a;
+    background: #1e352f;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: 2rem;
     font-weight: bold;
-    border: 3px solid #0f172a;
+    border: 3px solid #1e352f;
 }
 
 
@@ -210,7 +210,7 @@ if ($basePath === '/') {
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem;letter-spacing: -0.02em">
                     <?php echo htmlspecialchars(($prefixVal ? $prefixVal . ' ' : '') . $supervisor['name']); ?>
                 </h4>
-                <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Supervisor</span>
+                <span class="badge bg-success text-white border border-light border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Supervisor</span>
             </div>
             <p class="mb-2" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">
                 <i class="bi bi-briefcase me-1"></i><?php echo htmlspecialchars($designationVal ?? 'Faculty Member'); ?>

@@ -1,26 +1,4 @@
 <style>
-/* ─── Hero Section ─── */
-.eval-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-    border-radius: var(--border-radius-lg);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 24px;
-}
-.eval-hero-icon {
-    width: 56px;
-    height: 56px;
-    background: conic-gradient(from 0deg, #10b981, #059669, #34d399, #10b981);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    color: #fff;
-    flex-shrink: 0;
-}
-
 /* ─── Builder Panel ─── */
 .builder-section {
     background: var(--card-bg);
@@ -83,9 +61,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 
 <!-- Hero Section -->
-<div class="eval-hero">
+<div class="page-hero">
     <div class="d-flex align-items-center gap-3 position-relative" style="z-index: 1">
-        <div class="eval-hero-icon shadow-sm">
+        <div class="page-hero-icon shadow-sm">
             <i class="bi bi-file-earmark-excel-fill"></i>
         </div>
         <div>
@@ -109,14 +87,18 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0" style="color: var(--text-primary)">Assessment Configuration</h5>
                 </div>
-                
                 <div class="mb-4">
-                    <label class="form-label text-secondary fw-semibold" style="font-size: 0.8rem">Select Shift</label>
-                    <select class="form-select w-auto" name="shift" style="color: var(--text-primary)" required>
-                        <option value="Combined">Combined (Morning & Evening)</option>
-                        <option value="Morning">Morning Only</option>
-                        <option value="Evening">Evening Only</option>
-                    </select>
+                    <label class="form-label text-secondary fw-semibold d-block mb-2" style="font-size: 0.8rem">Select Shift</label>
+                    <div class="btn-group shadow-sm" role="group">
+                        <input type="radio" class="btn-check" name="shift" id="shiftCombined" value="Combined" autocomplete="off" checked>
+                        <label class="btn btn-outline-secondary fw-medium px-4" for="shiftCombined">Combined</label>
+
+                        <input type="radio" class="btn-check" name="shift" id="shiftMorning" value="Morning" autocomplete="off">
+                        <label class="btn btn-outline-secondary fw-medium px-4" for="shiftMorning">Morning</label>
+
+                        <input type="radio" class="btn-check" name="shift" id="shiftEvening" value="Evening" autocomplete="off">
+                        <label class="btn btn-outline-secondary fw-medium px-4" for="shiftEvening">Evening</label>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3 mt-4">

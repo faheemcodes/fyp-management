@@ -179,12 +179,7 @@ html.dark-theme .grade-box-remarks { color: #6ee7b7; }
     border-radius: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
-.eval-modal .modal-header {
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
-    background: var(--form-bg);
-    color: var(--text-primary);
-}
+
 .eval-modal .modal-body {
     padding: 1.5rem;
     color: var(--text-primary);
@@ -248,15 +243,9 @@ html.dark-theme .modal .btn-close:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
 }
 
-.eval-modal-header {
-    background: #f8fafc !important;
-    border-bottom: 1px solid var(--border-color) !important;
-    padding: 16px 20px !important;
-}
 
-html.dark-theme .eval-modal-header {
-    background: #1e293b !important;
-}
+
+html.dark-theme 
 
 .eval-table-wrapper {
     background: var(--card-bg);
