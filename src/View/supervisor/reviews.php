@@ -382,7 +382,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Move all modals to the body to prevent z-index issues from CSS stacking contexts
-        const modals = document.querySelectorAll('.modal');
+        const modals = document.querySelectorAll('.modal, .offcanvas');
         modals.forEach(modal => {
             document.body.appendChild(modal);
         });
