@@ -366,9 +366,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
-            <div class="modal-header border-0 py-3 rounded-top-4" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
-                <h6 class="modal-title fw-bold">Project Details - <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header py-3 rounded-top-4" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+                <h6 class="modal-title fw-bold" style="color: var(--text-primary);">Project Details - <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
