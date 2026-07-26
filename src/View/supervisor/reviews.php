@@ -353,13 +353,26 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
 <!-- PDF Offcanvas (Right Side) -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw;min-width: 320px;z-index: 1060">
-  <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
-    <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<div class="offcanvas offcanvas-end shadow-lg border-start-0" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 75vw; max-width: 1400px; min-width: 320px; z-index: 1060; background: var(--main-bg);">
+  <div class="offcanvas-header px-4 py-3" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+    <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 40px; height: 40px; background: rgba(13,148,136,0.1); color: #0d9488;">
+            <i class="bi bi-file-earmark-pdf-fill fs-5"></i>
+        </div>
+        <div>
+            <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Proposal Document</h6>
+            <div class="text-muted small fw-medium mt-1">Group: <span style="color: #0d9488; font-family: monospace;"><?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></span></div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-none d-sm-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
+            <i class="bi bi-box-arrow-up-right"></i> Open New Tab
+        </a>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: var(--btn-close-filter);"></button>
+    </div>
   </div>
-  <div class="offcanvas-body p-0">
-    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none"></iframe>
+  <div class="offcanvas-body p-0" style="background: #e5e7eb;">
+    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none; width: 100%; height: 100%;"></iframe>
   </div>
 </div>
 <?php endif; ?>
