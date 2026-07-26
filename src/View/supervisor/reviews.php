@@ -368,7 +368,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-none d-sm-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
             <i class="bi bi-box-arrow-up-right"></i> Open New Tab
         </a>
-        <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: var(--btn-close-filter);"></button>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
     </div>
   </div>
   <div class="offcanvas-body p-0" style="background: #e5e7eb;">
