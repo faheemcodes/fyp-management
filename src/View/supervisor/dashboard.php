@@ -50,7 +50,7 @@ $firstName = explode(' ', $fullName)[0];
         <h6 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Your Assigned FYP Groups</h6>
     </div>
     
-    <div class="table-responsive">
+    <div class="d-none d-md-block table-responsive">
         <table class="table table-hover align-middle border-0 m-0" style="box-shadow: none">
             <thead style="background: var(--table-header-bg)">
                 <tr>
@@ -107,5 +107,43 @@ $firstName = explode(' ', $fullName)[0];
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
+
+    <!-- Mobile Card List -->
+    <div class="d-block d-md-none mt-3">
+        <?php foreach($groups as $g): ?>
+            <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
+                <div class="mb-2 d-flex align-items-center gap-2">
+                    <span class="fw-bold" style="color: #10b981;font-size: 0.75rem;background: rgba(16,185,129,0.1);padding: 3px 6px;border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);">
+                        <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
+                    </span>
+                    <?php if($g['project_status'] === 'Approved'): ?>
+                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: rgba(16,185,129,0.1);color: #059669;font-weight: 600">Approved</span>
+                    <?php elseif($g['project_status'] === 'Submitted'): ?>
+                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: rgba(245,158,11,0.1);color: #d97706;font-weight: 600">Submitted</span>
+                    <?php else: ?>
+                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: var(--form-bg);color: var(--text-secondary);font-weight: 600;border: 1px solid var(--border-color)"><?php echo htmlspecialchars($g['project_status']); ?></span>
+                    <?php endif; ?>
+                </div>
+                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
+                    <?php echo htmlspecialchars($g['project_title']); ?>
+                </h6>
+                <div class="mb-3">
+                    <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase;display: inline-block">
+                        <?php echo htmlspecialchars($g['progress_stage']); ?>
+                    </span>
+                </div>
+                <div class="d-flex justify-content-end align-items-center mt-2 pt-3 border-top" style="border-color: var(--border-color) !important">
+                    <a href="<?php echo $basePath; ?>/supervisor/groups" class="btn btn-sm px-3 rounded-pill fw-semibold" style="font-size: 0.75rem;background: rgba(16,185,129,0.1);color: #10b981;border: none;transition: all 0.2s">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Details
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <?php if(empty($groups)): ?>
+            <div class="text-center text-muted py-4 rounded-3 small" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                No project groups assigned to you yet.
+            </div>
+        <?php endif; ?>
     </div>
 </div>

@@ -70,10 +70,10 @@ $firstName = explode(' ', $fullName)[0];
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
-                    Evaluation Committee
+                    Welcome back
                 </p>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
-                    Welcome back, <?php echo htmlspecialchars($firstName); ?>
+                    <?php echo htmlspecialchars($fullName); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
                     <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.8);padding: 4px 12px;border-radius: 20px;font-weight: 600">

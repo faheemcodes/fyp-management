@@ -295,8 +295,12 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
     </div>
 <?php else: ?>
 
-    <div class="page-section">
-        <div class="table-responsive">
+    <div class="card border-0 p-3 p-md-4 h-100 mb-4" style="border-radius: 16px;background: var(--card-bg);box-shadow: var(--card-shadow)">
+        <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom d-md-none" style="border-color: var(--border-color) !important">
+            <i class="bi bi-people-fill text-primary" style="font-size: 1.2rem;"></i>
+            <h6 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Assigned Groups</h6>
+        </div>
+        <div class="d-none d-md-block table-responsive">
             <table class="table modern-table">
                 <thead>
                     <tr>
@@ -354,6 +358,48 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card List -->
+        <div class="d-block d-md-none mt-3">
+            <?php foreach($groups as $g): ?>
+                <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
+                    <div class="mb-2">
+                        <span class="group-code-badge" style="font-size: 0.75rem;">
+                            <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
+                        </span>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
+                        <?php echo htmlspecialchars($g['project_title']); ?>
+                    </h6>
+                    <div class="mb-3">
+                        <span class="progress-stage-chip" style="font-size: 0.65rem;">
+                            <?php echo htmlspecialchars($g['progress_stage']); ?>
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-stack">
+                            <?php foreach(array_slice($g['members'], 0, 4) as $m): ?>
+                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
+                                     title="<?php echo htmlspecialchars($m['name']); ?>"
+                                     alt="Avatar" style="width: 24px; height: 24px;">
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if(count($g['members']) > 4): ?>
+                            <span class="text-muted small fw-semibold" style="font-size: 0.7rem;">+<?php echo count($g['members']) - 4; ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center mt-2 pt-3 border-top" style="border-color: var(--border-color) !important; gap: 8px;">
+                        <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                            <i class="bi bi-info-circle-fill"></i> Details
+                        </button>
+                        <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                            <i class="bi bi-pencil-fill"></i> Grade
+                        </button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 
