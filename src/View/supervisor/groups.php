@@ -468,9 +468,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <!-- MANUAL GRADING MODAL -->
 <div class="modal fade eval-modal" id="gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header eval-modal-header border-0">
-                <h5 class="modal-title fw-semibold" style="color: #0d9488;font-size: 1.05rem"><i class="bi bi-person-check-fill me-2"></i>Supervision Marks</h5>
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header py-3 rounded-top-4" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+                <h5 class="modal-title fw-bold" style="color: var(--text-primary); font-size: 1.05rem"><i class="bi bi-person-check-fill me-2 text-primary"></i>Supervision Marks</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="<?php echo $basePath; ?>/supervisor/groups/grade" method="POST">
