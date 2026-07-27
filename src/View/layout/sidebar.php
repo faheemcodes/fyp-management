@@ -1,24 +1,4 @@
-<style>
-.action-icon-pw {
-                background: rgba(245, 158, 11, 0.15) !important;
-                color: #fcd34d !important;
-                width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
-                transition: all 0.2s ease;
-            }
-            .action-icon-logout {
-                background: rgba(239, 68, 68, 0.2) !important;
-                color: #f87171 !important;
-                width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
-                transition: all 0.2s ease;
-            }
-            /* Protect custom icon colors from the global .active override */
-            #sidebar .nav-link.active .action-icon-pw i {
-                color: #fcd34d !important;
-            }
-            #sidebar .nav-link.active .action-icon-logout i {
-                color: #f87171 !important;
-            }
-</style>
+
 <?php
 $role = $_SESSION['role'] ?? '';
 $name = $_SESSION['name'] ?? 'User';
@@ -41,6 +21,30 @@ $urlPrefix = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 if ($urlPrefix === '/') {
     $urlPrefix = '';
 }
+
+// Fetch pending students count for HOD and Coordinator
+$pendingStudentsCount = 0;
+if ($role === 'hod' || $role === 'coordinator') {
+    try {
+        $dbSidebar = \Database::getInstance()->getConnection();
+        $table = $role === 'hod' ? 'hods' : 'coordinators';
+        $stmtDept = $dbSidebar->prepare("SELECT department FROM $table WHERE user_id = ?");
+        $stmtDept->execute([$_SESSION['user_id'] ?? 0]);
+        $userDept = $stmtDept->fetchColumn();
+
+        if ($userDept) {
+            $stmtPending = $dbSidebar->prepare("
+                SELECT COUNT(*) FROM students s 
+                JOIN users u ON s.user_id = u.id 
+                WHERE u.status = 'pending' AND s.department = ?
+            ");
+            $stmtPending->execute([$userDept]);
+            $pendingStudentsCount = $stmtPending->fetchColumn();
+        }
+    } catch (Exception $e) {
+        // Ignore DB errors in sidebar to prevent breaking layout
+    }
+}
 ?>
 
 <!-- Sidebar -->
@@ -51,12 +55,11 @@ if ($urlPrefix === '/') {
                 <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%;max-height: 100%;object-fit: contain">
             </div>
             <div class="sidebar-brand-text">
-                <h6 class="m-0 fw-bold" style="color: var(--text-primary);font-size: 0.88rem;letter-spacing: -0.01em">University of Sindh</h6>
-                <small style="font-size: 0.65rem;color: var(--text-secondary)">FYP Portal</small>
+                <h6 class="m-0 fw-bold" style="color: var(--text-primary);font-size: 0.88rem;letter-spacing: -0.01em">FYP Portal</h6>
             </div>
         </a>
         <button type="button" id="desktopSidebarCollapse" class="btn btn-link p-0 d-none d-lg-flex align-items-center justify-content-center" style="color: var(--text-primary);width: 36px;height: 36px;opacity: 0.7;transition: all 0.2s" title="Toggle Sidebar">
-            <i class="bi bi-layout-sidebar-inset" style="font-size: 1.2rem"></i>
+            <i class="bi bi-layout-sidebar" style="font-size: 1.2rem"></i>
         </button>
     </div>
 
@@ -125,8 +128,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/hod/students/verify" class="nav-link <?php echo isActive('/hod/students/verify', $currentUri); ?>">
-                    <i class="bi bi-person-check-fill"></i> Verify Students
+                <a href="<?php echo $urlPrefix; ?>/hod/students/verify" class="nav-link <?php echo isActive('/hod/students/verify', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-person-check-fill"></i> Verify Students</span>
+                    <?php if (isset($pendingStudentsCount) && $pendingStudentsCount > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(239, 68, 68, 0.3);"><?php echo $pendingStudentsCount; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
 
@@ -218,9 +224,7 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             
-            <li class="nav-item mt-3 mb-1 px-3">
-                <span class="text-xs fw-bold text-uppercase text-secondary" style="font-size: 0.7rem;letter-spacing: 0.05em">Online Grading</span>
-            </li>
+
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Proposal Defence Presentation') ? 'active' : ''; ?>">
                     <i class="bi bi-table"></i> Grade Proposal
@@ -255,8 +259,11 @@ if ($urlPrefix === '/') {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/coordinator/users" class="nav-link <?php echo isActive('/coordinator/users', $currentUri); ?>">
-                    <i class="bi bi-person-check-fill"></i> Verify Students
+                <a href="<?php echo $urlPrefix; ?>/coordinator/users" class="nav-link <?php echo isActive('/coordinator/users', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-person-check-fill"></i> Verify Students</span>
+                    <?php if (isset($pendingStudentsCount) && $pendingStudentsCount > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(239, 68, 68, 0.3);"><?php echo $pendingStudentsCount; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item">
@@ -274,20 +281,47 @@ if ($urlPrefix === '/') {
         
         <div class="mt-auto">
             <ul class="list-unstyled nav flex-column mb-0">
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?> d-flex align-items-center gap-2">
-                        <div class="action-icon-pw">
-                            <i class="bi bi-shield-lock-fill"></i>
+                <li class="nav-item mt-2">
+                    <a href="#" class="nav-link d-flex align-items-center justify-content-between" id="theme-toggle">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-palette-fill"></i>
+                            Appearance
                         </div>
-                        Change Password
+                        
+                        <!-- Tiny Pill Switch -->
+                        <div class="theme-switch" style="width: 44px; height: 24px; border-radius: 24px; background: #cbd5e1; position: relative; transition: all 0.3s ease;">
+                            <div class="theme-switch-knob shadow-sm d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; border-radius: 50%; background: #ffffff; position: absolute; top: 2px; left: 2px; transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);">
+                                <i class="bi bi-brightness-high switch-sun" style="font-size: 0.7rem; color: #1e293b; position: absolute; transition: all 0.3s ease;"></i>
+                                <i class="bi bi-moon-stars switch-moon" style="font-size: 0.7rem; color: #1e293b; position: absolute; transition: all 0.3s ease; opacity: 0; transform: scale(0.5) rotate(90deg);"></i>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <style>
+                /* Sidebar Theme Switch CSS */
+                html.dark-theme .theme-switch {
+                    background: #334155 !important;
+                }
+                html.dark-theme .theme-switch-knob {
+                    left: calc(100% - 22px) !important;
+                }
+                html.dark-theme .switch-sun {
+                    opacity: 0 !important;
+                    transform: scale(0.5) rotate(-90deg) !important;
+                }
+                html.dark-theme .switch-moon {
+                    opacity: 1 !important;
+                    transform: scale(1) rotate(0deg) !important;
+                }
+                </style>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">
+                        <i class="bi bi-shield-lock-fill"></i> Change Password
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link <?php echo isActive('/logout', $currentUri); ?> d-flex align-items-center gap-2">
-                        <div class="action-icon-logout">
-                            <i class="bi bi-box-arrow-right"></i>
-                        </div>
-                        Log Out
+                    <a href="<?php echo $urlPrefix; ?>/logout" class="nav-link <?php echo isActive('/logout', $currentUri); ?>">
+                        <i class="bi bi-box-arrow-right"></i> Log Out
                     </a>
                 </li>
             </ul>
@@ -314,17 +348,12 @@ if ($urlPrefix === '/') {
                     <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%;max-height: 100%;object-fit: contain">
                 </div>
                 <div>
-                    <h6 class="fw-bold m-0" style="color: var(--text-primary);font-size: 0.85rem;letter-spacing: -0.01em">University of Sindh</h6>
-                    <small style="color: var(--text-secondary);font-size: 0.65rem;letter-spacing: 0.02em">FYP Portal</small>
+                    <h6 class="fw-bold m-0" style="color: var(--text-primary);font-size: 0.85rem;letter-spacing: -0.01em">FYP Portal</h6>
                 </div>
             </a>
             
             <div class="ms-auto d-flex align-items-center gap-2 gap-md-3">
-                <!-- Dark Theme Toggle -->
-                <button class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center" id="theme-toggle" type="button" title="Toggle Theme" style="width: 34px;height: 34px;border: 1px solid var(--border-color);background: var(--form-bg)">
-                    <i class="bi bi-sun-fill d-none" id="theme-sun" style="font-size: 1rem;color: #F59E0B"></i>
-                    <i class="bi bi-moon-fill" id="theme-moon" style="font-size: 1rem;color: var(--text-secondary)"></i>
-                </button>
+
 
                 <!-- Notifications Dropdown -->
                 <div class="dropdown">

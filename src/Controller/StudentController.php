@@ -80,12 +80,18 @@ class StudentController extends BaseController {
         $stmtDl->execute([$department]);
         $deadlines = $stmtDl->fetchAll();
 
+        // Get notices for student
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('students', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices->execute([$department]);
+        $recentNotices = $stmtNotices->fetchAll();
+
         $this->render('student/dashboard', [
             'group' => $group,
             'members' => $members,
             'proposal' => $proposal,
             'grades' => $grades,
-            'deadlines' => $deadlines
+            'deadlines' => $deadlines,
+            'recentNotices' => $recentNotices
         ]);
     }
 

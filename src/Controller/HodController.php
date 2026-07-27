@@ -34,10 +34,16 @@ class HodController extends BaseController {
         $stmtRecentComm->execute([$dept]);
         $recentCommittee = $stmtRecentComm->fetchAll();
 
+        // Get system notices
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('hod', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices->execute([$dept]);
+        $recentNotices = $stmtNotices->fetchAll();
+
         $this->render('hod/dashboard', [
             'stats' => $stats,
             'recentSupervisors' => $recentSupervisors,
-            'recentCommittee' => $recentCommittee
+            'recentCommittee' => $recentCommittee,
+            'recentNotices' => $recentNotices
         ]);
     }
 

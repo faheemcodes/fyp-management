@@ -48,10 +48,18 @@ class SupervisorController extends BaseController {
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
+        // Get system deadlines and notices
+        $department = $_SESSION['department'] ?? 'Software Engineering';
+
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('supervisors', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices->execute([$department]);
+        $recentNotices = $stmtNotices->fetchAll();
+
         $this->render('supervisor/dashboard', [
             'groupCount' => $groupCount,
             'pendingProposals' => $pendingProposals,
-            'groups' => $groups
+            'groups' => $groups,
+            'recentNotices' => $recentNotices
         ]);
     }
 
