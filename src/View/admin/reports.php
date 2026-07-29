@@ -95,35 +95,8 @@ html.dark-theme, body.dark-theme {
 </div>
 
 <div class="row g-4 mb-4">
-    <!-- Progress Stage Distribution -->
-    <div class="col-md-5">
-        <div class="glass-panel h-100 mb-0 d-flex flex-column">
-            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
-                <h6 class="fw-bold m-0" style="color: var(--text-primary)"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Group Progress Distribution</h6>
-            </div>
-            <div class="p-4 flex-grow-1 d-flex flex-column justify-content-start">
-                <?php if(empty($progressStages)): ?>
-                    <div class="text-center text-muted py-4">No group progress records available.</div>
-                <?php else: ?>
-                    <div class="d-flex flex-column gap-3">
-                        <?php foreach($progressStages as $ps): ?>
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-4" style="background: var(--form-bg);border: 1px solid var(--border-color);transition: all 0.2s ease">
-                            <span class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
-                                <?php echo htmlspecialchars($ps['progress_stage']); ?>
-                            </span>
-                            <span class="badge rounded-pill shadow-sm px-3 py-2" style="background: rgba(16,185,129,0.1);color: #10b981;border: 1px solid rgba(16,185,129,0.2);font-size: 0.85rem">
-                                <?php echo htmlspecialchars((string)($ps['count']), ENT_QUOTES, 'UTF-8'); ?> Groups
-                            </span>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
     <!-- Overview details -->
-    <div class="col-md-7">
+    <div class="col-12">
         <div class="glass-panel h-100 mb-0 position-relative eval-container">
             <div class="p-4 position-relative z-1">
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
@@ -335,7 +308,7 @@ html.dark-theme, body.dark-theme {
                 <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>">
                     <td class="ps-4">
                         <div class="fw-bold text-primary" style="font-size: 0.95rem"><?php echo htmlspecialchars($sg['student_name'] ?? 'Unknown'); ?> (<?php echo htmlspecialchars($sg['roll_no'] ?? ''); ?>)</div>
-                        <div class="small text-truncate text-dark mt-1" style="max-width: 180px;font-weight: 500" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
+                        <div class="small text-dark mt-1" style="font-weight: 500; word-break: break-word;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
                         <div class="text-muted" style="font-size: 0.75rem;margin-top: 2px"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
                     </td>
                     <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
