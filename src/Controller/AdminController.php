@@ -76,14 +76,15 @@ class AdminController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         
         // Fetch all users with details
-        $users = $db->query("SELECT u.id, u.email, u.role, u.status, u.created_at, 
-            COALESCE(u.cnic, prof.cnic) as cnic,
+        $users = $db->query("
+            SELECT u.*, 
             COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Administrator') as name,
-            s.student_id,
-            s.avatar,
-            s.shift,
-            COALESCE(sup.designation, c.designation, coord.designation) as designation,
+            COALESCE(s.student_id, '') as student_id,
             COALESCE(s.department, sup.department, c.department, d.department, coord.department, 'N/A') as department,
+            s.shift,
+            s.avatar,
+            COALESCE(sup.designation, c.designation, coord.designation, d.designation) as designation,
+            prof.cnic,
             prof.prefix,
             prof.surname,
             prof.father_name,
@@ -219,8 +220,8 @@ class AdminController extends BaseController {
                         $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
                         $stmt->execute([$userId, $name, $designation, $department]);
                     } else if ($role === 'hod') {
-                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
-                        $stmt->execute([$userId, $name, $department]);
+                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department, $designation]);
                     } else if ($role === 'coordinator') {
                         $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
                         $stmt->execute([$userId, $name, $department, $designation]);
@@ -456,9 +457,9 @@ class AdminController extends BaseController {
                         ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?");
                     $stmt->execute([$id, $name, $designation, $department, $name, $designation, $department]);
                 } else if ($role === 'hod') {
-                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, department = ?");
-                    $stmt->execute([$id, $name, $department, $name, $department]);
+                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department, designation) VALUES (?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
+                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
                 } else if ($role === 'coordinator') {
                     $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)
                         ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
