@@ -208,14 +208,14 @@ html.dark-theme, body.dark-theme {
         <table class="table premium-table m-0" id="grades-table">
             <thead>
                 <tr>
-                    <th class="ps-4 align-bottom pb-3">Student Details</th>
-                    <th class="text-center align-middle th-vertical">Prop. Def. (40)</th>
-                    <th class="text-center align-middle th-vertical">Prog. Pres. (40)</th>
-                    <th class="text-center align-middle th-vertical">Supv. (45)</th>
-                    <th class="text-center align-middle th-vertical">Final Pres. (75)</th>
-                    <th class="text-center align-middle th-vertical" style="background: rgba(16,185,129,0.1);color: #1e3a5f; border-left: 3px solid #000 !important;">Total (200)</th>
-                    <th class="text-center align-middle th-vertical">Grade</th>
-                    <th class="text-end pe-4 align-bottom pb-3">Status</th>
+                    <th class="ps-4 align-middle">Student Details</th>
+                    <th class="text-center align-middle">Prop. Def. (40)</th>
+                    <th class="text-center align-middle">Prog. Pres. (40)</th>
+                    <th class="text-center align-middle">Supv. (45)</th>
+                    <th class="text-center align-middle">Final Pres. (75)</th>
+                    <th class="text-center align-middle" style="background: rgba(16,185,129,0.1);color: #1e3a5f">Total (200)</th>
+                    <th class="text-center align-middle">Grade</th>
+                    <th class="text-end pe-4 align-middle">Status</th>
                 </tr>
             </thead>
             <tbody>
