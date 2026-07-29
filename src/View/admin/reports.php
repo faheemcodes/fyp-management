@@ -226,21 +226,21 @@ html.dark-theme, body.dark-theme {
                         <div class="small text-dark mt-1" style="font-weight: 500; word-break: break-word;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
                         <div class="text-muted" style="font-size: 0.75rem;margin-top: 2px"><i class="bi bi-people me-1"></i><?php echo htmlspecialchars($sg['group_code'] ?? 'N/A'); ?> &nbsp;|&nbsp; <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($sg['supervisor_name'] ?? 'Unassigned'); ?></div>
                     </td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-semibold" style="color: #475569"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center font-monospace fw-bold fs-5" style="background: rgba(16,185,129,0.02);color: #1e3a5f"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center">
-                        <span class="badge font-monospace rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 36px;height: 36px;font-size: 0.95rem;background: linear-gradient(135deg, #1e293b, #0f172a);color: #fff">
+                    <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['proposal_defense_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace" style="background: rgba(16,185,129,0.02);color: #1e3a5f"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle">
+                        <span class="fw-semibold" style="font-size: 1.1rem; color: #1e293b;">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>
                         </span>
                     </td>
-                    <td class="text-end pe-4">
+                    <td class="text-end pe-4 align-middle">
                         <?php if($sg['status'] === 'Pass'): ?>
-                            <span class="premium-badge success">Pass</span>
+                            <span class="text-success fw-semibold">Pass</span>
                         <?php else: ?>
-                            <span class="premium-badge danger">Fail</span>
+                            <span class="text-danger fw-semibold">Fail</span>
                         <?php endif; ?>
                     </td>
                 </tr>
