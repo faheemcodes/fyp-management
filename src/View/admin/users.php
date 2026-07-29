@@ -279,12 +279,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </div>
                     
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2">
+                            <label for="modalPrefix" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Prefix</label>
+                            <select class="form-select" id="modalPrefix" name="prefix">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Engr.">Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
                             <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">First Name</label>
                             <input type="text" class="form-control" id="modalName" name="name" required placeholder="e.g. Faheem">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5" id="surnameGroup">
                             <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Surname / Last Name</label>
                             <input type="text" class="form-control" id="modalSurname" name="surname" placeholder="e.g. Soomro">
                         </div>
@@ -316,8 +325,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </div>
 
-                    <!-- Supervisor Specific -->
-                    <div id="modalSupervisorFields" class="row g-3 mb-3 d-none">
+                    <!-- Supervisor / Staff Specific -->
+                    <div id="modalSupervisorFields" class="row g-2 mb-3 d-none">
                         <div class="col-md-12">
                             <label for="modalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Designation</label>
                             <select class="form-select" id="modalDesignation" name="designation">
@@ -580,16 +589,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         const roleSelect = document.getElementById('modalRole');
         const studentFields = document.getElementById('modalStudentFields');
         const supervisorFields = document.getElementById('modalSupervisorFields');
+        const departmentGroup = document.getElementById('modalDepartment').closest('.col-md-6');
+        const surnameGroup = document.getElementById('surnameGroup');
 
         roleSelect.addEventListener('change', function() {
-            if (this.value === 'student') {
+            const role = this.value;
+            if (role === 'student') {
                 studentFields.classList.remove('d-none');
                 supervisorFields.classList.add('d-none');
+                departmentGroup.classList.remove('d-none');
+                surnameGroup.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = true;
-            } else if (this.value === 'supervisor') {
+            } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee' || role === 'hod') {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = false;
+                
+                if (role === 'hod' || role === 'committee' || role === 'supervisor') {
+                    departmentGroup.classList.remove('d-none');
+                } else if (role === 'coordinator') {
+                    departmentGroup.classList.add('d-none');
+                }
+                surnameGroup.classList.remove('d-none');
             } else {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.add('d-none');
