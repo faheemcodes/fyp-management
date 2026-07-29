@@ -269,6 +269,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="col-md-6">
                             <label for="modalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Department</label>
                             <select class="form-select" id="modalDepartment" name="department" required>
+                                <option value="N/A">Not Applicable</option>
                                 <option value="Software Engineering">Software Engineering</option>
                                 <option value="Information Technology">Information Technology</option>
                                 <option value="Data Science">Data Science</option>
@@ -285,7 +286,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                         <div class="col-md-6">
                             <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Surname / Last Name</label>
-                            <input type="text" class="form-control" id="modalSurname" name="surname" required placeholder="e.g. Soomro">
+                            <input type="text" class="form-control" id="modalSurname" name="surname" placeholder="e.g. Soomro">
                         </div>
                     </div>
 
@@ -377,7 +378,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                         <div class="col-md-5">
                             <label for="editModalSurname" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Surname</label>
-                            <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname" required>
+                            <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname">
                         </div>
                     </div>
 
@@ -408,6 +409,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="col-md-3" id="editModalDeptGroup">
                             <label for="editModalDepartment" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Department</label>
                             <select class="form-select form-select-sm" id="editModalDepartment" name="department">
+                                <option value="N/A">Not Applicable</option>
                                 <option value="Software Engineering">Software Engineering</option>
                                 <option value="Information Technology">Information Technology</option>
                                 <option value="Data Science">Data Science</option>
