@@ -443,3 +443,94 @@ input.premium-filter-input {
         width: 100%;
     }
 }
+
+
+/* ==========================================================================
+   Print Styles (Landscape Report)
+   ========================================================================== */
+@media print {
+    @page {
+        size: landscape;
+        margin: 15mm;
+    }
+
+    body {
+        background-color: #fff !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hide UI Elements */
+    #sidebar, 
+    .admin-hero, 
+    .premium-filter-group, 
+    .eval-container,
+    .page-section-header,
+    .btn,
+    .d-print-none {
+        display: none !important;
+    }
+
+    /* Reset Main Content Area */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Remove Glass Effects for Print */
+    .glass-panel {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Clean Table for Print */
+    .premium-table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        border: 1px solid #ddd !important;
+        margin-top: 20px !important;
+    }
+
+    .premium-table th {
+        background-color: #f8f9fa !important;
+        color: #000 !important;
+        border: 1px solid #ddd !important;
+        padding: 10px !important;
+        font-weight: bold !important;
+        border-bottom: 2px solid #333 !important;
+    }
+
+    .premium-table td {
+        background-color: #fff !important;
+        color: #000 !important;
+        border: 1px solid #ddd !important;
+        padding: 8px 10px !important;
+    }
+
+    .premium-table tr {
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+    .premium-table td, .premium-table tr {
+        border-radius: 0 !important;
+    }
+
+    /* Text Adjustments */
+    .text-primary, .text-muted, .text-dark {
+        color: #000 !important;
+    }
+    
+    .badge, .premium-badge {
+        border: 1px solid #666 !important;
+        color: #000 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}

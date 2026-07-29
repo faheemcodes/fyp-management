@@ -246,13 +246,18 @@ html.dark-theme, body.dark-theme {
 </div>
 
 <!-- Detailed Grading Report -->
+<div class="d-none d-print-block text-center mb-4 pb-2" style="border-bottom: 2px solid #000;">
+    <h2 class="fw-bold mb-1" style="color: #000;">Cumulative Final Grading Report</h2>
+    <p class="mb-1" style="color: #333; font-size: 1.1rem;">FYP Management System - University of Sindh</p>
+    <p class="mb-0" style="color: #666; font-size: 0.9rem;">Generated on <?php echo date('F j, Y'); ?></p>
+</div>
 <div class="glass-panel mb-4">
-    <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
+    <div class="border-bottom p-3 bg-light rounded-top d-print-none" style="border-radius: 16px 16px 0 0;">
         <h6 class="fw-bold text-dark m-0">Cumulative Final Grading Report</h6>
     </div>
     
     <!-- Filters and Search Controls -->
-    <div class="p-3 border-bottom">
+    <div class="p-3 border-bottom d-print-none">
         <div class="premium-filter-group w-100">
             <!-- Search Input -->
             <div class="flex-grow-1 d-flex align-items-center px-3">
