@@ -41,6 +41,7 @@ class BaseController {
                 'coordinator/view_notice',
                 'coordinator/assessment_report',
                 'committee/print_sheet',
+                'admin/reports_print',
                 'landing',
                 'about',
                 'contact',

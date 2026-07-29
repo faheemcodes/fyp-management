@@ -110,6 +110,7 @@ $routes = [
     '/admin/deadlines' => ['Controller\AdminController', 'deadlines'],
     '/admin/deadlines/delete' => ['Controller\AdminController', 'deleteDeadline'],
     '/admin/reports' => ['Controller\AdminController', 'reports'],
+    '/admin/reports/print' => ['Controller\AdminController', 'printReports'],
     '/admin/batches' => ['Controller\AdminController', 'batches'],
     '/admin/batches/create' => ['Controller\AdminController', 'createBatch'],
     '/admin/batches/toggle' => ['Controller\AdminController', 'toggleBatch'],

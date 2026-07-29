@@ -88,9 +88,9 @@ html.dark-theme, body.dark-theme {
                 <p class="mb-0 mt-1" style="font-size: 0.85rem">View group progress, evaluation criteria, and cumulative final grades</p>
             </div>
         </div>
-        <button onclick="window.print()" class="btn-hero-glass rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm">
+        <a href="/admin/reports/print" target="_blank" class="btn-hero-glass rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm text-decoration-none d-flex align-items-center justify-content-center">
             <i class="bi bi-printer me-2"></i> Print Report
-        </button>
+        </a>
     </div>
 </div>
 
