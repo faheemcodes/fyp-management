@@ -213,7 +213,7 @@ html.dark-theme, body.dark-theme {
                     <th class="text-center align-middle th-vertical">Prog. Pres. (40)</th>
                     <th class="text-center align-middle th-vertical">Supv. (45)</th>
                     <th class="text-center align-middle th-vertical">Final Pres. (75)</th>
-                    <th class="text-center align-middle th-vertical" style="background: rgba(16,185,129,0.1);color: #1e3a5f">Total (200)</th>
+                    <th class="text-center align-middle th-vertical border-end" style="background: rgba(16,185,129,0.1);color: #1e3a5f;border-color: rgba(0,0,0,0.1) !important;">Total (200)</th>
                     <th class="text-center align-middle th-vertical">Grade</th>
                     <th class="text-end pe-4 align-bottom pb-3">Status</th>
                 </tr>
@@ -230,7 +230,7 @@ html.dark-theme, body.dark-theme {
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center align-middle font-monospace" style="background: rgba(16,185,129,0.02);color: #1e3a5f"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace border-end" style="background: rgba(16,185,129,0.02);color: #1e3a5f;border-color: rgba(0,0,0,0.1) !important;"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle">
                         <span class="fw-semibold" style="font-size: 1.1rem; color: #1e293b;">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>
@@ -238,9 +238,9 @@ html.dark-theme, body.dark-theme {
                     </td>
                     <td class="text-end pe-4 align-middle">
                         <?php if($sg['status'] === 'Pass'): ?>
-                            <span class="text-success fw-semibold">Pass</span>
+                            <span class="premium-badge success">Pass</span>
                         <?php else: ?>
-                            <span class="text-danger fw-semibold">Fail</span>
+                            <span class="premium-badge danger">Fail</span>
                         <?php endif; ?>
                     </td>
                 </tr>
