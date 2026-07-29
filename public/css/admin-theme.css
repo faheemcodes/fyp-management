@@ -181,7 +181,7 @@ body {
 }
 
 .premium-table td {
-    background: var(--admin-card-bg);
+    background: transparent;
     padding: 1rem 1.5rem;
     vertical-align: middle;
     border-top: 1px solid var(--admin-border);
@@ -212,7 +212,7 @@ body {
 }
 
 .premium-table tbody tr:hover td {
-    background: var(--admin-bg);
+    background: rgba(128, 128, 128, 0.05);
 }
 
 /* Action Buttons within Tables */
@@ -292,7 +292,7 @@ body {
 }
 
 .premium-badge.neutral {
-    background: var(--admin-bg);
+    background: rgba(128, 128, 128, 0.05);
     color: var(--admin-text-muted);
     border: 1px solid var(--admin-border);
 }
@@ -331,7 +331,7 @@ input.premium-filter-input {
 }
 
 .premium-filter-input option {
-    background: var(--admin-bg);
+    background: rgba(128, 128, 128, 0.05);
     color: var(--admin-text-main);
 }
 
@@ -347,7 +347,7 @@ input.premium-filter-input {
 
 /* Inputs */
 .premium-input {
-    background: var(--admin-bg);
+    background: rgba(128, 128, 128, 0.05);
     border: 1px solid var(--admin-border);
     border-radius: 12px;
     padding: 0.6rem 1rem;
