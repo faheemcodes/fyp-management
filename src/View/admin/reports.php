@@ -230,7 +230,7 @@ html.dark-theme, body.dark-theme {
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['progress_presentation_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['supervision_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle font-monospace" style="color: #475569"><?php echo number_format($sg['final_presentation_marks'] ?? 0, 0); ?></td>
-                    <td class="text-center align-middle font-monospace border-end" style="background: rgba(16,185,129,0.02);color: #1e3a5f;border-color: rgba(0,0,0,0.1) !important;"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
+                    <td class="text-center align-middle font-monospace" style="background: rgba(16,185,129,0.02);color: #1e3a5f"><?php echo number_format($sg['total_marks'] ?? 0, 0); ?></td>
                     <td class="text-center align-middle">
                         <span class="fw-semibold" style="font-size: 1.1rem; color: #1e293b;">
                             <?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>
