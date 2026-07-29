@@ -3,26 +3,33 @@ $title = 'Supervisor Slots & Workload';
 $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">Supervisor Workload</h3>
-        <p class="text-muted mb-0">Monitor all assigned capacity limits (max 8 groups/supervisor) for active batches.</p>
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="admin-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="admin-hero-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <div>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Supervisor Workload</h4>
+                <p class="mb-0 mt-1" style="font-size: 0.85rem">Monitor all assigned capacity limits (max 8 groups/supervisor) for active batches.</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 mb-4">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr>
-                        <th class="px-4 py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Supervisor Name</th>
-                        <th class="py-3 text-muted" style="font-weight: 600;font-size: 0.85rem">Department</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Slot Allocation (Current/8)</th>
-                        <th class="py-3 text-muted text-center" style="font-weight: 600;font-size: 0.85rem">Remaining Slots</th>
-                        <th class="px-4 py-3 text-muted text-end" style="font-weight: 600;font-size: 0.85rem">Status</th>
-                    </tr>
-                </thead>
+<div class="glass-panel p-4 mb-4">
+    <div class="table-responsive">
+        <table class="table premium-table mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Supervisor Name</th>
+                    <th>Department</th>
+                    <th class="text-center">Slot Allocation (Current/8)</th>
+                    <th class="text-center">Remaining Slots</th>
+                    <th class="text-end pe-4">Status</th>
+                </tr>
+            </thead>
                 <tbody>
                     <?php if(empty($supervisorsList)): ?>
                         <tr>
@@ -38,7 +45,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             $statusText = $percentage >= 100 ? 'Full' : 'Available';
                         ?>
                         <tr>
-                            <td class="px-4 py-3 fw-bold text-dark">
+                            <td class="ps-4 py-3 fw-bold text-dark">
                                 <?php echo htmlspecialchars($sup['name']); ?>
                             </td>
                             <td class="py-3 text-muted" style="font-size: 0.9rem">
@@ -55,8 +62,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <td class="py-3 text-center">
                                 <span class="fw-bold text-<?php echo $statusColor; ?> fs-5"><?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?></span>
                             </td>
-                            <td class="px-4 py-3 text-end">
-                                <span class="badge bg-<?php echo $statusColor; ?> bg-opacity-10 text-<?php echo $statusColor; ?> px-3 py-2 rounded-pill" style="letter-spacing: 0.05em">
+                            <td class="pe-4 py-3 text-end">
+                                <span class="premium-badge <?php echo $statusColor; ?>">
                                     <?php echo htmlspecialchars((string)($statusText), ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>

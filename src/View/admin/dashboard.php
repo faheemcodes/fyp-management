@@ -47,203 +47,137 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
         </div>
 
-        <!-- Stats -->
-        <div class="d-flex flex-wrap hero-stats-container">
-            <div class="page-stat-pill">
-                <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_users']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Total Users</span>
             </div>
-            <div class="page-stat-pill">
-                <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['active_projects']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Active Projects</span>
-            </div>
-            <div class="page-stat-pill">
-                <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($stats['pending_evaluations']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Pending Evals</span>
-            </div>
-            <div class="page-stat-pill" style="margin-right: 0">
-                <span class="stat-num text-primary"><?php echo htmlspecialchars((string)($stats['avg_marks']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Avg Grades</span>
-            </div>
-        </div>
-    </div>
 </div>
 
-<div class="row g-4">
-    <!-- ═══════════════ Recent Users ═══════════════ -->
-    <div class="col-xl-6">
-        <div class="page-section h-100 mb-0">
-            <div class="page-section-header">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
-                        <i class="bi bi-person-plus-fill"></i>
+<!-- -- Premium Stat Cards Row -- -->
+<div class="row g-3 mb-4 mt-2">
+    <!-- Manage Users Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/users" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue">
+                        <i class="bi bi-people-fill"></i>
                     </div>
-                    <div>
-                        <h6>Recent Users</h6>
-                        <small>Latest system signups</small>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_users'] ?? '0'), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Manage Users</div>
                     </div>
-                </div>
-                <a href="<?php echo $basePath; ?>/admin/users" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem;padding: 4px 12px">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table modern-table m-0">
-                    <thead>
-                        <tr>
-                            <th class="ps-4">User Details</th>
-                            <th>Role</th>
-                            <th class="text-end pe-4">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentUsers as $ru): ?>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-semibold text-dark" style="font-size: 0.85rem"><?php echo htmlspecialchars($ru['name']); ?></div>
-                                <div class="text-muted" style="font-size: 0.75rem"><?php echo htmlspecialchars($ru['email']); ?></div>
-                            </td>
-                            <td>
-                                <span class="status-pill bg-light text-secondary border">
-                                    <?php echo htmlspecialchars($ru['role']); ?>
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <?php if($ru['status'] === 'approved'): ?>
-                                    <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Approved</span>
-                                <?php elseif($ru['status'] === 'pending'): ?>
-                                    <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15);color: #d97706">Pending</span>
-                                <?php else: ?>
-                                    <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Rejected</span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ Recent Groups ═══════════════ -->
-    <div class="col-xl-6">
-        <div class="page-section h-100 mb-0">
-            <div class="page-section-header">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
-                        <i class="bi bi-diagram-3-fill"></i>
-                    </div>
-                    <div>
-                        <h6>Recent Project Groups</h6>
-                        <small>Newly formed teams</small>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
                     </div>
                 </div>
-                <a href="<?php echo $basePath; ?>/admin/groups" class="btn btn-outline-success btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem;padding: 4px 12px;color: #10b981;border-color: #10b981">View All</a>
             </div>
-            <div class="table-responsive">
-                <table class="table modern-table m-0">
-                    <thead>
-                        <tr>
-                            <th class="ps-4">Group Code</th>
-                            <th>Project Title</th>
-                            <th class="text-end pe-4">Stage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentGroups as $rg): ?>
-                        <tr>
-                            <td class="ps-4 fw-bold" style="color: #10b981;font-size: 0.85rem;font-family: monospace">
-                                <?php echo htmlspecialchars($rg['group_code'] ?? 'Pending'); ?>
-                            </td>
-                            <td>
-                                <div class="text-truncate fw-semibold text-dark" style="max-width: 200px;font-size: 0.85rem" title="<?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>">
-                                    <?php echo htmlspecialchars($rg['project_title'] ?? 'No Title Yet'); ?>
-                                </div>
-                                <div class="text-muted" style="font-size: 0.75rem">By: <?php echo htmlspecialchars($rg['creator_name']); ?></div>
-                            </td>
-                            <td class="text-end pe-4">
-                                <span class="status-pill" style="background: rgba(16,185,129,0.1);color: #10b981">
-                                    <?php echo htmlspecialchars($rg['progress_stage']); ?>
-                                </span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($recentGroups)): ?>
-                            <tr>
-                                <td colspan="3" class="text-center text-muted py-4">No project groups created yet.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </a>
     </div>
-</div>
 
-<div class="row g-4 mt-0 mb-4">
-    <!-- ═══════════════ Supervisor Slots ═══════════════ -->
-    <div class="col-12">
-        <div class="page-section mb-0">
-            <div class="page-section-header">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(139,92,246,0.1);color: #8b5cf6">
+    <!-- FYP Groups Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/groups" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-green">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-green">
+                        <i class="bi bi-folder-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['active_projects'] ?? '0'), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">FYP Groups</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Batches Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/batches" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-purple">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-purple" style="width: 54px; height: 54px; font-size: 1.4rem;">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Manage Batches</div>
+                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Configure academic years</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Supervisor Slots Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/slots" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-amber">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-amber" style="width: 54px; height: 54px; font-size: 1.4rem;">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
-                    <div>
-                        <h6>Supervisor Slots Status</h6>
-                        <small>Monitor assigned capacity limits (max 8 groups/supervisor)</small>
+                    <div class="flex-grow-1">
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Supervisor Slots</div>
+                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Manage capacity limits</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
                     </div>
                 </div>
-                <a href="<?php echo $basePath; ?>/admin/slots" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold" style="font-size: 0.75rem;padding: 4px 12px">View All</a>
             </div>
-            <div class="table-responsive">
-                <table class="table modern-table m-0">
-                    <thead>
-                        <tr>
-                            <th class="ps-4">Supervisor Name</th>
-                            <th>Department</th>
-                            <th>Slot Allocation (Current/8)</th>
-                            <th class="text-center">Remaining Slots</th>
-                            <th class="text-end pe-4">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($supervisorsList as $sup): ?>
-                            <?php 
-                            $current = (int)$sup['current_slots'];
-                            $remaining = max(0, 8 - $current);
-                            ?>
-                            <tr>
-                                <td class="ps-4 fw-bold text-dark" style="font-size: 0.85rem"><?php echo htmlspecialchars($sup['name']); ?></td>
-                                <td><span class="text-muted" style="font-size: 0.8rem"><?php echo htmlspecialchars($sup['department']); ?></span></td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="progress flex-grow-1" style="height: 8px;max-width: 150px;background-color: var(--border-color);border-radius: 4px;overflow: hidden">
-                                            <div class="progress-bar <?php echo $current >= 8 ? 'bg-danger' : ($current >= 6 ? 'bg-warning' : 'bg-success'); ?>" role="progressbar" style="width: <?php echo ($current / 8) * 100;?>%"></div>
-                                        </div>
-                                        <span class="fw-bold text-dark" style="font-size: 0.75rem"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <span class="fw-bold <?php echo $remaining === 0 ? 'text-danger' : 'text-success'; ?>" style="font-size: 0.85rem">
-                                        <?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?>
-                                    </span>
-                                </td>
-                                <td class="text-end pe-4">
-                                    <?php if($current >= 8): ?>
-                                        <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Full</span>
-                                    <?php else: ?>
-                                        <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Available</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php if(empty($supervisorsList)): ?>
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">No supervisors registered yet.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+        </a>
+    </div>
+
+    <!-- Deadlines Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/deadlines" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-rose">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-rose" style="width: 54px; height: 54px; font-size: 1.4rem;">
+                        <i class="bi bi-calendar2-event-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Deadlines</div>
+                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Set project milestones</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
             </div>
-        </div>
+        </a>
+    </div>
+
+    <!-- Analytics & Reports Card -->
+    <div class="col-xl-4 col-sm-6">
+        <a href="<?php echo $basePath; ?>/admin/reports" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-indigo">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-indigo" style="width: 54px; height: 54px; font-size: 1.4rem;">
+                        <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Analytics & Reports</div>
+                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">View system insights</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
+
+
+

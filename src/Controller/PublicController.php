@@ -46,7 +46,7 @@ class PublicController extends BaseController {
             $notices = $this->db->query("
                 SELECT id, subject, body, target_audience, department, notice_date 
                 FROM notices 
-                WHERE is_public = 1
+                WHERE is_public = 1 AND is_hidden = 0
                 ORDER BY notice_date DESC 
                 LIMIT 4
             ")->fetchAll();
@@ -94,7 +94,7 @@ class PublicController extends BaseController {
     public function faculty() {
         try {
             $supervisors = $this->db->query("
-                SELECT s.name, s.department, s.designation, s.research_interest, u.email 
+                SELECT s.name, s.department, s.designation, u.email 
                 FROM supervisors s 
                 JOIN users u ON s.user_id = u.id 
                 WHERE u.status = 'approved' 
@@ -147,7 +147,7 @@ class PublicController extends BaseController {
                 SELECT n.subject, n.body, n.notice_date, n.ref_no, u.role, n.department
                 FROM notices n 
                 JOIN users u ON n.sender_id = u.id
-                WHERE n.is_public = 1
+                WHERE n.is_public = 1 AND n.is_hidden = 0
                 ORDER BY n.notice_date DESC
                 LIMIT :limit OFFSET :offset
             ");
@@ -157,7 +157,7 @@ class PublicController extends BaseController {
             $notices = $stmt->fetchAll();
 
             // Total count for pagination
-            $totalNotices = $this->db->query("SELECT COUNT(*) FROM notices WHERE is_public = 1")->fetchColumn();
+            $totalNotices = $this->db->query("SELECT COUNT(*) FROM notices WHERE is_public = 1 AND is_hidden = 0")->fetchColumn();
             $totalPages = ceil($totalNotices / $limit);
 
             $this->render('public/notice-board', [

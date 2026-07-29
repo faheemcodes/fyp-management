@@ -198,7 +198,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
                                     data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'Morning'); ?>"
                                     data-designation="<?php echo htmlspecialchars($u['designation'] ?? ''); ?>"
-                                    data-interests="<?php echo htmlspecialchars($u['research_interest'] ?? ''); ?>">
+                                    data-gender="<?php echo htmlspecialchars(!empty($u['gender']) ? ucfirst(strtolower(trim($u['gender']))) : 'Male'); ?>">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <?php if($u['role'] !== 'admin'): ?>
@@ -349,19 +349,77 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="editModalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Full Name</label>
-                        <input type="text" class="form-control" id="editModalName" name="name" required>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2">
+                            <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Prefix</label>
+                            <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Engr.">Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="editModalName" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">First Name</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="editModalSurname" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Surname</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname" required>
+                        </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-md-6">
-                            <label for="editModalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Email Address</label>
-                            <input type="email" class="form-control" id="editModalEmail" name="email" required>
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Email Address</label>
+                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="editModalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">CNIC (no dashes)</label>
-                            <input type="text" class="form-control" id="editModalCnic" name="cnic" required>
+                        <div class="col-md-6" id="editModalCnicCol">
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">CNIC (no dashes)</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
+                        </div>
+                    </div>
+                    
+                    <div id="roleSpecificSection">
+                        <h6 class="text-success fw-bold mb-2 border-bottom pb-1 mt-3" style="font-size: 0.90rem;">Personal Details</h6>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-4" id="editModalFatherCol">
+                                <label for="editModalFather" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Father's Name</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalFather" name="father_name">
+                            </div>
+                            <div class="col-md-4" id="editModalGenderCol">
+                                <label for="editModalGender" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Gender</label>
+                                <select class="form-select form-select-sm" id="editModalGender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4" id="editModalDobCol">
+                                <label for="editModalDob" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Date of Birth</label>
+                                <input type="date" class="form-control form-control-sm" id="editModalDob" name="dob">
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-6">
+                                <label for="editModalMobileNo" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Mobile Number</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light border-end-0">+92</span>
+                                    <input type="text" class="form-control form-control-sm border-start-0 ps-0" id="editModalMobileNo" name="mobile_no" placeholder="3001234567">
+                                </div>
+                            </div>
+                            <div class="col-md-3" id="editModalProvinceCol">
+                                <label for="editModalProvince" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Province</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalProvince" name="province_state">
+                            </div>
+                            <div class="col-md-3" id="editModalDistrictCol">
+                                <label for="editModalDistrict" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">District / City</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalDistrict" name="district">
+                            </div>
+                        </div>
+                        <div class="mb-2" id="editModalAddressCol">
+                            <label for="editModalAddress" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Home Address</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalAddress" name="home_address">
                         </div>
                     </div>
 
@@ -382,7 +440,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                     <!-- Supervisor Specific -->
                     <div id="editModalSupervisorFields" class="row g-3 mb-3 d-none">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="editModalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Designation</label>
                             <select class="form-select" id="editModalDesignation" name="designation">
                                 <option value="Lecturer">Lecturer</option>
@@ -390,10 +448,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <option value="Associate Professor">Associate Professor</option>
                                 <option value="Professor">Professor</option>
                             </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editModalInterests" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Research Interests</label>
-                            <input type="text" class="form-control" id="editModalInterests" name="research_interest">
                         </div>
                     </div>
 
@@ -633,15 +687,34 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 const dept = this.getAttribute('data-dept');
                 const shift = this.getAttribute('data-shift');
                 const designation = this.getAttribute('data-designation');
-                const interests = this.getAttribute('data-interests');
+                
+                const prefix = this.getAttribute('data-prefix');
+                const surname = this.getAttribute('data-surname');
+                const mobileNo = this.getAttribute('data-mobile-no');
+                const gender = this.getAttribute('data-gender');
+                const dob = this.getAttribute('data-dob');
+                const province = this.getAttribute('data-province');
+                const district = this.getAttribute('data-district');
+                const address = this.getAttribute('data-address');
+                const father = this.getAttribute('data-father');
                 
                 document.getElementById('editModalId').value = userId;
                 document.getElementById('editModalRole').value = role;
                 document.getElementById('editModalRoleDisplay').value = role;
+                if(document.getElementById('editModalPrefix')) document.getElementById('editModalPrefix').value = prefix || 'Mr.';
                 document.getElementById('editModalName').value = name;
+                if(document.getElementById('editModalSurname')) document.getElementById('editModalSurname').value = surname;
                 document.getElementById('editModalEmail').value = email;
                 document.getElementById('editModalCnic').value = cnic;
                 document.getElementById('editModalPassword').value = '';
+                
+                if(document.getElementById('editModalFather')) document.getElementById('editModalFather').value = father === 'N/A' ? '' : father;
+                if(document.getElementById('editModalMobileNo')) document.getElementById('editModalMobileNo').value = mobileNo;
+                if(document.getElementById('editModalGender')) document.getElementById('editModalGender').value = gender;
+                if(document.getElementById('editModalDob')) document.getElementById('editModalDob').value = dob;
+                if(document.getElementById('editModalProvince')) document.getElementById('editModalProvince').value = province;
+                if(document.getElementById('editModalDistrict')) document.getElementById('editModalDistrict').value = district;
+                if(document.getElementById('editModalAddress')) document.getElementById('editModalAddress').value = address;
                 
                 const deptSelect = document.getElementById('editModalDepartment');
                 if (dept) {
@@ -652,20 +725,29 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 const supFields = document.getElementById('editModalSupervisorFields');
                 const deptGroup = document.getElementById('editModalDeptGroup');
                 
-                stdFields.classList.add('d-none');
-                supFields.classList.add('d-none');
-                deptGroup.classList.remove('d-none');
+                const roleSection = document.getElementById('roleSpecificSection');
+                const normalizedRole = (role || '').trim().toLowerCase();
                 
-                if (role === 'student') {
-                    stdFields.classList.remove('d-none');
+                if (stdFields) stdFields.classList.add('d-none');
+                if (supFields) supFields.classList.add('d-none');
+                if (deptGroup) deptGroup.classList.remove('d-none');
+                if (roleSection) roleSection.classList.add('d-none');
+                
+                if (normalizedRole === 'admin') {
+                    if (deptGroup) deptGroup.classList.add('d-none');
+                }
+                
+                if (normalizedRole === 'student') {
+                    if (roleSection) roleSection.classList.remove('d-none');
+                    if (stdFields) stdFields.classList.remove('d-none');
                     document.getElementById('editModalStudentId').value = studentId;
                     document.getElementById('editModalShift').value = shift;
-                } else if (role === 'supervisor') {
-                    supFields.classList.remove('d-none');
+                } else if (normalizedRole === 'supervisor') {
+                    if (supFields) supFields.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
-                    document.getElementById('editModalInterests').value = interests;
-                } else if (role === 'admin') {
-                    deptGroup.classList.add('d-none');
+                } else if (['coordinator', 'committee', 'hod'].includes(normalizedRole)) {
+                    if (supFields) supFields.classList.remove('d-none');
+                    document.getElementById('editModalDesignation').value = designation;
                 }
             });
         });

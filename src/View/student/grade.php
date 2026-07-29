@@ -120,17 +120,39 @@ elseif (in_array($showGrade, ['C+','C'])) $gradeColor = '#d97706';
 elseif ($showGrade === 'F') $gradeColor = '#dc2626';
 ?>
 
-<!-- Page Header -->
-<div class="page-header mb-4">
-    <h4><i class="bi bi-award-fill text-primary me-2"></i>Final Grade</h4>
-    <p class="mb-0">Your FYP evaluation breakdown and overall result.</p>
+<!-- ═══════════════ Hero Banner ═══════════════ -->
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+        <!-- Icon -->
+        <div class="page-hero-icon">
+            <i class="bi bi-award-fill"></i>
+        </div>
+
+        <!-- Info -->
+        <div class="flex-grow-1 text-center text-md-start">
+            <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                Final Grade
+            </h4>
+            <p class="mb-1 mt-1" style="font-size: 0.8rem;color: rgba(255,255,255,0.7)">
+                Comprehensive Evaluation Summary
+            </p>
+        </div>
+    </div>
 </div>
 
 <div class="row g-4">
     <!-- Left: Grade Breakdown -->
     <div class="col-lg-8">
         <div class="card border-0 p-4 mb-4">
-            <div class="section-title"><i class="bi bi-table"></i> Grade Breakdown</div>
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(245, 158, 11, 0.1);color: #f59e0b">
+                    <i class="bi bi-table"></i>
+                </div>
+                <div>
+                    <h6>Grade Breakdown</h6>
+                    <small>Detailed view of your marks</small>
+                </div>
+            </div>
 
             <?php if ($hasHiddenMarks): ?>
                 <div class="alert border-0 rounded-3 d-flex align-items-center gap-2 mb-4 py-2 px-3" style="background: rgba(16,185,129,0.07);color: #059669;font-size: 0.82rem" role="alert">
@@ -183,7 +205,15 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
 
         <!-- Committee Feedback -->
         <div class="card border-0 p-4">
-            <div class="section-title"><i class="bi bi-chat-right-text-fill"></i> Committee Feedback &amp; Remarks</div>
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(6, 182, 212, 0.1);color: #06b6d4">
+                    <i class="bi bi-chat-right-text-fill"></i>
+                </div>
+                <div>
+                    <h6>Committee Feedback & Remarks</h6>
+                    <small>Comments from evaluators</small>
+                </div>
+            </div>
 
             <?php
             $groupedEvals = [];
@@ -260,7 +290,15 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
             <div style="position: absolute;top: -40px;right: -40px;width: 160px;height: 160px;background: <?php echo $gradeColor;?>;opacity: 0.05;border-radius: 50%"></div>
             <div style="position: absolute;bottom: -30px;left: -30px;width: 100px;height: 100px;background: <?php echo $gradeColor;?>;opacity: 0.05;border-radius: 50%"></div>
 
-            <div class="section-title justify-content-center" style="border: none;padding: 0;margin-bottom: 20px"><i class="bi bi-trophy-fill"></i> Overall Result</div>
+            <div class="page-section-header justify-content-center mb-4">
+                <div class="page-section-icon" style="background: rgba(234, 179, 8, 0.1);color: #eab308">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+                <div>
+                    <h6 class="text-center">Overall Result</h6>
+                    <small class="text-center">Your final FYP outcome</small>
+                </div>
+            </div>
 
             <!-- Grade Circle -->
             <div class="d-inline-flex align-items-center justify-content-center mb-3 rounded-circle" style="width: 90px;height: 90px;background: <?php echo $gradeColor;?>;font-size: 2.2rem;font-weight: 800;color: #fff;letter-spacing: -0.02em;box-shadow: 0 8px 20px <?php echo $gradeColor;?>55">
@@ -288,7 +326,15 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
 
         <!-- Grade Scale -->
         <div class="card border-0 p-4">
-            <div class="section-title"><i class="bi bi-bar-chart-fill"></i> Grade Scale</div>
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(217, 70, 239, 0.1);color: #d946ef">
+                    <i class="bi bi-bar-chart-fill"></i>
+                </div>
+                <div>
+                    <h6>Grade Scale</h6>
+                    <small>University grading criteria</small>
+                </div>
+            </div>
             <?php
             $scale = [
                 ['A+', '#059669', '85 – 100%', '170 – 200'],
@@ -315,3 +361,5 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
     </div>
 </div>
 <?php endif; ?>
+
+

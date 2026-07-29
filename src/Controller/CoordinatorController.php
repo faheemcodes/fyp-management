@@ -205,34 +205,24 @@ class CoordinatorController extends BaseController {
         }
         redirect('/coordinator/notice');
     }
-
-    public function viewNotice() {
+    public function toggleNoticeVisibility() {
         $id = $_GET['id'] ?? null;
-        if (!$id) {
-            die("Notice ID is required.");
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            
+            $stmt = $db->prepare("SELECT is_hidden FROM notices WHERE id = ? AND sender_id = ?");
+            $stmt->execute([$id, $userId]);
+            $currentStatus = $stmt->fetchColumn();
+            
+            if ($currentStatus !== false) {
+                $newStatus = $currentStatus ? 0 : 1;
+                $updateStmt = $db->prepare("UPDATE notices SET is_hidden = ? WHERE id = ?");
+                $updateStmt->execute([$newStatus, $id]);
+                $this->flash('success', $newStatus ? 'Notice hidden successfully.' : 'Notice is now visible.');
+            }
         }
-
-        $db = \Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM notices WHERE id = ?");
-        $stmt->execute([$id]);
-        $notice = $stmt->fetch();
-
-        if (!$notice) {
-            die("Notice not found.");
-        }
-
-        // Get Coordinator and HOD signatures
-        $coordName = $this->getCoordinatorName($db, $notice['sender_id']);
-        $coordDept = $this->getCoordinatorDept($db, $notice['sender_id']);
-        $hodName = $this->getHodNameForDept($db, $coordDept);
-
-        // Standalone clean view for letters
-        $this->render('coordinator/view_notice', [
-            'notice' => $notice,
-            'coordName' => $coordName,
-            'coordDept' => $coordDept,
-            'hodName' => $hodName
-        ]);
+        redirect('/coordinator/notice');
     }
 
     public function deleteNotice() {

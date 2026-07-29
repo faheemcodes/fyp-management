@@ -43,114 +43,150 @@ $firstName = explode(' ', $fullName)[0];
     </div>
 </div>
 
-<!-- ── Recent Notices ── -->
-<div class="card border-0 p-3 p-md-4 mb-4">
-    <div class="section-title mb-4">
-        <i class="bi bi-megaphone-fill text-primary"></i> Recent Notices
+<?php
+// Set a default for unread messages since the table isn't set up yet
+$unreadMessages = 0;
+?>
+
+<!-- -- Premium Stat Cards Row -- -->
+<div class="row g-3 mb-4">
+    <!-- Assigned Groups Card -->
+    <div class="col-xl-4 col-md-6">
+        <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-amber">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-amber">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($groupCount), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Assigned Groups</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 
-            <!-- Desktop Table -->
-            <div class="table-responsive d-none d-md-block">
-                <table class="table modern-table align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Ref No.</th>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentNotices as $n): ?>
-                        <tr>
-                            <td>
-                                <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.8rem;background: var(--form-bg);padding: 4px 8px;border-radius: 6px;border: 1px solid var(--border-color)">
-                                    <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="fw-semibold text-wrap" title="<?php echo htmlspecialchars($n['subject']); ?>" style="font-size: 0.85rem;max-width: 400px;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary)">
-                                    <?php echo htmlspecialchars($n['subject']); ?>
-                                </div>
-                            </td>
-                            <td style="white-space: nowrap">
-                                <span style="font-size: 0.8rem;color: var(--text-secondary)">
-                                    <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                </span>
-                            </td>
-
-                            <td class="text-end">
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 12px; border: none;"><i class="bi bi-eye-fill me-1"></i>View</button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if(empty($recentNotices)): ?>
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                                    No recent notices found.
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Mobile Cards View -->
-            <div class="d-md-none p-3 pb-4">
-                <?php foreach($recentNotices as $n): ?>
-                <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold" style="font-family: monospace;font-size: 0.75rem;color: var(--text-secondary);background: rgba(0,0,0,0.05);padding: 4px 8px;border-radius: 6px">
-                            <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                        </span>
-
+    <!-- Review Proposals Card -->
+    <div class="col-xl-4 col-md-6">
+        <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue">
+                        <i class="bi bi-file-earmark-check-fill"></i>
                     </div>
-                    <h6 class="fw-bold mb-3 lh-base" style="font-size: 0.85rem; color: var(--text-primary)">
-                        <?php echo htmlspecialchars($n['subject']); ?>
-                    </h6>
-                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--border-color)">
-                        <span class="fw-semibold" style="font-size: 0.75rem;color: var(--text-secondary)">
-                            <i class="bi bi-calendar3 me-2"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                        </span>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem; border: none;">View</button>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($pendingProposals), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Review Proposals</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Messages Card -->
+    <div class="col-xl-4 col-md-12">
+        <a href="<?php echo $basePath; ?>/supervisor/chat" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-purple">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-purple">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($unreadMessages), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Unread Messages</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- -- Recent Notices -- -->
+    <div class="col-xl-4">
+        <div class="card border-0 p-3 p-md-4 h-100">
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
+                    <i class="bi bi-megaphone-fill"></i>
+                </div>
+                <div>
+                    <h6>Recent Notices</h6>
+                    <small>View latest announcements and updates</small>
+                </div>
+            </div>
+            <div class="custom-table-scroll" style="max-height: 320px; overflow-y: auto; padding-right: 8px;">
+                <?php foreach($recentNotices as $n): ?>
+                <div class="d-flex align-items-start py-3" style="border-bottom: 1px solid var(--border-color);">
+                    <div class="flex-grow-1 min-w-0" style="min-width: 0;">
+                        <div class="fw-semibold text-truncate pe-2" title="<?php echo htmlspecialchars($n['subject']); ?>" style="font-size: 0.9rem; color: var(--text-primary);">
+                            <?php echo htmlspecialchars($n['subject']); ?>
+                        </div>
+                        <div class="mt-1" style="font-size: 0.8rem; color: var(--text-secondary);">
+                            <i class="bi bi-calendar3 me-1 opacity-75"></i> <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
+                        </div>
+                    </div>
+                    <div class="ms-2 align-self-center">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link text-decoration-none fw-bold p-0" style="color: #10b981; font-size: 0.85rem;">View</button>
                     </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                        No recent notices found.
-                    </div>
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
+                    No recent notices found.
+                </div>
                 <?php endif; ?>
             </div>
-</div>
-
-
-
-<!-- Table Card -->
-<div class="card border-0 p-3 p-md-4 h-100 mb-4">
-    <div class="section-title mb-4">
-        <i class="bi bi-person-video3 text-primary me-2"></i> Your Assigned FYP Groups
+        </div>
     </div>
-    
-    <div class="d-none d-md-block table-responsive">
-        <table class="table table-hover align-middle border-0 m-0" style="box-shadow: none">
-            <thead style="background: var(--table-header-bg)">
-                <tr>
-                    <th class="py-3 px-3 border-0 rounded-start text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Group Code</th>
-                    <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Title</th>
-                    <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Status</th>
-                    <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Current FYP Stage</th>
-                    <th class="py-3 px-3 border-0 rounded-end text-end text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Actions</th>
-                </tr>
-            </thead>
+
+
+
+    <!-- -- Your Assigned FYP Groups -- -->
+    <div class="col-xl-8">
+        <div class="card border-0 p-3 p-md-4 h-100">
+            <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(16, 185, 129, 0.1);color: #10b981">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6>Your Assigned FYP Groups</h6>
+                        <small>Track your students' progress</small>
+                    </div>
+                </div>
+                <a href="<?php echo $basePath; ?>/supervisor/groups" class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm" style="font-size: 0.8rem; background: #10b981; color: #fff; border: none;">
+                    View Details
+                </a>
+            </div>
+            
+            <div class="d-none d-md-block table-responsive custom-table-scroll" style="max-height: 320px; overflow-y: auto;">
+                <table class="table modern-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Group Code</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Title</th>
+                            <th class="py-3 px-3 border-0 text-uppercase rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Team Members</th>
+                        </tr>
+                    </thead>
             <tbody>
                 <?php foreach($groups as $g): ?>
                 <tr style="transition: background-color 0.2s">
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
-                        <span class="fw-bold" style="color: #10b981;font-size: 0.9rem"><?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></span>
+                        <span style="color: #10b981; font-size: 0.75rem; font-weight: 500; background: rgba(16, 185, 129, 0.1); padding: 3px 10px; border-radius: 8px; letter-spacing: 0.5px;"><?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?></span>
                     </td>
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
                         <div class="fw-semibold text-truncate" style="max-width: 350px;color: var(--text-primary);font-size: 0.9rem" title="<?php echo htmlspecialchars($g['project_title']); ?>">
@@ -158,26 +194,39 @@ $firstName = explode(' ', $fullName)[0];
                         </div>
                     </td>
                     <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
-                        <?php if($g['project_status'] === 'Approved'): ?>
-                            <span style="font-size: 0.7rem;padding: 4px 10px;border-radius: 20px;background: rgba(16,185,129,0.1);color: #059669;font-weight: 600">Approved</span>
-                        <?php elseif($g['project_status'] === 'Submitted'): ?>
-                            <span style="font-size: 0.7rem;padding: 4px 10px;border-radius: 20px;background: rgba(245,158,11,0.1);color: #d97706;font-weight: 600">Submitted</span>
-                        <?php else: ?>
-                            <span style="font-size: 0.7rem;padding: 4px 10px;border-radius: 20px;background: var(--form-bg);color: var(--text-secondary);font-weight: 600;border: 1px solid var(--border-color)"><?php echo htmlspecialchars($g['project_status']); ?></span>
-                        <?php endif; ?>
-                    </td>
-                    <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
-                        <div class="d-flex align-items-center gap-2">
-                            <span style="width: 8px;height: 8px;border-radius: 50%;background: #10b981;flex-shrink: 0;box-shadow: 0 0 0 3px rgba(16,185,129,0.15)"></span>
-                            <span style="font-size: 0.8rem;font-weight: 600;color: var(--text-primary);line-height: 1.3">
-                                <?php echo htmlspecialchars($g['progress_stage']); ?>
-                            </span>
+                        <div class="d-flex align-items-center">
+                            <?php if (!empty($g['members'])): ?>
+                                <?php $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; ?>
+                                <?php foreach (array_slice($g['members'], 0, 3) as $index => $m): 
+                                    $initials = strtoupper(substr($m['name'] ?? 'U', 0, 1));
+                                    $colorClass = $colors[$index % count($colors)];
+                                    $avatarPath = !empty($m['avatar']) ? $basePath . '/uploads/avatars/' . $m['avatar'] : null;
+                                ?>
+                                    <?php if ($avatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                        <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center" 
+                                             style="width: 32px; height: 32px; margin-left: <?php echo $index > 0 ? '-10px' : '0'; ?>; overflow: hidden;"
+                                             title="<?php echo htmlspecialchars($m['name']); ?>">
+                                            <img src="<?php echo htmlspecialchars($avatarPath); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colorClass; ?>" 
+                                             style="width: 32px; height: 32px; margin-left: <?php echo $index > 0 ? '-10px' : '0'; ?>; font-size: 0.75rem; font-weight: 600;"
+                                             title="<?php echo htmlspecialchars($m['name']); ?>">
+                                            <?php echo $initials; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                                <?php if (count($g['members']) > 3): ?>
+                                    <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center bg-secondary text-white" 
+                                         style="width: 32px; height: 32px; margin-left: -10px; font-size: 0.7rem; font-weight: 600;"
+                                         title="<?php echo (count($g['members']) - 3); ?> more">
+                                        +<?php echo (count($g['members']) - 3); ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <span class="text-muted small">No members</span>
+                            <?php endif; ?>
                         </div>
-                    </td>
-                    <td class="px-3 py-3 border-bottom text-end" style="border-color: var(--border-color) !important">
-                        <a href="<?php echo $basePath; ?>/supervisor/groups" class="btn btn-sm px-3 rounded-pill fw-semibold" style="font-size: 0.75rem;background: var(--form-bg);color: var(--text-primary);border: 1px solid var(--border-color);transition: all 0.2s" onmouseover="this.style.background='var(--primary-color)'; this.style.color='#fff'; this.style.borderColor='var(--primary-color)';" onmouseout="this.style.background='var(--form-bg)'; this.style.color='var(--text-primary)'; this.style.borderColor='var(--border-color)';">
-                            View Details
-                        </a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -194,42 +243,59 @@ $firstName = explode(' ', $fullName)[0];
         </table>
     </div>
 
-    <!-- Mobile Card List -->
-    <div class="d-block d-md-none mt-3">
-        <?php foreach($groups as $g): ?>
-            <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
-                <div class="mb-2 d-flex align-items-center gap-2">
-                    <span class="fw-bold" style="color: #10b981;font-size: 0.75rem;background: rgba(16,185,129,0.1);padding: 3px 6px;border-radius: 4px; border: 1px solid rgba(16,185,129,0.2);">
-                        <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
-                    </span>
-                    <?php if($g['project_status'] === 'Approved'): ?>
-                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: rgba(16,185,129,0.1);color: #059669;font-weight: 600">Approved</span>
-                    <?php elseif($g['project_status'] === 'Submitted'): ?>
-                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: rgba(245,158,11,0.1);color: #d97706;font-weight: 600">Submitted</span>
-                    <?php else: ?>
-                        <span style="font-size: 0.65rem;padding: 3px 8px;border-radius: 20px;background: var(--form-bg);color: var(--text-secondary);font-weight: 600;border: 1px solid var(--border-color)"><?php echo htmlspecialchars($g['project_status']); ?></span>
-                    <?php endif; ?>
-                </div>
-                <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
-                    <?php echo htmlspecialchars($g['project_title']); ?>
-                </h6>
-                <div class="mb-3">
-                    <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase;display: inline-block">
-                        <?php echo htmlspecialchars($g['progress_stage']); ?>
-                    </span>
-                </div>
-                <div class="d-flex justify-content-end align-items-center mt-2 pt-3 border-top" style="border-color: var(--border-color) !important">
-                    <a href="<?php echo $basePath; ?>/supervisor/groups" class="btn btn-sm px-3 rounded-pill fw-semibold" style="font-size: 0.75rem;background: rgba(16,185,129,0.1);color: #10b981;border: none;transition: all 0.2s">
-                        <i class="bi bi-arrow-right-circle me-1"></i>View Details
-                    </a>
-                </div>
+            <!-- Mobile Card List -->
+            <div class="d-block d-md-none mt-3">
+                <?php foreach($groups as $g): ?>
+                    <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
+                        <div class="mb-2 d-flex justify-content-between align-items-center gap-2">
+                            <span style="color: #10b981; font-size: 0.75rem; font-weight: 500; background: rgba(16, 185, 129, 0.1); padding: 3px 10px; border-radius: 8px; letter-spacing: 0.5px;">
+                                <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
+                            </span>
+                            
+                            <div class="d-flex align-items-center">
+                                <?php if (!empty($g['members'])): ?>
+                                    <?php $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger']; ?>
+                                    <?php foreach (array_slice($g['members'], 0, 3) as $index => $m): 
+                                        $initials = strtoupper(substr($m['name'] ?? 'U', 0, 1));
+                                        $colorClass = $colors[$index % count($colors)];
+                                        $avatarPath = !empty($m['avatar']) ? $basePath . '/uploads/avatars/' . $m['avatar'] : null;
+                                    ?>
+                                        <?php if ($avatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                            <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center" 
+                                                 style="width: 24px; height: 24px; margin-left: <?php echo $index > 0 ? '-8px' : '0'; ?>; overflow: hidden;"
+                                                 title="<?php echo htmlspecialchars($m['name']); ?>">
+                                                <img src="<?php echo htmlspecialchars($avatarPath); ?>" alt="<?php echo htmlspecialchars($m['name']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colorClass; ?>" 
+                                                 style="width: 24px; height: 24px; margin-left: <?php echo $index > 0 ? '-8px' : '0'; ?>; font-size: 0.6rem; font-weight: 600;"
+                                                 title="<?php echo htmlspecialchars($m['name']); ?>">
+                                                <?php echo $initials; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    <?php if (count($g['members']) > 3): ?>
+                                        <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center bg-secondary text-white" 
+                                             style="width: 24px; height: 24px; margin-left: -8px; font-size: 0.55rem; font-weight: 600;"
+                                             title="<?php echo (count($g['members']) - 3); ?> more">
+                                            +<?php echo (count($g['members']) - 3); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-2 mt-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
+                            <?php echo htmlspecialchars($g['project_title']); ?>
+                        </h6>
+                    </div>
+                <?php endforeach; ?>
+                <?php if(empty($groups)): ?>
+                    <div class="text-center text-muted py-4 rounded-3 small" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                        No project groups assigned to you yet.
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endforeach; ?>
-        <?php if(empty($groups)): ?>
-            <div class="text-center text-muted py-4 rounded-3 small" style="background: var(--form-bg); border: 1px solid var(--border-color);">
-                No project groups assigned to you yet.
-            </div>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 

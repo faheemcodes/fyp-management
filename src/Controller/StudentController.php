@@ -81,7 +81,7 @@ class StudentController extends BaseController {
         $deadlines = $stmtDl->fetchAll();
 
         // Get notices for student
-        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('students', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('students', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
         $stmtNotices->execute([$department]);
         $recentNotices = $stmtNotices->fetchAll();
 

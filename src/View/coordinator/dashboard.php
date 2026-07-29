@@ -126,74 +126,97 @@ $firstName = explode(' ', $fullName)[0];
                 </div>
             </div>
         </div>
-
-        <div class="d-flex flex-wrap hero-stats-container">
-            <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num" style="color: <?php echo $stats['pending_approvals'] > 0 ? '#f59e0b' : 'var(--text-secondary)';?>"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span class="stat-label text-white">Pending Approvals</span>
-                </div>
-            </a>
-            <div class="page-stat-pill">
-                <span class="stat-num text-success"><?php echo htmlspecialchars((string)($stats['total_students']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Active Students</span>
-            </div>
-            <div class="page-stat-pill" style="margin-right: 0">
-                <span class="stat-num text-info"><?php echo htmlspecialchars((string)($stats['total_notices']), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span class="stat-label">Notices Generated</span>
-            </div>
-        </div>
     </div>
 </div>
 
-<!-- ── Quick Actions Row ── -->
+<!-- -- Premium Stat Cards Row -- -->
 <div class="row g-3 mb-4">
-    <div class="col-md-6">
-        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s;cursor: pointer" onclick="window.location.href='<?php echo $bp; ?>/coordinator/users'">
-            <div class="d-flex align-items-center gap-3">
-                <div style="width: 48px;height: 48px;background: rgba(245,158,11,0.1);color: #f59e0b;font-size: 1.4rem;border-radius: 12px;display: flex;align-items: center;justify-content: center;flex-shrink: 0">
-                    <i class="bi bi-shield-lock-fill"></i>
-                </div>
-                <div>
-                    <h6 class="fw-bold mb-1" style="color: var(--text-primary)">Verify Students</h6>
-                    <p class="mb-0 text-muted" style="font-size: 0.8rem">
-                        <strong style="color: #f59e0b"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></strong> pending registrations
-                    </p>
+
+    <!-- Verify Students Card -->
+    <div class="col-xl-4 col-md-6">
+        <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-amber">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-amber">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_approvals']), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Verify Students</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
                 </div>
             </div>
-            <i class="bi bi-chevron-right text-muted"></i>
-        </div>
+        </a>
     </div>
 
-    <div class="col-md-6">
-        <div class="modern-table-card p-3 d-flex align-items-center justify-content-between h-100" style="transition: transform 0.2s;cursor: pointer" onclick="window.location.href='<?php echo $bp; ?>/coordinator/assessment'">
-            <div class="d-flex align-items-center gap-3">
-                <div style="width: 48px;height: 48px;background: rgba(16,185,129,0.1);color: #10b981;font-size: 1.4rem;border-radius: 12px;display: flex;align-items: center;justify-content: center;flex-shrink: 0">
-                    <i class="bi bi-file-earmark-excel-fill"></i>
-                </div>
-                <div>
-                    <h6 class="fw-bold mb-1" style="color: var(--text-primary)">External Assessment</h6>
-                    <p class="mb-0 text-muted" style="font-size: 0.8rem">Generate dynamic grading sheets</p>
+    <!-- Notices Generated Card -->
+    <div class="col-xl-4 col-md-6">
+        <a href="<?php echo $bp; ?>/coordinator/notice" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-purple">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-purple">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_notices']), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Notices Generated</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
                 </div>
             </div>
-            <i class="bi bi-chevron-right text-muted"></i>
-        </div>
+        </a>
+    </div>
+
+    <!-- External Assessment Card -->
+    <div class="col-xl-4 col-md-12">
+        <a href="<?php echo $bp; ?>/coordinator/assessment" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue" style="width: 54px; height: 54px; font-size: 1.4rem;">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">External Assessment</div>
+                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Generate dynamic grading sheets</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 
 <div class="row">
     <!-- Main Table (Full Width) -->
     <div class="col-12">
-        <div class="card border-0 p-3 p-md-4 mb-4">
-    <div class="section-title mb-4 d-flex justify-content-between align-items-center">
-        <div><i class="bi bi-megaphone-fill text-primary me-2"></i> Recent Notices Generated</div>
-        <a href="<?php echo $bp; ?>/coordinator/notice" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-            <i class="bi bi-plus-lg me-1"></i> New Notice
+        <div class="card border-0 p-3 p-md-4 mb-4 mt-4">
+            <div class="page-section-header d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Recent Notices Generated</h6>
+                        <small>View latest announcements and updates</small>
+                    </div>
+                </div>
+                <a href="<?php echo $bp; ?>/coordinator/notice" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;font-weight: 600; text-transform: none; letter-spacing: normal;">
+            <i class="bi bi-plus-lg me-1 fw-bold"></i> New Notice
         </a>
     </div>
 
             <!-- Desktop Table -->
-            <div class="table-responsive d-none d-md-block">
+            <div class="table-responsive d-none d-md-block custom-table-scroll" style="max-height: 320px; overflow-y: auto;">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
@@ -245,7 +268,7 @@ $firstName = explode(' ', $fullName)[0];
             </div>
 
             <!-- Mobile Cards View -->
-            <div class="d-md-none p-3 pb-4">
+            <div class="d-md-none p-3 pb-4 custom-table-scroll" style="max-height: 320px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -396,3 +419,8 @@ foreach($noticesForModal as $n):
     </div>
 </div>
 <?php endforeach; ?>
+
+
+
+
+

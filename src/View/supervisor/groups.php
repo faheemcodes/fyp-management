@@ -296,9 +296,14 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <?php else: ?>
 
     <div class="card border-0 p-3 p-md-4 h-100 mb-4" style="border-radius: 16px;background: var(--card-bg);box-shadow: var(--card-shadow)">
-        <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom d-md-none" style="border-color: var(--border-color) !important">
-            <i class="bi bi-people-fill text-primary" style="font-size: 1.2rem;"></i>
-            <h6 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Assigned Groups</h6>
+        <div class="page-section-header mb-4 d-md-none">
+            <div class="page-section-icon" style="background: rgba(99, 102, 241, 0.1);color: #6366f1">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h6>Assigned Groups</h6>
+                <small>Manage your supervised teams</small>
+            </div>
         </div>
         <div class="d-none d-md-block table-responsive">
             <table class="table modern-table">

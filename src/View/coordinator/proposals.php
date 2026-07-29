@@ -153,8 +153,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
 <?php else: ?>
-    <div class="page-section">
-        <div class="table-responsive">
+    <div class="card border-0 p-3 p-md-4 h-100 mb-4" style="border-radius: 16px;background: var(--card-bg);box-shadow: var(--card-shadow)">
+        <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom d-md-none" style="border-color: var(--border-color) !important">
+            <i class="bi bi-file-earmark-text text-primary" style="font-size: 1.2rem;"></i>
+            <h6 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Project Proposals</h6>
+        </div>
+        <div class="d-none d-md-block table-responsive">
             <table class="table modern-table">
                 <thead>
                     <tr>
@@ -182,15 +186,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                                 <?php if($ext === 'pdf'): ?>
                                     <!-- Laptop Offcanvas trigger -->
-                                    <span role="button" class="small text-primary text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem;cursor: pointer" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span role="button" class="small text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #10b981;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
                                     </span>
                                     <!-- Mobile new tab trigger -->
-                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem">
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
                                         <i class="bi bi-box-arrow-up-right me-1"></i>View PDF
                                     </a>
                                 <?php else: ?>
-                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem">
+                                    <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
                                         <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
                                     </a>
                                 <?php endif; ?>
@@ -243,6 +247,66 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card List -->
+        <div class="d-block d-md-none mt-3">
+            <?php foreach($proposals as $pr): ?>
+                <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
+                    <div class="mb-2 d-flex justify-content-between align-items-center">
+                        <span class="group-code-badge" style="font-size: 0.75rem;">
+                            <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?>
+                        </span>
+                        <?php 
+                        $statusMap = [
+                            'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                            'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
+                            'Revision Requested' => ['rgba(139,92,246,0.1)', '#8b5cf6'],
+                            'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
+                        ];
+                        $st = $pr['status'];
+                        $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
+                        $color = $statusMap[$st][1] ?? '#6b7280';
+                        ?>
+                        <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 3px 8px;border-radius: 20px;">
+                            <?php echo htmlspecialchars($st); ?>
+                        </span>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
+                        <?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?>
+                    </h6>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar-stack">
+                            <?php foreach(array_slice($pr['members'], 0, 4) as $m): ?>
+                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
+                                     title="<?php echo htmlspecialchars($m['student_name']); ?>"
+                                     alt="Avatar" style="width: 24px; height: 24px;">
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if(count($pr['members']) > 4): ?>
+                            <span class="text-muted small fw-semibold" style="font-size: 0.7rem;">+<?php echo count($pr['members']) - 4; ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-end align-items-center mt-2 pt-3 border-top" style="border-color: var(--border-color) !important; gap: 8px;">
+                        <?php if($pr['file_path']): ?>
+                            <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
+                            <?php if($ext === 'pdf'): ?>
+                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="action-btn text-decoration-none" style="font-size: 0.75rem; padding: 4px 10px; color: #10b981; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i> View PDF
+                                </a>
+                            <?php else: ?>
+                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="action-btn text-decoration-none" style="font-size: 0.75rem; padding: 4px 10px; color: #10b981; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
+                                    <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Download
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                            <i class="bi bi-info-circle-fill"></i> Details
+                        </button>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 <?php endif; ?>
@@ -307,13 +371,26 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php if($pr['file_path'] && strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
 <!-- PDF Offcanvas (Right Side) -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 50vw;min-width: 320px;z-index: 1060">
-  <div class="offcanvas-header border-bottom" style="background: linear-gradient(135deg, #0f172a, #1e293b);color: #fff">
-    <h6 class="offcanvas-title fw-bold">Proposal Document - <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></h6>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+<div class="offcanvas offcanvas-end shadow-lg border-start-0" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 75vw; max-width: 1400px; min-width: 320px; z-index: 1060; background: var(--main-bg);">
+  <div class="offcanvas-header px-4 py-3" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+    <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 40px; height: 40px; background: rgba(13,148,136,0.1); color: #0d9488;">
+            <i class="bi bi-file-earmark-pdf-fill fs-5"></i>
+        </div>
+        <div>
+            <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Proposal Document</h6>
+            <div class="text-muted small fw-medium mt-1">Group: <span style="color: #0d9488; font-family: monospace;"><?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?></span></div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
+            <i class="bi bi-box-arrow-up-right"></i> Open New Tab
+        </a>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close" ></button>
+    </div>
   </div>
-  <div class="offcanvas-body p-0">
-    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none"></iframe>
+  <div class="offcanvas-body p-0" style="background: #e5e7eb;">
+    <iframe src="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" width="100%" height="100%" style="border: none; width: 100%; height: 100%;"></iframe>
   </div>
 </div>
 <?php endif; ?>
@@ -323,7 +400,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Move all modals to the body to prevent z-index issues from CSS stacking contexts
-        const modals = document.querySelectorAll('.modal');
+        const modals = document.querySelectorAll('.modal, .offcanvas');
         modals.forEach(modal => {
             document.body.appendChild(modal);
         });

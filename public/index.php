@@ -173,11 +173,10 @@ $routes = [
     '/coordinator/users/reject' => ['Controller\CoordinatorController', 'rejectStudent'],
     '/coordinator/notice' => ['Controller\CoordinatorController', 'notice'],
     '/coordinator/notice/create' => ['Controller\CoordinatorController', 'createNotice'],
-    '/coordinator/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
+    '/coordinator/notice/toggle' => ['Controller\CoordinatorController', 'toggleNoticeVisibility'],
     '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
     '/coordinator/assessment' => ['Controller\CoordinatorController', 'externalAssessment'],
     '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
-    '/notice/view' => ['Controller\CoordinatorController', 'viewNotice'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],

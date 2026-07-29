@@ -1,0 +1,12 @@
+{
+  "AllowMultiple": false,
+  "Description": "Fix student Progress Path section title",
+  "EndLine": 325,
+  "Instruction": "Replace section-title with page-section-header",
+  "ReplacementContent": "            <div class=\"page-section-header mb-4\">\n                <div class=\"page-section-icon\" style=\"background: rgba(16,185,129,0.1);color: #10b981\">\n                    <i class=\"bi bi-map-fill\"></i>\n                </div>\n                <div>\n                    <h6>Your FYP Progress Path</h6>\n                    <small>Track your project evaluation stages</small>\n                </div>\n            </div>",
+  "StartLine": 325,
+  "TargetContent": "            <div class=\"section-title mb-4\"><i class=\"bi bi-map-fill\"></i> Your FYP Progress Path</div>",
+  "TargetFile": "d:\\App By Faheem\\FYP\\fyp-management\\src\\View\\student\\dashboard.php",
+  "toolAction": "Fix student section title 4",
+  "toolSummary": "Edit student dashboard"
+}

@@ -1,29 +1,8 @@
-<style>
-@media (min-width: 576px) {
-    
-}
 
-
-
-/* ─── Section Panel ─── */
-
-
-
-
-.page-section-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin: 0;
-}
-
-/* ─── Modern Table Styles ─── */
-</style>
 <!-- HOD Dashboard View -->
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
-
 
 <!-- Top Hero Banner -->
 <div class="page-hero">
@@ -37,45 +16,112 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Manage faculty, coordinate groups, and monitor academic progress</p>
             </div>
         </div>
-        
-        <!-- Stats Row inside Hero -->
-        <div class="row g-2 w-100 mt-3 mt-lg-0 justify-content-center justify-content-lg-end" style="max-width: 600px; margin: 0;">
-            <div class="col-6 col-lg-3">
-                <div class="page-stat-pill h-100 w-100" style="margin: 0 !important; min-width: 0 !important; max-width: none;">
-                    <span class="stat-num"><?php echo htmlspecialchars($stats['supervisors'] ?? '0'); ?></span>
-                    <span class="stat-label">Supervisors</span>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="page-stat-pill h-100 w-100" style="margin: 0 !important; min-width: 0 !important; max-width: none;">
-                    <span class="stat-num"><?php echo htmlspecialchars($stats['committee'] ?? '0'); ?></span>
-                    <span class="stat-label">Committee</span>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="page-stat-pill h-100 w-100" style="margin: 0 !important; min-width: 0 !important; max-width: none;">
-                    <span class="stat-num text-info"><?php echo htmlspecialchars($stats['total_groups'] ?? '0'); ?></span>
-                    <span class="stat-label">FYP Groups</span>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="page-stat-pill h-100 w-100" style="margin: 0 !important; min-width: 0 !important; max-width: none;">
-                    <span class="stat-num text-warning"><?php echo htmlspecialchars($stats['pending_approvals'] ?? '0'); ?></span>
-                    <span class="stat-label">Pending</span>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
+<!-- ── Stat Cards Row ── -->
+<div class="row g-3 mb-4">
+    <!-- Supervisors Card -->
+    <div class="col-xl-3 col-sm-6">
+        <a href="<?php echo $basePath; ?>/hod/supervisors" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-green">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-green">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars($stats['supervisors'] ?? '0', ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Supervisors</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Committee Card -->
+    <div class="col-xl-3 col-sm-6">
+        <a href="<?php echo $basePath; ?>/hod/committee" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars($stats['committee'] ?? '0', ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Committee</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Coordinator Card -->
+    <div class="col-xl-3 col-sm-6">
+        <a href="<?php echo $basePath; ?>/hod/coordinators" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-purple">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-purple">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars($stats['coordinators'] ?? '0', ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Coordinators</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Verify Students Card -->
+    <div class="col-xl-3 col-sm-6">
+        <a href="<?php echo $basePath; ?>/hod/students/verify" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-amber">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-amber">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars($stats['pending_approvals'] ?? '0', ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Verify Students</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+
 <!-- ── Recent Notices ── -->
 <div class="card border-0 p-3 p-md-4 mb-4">
-    <div class="section-title mb-4">
-        <i class="bi bi-megaphone-fill text-primary"></i> Recent Notices
+    <div class="page-section-header mb-4">
+        <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
+                    <i class="bi bi-megaphone-fill"></i>
+        </div>
+        <div>
+            <h6>Recent Notices</h6>
+            <small>View latest announcements and updates</small>
+        </div>
     </div>
 
             <!-- Desktop Table -->
-            <div class="table-responsive d-none d-md-block">
+            <div class="table-responsive d-none d-md-block custom-table-scroll" style="max-height: 230px; overflow-y: auto;">
                 <table class="table modern-table align-middle mb-0">
                     <thead>
                         <tr>
@@ -123,14 +169,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
 
             <!-- Mobile Cards View -->
-            <div class="d-md-none p-3 pb-4">
+            <div class="d-md-none p-3 pb-4" style="max-height: 350px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="fw-bold" style="font-family: monospace;font-size: 0.75rem;color: var(--text-secondary);background: rgba(0,0,0,0.05);padding: 4px 8px;border-radius: 6px">
                             <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
                         </span>
-
                     </div>
                     <h6 class="fw-bold mb-3 lh-base" style="font-size: 0.85rem; color: var(--text-primary)">
                         <?php echo htmlspecialchars($n['subject']); ?>
@@ -151,101 +196,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endif; ?>
             </div>
 </div>
-
-
-
-<div class="row g-4">
-    <!-- Recent Supervisors -->
-    <div class="col-xl-6">
-        <div class="card border-0 p-3 p-md-4 h-100 mb-0">
-            <div class="section-title mb-4 d-flex justify-content-between align-items-center" style="margin-bottom: 1.5rem;">
-                <div><i class="bi bi-person-badge text-primary me-2"></i> Recently Added Supervisors</div>
-                <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;font-weight: 600; text-transform: none; letter-spacing: normal;">Manage All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table modern-table">
-                    <thead>
-                        <tr>
-                            <th>Faculty Name</th>
-                            <th>Designation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentSupervisors as $rs): ?>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 36px;height: 36px;font-size: 0.9rem">
-                                        <?php echo strtoupper(substr($rs['name'], 0, 1)); ?>
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($rs['name']); ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rs['email']); ?></small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge bg-light text-dark border px-2 py-1"><?php echo htmlspecialchars($rs['designation']); ?></span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($recentSupervisors)): ?>
-                            <tr>
-                                <td colspan="2" class="text-center text-muted py-4">No supervisors registered yet.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Active Committee Members -->
-    <div class="col-xl-6">
-        <div class="card border-0 p-3 p-md-4 h-100 mb-0">
-            <div class="section-title mb-4 d-flex justify-content-between align-items-center">
-                <div><i class="bi bi-shield-check text-primary me-2"></i> Active Committee Members</div>
-                <a href="<?php echo $basePath; ?>/hod/committee" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem;font-weight: 600; text-transform: none; letter-spacing: normal;">Manage All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table modern-table">
-                    <thead>
-                        <tr>
-                            <th>Member Name</th>
-                            <th>Department</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentCommittee as $rc): ?>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 36px;height: 36px;font-size: 0.9rem">
-                                        <?php echo strtoupper(substr($rc['name'], 0, 1)); ?>
-                                    </div>
-                                    <div>
-                                        <div class="fw-semibold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($rc['name']); ?></div>
-                                        <small class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($rc['email']); ?></small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="text-secondary small fw-medium"><?php echo htmlspecialchars($rc['department']); ?></span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($recentCommittee)): ?>
-                            <tr>
-                                <td colspan="2" class="text-center text-muted py-4">No committee members added yet.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- Notice Modals -->
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -322,11 +272,11 @@ foreach($noticesForModal as $n):
                             </div>
                         </div>
 
-                        <div class="subject-line" style="font-size: 1.15rem; font-weight: bold; margin-bottom: 30px; color: #0f172a; border-left: 3px solid #1e3a8a; padding-left: 12px;">
+                        <div class="subject-line" style="font-size: 1rem; font-weight: bold; margin-bottom: 20px; color: #0f172a; border-left: 3px solid #1e3a8a; padding-left: 12px;">
                             SUBJECT: <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
 
-                        <div class="body-content" style="font-size: 1.05rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 60px; color: #1e293b;">
+                        <div class="body-content" style="font-size: 0.95rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 60px; color: #1e293b;">
                             <?php echo htmlspecialchars($n['body']); ?>
                         </div>
                     </div>
@@ -362,3 +312,11 @@ foreach($noticesForModal as $n):
     </div>
 </div>
 <?php endforeach; ?>
+
+
+
+
+
+
+
+

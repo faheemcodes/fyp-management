@@ -45,6 +45,29 @@ if ($role === 'hod' || $role === 'coordinator') {
         // Ignore DB errors in sidebar to prevent breaking layout
     }
 }
+
+// Fetch pending proposals count for Supervisor
+$pendingProposalsCount = 0;
+if ($role === 'supervisor') {
+    try {
+        $dbSidebar = \Database::getInstance()->getConnection();
+        $stmtSup = $dbSidebar->prepare("SELECT id FROM supervisors WHERE user_id = ?");
+        $stmtSup->execute([$_SESSION['user_id'] ?? 0]);
+        $supId = $stmtSup->fetchColumn();
+
+        if ($supId) {
+            $stmtPendingProp = $dbSidebar->prepare("
+                SELECT COUNT(*) FROM proposals pr
+                JOIN projects p ON pr.group_id = p.group_id
+                WHERE p.supervisor_id = ? AND pr.status = 'Submitted'
+            ");
+            $stmtPendingProp->execute([$supId]);
+            $pendingProposalsCount = $stmtPendingProp->fetchColumn();
+        }
+    } catch (Exception $e) {
+        // Ignore DB errors
+    }
+}
 ?>
 
 <!-- Sidebar -->
@@ -197,8 +220,11 @@ if ($role === 'hod' || $role === 'coordinator') {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?>">
-                    <i class="bi bi-clipboard-check-fill"></i> Review Proposals
+                <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-clipboard-check-fill"></i> Review Proposals</span>
+                    <?php if (isset($pendingProposalsCount) && $pendingProposalsCount > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(245, 158, 11, 0.3);"><?php echo $pendingProposalsCount; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item">
@@ -347,8 +373,8 @@ if ($role === 'hod' || $role === 'coordinator') {
                 <div style="width: 38px;height: 38px;display: flex;align-items: center;justify-content: center;flex-shrink: 0">
                     <img src="<?php echo $urlPrefix; ?>/images/logo.png" alt="Logo" style="max-width: 100%;max-height: 100%;object-fit: contain">
                 </div>
-                <div>
-                    <h6 class="fw-bold m-0" style="color: var(--text-primary);font-size: 0.85rem;letter-spacing: -0.01em">FYP Portal</h6>
+                <div style="max-width: 160px;">
+                    <h6 class="fw-bold m-0 text-wrap" style="color: var(--text-primary);font-size: 0.8rem;line-height: 1.25;letter-spacing: -0.01em">Faculty of Engineering &amp; Technology</h6>
                 </div>
             </a>
             
@@ -362,7 +388,7 @@ if ($role === 'hod' || $role === 'coordinator') {
                         <span class="position-absolute bg-danger text-white fw-bold d-none align-items-center justify-content-center" id="notification-badge" style="top: -4px;right: -4px;font-size: 0.65rem;min-width: 18px;height: 18px;padding: 0 4px;border-radius: 10px;border: 2px solid var(--navbar-bg);box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);z-index: 2"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 py-0" style="width: 320px;max-height: 440px;overflow-y: auto;border-radius: 14px;background: var(--card-bg)" id="notification-dropdown">
-                        <div class="p-3 border-bottom d-flex align-items-center justify-content-between rounded-top" style="background: #1e352f;color: #ffffff;border-color: var(--border-color) !important">
+                        <div class="p-3 border-bottom d-flex align-items-center justify-content-between rounded-top" style="background: #1e352f;color: #ffffff;border-color: var(--border-color) !important; position: sticky; top: 0; z-index: 100;">
                             <span class="small fw-semibold">Recent Alerts</span>
                             <a href="#" class="text-white text-decoration-none" id="mark-all-read" style="font-size: 0.75rem;opacity: 0.8">Mark all read</a>
                         </div>
@@ -411,3 +437,4 @@ if ($role === 'hod' || $role === 'coordinator') {
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
+

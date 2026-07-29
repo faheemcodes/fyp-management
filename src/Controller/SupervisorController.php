@@ -48,10 +48,19 @@ class SupervisorController extends BaseController {
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
+        // Fetch members for each assigned group for the dashboard
+        foreach ($groups as &$group) {
+            $stmt = $db->prepare("SELECT s.name, s.avatar FROM group_members gm 
+                JOIN students s ON gm.student_id = s.user_id 
+                WHERE gm.group_id = ? LIMIT 5");
+            $stmt->execute([$group['id']]);
+            $group['members'] = $stmt->fetchAll();
+        }
+
         // Get system deadlines and notices
         $department = $_SESSION['department'] ?? 'Software Engineering';
 
-        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('supervisors', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('supervisors', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
         $stmtNotices->execute([$department]);
         $recentNotices = $stmtNotices->fetchAll();
 
@@ -358,7 +367,7 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch supervisor details
-        $stmt = $db->prepare("SELECT s.name, s.designation, s.department, s.research_interest, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
+        $stmt = $db->prepare("SELECT s.name, s.designation, s.department, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
         $stmt->execute([$userId]);
         $supervisor = $stmt->fetch();
         if (!$supervisor) {
@@ -485,3 +494,4 @@ class SupervisorController extends BaseController {
         redirect('/supervisor/groups');
     }
 }
+

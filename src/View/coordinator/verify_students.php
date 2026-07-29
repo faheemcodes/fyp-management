@@ -189,9 +189,9 @@ html.dark-theme .modal .btn-close:hover {
                             </div>
                         </div>
                     </td>
-                    <td class="fw-bold" style="color: var(--primary-color);font-size: 0.9rem"><?php echo htmlspecialchars($s['student_id']); ?></td>
+                    <td style="color: var(--primary-color);font-size: 0.9rem; font-weight: 400;"><?php echo htmlspecialchars($s['student_id']); ?></td>
                     <td>
-                        <span class="group-code-badge"><i class="bi bi-clock-history me-1"></i><?php echo htmlspecialchars($s['shift']); ?></span>
+                        <span class="group-code-badge fw-normal" style="font-weight: 400;"><?php echo htmlspecialchars($s['shift']); ?></span>
                     </td>
                     <td>
                         <span class="badge status-badge-pending"><i class="bi bi-hourglass-split me-1"></i>Pending</span>

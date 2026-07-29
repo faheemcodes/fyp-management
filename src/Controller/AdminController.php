@@ -76,13 +76,16 @@ class AdminController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         
         // Fetch all users with details
-        $users = $db->query("SELECT u.*, 
+        $users = $db->query("SELECT u.id, u.email, u.role, u.status, u.created_at, 
+            COALESCE(u.cnic, prof.cnic) as cnic,
             COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Administrator') as name,
             s.student_id,
             s.avatar,
             s.shift,
-            sup.designation,
+            COALESCE(sup.designation, c.designation, coord.designation) as designation,
             COALESCE(s.department, sup.department, c.department, d.department, coord.department, 'N/A') as department,
+            prof.prefix,
+            prof.surname,
             prof.father_name,
             prof.dob,
             prof.mobile_code,
@@ -161,7 +164,6 @@ class AdminController extends BaseController {
             // Specifics
             $designation = trim($_POST['designation'] ?? '');
             $student_id = trim($_POST['student_id'] ?? '');
-            $research_interest = trim($_POST['research_interest'] ?? '');
             
             // Common Profile
             $surname = trim($_POST['surname'] ?? '');
@@ -220,11 +222,11 @@ class AdminController extends BaseController {
                         $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
                         $stmt->execute([$userId, $name, $department]);
                     } else if ($role === 'coordinator') {
-                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
-                        $stmt->execute([$userId, $name, $department]);
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department, $designation]);
                     } else if ($role === 'committee') {
-                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
-                        $stmt->execute([$userId, $name, $department]);
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $department, $designation]);
                     }
                 }
                 
@@ -384,10 +386,21 @@ class AdminController extends BaseController {
             $password = $_POST['password'] ?? '';
             
             // role specific
+            $prefix = $_POST['prefix'] ?? 'Mr.';
+            $surname = trim($_POST['surname'] ?? '');
             $student_id = trim($_POST['student_id'] ?? '');
             $shift = $_POST['shift'] ?? 'Morning';
-            $designation = $_POST['designation'] ?? '';
-            $research_interest = trim($_POST['research_interest'] ?? '');
+            $designation = trim($_POST['designation'] ?? '');
+            
+            // Profile specific
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $gender = $_POST['gender'] ?? 'Male';
+            $dob = $_POST['dob'] ?? '2000-01-01';
+            if(empty($dob)) $dob = '2000-01-01';
+            $province_state = trim($_POST['province_state'] ?? '');
+            $district = trim($_POST['district'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            $father_name = trim($_POST['father_name'] ?? '');
             
             if (!$id || empty($name) || empty($email) || empty($role)) {
                 $this->flash('error', 'Required fields are missing.');
@@ -396,6 +409,11 @@ class AdminController extends BaseController {
 
             // Remove dashes from CNIC if present
             $cnic = str_replace('-', '', $cnic);
+            
+            // For users table, empty string must be null to avoid UNIQUE constraint violations
+            $user_cnic = ($cnic === '') ? null : $cnic;
+            // For profiles table, cnic cannot be null
+            $profile_cnic = ($cnic === '') ? '' : $cnic;
 
             $db = \Database::getInstance()->getConnection();
             
@@ -406,10 +424,10 @@ class AdminController extends BaseController {
                 if (!empty($password)) {
                     $hashed = password_hash($password, PASSWORD_DEFAULT);
                     $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ?, password = ? WHERE id = ?");
-                    $stmt->execute([$email, $cnic, $hashed, $id]);
+                    $stmt->execute([$email, $user_cnic, $hashed, $id]);
                 } else {
                     $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ? WHERE id = ?");
-                    $stmt->execute([$email, $cnic, $id]);
+                    $stmt->execute([$email, $user_cnic, $id]);
                 }
                 
                 // Update role-specific table and profiles
@@ -418,22 +436,26 @@ class AdminController extends BaseController {
                         ON DUPLICATE KEY UPDATE student_id = ?, name = ?, department = ?, shift = ?");
                     $stmt->execute([$id, $student_id, $name, $department, $shift, $student_id, $name, $department, $shift]);
                 } else if ($role === 'supervisor') {
-                    $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?, research_interest = ?");
-                    $stmt->execute([$id, $name, $designation, $department, $research_interest, $name, $designation, $department, $research_interest]);
+                    $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?");
+                    $stmt->execute([$id, $name, $designation, $department, $name, $designation, $department]);
                 } else if ($role === 'hod') {
                     $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)
                         ON DUPLICATE KEY UPDATE name = ?, department = ?");
                     $stmt->execute([$id, $name, $department, $name, $department]);
                 } else if ($role === 'coordinator') {
-                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, department = ?");
-                    $stmt->execute([$id, $name, $department, $name, $department]);
+                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
+                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
+                } else if ($role === 'committee') {
+                    $stmt = $db->prepare("INSERT INTO committees (user_id, name, department, designation) VALUES (?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
+                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
                 }
                 
                 // Keep profiles table in sync
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '2000-01-01', '+92', '0000000', 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE cnic = ?, surname = ?");
-                $stmtP->execute([$id, $name, $cnic, $cnic, $name]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender, province_state, district, father_name) VALUES (?, ?, ?, ?, ?, '+92', ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE prefix = ?, surname = ?, cnic = ?, dob = ?, mobile_no = ?, home_address = ?, gender = ?, province_state = ?, district = ?, father_name = ?");
+                $stmtP->execute([$id, $prefix, $surname, $profile_cnic, $dob, $mobile_no, $home_address, $gender, $province_state, $district, $father_name, $prefix, $surname, $profile_cnic, $dob, $mobile_no, $home_address, $gender, $province_state, $district, $father_name]);
                 
                 $db->commit();
                 $this->flash('success', "User account updated successfully.");

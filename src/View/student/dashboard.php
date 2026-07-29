@@ -142,8 +142,19 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
-                <i class="bi bi-mortarboard-fill"></i>
+            <?php 
+            $heroAvatar = !empty($_SESSION['avatar']) ? $_SESSION['avatar'] : '';
+            $heroBasePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+            $heroAvatarPath = $_SERVER['DOCUMENT_ROOT'] . $heroBasePath . '/uploads/avatars/' . $heroAvatar;
+            $heroHasAvatar = !empty($heroAvatar) && file_exists($heroAvatarPath);
+            $heroInitial = strtoupper(substr(trim($_SESSION['name'] ?? 'S'), 0, 1));
+            ?>
+            <div class="page-hero-icon" style="padding: 0; overflow: hidden;">
+                <?php if($heroHasAvatar): ?>
+                    <img src="<?php echo htmlspecialchars($heroBasePath, ENT_QUOTES, 'UTF-8'); ?>/uploads/avatars/<?php echo htmlspecialchars($heroAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+                <?php else: ?>
+                    <span style="font-size: 1.6rem; font-weight: 700; font-style: normal;"><?php echo htmlspecialchars($heroInitial, ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php endif; ?>
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
@@ -190,12 +201,22 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 
 <?php $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>
 
+
+
 <!-- ── Main Content Row ── -->
 <div class="row g-4 mb-4">
     <!-- Project Abstract -->
     <div class="col-lg-8">
         <div class="card border-0 p-4 h-100">
-            <div class="section-title"><i class="bi bi-file-text-fill"></i> Project Abstract</div>
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
+                    <i class="bi bi-file-text-fill"></i>
+                </div>
+                <div>
+                    <h6>Project Abstract</h6>
+                    <small>Summary of your final year project</small>
+                </div>
+            </div>
             <?php
             $desc = $group['project_description'] ?? '';
             if ($desc): 
@@ -241,7 +262,15 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
     <!-- Deadlines -->
     <div class="col-lg-4" id="deadlines-section">
         <div class="card border-0 p-4 h-100">
-            <div class="section-title"><i class="bi bi-calendar-event-fill"></i> Upcoming Deadlines</div>
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(239,68,68,0.1);color: #dc2626">
+                    <i class="bi bi-calendar-event-fill"></i>
+                </div>
+                <div>
+                    <h6>Upcoming Deadlines</h6>
+                    <small>Important dates for your project</small>
+                </div>
+            </div>
             <?php if (empty($deadlines)): ?>
                 <div class="text-center py-3">
                     <i class="bi bi-calendar-x text-muted" style="font-size: 1.8rem;opacity: 0.3"></i>
@@ -275,139 +304,116 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 </div>
 
 
-<!-- ── Recent Notices ── -->
-<div class="card border-0 p-3 p-md-4 mb-4">
-    <div class="section-title mb-4">
-        <i class="bi bi-megaphone-fill text-primary"></i> Recent Notices
-    </div>
-
-            <!-- Desktop Table -->
-            <div class="table-responsive d-none d-md-block">
-                <table class="table modern-table align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Ref No.</th>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentNotices as $n): ?>
-                        <tr>
-                            <td>
-                                <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.8rem;background: var(--form-bg);padding: 4px 8px;border-radius: 6px;border: 1px solid var(--border-color)">
-                                    <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="fw-semibold text-wrap" title="<?php echo htmlspecialchars($n['subject']); ?>" style="font-size: 0.85rem;max-width: 400px;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary)">
-                                    <?php echo htmlspecialchars($n['subject']); ?>
-                                </div>
-                            </td>
-                            <td style="white-space: nowrap">
-                                <span style="font-size: 0.8rem;color: var(--text-secondary)">
-                                    <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                </span>
-                            </td>
-
-                            <td class="text-end">
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 12px; border: none;"><i class="bi bi-eye-fill me-1"></i>View</button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if(empty($recentNotices)): ?>
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                                    No recent notices found.
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+<!-- ── Notices & Progress Row ── -->
+<div class="row g-4 mb-4">
+    
+    <!-- ── Recent Notices (col-lg-4) ── -->
+    <div class="col-lg-4">
+        <div class="card border-0 p-4 h-100">
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(59,130,246,0.1);color: #3b82f6">
+                    <i class="bi bi-megaphone-fill"></i>
+                </div>
+                <div>
+                    <h6>Recent Notices</h6>
+                    <small>Latest announcements and updates</small>
+                </div>
             </div>
 
-            <!-- Mobile Cards View -->
-            <div class="d-md-none p-3 pb-4">
-                <?php foreach($recentNotices as $n): ?>
-                <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold" style="font-family: monospace;font-size: 0.75rem;color: var(--text-secondary);background: rgba(0,0,0,0.05);padding: 4px 8px;border-radius: 6px">
-                            <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                        </span>
+            <?php if (empty($recentNotices)): ?>
+                <div class="text-center py-3">
+                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50 text-muted"></i>
+                    <p class="text-muted mb-0 mt-2" style="font-size: 0.82rem">No recent notices found.</p>
+                </div>
+            <?php else: ?>
+                <ul class="list-unstyled m-0 p-0" style="max-height: 180px; overflow-y: auto; padding-right: 4px !important;">
+                    <?php foreach ($recentNotices as $i => $n):
+                        $isLast = ($i === count($recentNotices) - 1);
+                    ?>
+                        <li class="d-flex align-items-start gap-3 <?php echo !$isLast ? 'pb-3 mb-3 border-bottom' : ''; ?>">
+                            <div style="width: 8px;height: 8px;border-radius: 50%;background: var(--primary-color);margin-top: 5px;flex-shrink: 0"></div>
+                            <div style="flex: 1;min-width: 0">
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <span class="fw-semibold text-truncate" style="font-size: 0.82rem; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                                        <?php echo htmlspecialchars($n['subject']); ?>
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between mt-1">
+                                    <span class="text-muted" style="font-size: 0.72rem">
+                                        <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
+                                    </span>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link p-0 text-primary" style="font-size: 0.75rem; text-decoration: none; font-weight: 600;">
+                                        View
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </div>
 
+    <!-- ── FYP Progress Path (col-lg-8) ── -->
+    <div class="col-lg-8">
+        <div class="card border-0 p-4 h-100" id="progress-section">
+            <div class="page-section-header mb-4">
+                <div class="page-section-icon" style="background: rgba(99,102,241,0.1);color: #6366f1">
+                    <i class="bi bi-map-fill"></i>
+                </div>
+                <div>
+                    <h6>Your FYP Progress Path</h6>
+                    <small>Track your project milestones</small>
+                </div>
+            </div>
+            <div class="h-stepper pb-2">
+                <?php foreach ($stagesList as $index => $stageName):
+                    if ($index <= $currentIdx) {
+                        $cls = 'completed';
+                    } elseif ($index == $currentIdx + 1) {
+                        $cls = 'active';
+                    } else {
+                        $cls = '';
+                    }
+                    
+                    // Remove 'Completed' for upcoming/active stages so it makes sense grammatically
+                    $displayName = $stageName;
+                    if ($cls !== 'completed') {
+                        $displayName = str_replace(' Completed', '', $stageName);
+                    }
+                ?>
+                <div class="h-step <?php echo $cls; ?>">
+                    <div class="h-step-dot">
+                        <?php if ($cls === 'completed'): ?>
+                            <i class="bi bi-check-lg" style="font-size: 0.8rem"></i>
+                        <?php elseif ($cls === 'active'): ?>
+                            <i class="bi bi-arrow-right" style="font-size: 0.75rem"></i>
+                        <?php else: ?>
+                            <?php echo $index + 1; ?>
+                        <?php endif; ?>
                     </div>
-                    <h6 class="fw-bold mb-3 lh-base" style="font-size: 0.85rem; color: var(--text-primary)">
-                        <?php echo htmlspecialchars($n['subject']); ?>
-                    </h6>
-                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--border-color)">
-                        <span class="fw-semibold" style="font-size: 0.75rem;color: var(--text-secondary)">
-                            <i class="bi bi-calendar3 me-2"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                        </span>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem; border: none;">View</button>
-                    </div>
+                    <div class="h-step-label"><?php echo htmlspecialchars($displayName); ?></div>
                 </div>
                 <?php endforeach; ?>
-                <?php if(empty($recentNotices)): ?>
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                        No recent notices found.
-                    </div>
-                <?php endif; ?>
             </div>
-</div>
-
-<!-- ── Horizontal Progress Stepper (Full Width) ── -->
-<div class="card border-0 p-4" id="progress-section">
-    <div class="section-title mb-4"><i class="bi bi-map-fill"></i> Your FYP Progress Path</div>
-    <div class="h-stepper pb-2">
-        <?php foreach ($stagesList as $index => $stageName):
-            if ($index <= $currentIdx) {
-                $cls = 'completed';
-            } elseif ($index == $currentIdx + 1) {
-                $cls = 'active';
-            } else {
-                $cls = '';
-            }
-            
-            // Remove 'Completed' for upcoming/active stages so it makes sense grammatically
-            $displayName = $stageName;
-            if ($cls !== 'completed') {
-                $displayName = str_replace(' Completed', '', $stageName);
-            }
-        ?>
-        <div class="h-step <?php echo $cls; ?>">
-            <div class="h-step-dot">
-                <?php if ($cls === 'completed'): ?>
-                    <i class="bi bi-check-lg" style="font-size: 0.8rem"></i>
-                <?php elseif ($cls === 'active'): ?>
-                    <i class="bi bi-arrow-right" style="font-size: 0.75rem"></i>
-                <?php else: ?>
-                    <?php echo $index + 1; ?>
-                <?php endif; ?>
+            <div class="d-flex align-items-center gap-4 mt-3 pt-3 border-top flex-wrap" style="font-size: 0.75rem">
+                <span class="d-flex align-items-center gap-2">
+                    <span style="width: 10px;height: 10px;border-radius: 50%;background: #059669;display: inline-block"></span>
+                    <span class="text-muted">Completed</span>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <span style="width: 10px;height: 10px;border-radius: 50%;background: #3b82f6;display: inline-block"></span>
+                    <span class="text-muted">Current Stage</span>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <span style="width: 10px;height: 10px;border-radius: 50%;background: var(--border-color);display: inline-block"></span>
+                    <span class="text-muted">Upcoming</span>
+                </span>
+                <span class="ms-auto fw-semibold" style="color: #10b981">
+                    <?php echo $currentIdx + 1; ?> of <?php echo count($stagesList); ?> stages complete
+                </span>
             </div>
-            <div class="h-step-label"><?php echo htmlspecialchars($displayName); ?></div>
         </div>
-        <?php endforeach; ?>
-    </div>
-    <div class="d-flex align-items-center gap-4 mt-3 pt-3 border-top flex-wrap" style="font-size: 0.75rem">
-        <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px;height: 10px;border-radius: 50%;background: #059669;display: inline-block"></span>
-            <span class="text-muted">Completed</span>
-        </span>
-        <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px;height: 10px;border-radius: 50%;background: #3b82f6;display: inline-block"></span>
-            <span class="text-muted">Current Stage</span>
-        </span>
-        <span class="d-flex align-items-center gap-2">
-            <span style="width: 10px;height: 10px;border-radius: 50%;background: var(--border-color);display: inline-block"></span>
-            <span class="text-muted">Upcoming</span>
-        </span>
-        <span class="ms-auto fw-semibold" style="color: #10b981">
-            <?php echo $currentIdx + 1; ?> of <?php echo count($stagesList); ?> stages complete
-        </span>
     </div>
 </div>
 
@@ -489,11 +495,11 @@ foreach($noticesForModal as $n):
                             </div>
                         </div>
 
-                        <div class="subject-line" style="font-size: 1.15rem; font-weight: bold; margin-bottom: 30px; color: #0f172a; border-left: 3px solid #1e3a8a; padding-left: 12px;">
+                        <div class="subject-line" style="font-size: 1rem; font-weight: bold; margin-bottom: 20px; color: #0f172a; border-left: 3px solid #1e3a8a; padding-left: 12px;">
                             SUBJECT: <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
 
-                        <div class="body-content" style="font-size: 1.05rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 60px; color: #1e293b;">
+                        <div class="body-content" style="font-size: 0.95rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 60px; color: #1e293b;">
                             <?php echo htmlspecialchars($n['body']); ?>
                         </div>
                     </div>

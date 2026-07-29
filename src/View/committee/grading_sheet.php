@@ -378,15 +378,19 @@ $groupCount = count($grouped ?? []);
 
 
 <!-- Hero Section -->
-<div class="gs-hero">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative" style="z-index: 1">
-        <div class="d-flex align-items-center gap-3">
-            <div class="gs-hero-icon shadow-sm">
+<div class="page-hero mb-4" style="position: sticky; top: 60px; z-index: 1010; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon">
                 <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold mb-1" style="font-size: 1.3rem;letter-spacing: -0.02em"><?php echo htmlspecialchars($stage); ?> Grading</h4>
-                <p class="mb-0" style="color: rgba(255,255,255,0.6);font-size: 0.82rem"><?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?></p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                    <?php echo htmlspecialchars($stage); ?> Grading
+                </h4>
+                <p class="mb-1 mt-1" style="font-size: 0.8rem;color: rgba(255,255,255,0.7)">
+                    <?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?>
+                </p>
             </div>
         </div>
 

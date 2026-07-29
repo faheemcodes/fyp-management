@@ -82,34 +82,32 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="page-hero">
+<div class="admin-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
+            <div class="admin-hero-icon">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Project Groups Overview</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Monitor project status, edit team details, and manage supervisors</p>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Project Groups Overview</h4>
+                <p class="mb-0 mt-1" style="font-size: 0.85rem">Monitor project status, edit team details, and manage supervisors</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="page-section" style="overflow: visible !important">
+<div class="glass-panel p-4 mb-4" style="overflow: visible !important">
     <!-- Filters and Search Controls -->
-    <div class="page-section-header">
-        <div class="row g-3 align-items-center w-100 m-0">
+    <div class="mb-4">
+        <div class="premium-filter-group w-100">
             <!-- Search Input -->
-            <div class="col-md-4 ps-0">
-                <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
-                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search groups by code, title..." data-target="groups-table">
-                </div>
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search text-muted me-2"></i>
+                <input type="text" class="form-control premium-filter-input table-search" placeholder="Search groups by code, title..." data-target="groups-table">
             </div>
             <!-- Supervisor Filter -->
-            <div class="col-md-4">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="supervisor" data-target="groups-table">
+            <div class="border-start border-light-subtle px-2" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter" data-column="supervisor" data-target="groups-table">
                     <option value="all">All Supervisors</option>
                     <option value="unassigned">Unassigned</option>
                     <?php foreach($supervisors as $s): ?>
@@ -118,8 +116,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </select>
             </div>
             <!-- Progress Stage Filter -->
-            <div class="col-md-4 pe-0">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="stage" data-target="groups-table">
+            <div class="border-start border-light-subtle px-2" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter" data-column="stage" data-target="groups-table">
                     <option value="all">All Progress Stages</option>
                     <option value="Group Created">Group Created</option>
                     <option value="Proposal Submitted">Proposal Submitted</option>
@@ -135,7 +133,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
     <!-- Table -->
     <div class="table-responsive-md">
-        <table class="table modern-table m-0" id="groups-table">
+        <table class="table premium-table m-0" id="groups-table">
             <thead>
                 <tr>
                     <th class="ps-4">Group Code</th>
@@ -222,7 +220,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                     </td>
                     <td>
-                        <span class="status-pill" style="background: rgba(16,185,129,0.1);color: #059669">
+                        <span class="premium-badge success">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
                         </span>
                         <?php if($g['project_status'] === 'Submitted'): ?>
@@ -231,13 +229,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex gap-1 justify-content-end">
-                            <button class="action-btn btn-edit-group" title="Edit Group Details" data-bs-toggle="modal" data-bs-target="#editGroupModal"
+                            <button class="table-action-btn edit btn-edit-group" title="Edit Group Details" data-bs-toggle="modal" data-bs-target="#editGroupModal"
                                 data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-code="<?php echo htmlspecialchars($g['group_code'] ?? ''); ?>"
                                 data-stage="<?php echo htmlspecialchars($g['progress_stage']); ?>">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
-                            <button class="action-btn btn-edit-project" title="Edit Project/Proposal" data-bs-toggle="modal" data-bs-target="#editProjectModal"
+                            <button class="table-action-btn btn-edit-project" title="Edit Project/Proposal" data-bs-toggle="modal" data-bs-target="#editProjectModal"
                                 data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-title="<?php echo htmlspecialchars($g['project_title'] ?? ''); ?>"
                                 data-desc="<?php echo htmlspecialchars($g['project_description'] ?? ''); ?>"
@@ -245,7 +243,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 data-supervisor="<?php echo htmlspecialchars($g['supervisor_id'] ?? ''); ?>">
                                 <i class="bi bi-file-text-fill"></i>
                             </button>
-                            <button class="action-btn btn-edit-grades" title="Edit Grades/Marks" data-bs-toggle="modal" data-bs-target="#editGradesModal"
+                            <button class="table-action-btn btn-edit-grades" title="Edit Grades/Marks" data-bs-toggle="modal" data-bs-target="#editGradesModal"
                                 data-id="<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-def="<?php echo htmlspecialchars($g['proposal_defense_marks'] ?? ''); ?>"
                                 data-prog="<?php echo htmlspecialchars($g['progress_presentation_marks'] ?? ''); ?>"
@@ -253,7 +251,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 data-sup="<?php echo htmlspecialchars($g['supervision_marks'] ?? ''); ?>">
                                 <i class="bi bi-award-fill"></i>
                             </button>
-                            <a class="action-btn btn-delete-group text-danger text-decoration-none" title="Delete Group" href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/delete?id=<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" onclick="return confirm('Are you sure you want to permanently delete this group and all its records? This cannot be undone.');">
+                            <a class="table-action-btn delete btn-delete-group text-danger text-decoration-none" title="Delete Group" href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/groups/delete?id=<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" onclick="return confirm('Are you sure you want to permanently delete this group and all its records? This cannot be undone.');">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
                         </div>
@@ -271,10 +269,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <!-- Create Group Modal -->
-<div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade premium-modal" id="createGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header border-bottom py-3">
+        <div class="modal-content">
+            <div class="modal-header py-3">
                 <h5 class="modal-title fw-bold">Create New Student Group</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -318,10 +316,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <!-- Edit Group Modal -->
-<div class="modal fade" id="editGroupModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade premium-modal" id="editGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header border-bottom py-3">
+        <div class="modal-content">
+            <div class="modal-header py-3">
                 <h5 class="modal-title fw-bold">Edit Group Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -359,10 +357,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <!-- Manage Members Modal -->
-<div class="modal fade" id="manageMembersModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade premium-modal" id="manageMembersModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header border-bottom py-3">
+        <div class="modal-content">
+            <div class="modal-header py-3">
                 <h5 class="modal-title fw-bold">Manage Group Members</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -395,10 +393,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <!-- Edit Project Modal -->
-<div class="modal fade" id="editProjectModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade premium-modal" id="editProjectModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header border-bottom py-3">
+        <div class="modal-content">
+            <div class="modal-header py-3">
                 <h5 class="modal-title fw-bold">Edit Project / Proposal details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -453,10 +451,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <!-- Edit Grades Modal -->
-<div class="modal fade" id="editGradesModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade premium-modal" id="editGradesModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content rounded-3 border-0">
-            <div class="modal-header border-bottom py-3">
+        <div class="modal-content">
+            <div class="modal-header py-3">
                 <h5 class="modal-title fw-bold">Edit Group Grades & Marks</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

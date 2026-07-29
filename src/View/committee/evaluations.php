@@ -373,20 +373,20 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 
 <!-- Hero Section -->
-<div class="eval-hero">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 position-relative" style="z-index: 1">
-        <div class="d-flex align-items-center gap-3">
-            <div class="eval-hero-icon shadow-sm">
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon">
                 <i class="bi bi-clipboard-data"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold mb-1" style="font-size: 1.4rem;letter-spacing: -0.02em">Group Evaluations</h4>
-                <p class="mb-0" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Review project abstracts and submit presentation grades.</p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                    Group Evaluations
+                </h4>
+                <p class="mb-1 mt-1" style="font-size: 0.8rem;color: rgba(255,255,255,0.7)">
+                    Review project abstracts and submit presentation grades
+                </p>
             </div>
-        </div>
-        
-        <div class="d-flex align-items-center gap-2">
-            
         </div>
         
         <?php

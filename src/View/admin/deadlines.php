@@ -19,15 +19,15 @@
 
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="page-hero">
+<div class="admin-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
+            <div class="admin-hero-icon">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Timeline & Deadlines</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Set and manage submission deadlines for various FYP stages</p>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Timeline & Deadlines</h4>
+                <p class="mb-0 mt-1" style="font-size: 0.85rem">Set and manage submission deadlines for various FYP stages</p>
             </div>
         </div>
     </div>
@@ -51,8 +51,8 @@
 
 <div class="row g-4">
     <div class="col-lg-5">
-        <div class="page-section h-100">
-            <div class="page-section-header">
+        <div class="glass-panel h-100">
+            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
                 <h6 class="fw-bold text-dark m-0">Set / Update Stage Deadline</h6>
             </div>
             <div class="p-4">
@@ -70,7 +70,7 @@
                     
                     <div class="mb-3">
                         <label for="deadline_date" class="form-label small fw-semibold text-secondary">Deadline Date & Time</label>
-                        <input type="datetime-local" class="form-control bg-light" id="deadline_date" name="deadline_date" required>
+                        <input type="datetime-local" class="form-control premium-input bg-light" id="deadline_date" name="deadline_date" required>
                     </div>
 
                     <div class="mb-4">
@@ -81,7 +81,7 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill" style="background: linear-gradient(135deg, #10b981, #059669);border: none">Update Deadline</button>
+                    <button type="submit" class="btn-premium w-100 rounded-pill mt-2">Update Deadline</button>
                 
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </form>
@@ -90,12 +90,12 @@
     </div>
 
     <div class="col-lg-7">
-        <div class="page-section h-100">
-            <div class="page-section-header">
+        <div class="glass-panel h-100">
+            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
                 <h6 class="fw-bold text-dark m-0">Current Timeline Deadlines</h6>
             </div>
-            <div class="table-responsive">
-                <table class="table modern-table m-0">
+            <div class="table-responsive p-3">
+                <table class="table premium-table m-0">
                     <thead>
                         <tr>
                             <th class="ps-4">FYP Project Stage</th>
@@ -114,13 +114,13 @@
                             </td>
                             <td>
                                 <?php if($dl['status'] === 'Active'): ?>
-                                    <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Active</span>
+                                    <span class="premium-badge success">Active</span>
                                 <?php else: ?>
-                                    <span class="status-pill" style="background: rgba(107,114,128,0.15);color: #4b5563">Inactive</span>
+                                    <span class="premium-badge neutral">Inactive</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-end pe-4">
-                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>&department=<?php echo urlencode($dl['department'] ?? ($department ?? 'Software Engineering')); ?>" class="btn btn-sm d-inline-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;width: 32px;height: 32px" onclick="return confirm('Are you sure you want to delete this deadline?');">
+                                <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines/delete?stage=<?php echo urlencode($dl['stage']); ?>&department=<?php echo urlencode($dl['department'] ?? ($department ?? 'Software Engineering')); ?>" class="table-action-btn delete" onclick="return confirm('Are you sure you want to delete this deadline?');">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </td>

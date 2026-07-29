@@ -77,18 +77,18 @@ html.dark-theme, body.dark-theme {
 
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="page-hero">
+<div class="admin-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
+            <div class="admin-hero-icon">
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Reports & Analytics</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">View group progress, evaluation criteria, and cumulative final grades</p>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Reports & Analytics</h4>
+                <p class="mb-0 mt-1" style="font-size: 0.85rem">View group progress, evaluation criteria, and cumulative final grades</p>
             </div>
         </div>
-        <button onclick="window.print()" class="btn btn-outline-light rounded-pill px-4 align-self-stretch align-self-md-center border-2" style="background: rgba(255,255,255,0.1)">
+        <button onclick="window.print()" class="btn-hero-glass rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm">
             <i class="bi bi-printer me-2"></i> Print Report
         </button>
     </div>
@@ -97,8 +97,8 @@ html.dark-theme, body.dark-theme {
 <div class="row g-4 mb-4">
     <!-- Progress Stage Distribution -->
     <div class="col-md-5">
-        <div class="page-section h-100 mb-0 d-flex flex-column">
-            <div class="page-section-header">
+        <div class="glass-panel h-100 mb-0 d-flex flex-column">
+            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
                 <h6 class="fw-bold m-0" style="color: var(--text-primary)"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Group Progress Distribution</h6>
             </div>
             <div class="p-4 flex-grow-1 d-flex flex-column justify-content-start">
@@ -124,7 +124,7 @@ html.dark-theme, body.dark-theme {
 
     <!-- Overview details -->
     <div class="col-md-7">
-        <div class="page-section h-100 mb-0 position-relative eval-container">
+        <div class="glass-panel h-100 mb-0 position-relative eval-container">
             <div class="p-4 position-relative z-1">
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
                     <div>
@@ -246,24 +246,22 @@ html.dark-theme, body.dark-theme {
 </div>
 
 <!-- Detailed Grading Report -->
-<div class="page-section">
-    <div class="page-section-header">
+<div class="glass-panel mb-4">
+    <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
         <h6 class="fw-bold text-dark m-0">Cumulative Final Grading Report</h6>
     </div>
     
     <!-- Filters and Search Controls -->
-    <div class="p-3 border-bottom" style="background: var(--form-bg)">
-        <div class="row g-3 align-items-center w-100 m-0">
+    <div class="p-3 border-bottom">
+        <div class="premium-filter-group w-100">
             <!-- Search Input -->
-            <div class="col-md-4 ps-0">
-                <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
-                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search grades by group code, supervisor..." data-target="grades-table">
-                </div>
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search text-muted me-2"></i>
+                <input type="text" class="form-control premium-filter-input table-search" placeholder="Search grades by group code, supervisor..." data-target="grades-table">
             </div>
             <!-- Supervisor Filter -->
-            <div class="col-md-3">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="supervisor" data-target="grades-table">
+            <div class="border-start border-light-subtle px-2">
+                <select class="form-select premium-filter-input table-filter" data-column="supervisor" data-target="grades-table">
                     <option value="all">All Supervisors</option>
                     <option value="unassigned">Unassigned</option>
                     <?php 
@@ -276,16 +274,16 @@ html.dark-theme, body.dark-theme {
                 </select>
             </div>
             <!-- Status Filter -->
-            <div class="col-md-2">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="status" data-target="grades-table">
+            <div class="border-start border-light-subtle px-2">
+                <select class="form-select premium-filter-input table-filter" data-column="status" data-target="grades-table">
                     <option value="all">All Statuses</option>
                     <option value="Pass">Pass</option>
                     <option value="Fail">Fail</option>
                 </select>
             </div>
             <!-- Grade Filter -->
-            <div class="col-md-3 pe-0">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="grade" data-target="grades-table">
+            <div class="border-start border-light-subtle px-2">
+                <select class="form-select premium-filter-input table-filter" data-column="grade" data-target="grades-table">
                     <option value="all">All Grades</option>
                     <option value="A+">A+</option>
                     <option value="A">A</option>
@@ -301,8 +299,8 @@ html.dark-theme, body.dark-theme {
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table modern-table m-0" id="grades-table">
+    <div class="table-responsive p-3">
+        <table class="table premium-table m-0" id="grades-table">
             <thead>
                 <tr>
                     <th class="ps-4">Student Details</th>
@@ -335,9 +333,9 @@ html.dark-theme, body.dark-theme {
                     </td>
                     <td class="text-end pe-4">
                         <?php if($sg['status'] === 'Pass'): ?>
-                            <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Pass</span>
+                            <span class="premium-badge success">Pass</span>
                         <?php else: ?>
-                            <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Fail</span>
+                            <span class="premium-badge danger">Fail</span>
                         <?php endif; ?>
                     </td>
                 </tr>

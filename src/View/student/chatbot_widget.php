@@ -67,42 +67,60 @@ html.dark-theme #ai-chat-window {
     to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-/* ─── Header (Glass) ─── */
+/* ─── Header (Premium) ─── */
 .ai-chat-header {
-    background: #1e352f;
-    backdrop-filter: blur(12px);
-    color: white;
-    padding: 10px 14px;
+    background: #ffffff;
+    color: #1a1a1a;
+    padding: 14px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
+html.dark-theme .ai-chat-header {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+html.dark-theme .ai-header-title { color: #fff !important; }
 .ai-avatar-ring {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     padding: 2px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
+    background: linear-gradient(135deg, #10b981, #059669, #34d399);
+    animation: ringPulse 3s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes ringPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
 }
 .ai-avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.12);
     backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.15rem;
+    color: white;
 }
 .ai-status-text {
     font-size: 0.68rem;
-    opacity: 0.85;
+    color: #6b7280;
     display: flex;
     align-items: center;
     gap: 5px;
     margin-top: 1px;
 }
+html.dark-theme .ai-status-text { color: var(--text-secondary); }
 .ai-status-dot {
     width: 6px;
     height: 6px;
@@ -116,23 +134,30 @@ html.dark-theme #ai-chat-window {
     0%, 100% { box-shadow: 0 0 4px rgba(74,222,128,0.5); }
     50% { box-shadow: 0 0 10px rgba(74,222,128,0.9); }
 }
-.ai-header-actions { display: flex; gap: 4px; }
+.ai-header-actions { display: flex; gap: 2px; }
 .ai-header-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     border: none;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(4px);
-    color: white;
+    background: transparent;
+    color: #6b7280;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    transition: background 0.2s;
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
 }
-.ai-header-btn:hover { background: rgba(255,255,255,0.22); }
+.ai-header-btn:hover {
+    background: rgba(0,0,0,0.06);
+    color: #1a1a1a;
+}
+html.dark-theme .ai-header-btn { color: var(--text-secondary); }
+html.dark-theme .ai-header-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
 
 /* ─── Body ─── */
 #ai-chat-body {
@@ -161,7 +186,8 @@ html.dark-theme #ai-chat-window {
     width: 50px;
     height: 50px;
     margin: 0 auto 12px;
-    border-radius: 14px;
+    border-radius: 50%;
+    overflow: hidden;
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     display: flex;
@@ -454,18 +480,18 @@ html.dark-theme .ai-input-wrapper:focus-within {
     <div id="ai-chat-window" style="display:none">
         <!-- Header -->
         <div class="ai-chat-header">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3 position-relative z-1">
                 <div class="ai-avatar-ring">
                     <div class="ai-avatar">
-                        <i class="bi bi-stars"></i>
+                        <i class="bi bi-robot"></i>
                     </div>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold" style="font-size:0.95rem">FYP Buddy</h6>
-                    <span class="ai-status-text"><span class="ai-status-dot"></span>Online</span>
+                    <h6 class="mb-0 fw-bold ai-header-title" style="font-size:0.95rem;letter-spacing:-0.01em;color:#1a1a1a">FYP Buddy</h6>
+                    <span class="ai-status-text"><span class="ai-status-dot"></span>Always here to help</span>
                 </div>
             </div>
-            <div class="ai-header-actions">
+            <div class="ai-header-actions position-relative z-1">
                 <button id="ai-chat-clear" class="ai-header-btn" title="Clear chat"><i class="bi bi-arrow-counterclockwise"></i></button>
                 <button id="ai-chat-close" class="ai-header-btn" title="Close"><i class="bi bi-x-lg"></i></button>
             </div>
@@ -503,9 +529,9 @@ html.dark-theme .ai-input-wrapper:focus-within {
     </div>
 
     <!-- Floating Action Button - inline styles prevent FOUC -->
-    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(16,185,129,0.45)">
-        <i class="bi bi-chat-dots-fill ai-fab-icon-open"></i>
-        <i class="bi bi-x-lg ai-fab-icon-close" style="display:none"></i>
+    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(16,185,129,0.45)">
+        <i class="bi bi-robot ai-fab-icon-open"></i>
+        <i class="bi bi-x-lg ai-fab-icon-close" style="display:none; font-size:1.3rem;"></i>
         <span class="ai-fab-pulse"></span>
     </button>
 </div>
@@ -600,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const avatar = document.createElement('div');
         avatar.className = `ai-msg-avatar ${role === 'user' ? 'user-av' : 'bot'}`;
-        avatar.innerHTML = role === 'user' ? '<i class="bi bi-person-fill"></i>' : '<i class="bi bi-stars"></i>';
+        avatar.innerHTML = role === 'user' ? '<i class="bi bi-person-fill"></i>' : '<i class="bi bi-robot"></i>';
 
         const msgDiv = document.createElement('div');
         msgDiv.className = `ai-message ai-${role === 'user' ? 'user' : 'bot'}`;
@@ -624,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const avatar = document.createElement('div');
         avatar.className = 'ai-msg-avatar bot';
-        avatar.innerHTML = '<i class="bi bi-stars"></i>';
+        avatar.innerHTML = '<i class="bi bi-robot"></i>';
 
         const bubble = document.createElement('div');
         bubble.className = 'ai-typing-bubble';

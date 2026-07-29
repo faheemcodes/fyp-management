@@ -25,6 +25,10 @@ class HodController extends BaseController {
         $stmtGroupsCount->execute([$dept]);
         $stats['total_groups'] = $stmtGroupsCount->fetchColumn();
         
+        $stmtCoordCount = $db->prepare("SELECT COUNT(*) FROM coordinators WHERE department = ?");
+        $stmtCoordCount->execute([$dept]);
+        $stats['coordinators'] = $stmtCoordCount->fetchColumn();
+        
         // Fetch recent supervisors and committee members scoped to this department
         $stmtRecentSup = $db->prepare("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.department = ? ORDER BY u.created_at DESC LIMIT 5");
         $stmtRecentSup->execute([$dept]);
@@ -35,7 +39,7 @@ class HodController extends BaseController {
         $recentCommittee = $stmtRecentComm->fetchAll();
 
         // Get system notices
-        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('hod', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('hod', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
         $stmtNotices->execute([$dept]);
         $recentNotices = $stmtNotices->fetchAll();
 
@@ -67,7 +71,6 @@ class HodController extends BaseController {
             $password = $_POST['password'] ?? '';
             $designation = trim($_POST['designation'] ?? '');
             $department = trim($_POST['department'] ?? '');
-            $research_interest = trim($_POST['research_interest'] ?? '');
 
             if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation) || empty($department)) {
                 $this->flash('error', 'Please fill in all required fields.');
@@ -101,8 +104,8 @@ class HodController extends BaseController {
                 $userId = $db->lastInsertId();
 
                 $fullName = $firstName . ' ' . $lastName;
-                $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department, research_interest) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $department, $research_interest]);
+                $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$userId, $fullName, $designation, $department]);
 
                 // Sync profiles table
                 $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
@@ -127,12 +130,11 @@ class HodController extends BaseController {
             $name = trim($_POST['name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
             $department = trim($_POST['department'] ?? '');
-            $research_interest = trim($_POST['research_interest'] ?? '');
 
             if ($userId && $name && $designation && $department) {
                 $db = \Database::getInstance()->getConnection();
-                $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ?, department = ?, research_interest = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $department, $research_interest, $userId]);
+                $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ?, department = ? WHERE user_id = ?");
+                $stmt->execute([$name, $designation, $department, $userId]);
                 
                 $this->flash('success', "Supervisor profile updated.");
             } else {

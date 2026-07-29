@@ -95,13 +95,19 @@
             && !target.href.startsWith('javascript:')
             && !target.href.includes(window.location.hash || '#')
             && target.target !== '_blank'
-            && !target.hasAttribute('download')) {
+            && !target.hasAttribute('download')
+            && !target.hasAttribute('data-bs-toggle')) { // Ignore bootstrap toggles
             
-            const loader = document.getElementById('global-loader');
-            if (loader) {
-                document.body.appendChild(loader); 
-                loader.classList.remove('hidden');
-            }
+            // Check if navigation was cancelled (e.g. by a 'return confirm()' returning false)
+            setTimeout(() => {
+                if (!e.defaultPrevented) {
+                    const loader = document.getElementById('global-loader');
+                    if (loader) {
+                        document.body.appendChild(loader); 
+                        loader.classList.remove('hidden');
+                    }
+                }
+            }, 10);
         }
     });
 

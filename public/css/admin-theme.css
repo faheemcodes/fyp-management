@@ -1,0 +1,420 @@
+/* 
+   Admin Portal Premium Theme 
+   Performance-optimized CSS (Hardware accelerated transitions where applicable)
+*/
+
+:root {
+    --admin-primary: #059669;
+    --admin-primary-hover: #047857;
+    --admin-primary-light: rgba(5, 150, 105, 0.1);
+    
+    --admin-success: #10b981;
+    --admin-success-hover: #059669;
+    --admin-success-light: rgba(16, 185, 129, 0.1);
+    
+    --admin-warning: #f59e0b;
+    --admin-warning-light: rgba(245, 158, 11, 0.1);
+    
+    --admin-danger: #ef4444;
+    --admin-danger-light: rgba(239, 68, 68, 0.1);
+    
+    --admin-bg: #f8fafc;
+    --admin-card-bg: rgba(255, 255, 255, 0.85);
+    
+    --admin-text-main: #1e293b;
+    --admin-text-muted: #64748b;
+    
+    --admin-border: rgba(226, 232, 240, 0.8);
+    
+    --admin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --admin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --admin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --admin-shadow-glow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] {
+    --admin-bg: #0f172a;
+    --admin-card-bg: rgba(30, 41, 59, 0.75);
+    --admin-text-main: #f8fafc;
+    --admin-text-muted: #94a3b8;
+    --admin-border: rgba(51, 65, 85, 0.8);
+}
+
+/* Base Body Adjustment for Admin Theme */
+body {
+    background-color: var(--admin-bg);
+    color: var(--admin-text-main);
+}
+
+/* Glass Panel Utilities */
+.glass-panel {
+    background: var(--admin-card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    box-shadow: var(--admin-shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hero Section Restyling */
+.admin-hero {
+    background: linear-gradient(135deg, #2b4034 0%, #3a5244 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--admin-shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.admin-hero h4 {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-hero p {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+.admin-hero-icon {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    font-size: 1.8rem;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Premium Buttons */
+.btn-premium {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+.btn-premium:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+    color: white;
+}
+
+.btn-premium-danger {
+    background: var(--admin-danger);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.btn-premium-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    color: white;
+}
+
+/* Hero Glass Buttons */
+.btn-hero-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-hero-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    color: white;
+}
+
+
+/* Modern Tables */
+.premium-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: -8px; /* Offset first row spacing */
+}
+
+.premium-table th {
+    background: transparent;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.5rem;
+    border-bottom: 2px solid var(--admin-border);
+}
+
+.premium-table td {
+    background: var(--admin-card-bg);
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--admin-border);
+    border-bottom: 1px solid var(--admin-border);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.premium-table td:first-child {
+    border-left: 1px solid var(--admin-border);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.premium-table td:last-child {
+    border-right: 1px solid var(--admin-border);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.premium-table tbody tr {
+    box-shadow: var(--admin-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.premium-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-md);
+}
+
+.premium-table tbody tr:hover td {
+    background: var(--admin-bg);
+}
+
+/* Action Buttons within Tables */
+.table-action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--admin-border);
+    background: var(--admin-card-bg);
+    color: var(--admin-text-muted);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.table-action-btn:hover {
+    background: var(--admin-primary-light);
+    color: var(--admin-primary);
+    border-color: var(--admin-primary);
+    transform: translateY(-2px);
+}
+
+.table-action-btn.edit:hover {
+    background: var(--admin-primary-light);
+    color: var(--admin-primary);
+    border-color: var(--admin-primary);
+}
+
+.table-action-btn.approve:hover {
+    background: var(--admin-success-light);
+    color: var(--admin-success);
+    border-color: var(--admin-success);
+}
+
+.table-action-btn.delete:hover {
+    background: var(--admin-danger-light);
+    color: var(--admin-danger);
+    border-color: var(--admin-danger);
+}
+
+/* Status Pills */
+.premium-badge {
+    padding: 0.4em 0.8em;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-transform: capitalize;
+}
+
+.premium-badge.success {
+    background: var(--admin-success-light);
+    color: var(--admin-success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.premium-badge.warning {
+    background: var(--admin-warning-light);
+    color: var(--admin-warning);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.premium-badge.danger {
+    background: var(--admin-danger-light);
+    color: var(--admin-danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.premium-badge.primary {
+    background: var(--admin-primary-light);
+    color: var(--admin-primary);
+    border: 1px solid rgba(79, 70, 229, 0.2);
+}
+
+.premium-badge.neutral {
+    background: var(--admin-bg);
+    color: var(--admin-text-muted);
+    border: 1px solid var(--admin-border);
+}
+
+/* Filter Controls */
+.premium-filter-group {
+    background: var(--admin-card-bg);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem;
+    border-radius: 100px;
+    border: 1px solid var(--admin-border);
+    display: flex;
+    gap: 0.5rem;
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.premium-filter-input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--admin-text-main);
+    cursor: pointer;
+}
+
+input.premium-filter-input {
+    cursor: text;
+}
+
+.premium-filter-input:focus {
+    outline: none;
+}
+
+/* Inputs */
+.premium-input {
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    color: var(--admin-text-main);
+    transition: all 0.2s ease;
+}
+
+.premium-input:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px var(--admin-primary-light);
+    background: var(--admin-card-bg);
+    outline: none;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 4px var(--admin-primary-light);
+}
+
+/* Premium Input Group */
+.premium-input-group {
+    border-radius: 12px;
+}
+.premium-input-group .input-group-text {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border: 1px solid var(--admin-border);
+    border-right: none;
+    font-size: 0.875rem;
+    padding: 10px 14px;
+}
+.premium-input-group .form-control {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.premium-input-group .form-control:focus {
+    z-index: 5;
+}
+
+/* Modals */
+.premium-modal .modal-content {
+    background: var(--admin-card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--admin-border);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.premium-modal .modal-header {
+    border-bottom: 1px solid var(--admin-border);
+    background: rgba(0,0,0,0.02);
+}
+
+.premium-modal .modal-footer {
+    border-top: 1px solid var(--admin-border);
+    background: rgba(0,0,0,0.02);
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+    .premium-input-group .input-group-text {
+        padding: 9px 12px;
+    }
+    .premium-filter-group {
+        flex-direction: column;
+        border-radius: 16px;
+        padding: 0;
+        gap: 0;
+    }
+    
+    .premium-filter-group > div {
+        border-left: none !important;
+        border-bottom: 1px solid var(--admin-border);
+        padding: 0.75rem 1rem !important;
+    }
+    
+    .premium-filter-group > div.border-start {
+        border-left: none !important;
+    }
+    
+    .premium-filter-group > div:last-child {
+        border-bottom: none;
+    }
+    
+    .premium-filter-input {
+        width: 100%;
+    }
+}

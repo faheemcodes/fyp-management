@@ -35,7 +35,7 @@ class CommitteeController extends BaseController {
 
         // Get system notices
         $department = $committee['department'] ?? $_SESSION['department'] ?? 'Software Engineering';
-        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (target_audience = 'All' OR FIND_IN_SET('committee', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('committee', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
         $stmtNotices->execute([$department]);
         $recentNotices = $stmtNotices->fetchAll();
 

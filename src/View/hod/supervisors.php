@@ -42,7 +42,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <th class="ps-4">Supervisor Details</th>
                     <th>Designation</th>
                     <th>Department</th>
-                    <th>Research Interest</th>
+                    <th>Email Address</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
@@ -65,8 +65,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <span class="text-secondary small fw-medium"><?php echo htmlspecialchars($s['department']); ?></span>
                     </td>
                     <td>
-                        <div class="small text-muted" style="max-width: 250px;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;white-space: normal" title="<?php echo htmlspecialchars($s['research_interest'] ?? 'Not specified'); ?>">
-                            <?php echo htmlspecialchars($s['research_interest'] ?? 'Not specified'); ?>
+                        <div class="small text-muted" style="max-width: 250px;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;white-space: normal" title="<?php echo htmlspecialchars($s['email'] ?? 'Not specified'); ?>">
+                            <?php echo htmlspecialchars($s['email'] ?? 'Not specified'); ?>
                         </div>
                     </td>
                     <td class="text-end pe-4">
@@ -127,10 +127,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         </select>
                                     </div>
 
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Research Interests</label>
-                                        <textarea class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="research_interest" rows="3"><?php echo htmlspecialchars($s['research_interest'] ?? ''); ?></textarea>
-                                    </div>
+
                                 </div>
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
