@@ -259,9 +259,13 @@ html.dark-theme, body.dark-theme {
                 <i class="bi bi-search text-muted me-2"></i>
                 <input type="text" class="form-control premium-filter-input table-search" placeholder="Search grades by group code, supervisor..." data-target="grades-table">
             </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
             <!-- Supervisor Filter -->
-            <div class="border-start border-light-subtle px-2">
-                <select class="form-select premium-filter-input table-filter" data-column="supervisor" data-target="grades-table">
+            <div class="d-flex align-items-center px-2" style="flex-basis: 22%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="supervisor" data-target="grades-table">
                     <option value="all">All Supervisors</option>
                     <option value="unassigned">Unassigned</option>
                     <?php 
@@ -273,17 +277,25 @@ html.dark-theme, body.dark-theme {
                     <?php endforeach; ?>
                 </select>
             </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
             <!-- Status Filter -->
-            <div class="border-start border-light-subtle px-2">
-                <select class="form-select premium-filter-input table-filter" data-column="status" data-target="grades-table">
+            <div class="d-flex align-items-center px-2" style="flex-basis: 15%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="grades-table">
                     <option value="all">All Statuses</option>
                     <option value="Pass">Pass</option>
                     <option value="Fail">Fail</option>
                 </select>
             </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
             <!-- Grade Filter -->
-            <div class="border-start border-light-subtle px-2">
-                <select class="form-select premium-filter-input table-filter" data-column="grade" data-target="grades-table">
+            <div class="d-flex align-items-center px-2 pe-3" style="flex-basis: 15%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="grade" data-target="grades-table">
                     <option value="all">All Grades</option>
                     <option value="A+">A+</option>
                     <option value="A">A</option>
