@@ -105,9 +105,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <i class="bi bi-search text-muted me-2"></i>
                 <input type="text" class="form-control premium-filter-input table-search" placeholder="Search groups by code, title..." data-target="groups-table">
             </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
             <!-- Supervisor Filter -->
-            <div class="border-start border-light-subtle px-2" style="flex-basis: 30%;">
-                <select class="form-select premium-filter-input table-filter" data-column="supervisor" data-target="groups-table">
+            <div class="d-flex align-items-center px-2" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="supervisor" data-target="groups-table">
                     <option value="all">All Supervisors</option>
                     <option value="unassigned">Unassigned</option>
                     <?php foreach($supervisors as $s): ?>
@@ -115,9 +119,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <?php endforeach; ?>
                 </select>
             </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
             <!-- Progress Stage Filter -->
-            <div class="border-start border-light-subtle px-2" style="flex-basis: 30%;">
-                <select class="form-select premium-filter-input table-filter" data-column="stage" data-target="groups-table">
+            <div class="d-flex align-items-center px-2 pe-3" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="stage" data-target="groups-table">
                     <option value="all">All Progress Stages</option>
                     <option value="Group Created">Group Created</option>
                     <option value="Proposal Submitted">Proposal Submitted</option>
