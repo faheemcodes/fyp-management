@@ -231,60 +231,97 @@ html.dark-theme, body.dark-theme {
     
     <!-- Filters and Search Controls -->
     <div class="p-3 border-bottom d-print-none">
-        <div class="premium-filter-group w-100">
-            <!-- Search Input -->
-            <div class="flex-grow-1 d-flex align-items-center px-3">
-                <i class="bi bi-search text-muted me-2"></i>
-                <input type="text" class="form-control premium-filter-input table-search" placeholder="Search grades by group code, supervisor..." data-target="grades-table">
+        <div class="d-flex flex-column gap-3">
+            <!-- Row 1: Search, Department, Shift -->
+            <div class="premium-filter-group w-100">
+                <!-- Search Input -->
+                <div class="flex-grow-1 d-flex align-items-center px-3">
+                    <i class="bi bi-search text-muted me-2"></i>
+                    <input type="text" class="form-control premium-filter-input table-search" placeholder="Search grades by group code, project title..." data-target="grades-table">
+                </div>
+                
+                <!-- Divider -->
+                <div class="premium-filter-divider"></div>
+                
+                <!-- Department Filter -->
+                <div class="d-flex align-items-center px-2" style="flex-basis: 25%;">
+                    <select class="form-select premium-filter-input table-filter w-100" data-column="department" data-target="grades-table">
+                        <option value="all">All Departments</option>
+                        <?php 
+                        $uniqueDepts = array_unique(array_filter(array_column($studentGrades, 'department')));
+                        sort($uniqueDepts);
+                        foreach($uniqueDepts as $dept): 
+                        ?>
+                            <option value="<?php echo htmlspecialchars($dept); ?>"><?php echo htmlspecialchars($dept); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <!-- Divider -->
+                <div class="premium-filter-divider"></div>
+                
+                <!-- Shift Filter -->
+                <div class="d-flex align-items-center px-2 pe-3" style="flex-basis: 20%;">
+                    <select class="form-select premium-filter-input table-filter w-100" data-column="shift" data-target="grades-table">
+                        <option value="all">All Shifts</option>
+                        <?php 
+                        $uniqueShifts = array_unique(array_filter(array_column($studentGrades, 'shift')));
+                        sort($uniqueShifts);
+                        foreach($uniqueShifts as $shift): 
+                        ?>
+                            <option value="<?php echo htmlspecialchars($shift); ?>"><?php echo htmlspecialchars($shift); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             </div>
-            
-            <!-- Divider -->
-            <div class="premium-filter-divider"></div>
-            
-            <!-- Supervisor Filter -->
-            <div class="d-flex align-items-center px-2" style="flex-basis: 22%;">
-                <select class="form-select premium-filter-input table-filter w-100" data-column="supervisor" data-target="grades-table">
-                    <option value="all">All Supervisors</option>
-                    <option value="unassigned">Unassigned</option>
-                    <?php 
-                    $uniqueSups = array_unique(array_filter(array_column($studentGrades, 'supervisor_name')));
-                    sort($uniqueSups);
-                    foreach($uniqueSups as $supName): 
-                    ?>
-                        <option value="<?php echo htmlspecialchars($supName); ?>"><?php echo htmlspecialchars($supName); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <!-- Divider -->
-            <div class="premium-filter-divider"></div>
-            
-            <!-- Status Filter -->
-            <div class="d-flex align-items-center px-2" style="flex-basis: 15%;">
-                <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="grades-table">
-                    <option value="all">All Statuses</option>
-                    <option value="Pass">Pass</option>
-                    <option value="Fail">Fail</option>
-                </select>
-            </div>
-            
-            <!-- Divider -->
-            <div class="premium-filter-divider"></div>
-            
-            <!-- Grade Filter -->
-            <div class="d-flex align-items-center px-2 pe-3" style="flex-basis: 15%;">
-                <select class="form-select premium-filter-input table-filter w-100" data-column="grade" data-target="grades-table">
-                    <option value="all">All Grades</option>
-                    <option value="A+">A+</option>
-                    <option value="A">A</option>
-                    <option value="B+">B+</option>
-                    <option value="B">B</option>
-                    <option value="C+">C+</option>
-                    <option value="C">C</option>
-                    <option value="D+">D+</option>
-                    <option value="D">D</option>
-                    <option value="F">F</option>
-                </select>
+
+            <!-- Row 2: Supervisor, Status, Grade -->
+            <div class="premium-filter-group w-100">
+                <!-- Supervisor Filter -->
+                <div class="d-flex align-items-center px-2 ps-3 flex-grow-1">
+                    <select class="form-select premium-filter-input table-filter w-100" data-column="supervisor" data-target="grades-table">
+                        <option value="all">All Supervisors</option>
+                        <option value="unassigned">Unassigned</option>
+                        <?php 
+                        $uniqueSups = array_unique(array_filter(array_column($studentGrades, 'supervisor_name')));
+                        sort($uniqueSups);
+                        foreach($uniqueSups as $supName): 
+                        ?>
+                            <option value="<?php echo htmlspecialchars($supName); ?>"><?php echo htmlspecialchars($supName); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <!-- Divider -->
+                <div class="premium-filter-divider"></div>
+                
+                <!-- Status Filter -->
+                <div class="d-flex align-items-center px-2 flex-grow-1">
+                    <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="grades-table">
+                        <option value="all">All Statuses</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                </div>
+                
+                <!-- Divider -->
+                <div class="premium-filter-divider"></div>
+                
+                <!-- Grade Filter -->
+                <div class="d-flex align-items-center px-2 pe-3 flex-grow-1">
+                    <select class="form-select premium-filter-input table-filter w-100" data-column="grade" data-target="grades-table">
+                        <option value="all">All Grades</option>
+                        <option value="A+">A+</option>
+                        <option value="A">A</option>
+                        <option value="B+">B+</option>
+                        <option value="B">B</option>
+                        <option value="C+">C+</option>
+                        <option value="C">C</option>
+                        <option value="D+">D+</option>
+                        <option value="D">D</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -305,7 +342,7 @@ html.dark-theme, body.dark-theme {
             </thead>
             <tbody>
                 <?php foreach($studentGrades as $sg): ?>
-                <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>">
+                <tr data-supervisor="<?php echo htmlspecialchars($sg['supervisor_name'] ?? 'unassigned'); ?>" data-status="<?php echo htmlspecialchars($sg['status']); ?>" data-grade="<?php echo htmlspecialchars($sg['grade'] ?? 'F'); ?>" data-department="<?php echo htmlspecialchars($sg['department'] ?? ''); ?>" data-shift="<?php echo htmlspecialchars($sg['shift'] ?? ''); ?>">
                     <td class="ps-4">
                         <div class="fw-bold text-primary" style="font-size: 0.95rem"><?php echo htmlspecialchars($sg['student_name'] ?? 'Unknown'); ?> (<?php echo htmlspecialchars($sg['roll_no'] ?? ''); ?>)</div>
                         <div class="small text-dark mt-1" style="font-weight: 500; word-break: break-word;" title="<?php echo htmlspecialchars($sg['project_title']); ?>"><?php echo htmlspecialchars($sg['project_title']); ?></div>
