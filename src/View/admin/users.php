@@ -72,7 +72,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             
             <!-- Divider -->
-            <div class="border-start border-secondary opacity-25"></div>
+            <div class="premium-filter-divider"></div>
             
             <!-- Role Filter -->
             <div class="d-flex align-items-center px-2" style="min-width: 150px;">
@@ -87,7 +87,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
 
             <!-- Divider -->
-            <div class="border-start border-secondary opacity-25"></div>
+            <div class="premium-filter-divider"></div>
             
             <!-- Department Filter -->
             <div class="d-flex align-items-center px-2" style="min-width: 200px;">
@@ -102,7 +102,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
 
             <!-- Divider -->
-            <div class="border-start border-secondary opacity-25"></div>
+            <div class="premium-filter-divider"></div>
             
             <!-- Status Filter -->
             <div class="d-flex align-items-center px-2 pe-3" style="min-width: 150px;">

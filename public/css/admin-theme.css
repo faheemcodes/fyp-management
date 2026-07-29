@@ -325,6 +325,26 @@ input.premium-filter-input {
     outline: none;
 }
 
+.premium-filter-input::placeholder {
+    color: var(--admin-text-muted) !important;
+    opacity: 0.7;
+}
+
+.premium-filter-input option {
+    background: var(--admin-bg);
+    color: var(--admin-text-main);
+}
+
+.premium-filter-divider {
+    border-left: 1px solid var(--admin-border);
+    margin: 0.5rem 0;
+}
+
+.premium-filter-group .bi-search {
+    color: var(--admin-text-muted) !important;
+}
+
+
 /* Inputs */
 .premium-input {
     background: var(--admin-bg);
