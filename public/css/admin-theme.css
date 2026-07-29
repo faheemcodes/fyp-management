@@ -33,11 +33,11 @@
 }
 
 [data-theme="dark"] {
-    --admin-bg: #0f172a;
-    --admin-card-bg: rgba(30, 41, 59, 0.75);
-    --admin-text-main: #f8fafc;
-    --admin-text-muted: #94a3b8;
-    --admin-border: rgba(51, 65, 85, 0.8);
+    --admin-bg: #121212;
+    --admin-card-bg: rgba(30, 30, 30, 0.75);
+    --admin-text-main: #f3f4f6;
+    --admin-text-muted: #9ca3af;
+    --admin-border: rgba(64, 64, 64, 0.8);
 }
 
 /* Base Body Adjustment for Admin Theme */
