@@ -64,17 +64,19 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="page-section">
     <!-- Filters and Search Controls -->
     <div class="page-section-header">
-        <div class="row g-3 align-items-center w-100 m-0">
+        <div class="premium-filter-group w-100">
             <!-- Search Input -->
-            <div class="col-md-4 ps-0">
-                <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
-                    <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search users by name, email, department..." data-target="users-table">
-                </div>
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search text-muted me-2"></i>
+                <input type="text" class="form-control premium-filter-input table-search w-100" placeholder="Search users by name, email, department..." data-target="users-table">
             </div>
+            
+            <!-- Divider -->
+            <div class="border-start border-secondary opacity-25"></div>
+            
             <!-- Role Filter -->
-            <div class="col-md-3">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="role" data-target="users-table">
+            <div class="d-flex align-items-center px-2" style="min-width: 150px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="role" data-target="users-table">
                     <option value="all">All Roles</option>
                     <option value="student">Student</option>
                     <option value="supervisor">Supervisor</option>
@@ -83,9 +85,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <option value="coordinator">Coordinator</option>
                 </select>
             </div>
+
+            <!-- Divider -->
+            <div class="border-start border-secondary opacity-25"></div>
+            
             <!-- Department Filter -->
-            <div class="col-md-3">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="department" data-target="users-table">
+            <div class="d-flex align-items-center px-2" style="min-width: 200px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="department" data-target="users-table">
                     <option value="all">All Departments</option>
                     <option value="Software Engineering">Software Engineering</option>
                     <option value="Information Technology">Information Technology</option>
@@ -94,9 +100,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <option value="Telecommunication Engineering">Telecommunication Engineering</option>
                 </select>
             </div>
+
+            <!-- Divider -->
+            <div class="border-start border-secondary opacity-25"></div>
+            
             <!-- Status Filter -->
-            <div class="col-md-2 pe-0">
-                <select class="form-select table-filter shadow-sm rounded-pill border border-light-subtle" data-column="status" data-target="users-table">
+            <div class="d-flex align-items-center px-2 pe-3" style="min-width: 150px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="users-table">
                     <option value="all">All Statuses</option>
                     <option value="approved">Approved</option>
                     <option value="pending">Pending</option>
