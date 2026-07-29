@@ -44,20 +44,30 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="page-hero">
-    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
-        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
-                <i class="bi bi-shield-lock-fill"></i>
+<div class="admin-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <div class="d-flex align-items-center gap-4 text-center text-md-start">
+            <!-- Icon -->
+            <div class="admin-hero-icon">
+                <i class="bi bi-people-fill"></i>
             </div>
+            <!-- Info -->
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">User Account Management</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Approve self-registered accounts or add academic staff directly</p>
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.6)">
+                    System Administration
+                </p>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                    User Accounts
+                </h4>
             </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669)" data-bs-toggle="modal" data-bs-target="#createUserModal">
-            <i class="bi bi-person-plus-fill me-2"></i> Add New User
-        </button>
+        
+        <!-- Action Button -->
+        <div>
+            <button class="btn-hero-glass rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="bi bi-person-plus-fill me-2"></i>Add New User
+            </button>
+        </div>
     </div>
 </div>
 
