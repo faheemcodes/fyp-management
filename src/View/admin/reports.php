@@ -213,7 +213,7 @@ html.dark-theme, body.dark-theme {
                     <th class="text-center align-middle th-vertical">Prog. Pres. (40)</th>
                     <th class="text-center align-middle th-vertical">Supv. (45)</th>
                     <th class="text-center align-middle th-vertical">Final Pres. (75)</th>
-                    <th class="text-center align-middle th-vertical border-end" style="background: rgba(16,185,129,0.1);color: #1e3a5f;border-color: rgba(0,0,0,0.1) !important;">Total (200)</th>
+                    <th class="text-center align-middle th-vertical" style="background: rgba(16,185,129,0.1);color: #1e3a5f; border-left: 3px solid #000 !important;">Total (200)</th>
                     <th class="text-center align-middle th-vertical">Grade</th>
                     <th class="text-end pe-4 align-bottom pb-3">Status</th>
                 </tr>
