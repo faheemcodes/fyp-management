@@ -488,7 +488,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </div>
                 </div>
-                </div>
                 <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
                     <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold" style="background: #10b981;border-color: #10b981">Save Changes</button>
