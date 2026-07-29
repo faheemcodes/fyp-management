@@ -180,7 +180,8 @@ body {
     border-bottom: 2px solid var(--admin-border);
 }
 
-.premium-table td {
+.premium-table tr, .premium-table td {
+    background-color: transparent !important;
     background: transparent !important;
     padding: 1rem 1.5rem;
     vertical-align: middle;
