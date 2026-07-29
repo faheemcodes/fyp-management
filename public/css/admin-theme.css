@@ -534,3 +534,14 @@ input.premium-filter-input {
         box-shadow: none !important;
     }
 }
+
+
+/* Vertical Table Headers for space saving */
+.th-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    text-align: left; /* Aligns to bottom due to 180deg rotation */
+    padding: 1rem 0.5rem !important;
+    vertical-align: middle;
+}
