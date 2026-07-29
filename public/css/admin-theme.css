@@ -181,7 +181,7 @@ body {
 }
 
 .premium-table td {
-    background: transparent;
+    background: transparent !important;
     padding: 1rem 1.5rem;
     vertical-align: middle;
     border-top: 1px solid var(--admin-border);
@@ -212,7 +212,7 @@ body {
 }
 
 .premium-table tbody tr:hover td {
-    background: rgba(128, 128, 128, 0.05);
+    background: rgba(128, 128, 128, 0.05) !important;
 }
 
 /* Action Buttons within Tables */
