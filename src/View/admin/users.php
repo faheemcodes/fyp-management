@@ -280,16 +280,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                     
                     <div class="row g-2 mb-2">
-                        <div class="col-md-2">
+                        <div class="col-md-2 d-none" id="prefixGroup">
                             <label for="modalPrefix" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Prefix</label>
                             <select class="form-select" id="modalPrefix" name="prefix">
                                 <option value="Mr.">Mr.</option>
                                 <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
                                 <option value="Dr.">Dr.</option>
+                                <option value="Prof.">Prof.</option>
                                 <option value="Engr.">Engr.</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md" id="nameGroup">
                             <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">First Name</label>
                             <input type="text" class="form-control" id="modalName" name="name" required placeholder="e.g. Faheem">
                         </div>
@@ -334,6 +336,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <option value="Assistant Professor">Assistant Professor</option>
                                 <option value="Associate Professor">Associate Professor</option>
                                 <option value="Professor">Professor</option>
+                                <option value="Lab Engineer">Lab Engineer</option>
+                                <option value="Teaching Assistant">Teaching Assistant</option>
                             </select>
                         </div>
                     </div>
@@ -627,6 +631,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         const supervisorFields = document.getElementById('modalSupervisorFields');
         const departmentGroup = document.getElementById('modalDepartment').closest('.col-md-6');
         const surnameGroup = document.getElementById('surnameGroup');
+        const prefixGroup = document.getElementById('prefixGroup');
 
         roleSelect.addEventListener('change', function() {
             const role = this.value;
@@ -635,10 +640,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 supervisorFields.classList.add('d-none');
                 departmentGroup.classList.remove('d-none');
                 surnameGroup.classList.remove('d-none');
+                prefixGroup.classList.add('d-none');
                 document.getElementById('modalStudentId').required = true;
             } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee' || role === 'hod') {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.remove('d-none');
+                prefixGroup.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = false;
                 
                 if (role === 'hod' || role === 'committee' || role === 'supervisor') {
@@ -650,6 +657,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             } else {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.add('d-none');
+                prefixGroup.classList.add('d-none');
                 document.getElementById('modalStudentId').required = false;
             }
         });
