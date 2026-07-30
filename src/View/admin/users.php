@@ -384,25 +384,25 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <option value="Engr.">Engr.</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md" id="editModalNameCol">
                             <label for="editModalName" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">First Name</label>
                             <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md" id="editModalSurnameCol">
                             <label for="editModalSurname" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Surname</label>
                             <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Email</label>
-                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
-                        </div>
-                        <div class="col-md-3" id="editModalCnicCol">
-                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">CNIC</label>
-                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
                         </div>
                     </div>
 
                     <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Email</label>
+                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
+                        </div>
+                        <div class="col-md-4" id="editModalCnicCol">
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">CNIC</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
+                        </div>
                         <div class="col-md-4">
                             <label for="editModalPassword" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">New Password (leave blank to keep)</label>
                             <div class="position-relative">
@@ -486,7 +486,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div class="col-md-4">
                                 <label for="editModalMobileNo" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Mobile Number</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light border-end-0" style="padding: 0 0.5rem; font-size: 0.8rem;">+92</span>
+                                    <span class="input-group-text bg-light border-end-0">+92</span>
                                     <input type="text" class="form-control form-control-sm border-start-0 ps-0" id="editModalMobileNo" name="mobile_no" placeholder="3001234567">
                                 </div>
                             </div>
