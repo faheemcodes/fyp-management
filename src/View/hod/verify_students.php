@@ -171,3 +171,39 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </table>
     </div>
 </div>
+
+<!-- Reject User Modal -->
+<div class="modal fade" id="rejectUserModal" tabindex="-1" aria-labelledby="rejectUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold text-danger" id="rejectUserModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Reject Student Registration</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/students/reject" method="POST">
+                <div class="modal-body p-4">
+                    <input type="hidden" id="rejectModalId" name="id">
+                    <p class="text-secondary mb-3" style="font-size: 0.9rem;">Please provide a reason for rejecting this student. They will receive an email notification detailing the reason.</p>
+                    <div class="mb-3">
+                        <label for="rejectReason" class="form-label fw-medium text-secondary" style="font-size: 0.85rem">Reason for Rejection <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="rejectReason" name="reason" rows="4" required placeholder="e.g. Invalid document uploaded, wrong department specified..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 btn-sm fw-bold">Reject & Notify Student</button>
+                </div>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openRejectModal(userId) {
+        document.getElementById('rejectModalId').value = userId;
+        document.getElementById('rejectReason').value = '';
+        const modal = new bootstrap.Modal(document.getElementById('rejectUserModal'));
+        modal.show();
+    }
+</script>
