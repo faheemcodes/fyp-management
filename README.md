@@ -1,7 +1,5 @@
 # 🎓 FYP Management Portal
 
-![FYP Management Banner](public/images/bg-dark.jpg)
-
 Welcome to the **FYP (Final Year Project) Management Portal**! This is a state-of-the-art, beautifully designed management ecosystem built specifically to streamline the workflow between students, supervisors, coordinators, and Heads of Departments (HOD) in universities. 
 
 No more scattered emails, lost files, or messy spreadsheets. This platform handles project proposals, evaluations, deadlines, chat functionality, and AI-assisted chatbot interactions—all in one sleek, modern interface.
