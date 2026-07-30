@@ -372,11 +372,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <h6 class="text-primary fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Basic Information</h6>
                     <div class="row g-2 mb-2">
-                        <div class="col-md-3">
+                        <div class="col-md-2 d-none" id="editModalPrefixCol">
+                            <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Prefix</label>
+                            <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
+                                <option value="">Select</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Prof.">Prof.</option>
+                                <option value="Engr.">Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label for="editModalName" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">First Name</label>
                             <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="editModalSurname" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Surname</label>
                             <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname">
                         </div>
@@ -438,19 +450,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <!-- Staff Specific Fields -->
                         <div class="col-md-5 d-none" id="editModalStaffFields">
                             <div class="row g-2">
-                                <div class="col-md-4">
-                                    <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Prefix</label>
-                                    <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
-                                        <option value="">Select</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Ms.">Ms.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="Dr.">Dr.</option>
-                                        <option value="Prof.">Prof.</option>
-                                        <option value="Engr.">Engr.</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-8">
+                                <div class="col-md-12">
                                     <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Designation</label>
                                     <select class="form-select form-select-sm" id="editModalDesignation" name="designation">
                                         <option value="Lecturer">Lecturer</option>
@@ -784,6 +784,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 
                 const stdFields = document.getElementById('editModalStudentFields');
                 const staffFields = document.getElementById('editModalStaffFields');
+                const prefixCol = document.getElementById('editModalPrefixCol');
                 const deptGroup = document.getElementById('editModalDeptGroup');
                 
                 const roleSection = document.getElementById('roleSpecificSection');
@@ -791,6 +792,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 
                 if (stdFields) stdFields.classList.add('d-none');
                 if (staffFields) staffFields.classList.add('d-none');
+                if (prefixCol) prefixCol.classList.add('d-none');
                 if (deptGroup) deptGroup.classList.remove('d-none');
                 if (roleSection) roleSection.classList.add('d-none');
                 
@@ -805,6 +807,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     document.getElementById('editModalShift').value = shift;
                 } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee' || normalizedRole === 'hod') {
                     if (staffFields) staffFields.classList.remove('d-none');
+                    if (prefixCol) prefixCol.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
                 }
             });
