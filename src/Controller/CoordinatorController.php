@@ -83,7 +83,30 @@ class CoordinatorController extends BaseController {
                 $stmt = $db->prepare("UPDATE users SET status = 'approved' WHERE id = ?");
                 $stmt->execute([$id]);
 
-                $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                // Fetch student details for email
+                $stmtUser = $db->prepare("
+                    SELECT u.email, s.student_id 
+                    FROM users u 
+                    JOIN students s ON u.id = s.user_id 
+                    WHERE u.id = ?
+                ");
+                $stmtUser->execute([$id]);
+                $user = $stmtUser->fetch();
+
+                if ($user) {
+                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                    
+                    $subject = "Your Account has been Approved";
+                    $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
+                    
+                    $message = "Hello,\n\nYour account on the FYP Management Portal has been approved by your Coordinator.\n\n"
+                             . "Your Login Credentials:\n"
+                             . $identifierStr . "\n\n"
+                             . "You can now log in to the portal.\n\nRegards,\nFYP Management Team";
+                             
+                    $this->sendEmail($user['email'], $subject, $message);
+                }
+
                 $this->flash('success', 'Student account approved successfully.');
             } else {
                 $this->flash('error', 'Unauthorized: Student is not in your department.');
@@ -93,30 +116,50 @@ class CoordinatorController extends BaseController {
     }
 
     public function rejectStudent() {
-        $id = $_GET['id'] ?? null;
-        if ($id) {
-            $db = \Database::getInstance()->getConnection();
-            $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
-
-            // Check student department
-            $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
-            $stmtCheck->execute([$id]);
-            $student = $stmtCheck->fetch();
-
-            if ($student && $student['department'] === $dept) {
-                $avatarFile = $student['avatar'];
-                if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
-                    $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $id = $_POST['id'] ?? null;
+            $reason = trim($_POST['reason'] ?? '');
+            
+            if ($id && $reason) {
+                $db = \Database::getInstance()->getConnection();
+                $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+    
+                // Check student department
+                $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
+                $stmtCheck->execute([$id]);
+                $student = $stmtCheck->fetch();
+    
+                if ($student && $student['department'] === $dept) {
+                    $avatarFile = $student['avatar'];
+                    if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
+                        $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
                     }
+                    
+                    $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
+                    $stmtUser->execute([$id]);
+                    $userEmail = $stmtUser->fetchColumn();
+                    
+                    if ($userEmail) {
+                        $subject = "Your Registration has been Rejected";
+                        $message = "Hello,\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your Coordinator.\n\n"
+                                 . "Reason for rejection:\n$reason\n\n"
+                                 . "Please correct the issues mentioned above and create a new account, or contact your department if you believe this was a mistake.\n\n"
+                                 . "Regards,\nFYP Management Team";
+                        $this->sendEmail($userEmail, $subject, $message);
+                    }
+    
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $this->flash('success', 'Student registration rejected and deleted.');
+                } else {
+                    $this->flash('error', 'Unauthorized: Student is not in your department.');
                 }
-
-                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                $stmt->execute([$id]);
-                $this->flash('success', 'Student registration rejected and deleted.');
             } else {
-                $this->flash('error', 'Unauthorized: Student is not in your department.');
+                $this->flash('error', 'Rejection reason is required.');
             }
         }
         redirect('/coordinator/users');
@@ -451,5 +494,33 @@ class CoordinatorController extends BaseController {
             'coordinator' => $coordinator,
             'profile' => $profile
         ]);
+    }
+
+    private function sendEmail($toEmail, $subject, $message) {
+        $mailConfig = require __DIR__ . '/../../config/mail.php';
+
+        if (isset($mailConfig['smtp_username']) && $mailConfig['smtp_username'] !== 'your_email@gmail.com' && !empty($mailConfig['smtp_password'])) {
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = $mailConfig['smtp_host'];
+                $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+                $mail->Username   = $mailConfig['smtp_username'];
+                $mail->Password   = $mailConfig['smtp_password'];
+                $mail->SMTPSecure = ($mailConfig['smtp_secure'] === 'ssl') ? \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = $mailConfig['smtp_port'];
+
+                $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                $mail->addAddress($toEmail);
+
+                $mail->isHTML(false);
+                $mail->Subject = $subject;
+                $mail->Body    = $message;
+
+                $mail->send();
+            } catch (\Exception $e) {
+                error_log("PHPMailer failed in CoordinatorController: " . $mail->ErrorInfo);
+            }
+        }
     }
 }
