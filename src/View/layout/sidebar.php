@@ -88,14 +88,22 @@ if ($role === 'supervisor') {
 
     <ul class="list-unstyled nav flex-column mt-3 flex-grow-1 pb-3" style="overflow-y: auto;overflow-x: hidden">
         <?php if ($role === 'admin'): ?>
+            <?php
+                $dbSidebar = \Database::getInstance()->getConnection();
+                $stmtSidebar = $dbSidebar->query("SELECT COUNT(*) FROM users WHERE status = 'pending' AND role = 'student'");
+                $pendingStudentsCount = $stmtSidebar->fetchColumn();
+            ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/admin/dashboard" class="nav-link <?php echo isActive('/admin/dashboard', $currentUri); ?>">
                     <i class="bi bi-grid-fill"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/admin/users" class="nav-link <?php echo isActive('/admin/users', $currentUri); ?>">
-                    <i class="bi bi-people-fill"></i> Manage Users
+                <a href="<?php echo $urlPrefix; ?>/admin/users" class="nav-link <?php echo isActive('/admin/users', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <div><i class="bi bi-people-fill"></i> Manage Users</div>
+                    <?php if ($pendingStudentsCount > 0): ?>
+                    <span class="badge rounded-pill" style="font-size: 0.7rem; font-weight: 700; padding: 0.4em 0.7em; background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);"><?php echo $pendingStudentsCount; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item">
