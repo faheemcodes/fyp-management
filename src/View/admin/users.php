@@ -372,16 +372,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     
                     <h6 class="text-primary fw-bold mb-3 border-bottom pb-2" style="font-size: 0.95rem;">Basic Information</h6>
                     <div class="row g-3 mb-3">
-                        <div class="col-md-2">
-                            <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Prefix</label>
-                            <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
-                                <option value="Mr.">Mr.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="Dr.">Dr.</option>
-                                <option value="Engr.">Engr.</option>
-                            </select>
-                        </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label for="editModalName" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">First Name</label>
                             <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
                         </div>
@@ -444,15 +435,32 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
                         </div>
 
-                        <!-- Supervisor Specific -->
-                        <div class="col-md-6 d-none" id="editModalSupervisorFields">
-                            <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Designation</label>
-                            <select class="form-select form-select-sm" id="editModalDesignation" name="designation">
-                                <option value="Lecturer">Lecturer</option>
-                                <option value="Assistant Professor">Assistant Professor</option>
-                                <option value="Associate Professor">Associate Professor</option>
-                                <option value="Professor">Professor</option>
-                            </select>
+                        <!-- Staff Specific Fields -->
+                        <div class="col-md-6 d-none" id="editModalStaffFields">
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Prefix</label>
+                                    <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
+                                        <option value="">Select</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Dr.">Dr.</option>
+                                        <option value="Prof.">Prof.</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Designation</label>
+                                    <select class="form-select form-select-sm" id="editModalDesignation" name="designation">
+                                        <option value="Lecturer">Lecturer</option>
+                                        <option value="Assistant Professor">Assistant Professor</option>
+                                        <option value="Associate Professor">Associate Professor</option>
+                                        <option value="Professor">Professor</option>
+                                        <option value="HOD">HOD</option>
+                                        <option value="System Admin">System Admin</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -774,14 +782,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 }
                 
                 const stdFields = document.getElementById('editModalStudentFields');
-                const supFields = document.getElementById('editModalSupervisorFields');
+                const staffFields = document.getElementById('editModalStaffFields');
                 const deptGroup = document.getElementById('editModalDeptGroup');
                 
                 const roleSection = document.getElementById('roleSpecificSection');
                 const normalizedRole = (role || '').trim().toLowerCase();
                 
                 if (stdFields) stdFields.classList.add('d-none');
-                if (supFields) supFields.classList.add('d-none');
+                if (staffFields) staffFields.classList.add('d-none');
                 if (deptGroup) deptGroup.classList.remove('d-none');
                 if (roleSection) roleSection.classList.add('d-none');
                 
@@ -794,11 +802,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     if (stdFields) stdFields.classList.remove('d-none');
                     document.getElementById('editModalStudentId').value = studentId;
                     document.getElementById('editModalShift').value = shift;
-                } else if (normalizedRole === 'supervisor') {
-                    if (supFields) supFields.classList.remove('d-none');
-                    document.getElementById('editModalDesignation').value = designation;
-                } else if (['coordinator', 'committee', 'hod'].includes(normalizedRole)) {
-                    if (supFields) supFields.classList.remove('d-none');
+                } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee' || normalizedRole === 'hod') {
+                    if (staffFields) staffFields.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
                 }
             });
