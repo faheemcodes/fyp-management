@@ -196,8 +196,24 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center gap-4">
         <!-- Avatar -->
-        <div class="profile-avatar-ring">
-            <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" alt="Profile Photo">
+        <div class="d-flex flex-column align-items-center">
+            <div class="profile-avatar-ring position-relative">
+                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" alt="Profile Photo">
+                <?php if (!$student['avatar_changed']): ?>
+                    <form action="<?php echo $basePath; ?>/student/profile" method="POST" enctype="multipart/form-data" id="avatarForm">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                        <input type="file" name="avatar" id="avatarInput" class="d-none" accept="image/*" onchange="document.getElementById('avatarForm').submit();">
+                        <label for="avatarInput" class="btn btn-sm btn-light position-absolute bottom-0 end-0 rounded-circle shadow-sm" style="width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--card-bg);" title="Change Profile Picture (One time only)">
+                            <i class="bi bi-camera-fill text-primary" style="font-size: 1rem;"></i>
+                        </label>
+                    </form>
+                <?php endif; ?>
+            </div>
+            <?php if (!$student['avatar_changed']): ?>
+                <div class="mt-2 text-center" style="max-width: 180px;">
+                    <small class="text-white-50" style="font-size: 0.65rem; line-height: 1.2; display: block;"><i class="bi bi-info-circle me-1"></i>You can change your picture only once. Max size: 500KB.</small>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- Info -->

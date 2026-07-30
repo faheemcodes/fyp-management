@@ -46,6 +46,7 @@ CREATE TABLE students (
     phone VARCHAR(20) DEFAULT NULL,
     department VARCHAR(100) NOT NULL,
     avatar VARCHAR(255) DEFAULT NULL,
+    avatar_changed TINYINT(1) DEFAULT 0,
     shift ENUM('Morning', 'Evening') NOT NULL DEFAULT 'Morning',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

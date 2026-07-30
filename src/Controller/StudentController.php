@@ -630,7 +630,7 @@ class StudentController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch student details
-        $stmt = $db->prepare("SELECT s.name, u.email, s.avatar, s.student_id, s.shift FROM students s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
+        $stmt = $db->prepare("SELECT s.name, u.email, s.avatar, s.avatar_changed, s.student_id, s.shift FROM students s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
         $stmt->execute([$userId]);
         $student = $stmt->fetch();
         if (!$student) {
@@ -645,6 +645,44 @@ class StudentController extends BaseController {
         $isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] != UPLOAD_ERR_NO_FILE) {
+                if ($student['avatar_changed']) {
+                    $this->flash('error', 'You can only change your profile picture once.');
+                    redirect('/student/profile');
+                }
+                
+                $avatar = $_FILES['avatar'];
+                if ($avatar['size'] > 500 * 1024) {
+                    $this->flash('error', 'Profile picture size must be less than 500 KB.');
+                    redirect('/student/profile');
+                }
+
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mime = $finfo->file($avatar['tmp_name']);
+                $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif', 'image/webp' => 'webp'];
+                
+                if (!array_key_exists($mime, $allowed)) {
+                    $this->flash('error', 'Invalid file format. Only JPG, PNG, GIF, and WEBP are allowed.');
+                    redirect('/student/profile');
+                }
+                
+                $ext = $allowed[$mime];
+                $filename = uniqid('avatar_') . '.' . $ext;
+                $targetDir = __DIR__ . '/../../public/uploads/avatars';
+                if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+                $target = $targetDir . '/' . $filename;
+                
+                if (move_uploaded_file($avatar['tmp_name'], $target)) {
+                    $stmt = $db->prepare("UPDATE students SET avatar = ?, avatar_changed = 1 WHERE user_id = ?");
+                    $stmt->execute([$filename, $userId]);
+                    if (isset($_SESSION['avatar'])) $_SESSION['avatar'] = $filename;
+                    $this->flash('success', 'Profile picture updated successfully.');
+                } else {
+                    $this->flash('error', 'Failed to upload profile picture.');
+                }
+                redirect('/student/profile');
+            }
+
             if ($isLocked) {
                 $this->flash('error', 'Your profile is locked and cannot be edited after submission.');
                 redirect('/student/profile');
