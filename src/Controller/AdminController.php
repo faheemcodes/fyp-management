@@ -1,6 +1,8 @@
 <?php
 namespace Controller;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 class AdminController extends BaseController {
 
     public function dashboard() {
@@ -123,6 +125,10 @@ class AdminController extends BaseController {
             
             if ($user) {
                 $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                $subject = "Your Account has been Approved";
+                $message = "Hello,\n\nYour account on the FYP Management Portal has been approved by an administrator.\n\n"
+                         . "You can now log in to the portal using this email address.\n\nRegards,\nFYP Management Team";
+                $this->sendEmail($user['email'], $subject, $message);
             }
             
             $this->flash('success', 'User account approved successfully.');
@@ -131,24 +137,44 @@ class AdminController extends BaseController {
     }
 
     public function rejectUser() {
-        $id = $_GET['id'] ?? null;
-        if ($id) {
-            $db = \Database::getInstance()->getConnection();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $id = $_POST['id'] ?? null;
+            $reason = trim($_POST['reason'] ?? '');
             
-            // Get student avatar file to delete from disk if it exists
-            $stmtAvatar = $db->prepare("SELECT avatar FROM students WHERE user_id = ?");
-            $stmtAvatar->execute([$id]);
-            $avatarFile = $stmtAvatar->fetchColumn();
-            if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
-                $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
-                if (file_exists($filePath)) {
-                    unlink($filePath);
+            if ($id && !empty($reason)) {
+                $db = \Database::getInstance()->getConnection();
+                
+                // Get user email before deletion
+                $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
+                $stmtUser->execute([$id]);
+                $user = $stmtUser->fetch();
+                
+                if ($user) {
+                    $subject = "Your Account Registration was Rejected";
+                    $message = "Hello,\n\nUnfortunately, your account registration on the FYP Management Portal was rejected by an administrator.\n\n"
+                             . "Reason for rejection:\n$reason\n\n"
+                             . "If you believe this was a mistake, please contact administration.\n\nRegards,\nFYP Management Team";
+                    $this->sendEmail($user['email'], $subject, $message);
                 }
+                
+                // Get student avatar file to delete from disk if it exists
+                $stmtAvatar = $db->prepare("SELECT avatar FROM students WHERE user_id = ?");
+                $stmtAvatar->execute([$id]);
+                $avatarFile = $stmtAvatar->fetchColumn();
+                if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
+                    $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+                
+                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                $stmt->execute([$id]);
+                $this->flash('success', 'User registration rejected and record deleted from system.');
+            } else {
+                $this->flash('error', 'Rejection reason is required.');
             }
-            
-            $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-            $stmt->execute([$id]);
-            $this->flash('success', 'User registration rejected and record deleted from system.');
         }
         redirect('/admin/users');
     }
@@ -232,6 +258,15 @@ class AdminController extends BaseController {
                 }
                 
                 $db->commit();
+                
+                $subject = "Welcome to FYP Management Portal";
+                $message = "Hello $name,\n\nAn administrator has created an account for you on the FYP Management Portal as a " . ucfirst($role) . ".\n\n"
+                         . "Your Login Credentials:\n"
+                         . "Email: $email\n"
+                         . "Password: $password\n\n"
+                         . "Please log in and change your password as soon as possible.\n\nRegards,\nFYP Management Team";
+                $this->sendEmail($email, $subject, $message);
+
                 $this->flash('success', "User $name ($role) created successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
@@ -888,5 +923,33 @@ class AdminController extends BaseController {
             }
         }
         redirect('/admin/batches');
+    }
+
+    private function sendEmail($toEmail, $subject, $message) {
+        $mailConfig = require __DIR__ . '/../../config/mail.php';
+
+        if (isset($mailConfig['smtp_username']) && $mailConfig['smtp_username'] !== 'your_email@gmail.com' && !empty($mailConfig['smtp_password'])) {
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = $mailConfig['smtp_host'];
+                $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+                $mail->Username   = $mailConfig['smtp_username'];
+                $mail->Password   = $mailConfig['smtp_password'];
+                $mail->SMTPSecure = ($mailConfig['smtp_secure'] === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = $mailConfig['smtp_port'];
+
+                $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                $mail->addAddress($toEmail);
+
+                $mail->isHTML(false);
+                $mail->Subject = $subject;
+                $mail->Body    = $message;
+
+                $mail->send();
+            } catch (\Exception $e) {
+                error_log("PHPMailer failed in AdminController: " . $mail->ErrorInfo);
+            }
+        }
     }
 }
