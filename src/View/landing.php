@@ -632,17 +632,17 @@
 
     <div class="container hero-container">
         <div class="hero-grid">
-            <div class="hero-left" data-aos="fade-right" data-aos-duration="1000">
-                <div class="hero-badge">
+            <div class="hero-left">
+                <div class="hero-badge" data-aos="fade-right" data-aos-duration="800">
                     <span class="status-dot"></span> University of Sindh &bull; Official FYP Portal
                 </div>
-                <h1 class="hero-title heading-main">
+                <h1 class="hero-title heading-main" data-aos="fade-right" data-aos-duration="800" data-aos-delay="100">
                     We Build <br><span class="highlight">Future Engineers</span><br>That Grow Tech
                 </h1>
-                <p class="hero-desc">
+                <p class="hero-desc" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
                     We design, develop, and streamline the Final Year Project workflow — from stunning ideas to powerful management strategies that put you ahead of the competition.
                 </p>
-                <div class="hero-btns">
+                <div class="hero-btns" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
                     <a href="<?php echo $basePath; ?>/login" class="btn-hero btn-hero-gradient">
                         <i class="bi bi-rocket-fill"></i> Launch Your FYP
                     </a>
@@ -651,7 +651,7 @@
                     </a>
                 </div>
                 
-                <div class="hero-stats">
+                <div class="hero-stats" data-aos="fade-right" data-aos-duration="800" data-aos-delay="400">
                     <div class="hero-stat">
                         <h3 class="heading-main"><?php echo $stats['departments'] ?? 0; ?>+</h3>
                         <p>Departments</p>
@@ -683,13 +683,13 @@
                     <div class="orbit-dot dot-6"></div>
                     <div class="orbit-dot dot-7"></div>
                 </div>
-                <div class="floating-badge badge-1">
+                <div class="floating-badge badge-1" data-aos="zoom-in" data-aos-delay="500">
                     <div class="icon-wrap" style="background: rgba(139,92,246,0.2);color: var(--lp-violet)"><i class="bi bi-people-fill"></i></div> Supervisor Allocation
                 </div>
-                <div class="floating-badge badge-2">
+                <div class="floating-badge badge-2" data-aos="zoom-in" data-aos-delay="700">
                     <div class="icon-wrap" style="background: rgba(16,185,129,0.2);color: var(--lp-accent)"><i class="bi bi-bar-chart-steps"></i></div> Milestone Tracking
                 </div>
-                <div class="floating-badge badge-3">
+                <div class="floating-badge badge-3" data-aos="zoom-in" data-aos-delay="900">
                     <div class="icon-wrap" style="background: rgba(245,158,11,0.2);color: var(--lp-amber)"><i class="bi bi-file-earmark-text-fill"></i></div> Thesis Submissions
                 </div>
 
