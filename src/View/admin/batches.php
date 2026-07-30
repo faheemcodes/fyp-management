@@ -33,14 +33,14 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
-<div class="alert alert-info border-0 rounded-4 shadow-sm mb-4" role="alert">
-    <div class="d-flex gap-3">
-        <i class="bi bi-info-circle-fill fs-4 mt-1 text-info"></i>
+<div class="border rounded-4 shadow-sm mb-4 p-3" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+    <div class="d-flex gap-3 align-items-start">
+        <i class="bi bi-info-circle-fill fs-5 mt-1" style="color: #0ea5e9;"></i>
         <div>
-            <h6 class="fw-bold mb-1">How Batches Work</h6>
-            <ul class="mb-0 ps-3" style="font-size: 0.9rem">
-                <li><strong>Registration:</strong> Only one batch can be open. New groups automatically join it.</li>
-                <li><strong>Status:</strong> Active batches are visible to faculty. Archiving a batch hides it from their dashboards and frees up their project slots.</li>
+            <h6 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 0.9rem;">How Batches Work</h6>
+            <ul class="mb-0 ps-3" style="font-size: 0.8rem; color: var(--text-secondary);">
+                <li class="mb-1"><strong style="color: var(--text-primary);">Registration:</strong> Only one batch can be open. New groups automatically join it.</li>
+                <li><strong style="color: var(--text-primary);">Status:</strong> Active batches are visible to faculty. Archiving a batch hides it from their dashboards and frees up their project slots.</li>
             </ul>
         </div>
     </div>
