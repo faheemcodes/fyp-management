@@ -280,7 +280,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                     
                     <div class="row g-2 mb-2">
-                        <div class="col-md-2 d-none" id="prefixGroup">
+                        <div class="col-md-2" id="prefixGroup">
                             <label for="modalPrefix" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Prefix</label>
                             <select class="form-select" id="modalPrefix" name="prefix">
                                 <option value="Mr.">Mr.</option>
@@ -640,7 +640,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 supervisorFields.classList.add('d-none');
                 departmentGroup.classList.remove('d-none');
                 surnameGroup.classList.remove('d-none');
-                prefixGroup.classList.add('d-none');
+                prefixGroup.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = true;
             } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee' || role === 'hod') {
                 studentFields.classList.add('d-none');
