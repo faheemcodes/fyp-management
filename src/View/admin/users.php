@@ -370,44 +370,44 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <input type="hidden" id="editModalId" name="id">
                     <input type="hidden" id="editModalRole" name="role">
                     
-                    <h6 class="text-primary fw-bold mb-3 border-bottom pb-2" style="font-size: 0.95rem;">Basic Information</h6>
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label for="editModalName" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">First Name</label>
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Basic Information</h6>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-3">
+                            <label for="editModalName" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">First Name</label>
                             <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
                         </div>
-                        <div class="col-md-5">
-                            <label for="editModalSurname" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Surname</label>
+                        <div class="col-md-3">
+                            <label for="editModalSurname" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Surname</label>
                             <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Email</label>
+                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
+                        </div>
+                        <div class="col-md-3" id="editModalCnicCol">
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">CNIC</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-4">
+                    <div class="row g-2 mb-3">
                         <div class="col-md-4">
-                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Email Address</label>
-                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
-                        </div>
-                        <div class="col-md-4" id="editModalCnicCol">
-                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">CNIC (no dashes)</label>
-                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="editModalPassword" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">New Password (leave blank to keep)</label>
+                            <label for="editModalPassword" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">New Password (leave blank to keep)</label>
                             <div class="position-relative">
                                 <input type="password" class="form-control form-control-sm" id="editModalPassword" name="password" placeholder="••••••••" style="padding-right: 56px">
-                                <button type="button" style="position: absolute;right: 10px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.75rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                                <button type="button" style="position: absolute;right: 10px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.7rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
                             </div>
                         </div>
                     </div>
 
-                    <h6 class="text-primary fw-bold mb-3 border-bottom pb-2" style="font-size: 0.95rem;">Academic / Professional Details</h6>
-                    <div class="row g-3 mb-4">
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Academic Details</h6>
+                    <div class="row g-2 mb-3">
                         <div class="col-md-3">
-                            <label class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Role</label>
+                            <label class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Role</label>
                             <input type="text" class="form-control form-control-sm" id="editModalRoleDisplay" readonly style="font-weight: bold;text-transform: capitalize;background-color:#f8f9fa;">
                         </div>
-                        <div class="col-md-3" id="editModalDeptGroup">
-                            <label for="editModalDepartment" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Department</label>
+                        <div class="col-md-4" id="editModalDeptGroup">
+                            <label for="editModalDepartment" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Department</label>
                             <select class="form-select form-select-sm" id="editModalDepartment" name="department">
                                 <option value="N/A">Not Applicable</option>
                                 <option value="Software Engineering">Software Engineering</option>
@@ -419,14 +419,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                         
                         <!-- Student Specific -->
-                        <div class="col-md-6 d-none" id="editModalStudentFields">
-                            <div class="row g-3">
+                        <div class="col-md-5 d-none" id="editModalStudentFields">
+                            <div class="row g-2">
                                 <div class="col-md-6">
-                                    <label for="editModalStudentId" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Registration ID</label>
+                                    <label for="editModalStudentId" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Reg. ID</label>
                                     <input type="text" class="form-control form-control-sm" id="editModalStudentId" name="student_id">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="editModalShift" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Shift</label>
+                                    <label for="editModalShift" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Shift</label>
                                     <select class="form-select form-select-sm" id="editModalShift" name="shift">
                                         <option value="Morning">Morning</option>
                                         <option value="Evening">Evening</option>
@@ -436,10 +436,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
 
                         <!-- Staff Specific Fields -->
-                        <div class="col-md-6 d-none" id="editModalStaffFields">
+                        <div class="col-md-5 d-none" id="editModalStaffFields">
                             <div class="row g-2">
                                 <div class="col-md-4">
-                                    <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Prefix</label>
+                                    <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Prefix</label>
                                     <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
                                         <option value="">Select</option>
                                         <option value="Mr.">Mr.</option>
@@ -451,7 +451,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     </select>
                                 </div>
                                 <div class="col-md-8">
-                                    <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Designation</label>
+                                    <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Designation</label>
                                     <select class="form-select form-select-sm" id="editModalDesignation" name="designation">
                                         <option value="Lecturer">Lecturer</option>
                                         <option value="Assistant Professor">Assistant Professor</option>
@@ -466,45 +466,45 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                     
                     <div id="roleSpecificSection">
-                        <h6 class="text-success fw-bold mb-3 border-bottom pb-2" style="font-size: 0.95rem;">Personal Details</h6>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4" id="editModalFatherCol">
-                                <label for="editModalFather" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Father's Name</label>
+                        <h6 class="text-success fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Personal Details</h6>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-3" id="editModalFatherCol">
+                                <label for="editModalFather" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Father's Name</label>
                                 <input type="text" class="form-control form-control-sm" id="editModalFather" name="father_name">
                             </div>
-                            <div class="col-md-4" id="editModalGenderCol">
-                                <label for="editModalGender" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Gender</label>
+                            <div class="col-md-2" id="editModalGenderCol">
+                                <label for="editModalGender" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Gender</label>
                                 <select class="form-select form-select-sm" id="editModalGender" name="gender">
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
-                            <div class="col-md-4" id="editModalDobCol">
-                                <label for="editModalDob" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Date of Birth</label>
+                            <div class="col-md-3" id="editModalDobCol">
+                                <label for="editModalDob" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Date of Birth</label>
                                 <input type="date" class="form-control form-control-sm" id="editModalDob" name="dob">
                             </div>
-                        </div>
-
-                        <div class="row g-3 mb-3">
                             <div class="col-md-4">
-                                <label for="editModalMobileNo" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Mobile Number</label>
+                                <label for="editModalMobileNo" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Mobile Number</label>
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light border-end-0">+92</span>
+                                    <span class="input-group-text bg-light border-end-0" style="padding: 0 0.5rem; font-size: 0.8rem;">+92</span>
                                     <input type="text" class="form-control form-control-sm border-start-0 ps-0" id="editModalMobileNo" name="mobile_no" placeholder="3001234567">
                                 </div>
                             </div>
-                            <div class="col-md-4" id="editModalProvinceCol">
-                                <label for="editModalProvince" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Province</label>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-3" id="editModalProvinceCol">
+                                <label for="editModalProvince" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Province</label>
                                 <input type="text" class="form-control form-control-sm" id="editModalProvince" name="province_state">
                             </div>
-                            <div class="col-md-4" id="editModalDistrictCol">
-                                <label for="editModalDistrict" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">District / City</label>
+                            <div class="col-md-3" id="editModalDistrictCol">
+                                <label for="editModalDistrict" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">District</label>
                                 <input type="text" class="form-control form-control-sm" id="editModalDistrict" name="district">
                             </div>
-                        </div>
-                        <div class="mb-3" id="editModalAddressCol">
-                            <label for="editModalAddress" class="form-label text-secondary fw-medium mb-1" style="font-size: 0.8rem">Home Address</label>
-                            <input type="text" class="form-control form-control-sm" id="editModalAddress" name="home_address">
+                            <div class="col-md-6" id="editModalAddressCol">
+                                <label for="editModalAddress" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Home Address</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalAddress" name="home_address">
+                            </div>
                         </div>
                     </div>
                 </div>
