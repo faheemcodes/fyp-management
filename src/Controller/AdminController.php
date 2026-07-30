@@ -260,10 +260,17 @@ class AdminController extends BaseController {
                 $db->commit();
                 
                 $subject = "Welcome to FYP Management Portal";
+                
+                $identifierStr = "";
+                if ($role === 'student') {
+                    $identifierStr = "Roll Number: $student_id\nPassword: $password";
+                } else {
+                    $identifierStr = "CNIC: $cnic\nPassword: $password";
+                }
+
                 $message = "Hello $name,\n\nAn administrator has created an account for you on the FYP Management Portal as a " . ucfirst($role) . ".\n\n"
                          . "Your Login Credentials:\n"
-                         . "Email: $email\n"
-                         . "Password: $password\n\n"
+                         . $identifierStr . "\n\n"
                          . "Please log in and change your password as soon as possible.\n\nRegards,\nFYP Management Team";
                 $this->sendEmail($email, $subject, $message);
 
