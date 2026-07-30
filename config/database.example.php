@@ -4,8 +4,8 @@
 define('DB_HOST', 'localhost');
 define('DB_PORT', '3306');
 define('DB_NAME', 'fyp_management');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_USER', 'your_database_user');
+define('DB_PASS', 'your_database_password');
 
 class Database {
     private static $instance = null;

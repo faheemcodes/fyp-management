@@ -9,3 +9,8 @@
 *.rar
 .replit
 replit.nix
+
+# Sensitive Files
+database.sqlite
+config/database.php
+config/mail.php
