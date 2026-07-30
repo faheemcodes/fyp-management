@@ -33,9 +33,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
-<div class="border rounded-4 shadow-sm mb-4 p-3" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+<div class="border rounded-4 shadow-sm mb-4 p-3" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2) !important;">
     <div class="d-flex gap-3 align-items-start">
-        <i class="bi bi-info-circle-fill fs-5 mt-1" style="color: #0ea5e9;"></i>
+        <i class="bi bi-info-circle-fill fs-5 mt-1" style="color: #10b981;"></i>
         <div>
             <h6 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 0.9rem;">How Batches Work</h6>
             <ul class="mb-0 ps-3" style="font-size: 0.8rem; color: var(--text-secondary);">
