@@ -215,9 +215,9 @@ class AdminController extends BaseController {
             $father_name = !empty($_POST['father_name']) ? trim($_POST['father_name']) : '';
             $dob = !empty($_POST['dob']) ? trim($_POST['dob']) : '2000-01-01';
             $gender = !empty($_POST['gender']) ? trim($_POST['gender']) : 'Male';
-            $mobile_code = !empty($_POST['mobile_code']) ? trim($_POST['mobile_code']) : '+92';
-            $mobile_no = !empty($_POST['mobile_no']) ? trim($_POST['mobile_no']) : '0000000000';
-            $country = !empty($_POST['country']) ? trim($_POST['country']) : 'Pakistan';
+            $mobile_code = !empty($_POST['mobile_code']) ? trim($_POST['mobile_code']) : '';
+            $mobile_no = !empty($_POST['mobile_no']) ? trim($_POST['mobile_no']) : '';
+            $country = !empty($_POST['country']) ? trim($_POST['country']) : '';
             $province_state = !empty($_POST['province_state']) ? trim($_POST['province_state']) : '';
             $district = !empty($_POST['district']) ? trim($_POST['district']) : '';
             $home_address = !empty($_POST['home_address']) ? trim($_POST['home_address']) : 'Not Provided Yet';

@@ -316,17 +316,11 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Surname</label>
-                            <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo !empty($surnameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($surnameVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Father's Name</label>
-                            <input type="text" class="form-control" name="father_name" value="<?php echo htmlspecialchars($fatherNameVal); ?>" <?php echo !empty($fatherNameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($fatherNameVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="father_name" value="<?php echo htmlspecialchars($fatherNameVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
@@ -416,17 +410,11 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                         </div>
                         <div class="col-4 pf-group">
                             <label class="form-label">Code</label>
-                            <input type="text" class="form-control" name="mobile_code" value="<?php echo htmlspecialchars($mobileCodeVal); ?>" <?php echo !empty($mobileCodeVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($mobileCodeVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="mobile_code" value="<?php echo htmlspecialchars($mobileCodeVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-8 pf-group">
                             <label class="form-label">Mobile Number</label>
-                            <input type="text" class="form-control" name="mobile_no" value="<?php echo htmlspecialchars($mobileNoVal); ?>" <?php echo !empty($mobileNoVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($mobileNoVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="mobile_no" value="<?php echo htmlspecialchars($mobileNoVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <hr style="border-color: var(--border-color);opacity: 0.5;margin: 4px 0">
                         <div class="col-6 pf-group">
@@ -435,24 +423,15 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                         </div>
                         <div class="col-6 pf-group">
                             <label class="form-label">Country</label>
-                            <input type="text" class="form-control" name="country" value="<?php echo htmlspecialchars($countryVal); ?>" <?php echo !empty($countryVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($countryVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="country" value="<?php echo htmlspecialchars($countryVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-4 pf-group">
                             <label class="form-label">Province</label>
-                            <input type="text" class="form-control" name="province_state" value="<?php echo htmlspecialchars($provinceStateVal); ?>" <?php echo !empty($provinceStateVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($provinceStateVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="province_state" value="<?php echo htmlspecialchars($provinceStateVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-4 pf-group">
                             <label class="form-label">District</label>
-                            <input type="text" class="form-control" name="district" value="<?php echo htmlspecialchars($districtVal); ?>" <?php echo !empty($districtVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
-                            <?php if(!empty($districtVal)): ?>
-                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
-                            <?php endif; ?>
+                            <input type="text" class="form-control" name="district" value="<?php echo htmlspecialchars($districtVal); ?>" <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
                         </div>
                         <div class="col-4 pf-group">
                             <label class="form-label">City</label>
