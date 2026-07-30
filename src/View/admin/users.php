@@ -572,7 +572,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div id="modalActionButtonsDesktop" class="mt-4 pt-3 border-top d-none d-md-block">
                             <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
                             <a id="modalApproveBtnDesktop" href="#" class="btn btn-success w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
-                            <button id="modalRejectBtnDesktop" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="openRejectModal(this.dataset.id); bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide();"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
+                            <button id="modalRejectBtnDesktop" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
                         </div>
                     </div>
                     
@@ -607,7 +607,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
                             <div class="d-flex flex-column gap-2">
                                 <a id="modalApproveBtnMobile" href="#" class="btn btn-success w-100 rounded-pill shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
-                                <button id="modalRejectBtnMobile" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="openRejectModal(this.dataset.id); bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide();"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
+                                <button id="modalRejectBtnMobile" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
                             </div>
                         </div>
                     </div>
@@ -837,209 +837,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     if (prefixCol) prefixCol.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
                 }
-departmentGroup.classList.remove('d-none');
-                } else if (role === 'coordinator') {
-                    departmentGroup.classList.add('d-none');
-                }
-                surnameGroup.classList.remove('d-none');
-            } else {
-                studentFields.classList.add('d-none');
-                supervisorFields.classList.add('d-none');
-                document.getElementById('modalStudentId').required = false;
-            }
-        });
-
-        // View User Details logic
-        const viewButtons = document.querySelectorAll('.btn-view-user');
-        viewButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = this.getAttribute('data-id');
-                const name = this.getAttribute('data-name');
-                const role = this.getAttribute('data-role');
-                const email = this.getAttribute('data-email');
-                const cnic = this.getAttribute('data-cnic');
-                const studentId = this.getAttribute('data-student-id');
-                const dept = this.getAttribute('data-dept');
-                const shift = this.getAttribute('data-shift');
-                const father = this.getAttribute('data-father');
-                const phone = this.getAttribute('data-phone');
-                const gender = this.getAttribute('data-gender');
-                const dob = this.getAttribute('data-dob');
-                const domicile = this.getAttribute('data-domicile');
-                const address = this.getAttribute('data-address');
-                const designation = this.getAttribute('data-designation');
-                const status = this.getAttribute('data-status');
-                const avatar = this.getAttribute('data-avatar');
-                
-                // Populate text fields
-                document.getElementById('detailName').textContent = name;
-                document.getElementById('detailEmail').textContent = email;
-                document.getElementById('detailCnic').textContent = cnic;
-                document.getElementById('detailDept').textContent = dept;
-                document.getElementById('detailPhone').textContent = phone;
-                document.getElementById('detailGender').textContent = gender;
-                document.getElementById('detailDob').textContent = dob;
-                document.getElementById('detailDomicile').textContent = domicile;
-                document.getElementById('detailAddress').textContent = address;
-                
-                // Role Badge
-                const roleBadge = document.querySelector('#detailRoleBadge span');
-                roleBadge.textContent = role;
-                
-                // Status Badge
-                const statusBadge = document.getElementById('detailStatusBadge');
-                statusBadge.className = 'badge rounded-pill px-3 py-1.5 small mb-3';
-                if (status === 'approved') {
-                    statusBadge.textContent = 'Approved';
-                    statusBadge.classList.add('bg-success-subtle', 'text-success', 'border', 'border-success-subtle');
-                } else if (status === 'pending') {
-                    statusBadge.textContent = 'Pending';
-                    statusBadge.classList.add('bg-warning-subtle', 'text-warning', 'border', 'border-warning-subtle');
-                } else {
-                    statusBadge.textContent = 'Rejected';
-                    statusBadge.classList.add('bg-danger-subtle', 'text-danger', 'border', 'border-danger-subtle');
-                }
-                
-                // Avatar handling
-                const imgEl = document.getElementById('detailAvatar');
-                const initialsEl = document.getElementById('detailInitials');
-                
-                if (role === 'student' && avatar && avatar !== 'default_avatar.svg') {
-                    imgEl.src = `<?php echo $basePath; ?>/uploads/avatars/${avatar}`;
-                    imgEl.classList.remove('d-none');
-                    initialsEl.classList.add('d-none');
-                    initialsEl.style.display = 'none';
-                } else {
-                    imgEl.classList.add('d-none');
-                    imgEl.src = '#';
-                    initialsEl.textContent = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                    initialsEl.classList.remove('d-none');
-                    initialsEl.style.display = 'flex';
-                }
-                
-                // Conditional Student/Staff rows display
-                const studentRows = document.querySelectorAll('.student-detail-row');
-                const staffRows = document.querySelectorAll('.staff-detail-row');
-                
-                if (role === 'student') {
-                    studentRows.forEach(row => row.classList.remove('d-none'));
-                    staffRows.forEach(row => row.classList.add('d-none'));
-                    document.getElementById('detailStudentId').textContent = studentId;
-                    document.getElementById('detailShift').textContent = shift;
-                    document.getElementById('detailFather').textContent = father;
-                } else {
-                    studentRows.forEach(row => row.classList.add('d-none'));
-                    staffRows.forEach(row => row.classList.remove('d-none'));
-                    document.getElementById('detailDesignation').textContent = designation;
-                }
-                
-                // Pending modal action buttons
-                const actionDesktop = document.getElementById('modalActionButtonsDesktop');
-                const actionMobile = document.getElementById('modalActionButtonsMobile');
-                
-                // Reset display classes
-                actionDesktop.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
-                actionMobile.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
-                
-                if (status === 'pending') {
-                    actionDesktop.classList.add('d-none', 'd-md-block');
-                    actionMobile.classList.add('d-block', 'd-md-none');
-                    
-                    const basePathClean = "<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>";
-                    document.getElementById('modalApproveBtnDesktop').href = `${basePathClean}/admin/users/approve?id=${userId}`;
-                    document.getElementById('modalRejectBtnDesktop').dataset.id = userId;
-                    document.getElementById('modalApproveBtnMobile').href = `${basePathClean}/admin/users/approve?id=${userId}`;
-                    document.getElementById('modalRejectBtnMobile').dataset.id = userId;
-                } else {
-                    actionDesktop.classList.add('d-none');
-                    actionMobile.classList.add('d-none');
-                }
             });
         });
 
-        // Edit User Details logic
-        const editButtons = document.querySelectorAll('.btn-edit-user');
-        editButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const userId = this.getAttribute('data-id');
-                const name = this.getAttribute('data-name');
-                const role = this.getAttribute('data-role');
-                const email = this.getAttribute('data-email');
-                const cnic = this.getAttribute('data-cnic');
-                const studentId = this.getAttribute('data-student-id');
-                const dept = this.getAttribute('data-dept');
-                const shift = this.getAttribute('data-shift');
-                const designation = this.getAttribute('data-designation');
-                
-                const prefix = this.getAttribute('data-prefix');
-                const surname = this.getAttribute('data-surname');
-                const mobileNo = this.getAttribute('data-mobile-no');
-                const gender = this.getAttribute('data-gender');
-                const dob = this.getAttribute('data-dob');
-                const province = this.getAttribute('data-province');
-                const district = this.getAttribute('data-district');
-                const address = this.getAttribute('data-address');
-                const father = this.getAttribute('data-father');
-                
-                document.getElementById('editModalId').value = userId;
-                document.getElementById('editModalRole').value = role;
-                document.getElementById('editModalRoleDisplay').value = role;
-                if(document.getElementById('editModalPrefix')) document.getElementById('editModalPrefix').value = prefix || 'Mr.';
-                document.getElementById('editModalName').value = name;
-                if(document.getElementById('editModalSurname')) document.getElementById('editModalSurname').value = surname;
-                document.getElementById('editModalEmail').value = email;
-                document.getElementById('editModalCnic').value = cnic;
-                document.getElementById('editModalPassword').value = '';
-                
-                if(document.getElementById('editModalFather')) document.getElementById('editModalFather').value = father === 'N/A' ? '' : father;
-                if(document.getElementById('editModalMobileNo')) document.getElementById('editModalMobileNo').value = mobileNo;
-                if(document.getElementById('editModalGender')) document.getElementById('editModalGender').value = gender;
-                if(document.getElementById('editModalDob')) document.getElementById('editModalDob').value = dob;
-                if(document.getElementById('editModalProvince')) document.getElementById('editModalProvince').value = province;
-                if(document.getElementById('editModalDistrict')) document.getElementById('editModalDistrict').value = district;
-                if(document.getElementById('editModalAddress')) document.getElementById('editModalAddress').value = address;
-                
-                const deptSelect = document.getElementById('editModalDepartment');
-                if (dept) {
-                    deptSelect.value = dept;
-                }
-                
-                const stdFields = document.getElementById('editModalStudentFields');
-                const staffFields = document.getElementById('editModalStaffFields');
-                const prefixCol = document.getElementById('editModalPrefixCol');
-                const deptGroup = document.getElementById('editModalDeptGroup');
-                
-                const roleSection = document.getElementById('roleSpecificSection');
-                const normalizedRole = (role || '').trim().toLowerCase();
-                
-                if (stdFields) stdFields.classList.add('d-none');
-                if (staffFields) staffFields.classList.add('d-none');
-                if (prefixCol) prefixCol.classList.add('d-none');
-                if (deptGroup) deptGroup.classList.remove('d-none');
-                if (roleSection) roleSection.classList.add('d-none');
-                
-                if (normalizedRole === 'admin') {
-                    if (deptGroup) deptGroup.classList.add('d-none');
-                }
-                
-                if (normalizedRole === 'student') {
-                    if (roleSection) roleSection.classList.remove('d-none');
-                    if (stdFields) stdFields.classList.remove('d-none');
-                    document.getElementById('editModalStudentId').value = studentId;
-                    document.getElementById('editModalShift').value = shift;
-                } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee' || normalizedRole === 'hod') {
-                    if (staffFields) staffFields.classList.remove('d-none');
-                    if (prefixCol) prefixCol.classList.remove('d-none');
-                    document.getElementById('editModalDesignation').value = designation;
-                }
-            });
-        });
-        
-        function openRejectModal(userId) {
+        window.openRejectModal = function(userId) {
             document.getElementById('rejectModalId').value = userId;
             const modal = new bootstrap.Modal(document.getElementById('rejectUserModal'));
             modal.show();
-        }
-    </script>
+        };
+    });
+</script>
 </body>
 </html>
