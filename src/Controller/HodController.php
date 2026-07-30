@@ -339,40 +339,49 @@ class HodController extends BaseController {
     }
 
     public function rejectStudent() {
-        $id = $_GET['id'] ?? null;
-        if ($id) {
-            $db = \Database::getInstance()->getConnection();
-            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $id = $_POST['id'] ?? null;
+            $reason = trim($_POST['reason'] ?? '');
             
-            $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
-            $stmtCheck->execute([$id]);
-            $student = $stmtCheck->fetch();
-            
-            if ($student && $student['department'] === $dept) {
-                $avatarFile = $student['avatar'];
-                if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
-                    $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
-                    if (file_exists($filePath)) {
-                        unlink($filePath);
+            if ($id && $reason) {
+                $db = \Database::getInstance()->getConnection();
+                $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+                
+                $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
+                $stmtCheck->execute([$id]);
+                $student = $stmtCheck->fetch();
+                
+                if ($student && $student['department'] === $dept) {
+                    $avatarFile = $student['avatar'];
+                    if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
+                        $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
                     }
-                }
-                
-                $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
-                $stmtUser->execute([$id]);
-                $userEmail = $stmtUser->fetchColumn();
-                
-                if ($userEmail) {
-                    $subject = "Your Registration has been Rejected";
-                    $message = "Hello,\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your HOD.\n"
-                             . "Please contact your department if you believe this was a mistake.\n\nRegards,\nFYP Management Team";
-                    $this->sendEmail($userEmail, $subject, $message);
-                }
+                    
+                    $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
+                    $stmtUser->execute([$id]);
+                    $userEmail = $stmtUser->fetchColumn();
+                    
+                    if ($userEmail) {
+                        $subject = "Your Registration has been Rejected";
+                        $message = "Hello,\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your HOD.\n\n"
+                                 . "Reason for rejection:\n$reason\n\n"
+                                 . "Please correct the issues mentioned above and create a new account, or contact your department if you believe this was a mistake.\n\n"
+                                 . "Regards,\nFYP Management Team";
+                        $this->sendEmail($userEmail, $subject, $message);
+                    }
 
-                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                $stmt->execute([$id]);
-                $this->flash('success', 'Student registration rejected and deleted.');
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $this->flash('success', 'Student registration rejected and deleted.');
+                } else {
+                    $this->flash('error', 'Unauthorized: Student is not in your department.');
+                }
             } else {
-                $this->flash('error', 'Unauthorized: Student is not in your department.');
+                $this->flash('error', 'Rejection reason is required.');
             }
         }
         redirect('/hod/students/verify');
