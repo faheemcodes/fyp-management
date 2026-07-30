@@ -18,9 +18,48 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
-<div class="glass-panel p-4 mb-4">
+<div class="glass-panel p-4 mb-4" style="overflow: visible !important">
+    <!-- Filters and Search Controls -->
+    <div class="mb-4">
+        <div class="premium-filter-group w-100">
+            <!-- Search Input -->
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search text-muted me-2"></i>
+                <input type="text" class="form-control premium-filter-input table-search" placeholder="Search supervisors by name, department..." data-target="slots-table">
+            </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
+            <!-- Department Filter -->
+            <div class="d-flex align-items-center px-2" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="department" data-target="slots-table">
+                    <option value="all">All Departments</option>
+                    <?php 
+                    $departments = array_unique(array_filter(array_column($supervisorsList ?? [], 'department')));
+                    sort($departments);
+                    foreach($departments as $dept): ?>
+                        <option value="<?php echo htmlspecialchars($dept); ?>"><?php echo htmlspecialchars($dept); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
+            <!-- Status Filter -->
+            <div class="d-flex align-items-center px-2 pe-3" style="flex-basis: 30%;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="slots-table">
+                    <option value="all">All Statuses</option>
+                    <option value="Available">Available</option>
+                    <option value="Full">Full</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <div class="table-responsive">
-        <table class="table premium-table mb-0">
+        <table class="table premium-table mb-0" id="slots-table">
             <thead>
                 <tr>
                     <th class="ps-4">Supervisor Name</th>
@@ -44,7 +83,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             $statusColor = $percentage >= 100 ? 'danger' : ($percentage >= 75 ? 'warning' : 'success');
                             $statusText = $percentage >= 100 ? 'Full' : 'Available';
                         ?>
-                        <tr>
+                        <tr data-department="<?php echo htmlspecialchars($sup['department'] ?? ''); ?>" data-status="<?php echo htmlspecialchars($statusText); ?>">
                             <td class="ps-4 py-3 fw-bold text-dark">
                                 <?php echo htmlspecialchars($sup['name']); ?>
                             </td>
