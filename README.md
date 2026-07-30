@@ -62,18 +62,4 @@ Before you start, make sure you have the following installed on your machine:
 
 We take security seriously. All sensitive configuration files (like your database credentials and SMTP passwords) are protected and ignored by Git. We provide `.example.php` files so the project structure remains intact without compromising your private credentials on GitHub. 
 
----
-
-## 🤝 Contributing
-
-This project is built to serve institutes worldwide. Whether you want to fix a bug, add a feature, or improve the UI—your contributions are highly welcome! 
-
-1. Fork the project.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
----
-
 *Designed and engineered with ❤️ for academia.*
