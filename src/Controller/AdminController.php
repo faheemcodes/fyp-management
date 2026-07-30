@@ -119,15 +119,30 @@ class AdminController extends BaseController {
             $stmt->execute([$id]);
             
             // Get user's details for notification
-            $stmtUser = $db->prepare("SELECT email, role FROM users WHERE id = ?");
+            $stmtUser = $db->prepare("
+                SELECT u.email, u.role, u.cnic, s.student_id 
+                FROM users u 
+                LEFT JOIN students s ON u.id = s.user_id 
+                WHERE u.id = ?
+            ");
             $stmtUser->execute([$id]);
             $user = $stmtUser->fetch();
             
             if ($user) {
                 $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
                 $subject = "Your Account has been Approved";
+                
+                $identifierStr = "";
+                if ($user['role'] === 'student') {
+                    $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
+                } else {
+                    $identifierStr = "CNIC: " . $user['cnic'] . "\nPassword: (The password you chose during registration)";
+                }
+
                 $message = "Hello,\n\nYour account on the FYP Management Portal has been approved by an administrator.\n\n"
-                         . "You can now log in to the portal using this email address.\n\nRegards,\nFYP Management Team";
+                         . "Your Login Credentials:\n"
+                         . $identifierStr . "\n\n"
+                         . "You can now log in to the portal.\n\nRegards,\nFYP Management Team";
                 $this->sendEmail($user['email'], $subject, $message);
             }
             
