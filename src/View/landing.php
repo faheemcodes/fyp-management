@@ -20,6 +20,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <!-- Google Fonts including modern fallbacks for Chuner/Pierknife -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -631,7 +632,7 @@
 
     <div class="container hero-container">
         <div class="hero-grid">
-            <div class="hero-left">
+            <div class="hero-left" data-aos="fade-right" data-aos-duration="1000">
                 <div class="hero-badge">
                     <span class="status-dot"></span> University of Sindh &bull; Official FYP Portal
                 </div>
@@ -670,7 +671,7 @@
                 </div>
             </div>
             
-            <div class="hero-right">
+            <div class="hero-right" data-aos="zoom-in" data-aos-duration="1200" data-aos-delay="200">
                 <div class="hero-bg-circle hero-bg-circle-1">
                     <div class="orbit-dot dot-1"></div>
                     <div class="orbit-dot dot-2"></div>
@@ -750,7 +751,7 @@
 <section class="section section-alt">
     <div class="container">
         <div class="row g-5">
-            <div class="col-lg-6">
+            <div class="col-lg-6" data-aos="fade-up">
                 <div class="d-flex flex-column h-100">
                     <span class="section-label amber">Announcements</span>
                     <h2 class="section-heading heading-main">Deadlines</h2>
@@ -775,7 +776,7 @@
                 </div>
             </div>
             
-            <div class="col-lg-6 mt-5 ">
+            <div class="col-lg-6 mt-5" data-aos="fade-left" data-aos-delay="200">
                 <div class="d-flex flex-column h-100">
                     <span class="section-label emerald">Updates</span>
                     <h2 class="section-heading heading-main">Notice Board</h2>
@@ -816,14 +817,14 @@
 <!-- DEPARTMENTS BENTO -->
 <section class="section">
     <div class="container">
-        <div class="text-center mb-5">
+        <div class="text-center mb-5" data-aos="fade-down">
             <span class="section-label violet">Explore</span>
             <h2 class="section-heading heading-main">Departments</h2>
             <p class="section-sub mx-auto">Undergraduate and graduate programs in Engineering & Technology.</p>
         </div>
         
         <div class="bento-grid">
-            <div class="bento-item theme-orange">
+            <div class="bento-item theme-orange" data-aos="fade-up" data-aos-delay="100">
                 <div class="card-number"><i class="bi bi-pc-display"></i></div>
                 <div class="card-header">
                     <h4>Information Technology</h4>
@@ -833,7 +834,7 @@
                     <p>Established in 1998, the IT department provides an NCEAC-accredited program emphasizing critical thinking. Students learn to provide practical IT solutions for the nation's administrative challenges using state-of-the-art facilities.</p>
                 </div>
             </div>
-            <div class="bento-item theme-slate">
+            <div class="bento-item theme-slate" data-aos="fade-up" data-aos-delay="200">
                 <div class="card-number"><i class="bi bi-code-square"></i></div>
                 <div class="card-header">
                     <h4>Software Engineering</h4>
@@ -843,7 +844,7 @@
                     <p>One of Pakistan's first programs of its kind, offering NCEAC-accredited education. The curriculum focuses on engineering complex systems through research, design, and testing to build robust software architectures.</p>
                 </div>
             </div>
-            <div class="bento-item theme-crimson">
+            <div class="bento-item theme-crimson" data-aos="fade-up" data-aos-delay="300">
                 <div class="card-number"><i class="bi bi-broadcast-pin"></i></div>
                 <div class="card-header">
                     <h4>Telecommunication</h4>
@@ -853,7 +854,7 @@
                     <p>Operating under an Outcome-Based Education framework, this PEC-accredited program produces graduates equipped with a vision for modern telecommunications. Students master next-generation networks and technologies.</p>
                 </div>
             </div>
-            <div class="bento-item theme-blue">
+            <div class="bento-item theme-blue" data-aos="fade-up" data-aos-delay="400">
                 <div class="card-number"><i class="bi bi-cpu"></i></div>
                 <div class="card-header">
                     <h4>Electronic Engineering</h4>
@@ -863,7 +864,7 @@
                     <p>With roots dating back to 1979, this PEC-accredited department bridges theoretical concepts with practical application. Students engage in experimental learning using modern hardware to meet socio-economic needs.</p>
                 </div>
             </div>
-            <div class="bento-item theme-emerald">
+            <div class="bento-item theme-emerald" data-aos="fade-up" data-aos-delay="500">
                 <div class="card-number"><i class="bi bi-bar-chart-line"></i></div>
                 <div class="card-header">
                     <h4>Data Science</h4>
@@ -880,13 +881,13 @@
 <!-- HOW IT WORKS -->
 <section class="section section-alt">
     <div class="container">
-        <div class="text-center">
+        <div class="text-center" data-aos="fade-down">
             <h2 class="section-heading heading-main">The Process</h2>
             <p class="section-sub mx-auto">Your final year project journey from start to finish.</p>
         </div>
         
         <div class="timeline-grid">
-            <div class="timeline-card tl-style-green">
+            <div class="timeline-card tl-style-green" data-aos="flip-left" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
@@ -895,7 +896,7 @@
                 <p>Form a group, brainstorm innovative ideas, and submit your initial project proposal for approval.</p>
             </div>
             
-            <div class="timeline-card tl-style-grey">
+            <div class="timeline-card tl-style-grey" data-aos="flip-left" data-aos-delay="200">
                 <div class="card-pill">Phase 2</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-person-badge"></i></div>
@@ -904,7 +905,7 @@
                 <p>Get assigned to an expert faculty member who will guide and mentor your project development.</p>
             </div>
 
-            <div class="timeline-card tl-style-grey">
+            <div class="timeline-card tl-style-grey" data-aos="flip-left" data-aos-delay="300">
                 <div class="card-pill">Phase 3</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-code-slash"></i></div>
@@ -913,7 +914,7 @@
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
-            <div class="timeline-card tl-style-green">
+            <div class="timeline-card tl-style-green" data-aos="flip-left" data-aos-delay="400">
                 <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
@@ -928,13 +929,15 @@
 <!-- FACULTY -->
 <section class="section">
     <div class="container text-center">
-        <h2 class="section-heading heading-main">Faculty & Staff</h2>
-        <p class="section-sub mx-auto">Guiding FYP research across all departments.</p>
+        <div data-aos="fade-down">
+            <h2 class="section-heading heading-main">Faculty & Staff</h2>
+            <p class="section-sub mx-auto">Guiding FYP research across all departments.</p>
+        </div>
         
         <div class="row justify-content-center g-4 mb-5">
             <?php if (!empty($supervisors)): ?>
-                <?php foreach (array_slice($supervisors, 0, 4) as $supervisor): ?>
-                <div class="col-lg-3 col-md-4 col-6">
+                <?php foreach (array_slice($supervisors, 0, 4) as $index => $supervisor): ?>
+                <div class="col-lg-3 col-md-4 col-6" data-aos="fade-up" data-aos-delay="<?php echo ($index % 4 + 1) * 100; ?>">
                     <div class="card-modern text-center h-100 p-4">
                         <div class="avatar mx-auto mb-3" style="width: 80px;height: 80px;background: rgba(16, 185, 129, 0.1);color: var(--lp-accent);border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 2.5rem;font-weight: 700">
                             <?php echo strtoupper(substr($supervisor['name'], 0, 1)); ?>
