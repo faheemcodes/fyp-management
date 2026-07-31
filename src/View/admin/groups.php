@@ -96,9 +96,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
-<div class="glass-panel p-4 mb-4" style="overflow: visible !important">
+<div class="page-section">
     <!-- Filters and Search Controls -->
-    <div class="mb-4">
+    <div class="page-section-header">
         <div class="premium-filter-group w-100">
             <!-- Search Input -->
             <div class="flex-grow-1 d-flex align-items-center px-3">
