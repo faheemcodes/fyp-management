@@ -15,12 +15,28 @@
 }
 
 /* ─── Modern Table Styles ─── */
-
-
-
-
-
-
+.action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+.action-btn:hover {
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
+}
+.action-btn.btn-view-user:hover { background: rgba(59,130,246,0.1); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+.action-btn.btn-edit-user:hover { background: rgba(139,92,246,0.1); color: #8b5cf6; border-color: rgba(139,92,246,0.2); }
+.action-btn.btn-delete-user:hover { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+.action-btn.btn-approve:hover { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
+.action-btn.btn-reject:hover { background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
 
 /* Modern Modals */
 .modal { z-index: 99999 !important; }
@@ -128,7 +144,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
     <!-- Table -->
     <div class="table-responsive">
-        <table class="table modern-table m-0" id="users-table">
+        <table class="table premium-table m-0" id="users-table">
             <thead>
                 <tr>
                     <th class="ps-4">User Details</th>
@@ -182,7 +198,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-view-user" style="background: var(--form-bg);border: 1px solid var(--border-color);color: var(--text-primary);border-radius: 8px;font-weight: 500;transition: all 0.2s" onmouseover="this.style.background='var(--border-color)';" onmouseout="this.style.background='var(--form-bg)';"
+                            <button type="button" class="action-btn btn-view-user" title="View Details"
                                 data-bs-toggle="modal" data-bs-target="#viewUserModal"
                                 data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
@@ -201,13 +217,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 data-designation="<?php echo htmlspecialchars($u['designation'] ?? 'N/A'); ?>"
                                 data-status="<?php echo htmlspecialchars($u['status'] ?? ''); ?>"
                                 data-avatar="<?php echo htmlspecialchars($u['role'] === 'student' ? (!empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg') : ''); ?>">
-                                <i class="bi bi-eye"></i> Details
+                                <i class="bi bi-eye"></i>
                             </button>
                             <?php if($u['status'] === 'pending'): ?>
-                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669);color: white;border: none;border-radius: 8px;font-weight: 500;box-shadow: 0 4px 10px rgba(16,185,129,0.2)">Approve</a>
-                                <button type="button" onclick="openRejectModal('<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>')" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;font-weight: 500">Reject</button>
+                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="action-btn btn-approve" title="Approve"><i class="bi bi-check-lg"></i></a>
+                                <button type="button" onclick="openRejectModal('<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>')" class="action-btn btn-reject" title="Reject"><i class="bi bi-x-lg"></i></button>
                             <?php else: ?>
-                                <button type="button" class="btn btn-sm d-flex align-items-center gap-1 btn-edit-user" style="background: var(--form-bg);border: 1px solid var(--border-color);color: var(--text-primary);border-radius: 8px;font-weight: 500"
+                                <button type="button" class="action-btn btn-edit-user" title="Edit User"
                                     data-bs-toggle="modal" data-bs-target="#editUserModal"
                                     data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                     data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
@@ -230,7 +246,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <?php if($u['role'] !== 'admin'): ?>
-                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm d-flex align-items-center gap-1" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.2);border-radius: 8px;font-weight: 500" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
+                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="action-btn btn-delete-user" title="Delete User" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 <?php endif; ?>

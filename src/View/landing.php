@@ -751,16 +751,16 @@
 <section class="section section-alt">
     <div class="container">
         <div class="row g-5">
-            <div class="col-lg-6" data-aos="fade-up">
-                <div class="d-flex flex-column h-100">
+            <div class="col-lg-6">
+                <div class="d-flex flex-column h-100" data-aos="fade-up">
                     <span class="section-label amber">Announcements</span>
                     <h2 class="section-heading heading-main">Deadlines</h2>
                     <div class="card-modern mt-4 flex-grow-1">
                     <?php if (empty($deadlines)): ?>
                         <p class="text-muted m-0">No upcoming deadlines at the moment.</p>
                     <?php else: ?>
-                        <?php foreach (array_slice($deadlines, 0, 4) as $deadline): ?>
-                            <div class="list-item">
+                        <?php foreach (array_slice($deadlines, 0, 4) as $index => $deadline): ?>
+                            <div class="list-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 100 + 100; ?>">
                                 <div class="date-box">
                                     <span class="date-month"><?php echo date('M', strtotime($deadline['deadline_date'])); ?></span>
                                     <span class="date-day"><?php echo date('d', strtotime($deadline['deadline_date'])); ?></span>
@@ -776,16 +776,16 @@
                 </div>
             </div>
             
-            <div class="col-lg-6 mt-5" data-aos="fade-left" data-aos-delay="200">
-                <div class="d-flex flex-column h-100">
+            <div class="col-lg-6 mt-5">
+                <div class="d-flex flex-column h-100" data-aos="fade-up">
                     <span class="section-label emerald">Updates</span>
                     <h2 class="section-heading heading-main">Notice Board</h2>
                     <div class="card-notice-board mt-4 flex-grow-1">
                     <?php if (empty($notices)): ?>
                         <p class="text-muted m-0">No notices have been published yet.</p>
                     <?php else: ?>
-                        <?php foreach (array_slice($notices, 0, 4) as $notice): ?>
-                            <div class="notice-board-item" data-bs-toggle="modal" data-bs-target="#noticeModal" 
+                        <?php foreach (array_slice($notices, 0, 4) as $index => $notice): ?>
+                            <div class="notice-board-item" data-aos="fade-left" data-aos-delay="<?php echo $index * 100 + 100; ?>" data-bs-toggle="modal" data-bs-target="#noticeModal" 
                                  data-subject="<?php echo htmlspecialchars($notice['subject'], ENT_QUOTES, 'UTF-8'); ?>" 
                                  data-audience="<?php echo htmlspecialchars($notice['target_audience'] ?? 'All', ENT_QUOTES, 'UTF-8'); ?>" 
                                  data-body="<?php echo htmlspecialchars($notice['body'], ENT_QUOTES, 'UTF-8'); ?>" 
