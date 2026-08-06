@@ -44,10 +44,13 @@ class PublicController extends BaseController {
             
             // Notice Board Preview
             $notices = $this->db->query("
-                SELECT id, subject, body, target_audience, department, notice_date 
-                FROM notices 
-                WHERE is_public = 1 AND is_hidden = 0
-                ORDER BY notice_date DESC 
+                SELECT n.id, n.subject, n.body, n.target_audience, n.department, n.notice_date, n.ref_no,
+                       c.name AS coord_name, h.name AS hod_name
+                FROM notices n
+                LEFT JOIN coordinators c ON n.sender_id = c.user_id
+                LEFT JOIN hods h ON c.department = h.department
+                WHERE n.is_public = 1 AND n.is_hidden = 0
+                ORDER BY n.notice_date DESC 
                 LIMIT 4
             ")->fetchAll();
 
@@ -86,8 +89,21 @@ class PublicController extends BaseController {
     }
     
     public function contact() {
+        try {
+            $coordinators = $this->db->query("
+                SELECT c.name, c.department, u.email 
+                FROM coordinators c
+                JOIN users u ON c.user_id = u.id
+                WHERE u.status = 'approved'
+                ORDER BY c.department ASC
+            ")->fetchAll();
+        } catch (\Exception $e) {
+            $coordinators = [];
+        }
+
         $this->render('contact', [
-            'pageTitle' => 'Contact Us - FYP Management Portal'
+            'pageTitle' => 'Contact Us - FYP Management Portal',
+            'coordinators' => $coordinators
         ]);
     }
     
@@ -174,6 +190,85 @@ class PublicController extends BaseController {
                 'totalPages' => 1,
                 'error' => 'Notice board is temporarily unavailable.'
             ]);
+        }
+    }
+
+    public function contactSubmit() {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'error' => 'Invalid request method.']);
+            return;
+        }
+
+        // Validate CSRF
+        if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            echo json_encode(['success' => false, 'error' => 'Invalid CSRF token.']);
+            return;
+        }
+
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $department = trim($_POST['department'] ?? '');
+        $query_type = trim($_POST['query_type'] ?? '');
+        $messageText = trim($_POST['message'] ?? '');
+
+        if (empty($name) || empty($email) || empty($department) || empty($query_type) || empty($messageText)) {
+            echo json_encode(['success' => false, 'error' => 'All required fields must be filled.']);
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid email address format.']);
+            return;
+        }
+
+        $mailConfigPath = __DIR__ . '/../../config/mail.php';
+        if (!file_exists($mailConfigPath)) {
+            echo json_encode(['success' => false, 'error' => 'Mail configuration not found.']);
+            return;
+        }
+
+        $mailConfig = require $mailConfigPath;
+
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = $mailConfig['smtp_host'];
+            $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+            $mail->Username   = $mailConfig['smtp_username'];
+            $mail->Password   = $mailConfig['smtp_password'];
+            $mail->SMTPSecure = $mailConfig['smtp_secure'] === 'tls' ? \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS : \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = $mailConfig['smtp_port'];
+
+            // Recipients
+            $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+            // The destination for contact form submissions:
+            $mail->addAddress('fet.usindh@gmail.com', 'FYP Support Team');
+            $mail->addReplyTo($email, $name);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = "New Support Query: {$query_type} - {$name}";
+            
+            $htmlBody = "
+                <h2>New Contact Form Submission</h2>
+                <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
+                <p><strong>Email:</strong> <a href='mailto:" . htmlspecialchars($email) . "'>" . htmlspecialchars($email) . "</a></p>
+                <p><strong>Department:</strong> " . htmlspecialchars($department) . "</p>
+                <p><strong>Query Type:</strong> " . htmlspecialchars($query_type) . "</p>
+                <hr>
+                <h3>Message:</h3>
+                <p>" . nl2br(htmlspecialchars($messageText)) . "</p>
+            ";
+            $mail->Body = $htmlBody;
+            $mail->AltBody = strip_tags(str_replace('<br>', "\n", $htmlBody));
+
+            $mail->send();
+            echo json_encode(['success' => true, 'message' => 'Message sent successfully.']);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo]);
         }
     }
 }

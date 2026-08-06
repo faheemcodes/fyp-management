@@ -46,7 +46,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
-<div class="glass-panel p-4 mb-4">
+<div class="page-section">
     <div class="table-responsive">
         <table class="table premium-table mb-0">
             <thead>
@@ -66,7 +66,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <?php else: ?>
                         <?php foreach($batches as $b): ?>
                         <tr>
-                            <td class="ps-4 py-3 fw-bold text-dark">
+                            <td class="ps-4 py-3 fw-medium text-dark">
                                 <?php echo htmlspecialchars($b['name']); ?>
                             </td>
                             <td class="py-3 text-muted" style="font-size: 0.9rem">

@@ -105,8 +105,8 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
         .lp-navbar.nav-hidden {
             transform: translateY(-100%);
         }
-        .lp-navbar .brand-text h1 { font-family: 'Inter', -apple-system, sans-serif; font-size: 1.15rem; font-weight: 800; margin: 0; color: var(--lp-text) !important; letter-spacing: -0.5px; line-height: 1.1; }
-        .lp-navbar .brand-text p { font-size: 0.75rem; margin: 0; color: var(--lp-text-muted) !important; font-family: var(--font-body); }
+        .lp-navbar .brand-text h1 { font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; margin: 0; color: var(--lp-text) !important; letter-spacing: -0.01em; line-height: 1.1; }
+        .lp-navbar .brand-text p { font-size: 0.72rem; margin: 0; color: var(--lp-text-muted) !important; font-family: var(--font-body); letter-spacing: 0.02em; font-weight: 500; }
         .lp-navbar .brand { text-decoration: none; display: flex; align-items: center; gap: 14px; }
         .lp-navbar .brand img { width: 40px; height: 40px; object-fit: contain; }
         .lp-navbar .nav-inner { display: flex; align-items: center; justify-content: space-between; }
@@ -207,7 +207,7 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
                 <img src="<?php echo $basePath; ?>/images/logo.png" alt="Logo">
                 <div class="brand-text">
                     <h1>Faculty of Engineering & Technology</h1>
-                    <p>University of Sindh</p>
+                    <p>University of Sindh, Jamshoro</p>
                 </div>
             </a>
             <div class="nav-actions">

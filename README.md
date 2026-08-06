@@ -1,65 +1,95 @@
-# 🎓 FYP Management Portal
+<div align="center">
+  <img src="https://raw.githubusercontent.com/faheemcodes/fyp-management/main/public/images/logo.png" alt="FYP Management Logo" width="120" />
+  <h1>🎓 FYP Management Portal</h1>
+  <p><strong>A Modern, Unified Ecosystem for Academic Project Management</strong></p>
+  <p>
+    <img src="https://img.shields.io/badge/Status-Active-success.svg?style=for-the-badge" alt="Status" />
+    <img src="https://img.shields.io/badge/UI-Glassmorphism-blueviolet.svg?style=for-the-badge" alt="UI Style" />
+    <img src="https://img.shields.io/badge/Features-AI%20Chatbot-00C7B7.svg?style=for-the-badge" alt="AI Features" />
+    <img src="https://img.shields.io/badge/PHP-8.1+-777BB4.svg?style=for-the-badge&logo=php&logoColor=white" alt="PHP Version" />
+  </p>
+</div>
+
+<br />
 
 Welcome to the **FYP (Final Year Project) Management Portal**! This is a state-of-the-art, beautifully designed management ecosystem built specifically to streamline the workflow between students, supervisors, coordinators, and Heads of Departments (HOD) in universities. 
 
-No more scattered emails, lost files, or messy spreadsheets. This platform handles project proposals, evaluations, deadlines, chat functionality, and AI-assisted chatbot interactions—all in one sleek, modern interface.
+No more scattered emails, lost files, or messy spreadsheets. This platform handles project proposals, evaluations, deadlines, chat functionality, and AI-assisted interactions—all in one sleek, modern interface.
 
 ---
 
-## ✨ Key Features
+## ✨ Core Philosophy & UI
 
-- **Multi-Role Dashboards:** Unique, tailored experiences for Students, Supervisors, Coordinators, Committees, and HODs.
-- **Project Lifecycle Management:** Complete tracking from group formation and project proposal submissions to final grading and evaluations.
-- **Smart Chat System:** Real-time messaging between students and their supervisors.
-- **AI Chatbot Assistant:** Integrated chatbot widget for students to get instant answers to their FYP-related queries.
-- **Automated Evaluations:** Streamlined grading sheets and rubrics for committees and external evaluators.
-- **Modern UI/UX:** A stunning, responsive design with glassmorphism effects, dynamic modals, and smooth animations.
+The portal is designed with a **Premium, Modern UI/UX** aesthetic. It relies on minimalist hybrid layouts, sharp outer edges, rounded inner elements, frosted-glass effects (glassmorphism), deep vibrant colors, and smooth micro-animations. It automatically supports both **Light** and **Dark Mode**, ensuring optimal readability in any environment.
 
 ---
 
-## 🚀 Quick Setup & Installation
+## 💻 Technology Stack
 
-Getting the portal up and running is incredibly easy. 
-
-### Prerequisites
-Before you start, make sure you have the following installed on your machine:
-- **PHP** (v8.1 or higher)
-- **Composer** (PHP dependency manager)
-- **MySQL / MariaDB** (via XAMPP, WAMP, or standalone)
-- **Git** (for version control)
-
-### Step-by-Step Installation
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/faheemcodes/fyp-management.git
-   cd fyp-management
-   ```
-
-2. **Automated Setup (Windows):**
-   Simply double-click the `setup.bat` file in the main folder!
-   *This will automatically check for Composer and install all the necessary PHP dependencies required by the project.*
-
-3. **Database Configuration:**
-   - Open XAMPP/WAMP and start **Apache** and **MySQL**.
-   - Import the `schema.sql` file into your MySQL database using phpMyAdmin (create a database named `fyp_management`).
-   - Copy `config/database.example.php` to `config/database.php` and update it with your actual MySQL credentials if they are different from the defaults.
-
-4. **Email Configuration (Optional):**
-   - Copy `config/mail.example.php` to `config/mail.php`.
-   - Add your SMTP credentials (like Gmail App Passwords) if you want the system to send automated emails (e.g., password resets).
-
-5. **Run the Live Server:**
-   You can serve the application instantly using PHP's built-in server. Open your command prompt and run:
-   ```bash
-   php -S 0.0.0.0:8000 -t public
-   ```
-   *Your portal is now live at **http://localhost:8000**! Because we used `0.0.0.0`, you can even access it on your mobile phone by typing your computer's local IP address (e.g., `http://192.168.x.x:8000`).*
+* **Backend Environment:** PHP 8.x (Custom MVC Routing Architecture)
+* **Database Engine:** MySQL / MariaDB (PDO Prepared Statements)
+* **Frontend Structure:** HTML5 & Vanilla JavaScript
+* **Styling Framework:** Vanilla CSS (CSS Variables for Theming) + Bootstrap 5 Grid System
+* **Third-Party Integrations:** PHPMailer (SMTP), AOS (Animate on Scroll)
 
 ---
 
-## 🔒 Security First
+## 👥 Role-Based Capabilities
 
-We take security seriously. All sensitive configuration files (like your database credentials and SMTP passwords) are protected and ignored by Git. We provide `.example.php` files so the project structure remains intact without compromising your private credentials on GitHub. 
+The ecosystem is built around 5 distinct roles, each receiving a fully customized dashboard tailored to their specific needs.
 
-*Designed and engineered with ❤️ for academia.*
+### 🧑‍🎓 1. Students
+* **Project Proposals:** Form groups, submit detailed project proposals, and track their real-time approval status (Pending ➔ Supervisor Review ➔ Committee Review ➔ Accepted).
+* **AI Assistance:** Chat with an integrated, context-aware AI Chatbot right from the dashboard to get instant help regarding project guidelines, deadlines, and formatting.
+* **Direct Communication:** Securely message their assigned Supervisor through a built-in real-time chat interface.
+* **Document Management:** Upload project reports, presentations, and code repositories directly to their portal.
+
+### 👨‍🏫 2. Supervisors
+* **Proposal Review:** Accept or reject student project proposals with detailed feedback and revision requests.
+* **Mentorship Chat:** Communicate directly with all their assigned project groups in dedicated chat rooms.
+* **Progress Tracking:** Monitor the weekly and monthly progress of supervised groups.
+* **Grading Access:** Submit mid-term and final-term grades for their specific supervisees.
+
+### 📋 3. Department Committee
+* **Evaluation Management:** View all approved projects and conduct structured evaluations using predefined rubrics.
+* **Digital Grading Sheets:** Input marks digitally during defense presentations, automatically generating comprehensive evaluation reports.
+* **Bulk Processing:** Download/export printable grading sheets for physical record keeping.
+* **Final Approvals:** Provide the second layer of proposal vetting after supervisor acceptance.
+
+### ⚙️ 4. FYP Coordinators (Admin)
+* **User Management:** Approve, verify, or reject new student registrations to ensure only authorized university students access the portal. Automated email notifications are sent upon approval/rejection.
+* **Global Announcements:** Post critical deadlines, guidelines, and updates to the central Notice Board, visible to all users.
+* **External Assessment:** Generate and assign external assessment links for guest examiners.
+* **System Oversight:** Maintain a bird's-eye view of all projects, resolving deadlocks and managing departmental timelines.
+
+### 👑 5. Head of Department (HOD)
+* **Analytics Dashboard:** View statistical breakdowns of project domains, pass/fail rates, and supervisor loads.
+* **Executive Approval:** Final sign-off on contentious projects or grade disputes.
+
+---
+
+## 🛠️ Advanced Functional Features
+
+| Feature | Description |
+| :--- | :--- |
+| **Real-Time Notification System** | Instant alerts for proposal updates, new chat messages, and impending deadlines. |
+| **Integrated SMTP Mailer** | Automated email dispatch for account verification, password resets, and Contact Us queries. |
+| **AI Chatbot Engine** | A floating AI assistant that can answer FAQs, summarize rules, and guide students, reducing the manual support load on coordinators. |
+| **Responsive Mobile Layouts** | Flawless rendering on mobile devices, ensuring students and faculty can manage projects on the go. |
+| **Dynamic Notice Board** | A beautiful masonry-grid notice board for broadcasting departmental alerts with attached files and links. |
+
+---
+
+## 🔒 Security Standards
+
+We take security seriously in academic software. The platform implements the following protocols:
+* **Anti-CSRF Tokens:** All state-changing forms and AJAX requests are validated against unique session CSRF tokens.
+* **XSS Prevention:** Strict HTML sanitization on all user-submitted text and outputs.
+* **SQL Injection Immunity:** 100% reliance on PDO Prepared Statements for database interactions.
+* **Secure Sessions:** Regenerated session IDs upon login to prevent session fixation attacks.
+
+---
+
+<div align="center">
+  <i>Designed and engineered with ❤️ for academia. Elevating the standard of university project management.</i>
+</div>

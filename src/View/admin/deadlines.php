@@ -52,8 +52,14 @@
 <div class="row g-4">
     <div class="col-lg-5">
         <div class="glass-panel h-100">
-            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
-                <h6 class="fw-bold text-dark m-0">Set / Update Stage Deadline</h6>
+            <div class="border-bottom p-3 rounded-top d-flex align-items-center gap-3">
+                <div class="rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; background: rgba(59,130,246,0.1); color: #3b82f6;">
+                    <i class="bi bi-calendar-plus fs-5"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold text-dark m-0" style="font-size: 0.95rem; letter-spacing: -0.01em;">Update Stage Deadline</h6>
+                    <p class="text-muted m-0" style="font-size: 0.75rem;">Define a new deadline for a project stage</p>
+                </div>
             </div>
             <div class="p-4">
                 <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/deadlines" method="POST">
@@ -68,18 +74,12 @@
                         </select>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="deadline_date" class="form-label small fw-semibold text-secondary">Deadline Date & Time</label>
                         <input type="datetime-local" class="form-control premium-input bg-light" id="deadline_date" name="deadline_date" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="status" class="form-label small fw-semibold text-secondary">Visibility Status</label>
-                        <select class="form-select bg-light" id="status" name="status" required>
-                            <option value="Active">Active (Publish to Students)</option>
-                            <option value="Inactive" selected>Inactive (Hidden/Unpublished)</option>
-                        </select>
-                    </div>
+                    <input type="hidden" name="status" value="Active">
 
                     <button type="submit" class="btn-premium w-100 rounded-pill mt-2">Update Deadline</button>
                 
@@ -90,11 +90,17 @@
     </div>
 
     <div class="col-lg-7">
-        <div class="glass-panel h-100">
-            <div class="border-bottom p-3 bg-light rounded-top" style="border-radius: 16px 16px 0 0;">
-                <h6 class="fw-bold text-dark m-0">Current Timeline Deadlines</h6>
+        <div class="page-section h-100">
+            <div class="page-section-header border-bottom p-3 rounded-top d-flex align-items-center gap-3">
+                <div class="rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; background: rgba(16,185,129,0.1); color: #10b981;">
+                    <i class="bi bi-calendar3 fs-5"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold text-dark m-0" style="font-size: 0.95rem; letter-spacing: -0.01em;">Current Timeline Deadlines</h6>
+                    <p class="text-muted m-0" style="font-size: 0.75rem;">View and manage existing project deadlines</p>
+                </div>
             </div>
-            <div class="table-responsive p-3">
+            <div class="table-responsive">
                 <table class="table premium-table m-0">
                     <thead>
                         <tr>

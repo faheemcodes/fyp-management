@@ -102,7 +102,7 @@ html.dark-theme, body.dark-theme {
     <p class="mb-1" style="color: #333; font-size: 1.1rem;">FYP Management System - University of Sindh</p>
     <p class="mb-0" style="color: #666; font-size: 0.9rem;">Generated on <?php echo date('F j, Y'); ?></p>
 </div>
-<div class="glass-panel mb-4">
+<div class="page-section">
     <div class="border-bottom p-3 bg-light rounded-top d-print-none" style="border-radius: 16px 16px 0 0;">
         <h6 class="fw-bold text-dark m-0">Cumulative Final Grading Report</h6>
     </div>

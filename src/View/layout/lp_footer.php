@@ -19,9 +19,10 @@
 }
 .footer { 
     background: var(--lp-bg-alt); 
-    padding: 20px 0 40px; 
+    padding: 40px 0; 
     position: relative;
     overflow: hidden;
+    border-top: 1px solid var(--lp-border);
 }
 .footer h6 { 
     font-size: 1.1rem; 
@@ -85,25 +86,36 @@
     .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
 }
 .dev-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: inline-block;
     padding: 8px 20px;
-    background: var(--lp-bg);
-    border: 1px solid var(--lp-text);
+    background: rgba(16, 185, 129, 0.08);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border-radius: 50px;
     font-weight: normal;
+    color: var(--lp-text);
+    text-align: center;
+}
+:root[data-theme="dark"] .dev-badge {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+.dev-link {
+    color: var(--lp-accent, #10b981);
+    text-decoration: none;
+    position: relative;
+    font-weight: 600;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+.dev-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
     color: var(--lp-text);
 }
 </style>
 
 <!-- FOOTER -->
 <div class="footer-wrapper">
-    <div class="footer-wave">
-    <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-        <path class="wave-fill" d="M0,30 C350,110 850,-10 1440,60 L1440,100 L0,100 Z"></path>
-    </svg>
-</div>
+
 <footer class="footer">
     <div class="container">
         <div class="row g-5">
@@ -135,7 +147,7 @@
                     </li>
                     <li>
                         <i class="bi bi-telephone footer-contact-icon"></i>
-                        <a href="tel:+923378001160">+92 337-8001160</a>
+                        <span>+92 337-8001160</span>
                     </li>
                     <li>
                         <i class="bi bi-globe footer-contact-icon"></i>
@@ -150,7 +162,7 @@
             </div>
             <div>
                 <div class="dev-badge">
-                    Developed by <strong>Faheem Ahmed, Akash & Kamran</strong>
+                    Developed by <strong><a href="https://www.linkedin.com/in/mr-faheem/" target="_blank" class="dev-link">Faheem Ahmed</a>, <a href="https://www.linkedin.com/in/akash-kumar-65463a25b/" target="_blank" class="dev-link">Akash Kumar</a> & <a href="https://www.linkedin.com/in/kamran-memon-4b1baa364/" target="_blank" class="dev-link">Kamran</a></strong>
                 </div>
             </div>
         </div>

@@ -18,9 +18,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
-<div class="glass-panel p-4 mb-4" style="overflow: visible !important">
+<div class="page-section">
     <!-- Filters and Search Controls -->
-    <div class="mb-4">
+    <div class="page-section-header">
         <div class="premium-filter-group w-100">
             <!-- Search Input -->
             <div class="flex-grow-1 d-flex align-items-center px-3">
@@ -84,7 +84,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             $statusText = $percentage >= 100 ? 'Full' : 'Available';
                         ?>
                         <tr data-department="<?php echo htmlspecialchars($sup['department'] ?? ''); ?>" data-status="<?php echo htmlspecialchars($statusText); ?>">
-                            <td class="ps-4 py-3 fw-bold text-dark">
+                            <td class="ps-4 py-3 fw-medium text-dark">
                                 <?php echo htmlspecialchars($sup['name']); ?>
                             </td>
                             <td class="py-3 text-muted" style="font-size: 0.9rem">
@@ -99,7 +99,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                                 </div>
                             </td>
                             <td class="py-3 text-center">
-                                <span class="fw-bold text-<?php echo $statusColor; ?> fs-5"><?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?></span>
+                                <span class="badge bg-<?php echo $statusColor; ?> bg-opacity-10 text-<?php echo $statusColor; ?> border border-<?php echo $statusColor; ?> border-opacity-25" style="font-family: monospace; font-size: 1.1rem; padding: 6px 12px; font-weight: 700;">
+                                    <?php echo htmlspecialchars((string)($remaining), ENT_QUOTES, 'UTF-8'); ?>
+                                </span>
                             </td>
                             <td class="pe-4 py-3 text-end">
                                 <span class="premium-badge <?php echo $statusColor; ?>">

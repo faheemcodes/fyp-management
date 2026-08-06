@@ -790,7 +790,10 @@
                                  data-audience="<?php echo htmlspecialchars($notice['target_audience'] ?? 'All', ENT_QUOTES, 'UTF-8'); ?>" 
                                  data-body="<?php echo htmlspecialchars($notice['body'], ENT_QUOTES, 'UTF-8'); ?>" 
                                  data-date="<?php echo date('M d, Y', strtotime($notice['notice_date'])); ?>"
-                                 data-dept="<?php echo htmlspecialchars($notice['department'] ?? 'General', ENT_QUOTES, 'UTF-8'); ?>">
+                                 data-dept="<?php echo htmlspecialchars($notice['department'] ?? 'General', ENT_QUOTES, 'UTF-8'); ?>"
+                                 data-ref_no="<?php echo htmlspecialchars($notice['ref_no'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?>"
+                                 data-coord-name="<?php echo htmlspecialchars($notice['coord_name'] ?? 'Coordinator', ENT_QUOTES, 'UTF-8'); ?>"
+                                 data-hod-name="<?php echo htmlspecialchars($notice['hod_name'] ?? 'Head of Department', ENT_QUOTES, 'UTF-8'); ?>">
                                 <div class="item-info">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6><?php echo htmlspecialchars($notice['subject']); ?></h6>
@@ -887,7 +890,7 @@
         </div>
         
         <div class="timeline-grid">
-            <div class="timeline-card tl-style-green" data-aos="flip-left" data-aos-delay="100">
+            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
@@ -896,7 +899,7 @@
                 <p>Form a group, brainstorm innovative ideas, and submit your initial project proposal for approval.</p>
             </div>
             
-            <div class="timeline-card tl-style-grey" data-aos="flip-left" data-aos-delay="200">
+            <div class="timeline-card tl-style-grey" data-aos="fade-up" data-aos-duration="800" data-aos-delay="250">
                 <div class="card-pill">Phase 2</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-person-badge"></i></div>
@@ -905,7 +908,7 @@
                 <p>Get assigned to an expert faculty member who will guide and mentor your project development.</p>
             </div>
 
-            <div class="timeline-card tl-style-grey" data-aos="flip-left" data-aos-delay="300">
+            <div class="timeline-card tl-style-grey" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
                 <div class="card-pill">Phase 3</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-code-slash"></i></div>
@@ -914,7 +917,7 @@
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
-            <div class="timeline-card tl-style-green" data-aos="flip-left" data-aos-delay="400">
+            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
                 <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
@@ -962,21 +965,70 @@
 
 <!-- Notice Modal -->
 
-<div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border-radius: 16px;border: none;box-shadow: 0 10px 30px rgba(0,0,0,0.1);background: var(--lp-card)">
-            <div class="modal-header" style="border-bottom: 1px solid var(--lp-border);padding: 24px">
-                <h5 class="modal-title fw-bold" id="noticeModalLabel" style="color: var(--lp-text)">Notice Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="padding: 32px 24px">
-                <h4 id="modalNoticeSubject" class="fw-bold mb-4" style="color: var(--lp-text)"></h4>
-                <div id="modalNoticeBody" class="notice-body-content mb-4" style="color: var(--lp-text);line-height: 1.8;white-space: pre-wrap;font-size: 0.95rem">
-                </div>
-                <div class="d-flex flex-wrap align-items-center border-top pt-3 mt-2 gap-3" style="border-color: var(--lp-border) !important">
-                    <span id="modalNoticeDept" class="badge px-3 py-2 rounded-pill" style="background-color: var(--lp-border);color: var(--lp-text)"></span>
-                    <div class="small" style="color: var(--lp-text);opacity: 0.7">
-                        <i class="bi bi-calendar3 me-1"></i> Published on <span id="modalNoticeDate"></span>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<div class="modal fade" id="noticeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl notice-modal-dialog">
+        <div class="modal-content border-0 bg-transparent shadow-none">
+            <div class="modal-body p-0 d-flex justify-content-center position-relative">
+                
+                <div class="letterhead-container w-100" style="background: #fdfcfb; max-width: 820px; padding: 60px 70px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-radius: 8px; position: relative; min-height: 1060px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; font-family: 'Lora', Georgia, serif; color: #1e293b; text-align: left;">
+                    
+                    <button type="button" class="btn-close shadow-sm position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 25px; right: 25px; z-index: 10; background-color: rgba(0,0,0,0.05); border-radius: 50%; padding: 0.8rem; filter: none !important; opacity: 0.7;"></button>
+
+                    <!-- Watermark -->
+                    <div class="watermark" style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 380px; height: 380px; opacity: 0.035; pointer-events: none; z-index: 0;">
+                        <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Watermark" style="width: 100%;height: 100%;object-fit: contain;filter: grayscale(100%)">
+                    </div>
+
+                    <div class="letterhead-content" style="position: relative; z-index: 1;">
+                        <div class="header-logo-section" style="border-bottom: 3px double #1e293b; padding-bottom: 20px; margin-bottom: 35px; display: flex; align-items: center; justify-content: center; gap: 20px;">
+                            <img src="<?php echo $basePath; ?>/images/logo.png" alt="FET Logo" width="80" height="80" style="object-fit: contain">
+                            <div class="header-text" style="text-align: left;">
+                                <h3 class="uni-title m-0" style="font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #0f172a; line-height: 1.2;">University of Sindh</h3>
+                                <h5 class="fac-title m-0" style="font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #334155; margin-top: 3px;">Faculty of Engineering & Technology</h5>
+                                <h6 class="dept-title m-0" id="modalNoticeDept" style="font-family: 'Lora', Georgia, serif; font-size: 1.05rem; font-weight: 600; color: #475569; margin-top: 3px;">Department of </h6>
+                                <small class="text-muted" style="font-size: 0.78rem;display: block;margin-top: 3px;font-family: sans-serif;letter-spacing: 0.3px">Jamshoro, Sindh, Pakistan</small>
+                            </div>
+                        </div>
+
+                        <div class="meta-section d-flex justify-content-between align-items-center" style="font-size: 0.95rem; margin-bottom: 40px; color: #334155; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
+                            <div>
+                                <span class="fw-bold">Ref No:</span> <span id="modalNoticeRef" style="font-family: monospace; font-size: 1.05rem;"></span>
+                            </div>
+                            <div>
+                                <span class="fw-bold">Date:</span> <span id="modalNoticeDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="subject-line" style="font-size: 1rem; font-weight: bold; margin-bottom: 20px; color: #0f172a; border-left: 3px solid #1e3a8a; padding-left: 12px;">
+                            SUBJECT: <span id="modalNoticeSubject"></span>
+                        </div>
+
+                        <div class="body-content" id="modalNoticeBody" style="font-size: 0.95rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 60px; color: #1e293b;">
+                        </div>
+                    </div>
+
+                    <div class="signatures-section d-flex justify-content-between align-items-end" style="position: relative; z-index: 1; margin-top: auto; padding-top: 50px;">
+                        
+                        <div class="signature-box" style="position: relative; display: inline-block; text-align: left;">
+                            <div id="modalNoticeCoordSig" class="signature-cursive" style="font-family: 'Great Vibes', cursive; font-size: 2.1rem; color: #047857; position: absolute; top: -38px; left: 20px; transform: rotate(-3deg); opacity: 0.9; pointer-events: none; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(29, 78, 216, 0.15);"></div>
+                            <div class="signature-line" style="border-top: 1.5px solid #0f172a; width: 230px; padding-top: 8px; font-size: 0.9rem; font-weight: bold; color: #0f172a;">
+                                <div class="small mb-1" id="modalNoticeCoordName"></div>
+                                <div class="sign-title" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; color: #475569;">FYP Coordinator</div>
+                                <div class="text-muted x-small" style="font-size: 0.75rem; font-family: sans-serif;">Dept. of <span id="modalNoticeCoordDept"></span></div>
+                            </div>
+                        </div>
+
+                        <div class="signature-box" style="position: relative; display: inline-block; text-align: left;">
+                            <div id="modalNoticeHodSig" class="signature-cursive" style="font-family: 'Great Vibes', cursive; font-size: 2.1rem; color: #047857; position: absolute; top: -38px; left: 20px; transform: rotate(-3deg); opacity: 0.9; pointer-events: none; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(29, 78, 216, 0.15);"></div>
+                            <div class="signature-line" style="border-top: 1.5px solid #0f172a; width: 230px; padding-top: 8px; font-size: 0.9rem; font-weight: bold; color: #0f172a;">
+                                <div class="small mb-1" id="modalNoticeHodName"></div>
+                                <div class="sign-title" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; color: #475569;">Chairperson</div>
+                                <div class="text-muted x-small" style="font-size: 0.75rem; font-family: sans-serif;">Dept. of <span id="modalNoticeHodDept"></span></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -991,15 +1043,24 @@ document.addEventListener('DOMContentLoaded', function() {
         noticeModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var subject = button.getAttribute('data-subject');
-            var audience = button.getAttribute('data-audience');
             var body = button.getAttribute('data-body');
             var date = button.getAttribute('data-date');
             var dept = button.getAttribute('data-dept');
+            var ref_no = button.getAttribute('data-ref_no');
+            var coord_name = button.getAttribute('data-coord-name');
+            var hod_name = button.getAttribute('data-hod-name');
             
             noticeModal.querySelector('#modalNoticeSubject').textContent = subject;
-            noticeModal.querySelector('#modalNoticeDept').textContent = dept;
+            noticeModal.querySelector('#modalNoticeDept').textContent = 'Department of ' + dept;
+            noticeModal.querySelector('#modalNoticeCoordDept').textContent = dept;
+            noticeModal.querySelector('#modalNoticeHodDept').textContent = dept;
             noticeModal.querySelector('#modalNoticeDate').textContent = date;
+            noticeModal.querySelector('#modalNoticeRef').textContent = ref_no;
             noticeModal.querySelector('#modalNoticeBody').textContent = body;
+            noticeModal.querySelector('#modalNoticeCoordSig').textContent = coord_name;
+            noticeModal.querySelector('#modalNoticeCoordName').textContent = coord_name;
+            noticeModal.querySelector('#modalNoticeHodSig').textContent = hod_name;
+            noticeModal.querySelector('#modalNoticeHodName').textContent = hod_name;
         });
     }
 });
