@@ -873,12 +873,13 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 if (data.fileUrl) {
                     if (data.fileType && data.fileType.startsWith('image/')) {
                         fileContent = `
-                        <div class="file-img-wrap mb-1">
-                            <a href="${data.fileUrl}" target="_blank" style="text-decoration:none">
-                                <img src="${data.fileUrl}" alt="${data.fileName || 'Image'}" loading="lazy">
-                                <div class="file-img-overlay">
-                                    <i class="bi bi-arrows-fullscreen"></i>
-                                </div>
+                        <div class="file-img-wrap mb-1" style="position: relative; cursor: pointer;" onclick="openLightbox('${data.fileUrl}', '${data.fileName || 'image'}')">
+                            <img src="${data.fileUrl}" alt="${data.fileName || 'Image'}" loading="lazy" style="display: block; width: 100%;">
+                            <div class="file-img-overlay">
+                                <i class="bi bi-arrows-fullscreen"></i>
+                            </div>
+                            <a href="${data.fileUrl}" download="${data.fileName || 'image'}" class="btn btn-dark btn-sm position-absolute" style="top: 5px; right: 5px; z-index: 10; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; opacity: 0.7; transition: opacity 0.2s; text-decoration: none;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" title="Download Image" onclick="event.stopPropagation()">
+                                <i class="bi bi-download" style="font-size: 0.85rem;"></i>
                             </a>
                         </div>`;
                     } else {
@@ -1234,3 +1235,521 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         }
     });
 </script>
+
+
+
+
+
+
+
+
+
+
+<!-- Full Screen Image Gallery Modal -->
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true" style="backdrop-filter: blur(12px);">
+    <div class="modal-dialog modal-fullscreen m-0" style="width: 100vw; height: 100vh; overflow: hidden;">
+        <div class="modal-content gallery-modal-content" style="border: none; position: relative; height: 100vh; width: 100vw; overflow: hidden;">
+            
+            <!-- Top Controls (Premium Frosted) -->
+            <div class="gallery-top-controls" style="position: absolute; top: 25px; right: 30px; z-index: 1060; display: flex; gap: 12px;">
+                <button type="button" class="gallery-icon-btn" id="lightboxZoomOutBtn" title="Zoom Out" onclick="lightboxZoomOut()">
+                    <i class="bi bi-zoom-out"></i>
+                </button>
+                <button type="button" class="gallery-icon-btn" id="lightboxZoomInBtn" title="Zoom In" onclick="lightboxZoomIn()">
+                    <i class="bi bi-zoom-in"></i>
+                </button>
+                <a id="lightboxDownloadBtn" href="#" download class="gallery-icon-btn" title="Download Image">
+                    <i class="bi bi-download"></i>
+                </a>
+                <button type="button" class="gallery-icon-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Navigation Arrows -->
+            <button type="button" class="gallery-nav-btn prev" onclick="lightboxPrev()" id="lightboxPrevBtn">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button type="button" class="gallery-nav-btn next" onclick="lightboxNext()" id="lightboxNextBtn">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <!-- Main Image Viewport -->
+            <div class="modal-body d-flex flex-column p-0" style="height: 100vh; width: 100vw; overflow: hidden; background: transparent;">
+                
+                <div id="galleryMainViewport" class="flex-grow-1 d-flex align-items-center justify-content-center" style="cursor: default; overflow: hidden; height: calc(100vh - 100px);" onclick="if(event.target === this) bootstrap.Modal.getInstance(document.getElementById('imageLightboxModal')).hide()">
+                    <img id="lightboxImage" src="" alt="Gallery Image" style="max-width: 90vw; max-height: 80vh; object-fit: contain; box-shadow: 0 30px 80px rgba(0,0,0,0.7); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); user-select: none;">
+                </div>
+                
+                <!-- Bottom Thumbnails Strip Wrapper -->
+                <div class="w-100 d-flex justify-content-center align-items-center" id="lightboxThumbnailsWrapper">
+                    <div id="lightboxThumbnails" class="d-flex align-items-center gap-3" style="height: 100px; max-width: 100%; padding: 0 30px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth;">
+                        <!-- Thumbnails injected via JS -->
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* LIGHT MODE DEFAULTS */
+.gallery-modal-content {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.gallery-icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.gallery-icon-btn:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+    transform: translateY(-2px) scale(1.05);
+    border-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+.gallery-icon-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.95);
+}
+.gallery-icon-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1060;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #000;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    opacity: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.modal-content:hover .gallery-nav-btn { opacity: 1; }
+.gallery-nav-btn:hover:not(:disabled) { 
+    background: rgba(0, 0, 0, 0.1); 
+    transform: translateY(-50%) scale(1.1); 
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.gallery-nav-btn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
+}
+.gallery-nav-btn.prev { left: 30px; }
+.gallery-nav-btn.next { right: 30px; }
+.gallery-nav-btn:disabled { opacity: 0 !important; cursor: default; pointer-events: none; }
+
+#lightboxThumbnailsWrapper {
+    background: linear-gradient(to top, rgba(255,255,255,0.8), transparent);
+}
+#lightboxThumbnails::-webkit-scrollbar { height: 6px; }
+#lightboxThumbnails::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.3); border-radius: 3px; }
+#lightboxThumbnails::-webkit-scrollbar-track { background: transparent; }
+
+.lightbox-thumb-item {
+    height: 65px;
+    width: 65px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.35;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 2px solid transparent;
+    transform: scale(0.95);
+}
+.lightbox-thumb-item:hover {
+    opacity: 0.8;
+    transform: scale(1);
+}
+.lightbox-thumb-item.active {
+    opacity: 1;
+    border-color: #000;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+}
+.lightbox-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* DARK MODE OVERRIDES */
+html.dark-theme .gallery-modal-content {
+    background-color: rgba(10, 15, 30, 0.95) !important;
+}
+
+html.dark-theme .gallery-icon-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+html.dark-theme .gallery-icon-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+html.dark-theme .gallery-icon-btn:disabled {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+html.dark-theme .gallery-nav-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+html.dark-theme .gallery-nav-btn:hover:not(:disabled) { 
+    background: rgba(255, 255, 255, 0.25); 
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+html.dark-theme #lightboxThumbnailsWrapper {
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+html.dark-theme #lightboxThumbnails::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); }
+
+html.dark-theme .lightbox-thumb-item.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    .gallery-nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        opacity: 1 !important; /* Always show since mobile has no hover */
+    }
+    .gallery-nav-btn.prev { left: 10px; }
+    .gallery-nav-btn.next { right: 10px; }
+    
+    .gallery-icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    .gallery-top-controls {
+        top: 15px !important;
+        right: 15px !important;
+        gap: 8px !important;
+    }
+    
+    #lightboxImage {
+        max-width: 100vw !important;
+        max-height: 70vh !important;
+    }
+    
+    .lightbox-thumb-item {
+        width: 50px;
+        height: 50px;
+    }
+    #lightboxThumbnails {
+        height: 80px !important;
+        padding: 0 15px !important;
+    }
+}
+</style>
+
+<script>
+let galleryImages = [];
+let currentGalleryIndex = 0;
+let currentZoom = 1;
+
+// Drag state
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let translateX = 0;
+let translateY = 0;
+
+function openLightbox(url, name) {
+    galleryImages = [];
+    
+    const imageElements = document.querySelectorAll('.file-img-wrap img:not(#lightboxImage):not(.lightbox-thumb-item img)');
+    
+    imageElements.forEach((img, index) => {
+        const src = img.getAttribute('src');
+        const alt = img.getAttribute('alt') || 'Image';
+        if (!galleryImages.find(g => g.src === src)) {
+            galleryImages.push({ src, alt });
+        }
+    });
+
+    currentGalleryIndex = galleryImages.findIndex(g => g.src === url);
+    if (currentGalleryIndex === -1) {
+        galleryImages.push({ src: url, alt: name });
+        currentGalleryIndex = galleryImages.length - 1;
+    }
+
+    updateGalleryUI();
+    var myModal = new bootstrap.Modal(document.getElementById('imageLightboxModal'));
+    myModal.show();
+}
+
+function updateGalleryUI() {
+    if (galleryImages.length === 0) return;
+    
+    const imgData = galleryImages[currentGalleryIndex];
+    
+    const mainImg = document.getElementById('lightboxImage');
+    mainImg.src = imgData.src;
+    
+    // Reset transforms on image switch
+    currentZoom = 1;
+    translateX = 0;
+    translateY = 0;
+    applyTransform(true);
+    updateZoomControls();
+    
+    document.getElementById('lightboxDownloadBtn').href = imgData.src;
+    document.getElementById('lightboxDownloadBtn').download = imgData.alt;
+    
+    document.getElementById('lightboxPrevBtn').disabled = (currentGalleryIndex === 0);
+    document.getElementById('lightboxNextBtn').disabled = (currentGalleryIndex === galleryImages.length - 1);
+    
+    const thumbContainer = document.getElementById('lightboxThumbnails');
+    thumbContainer.innerHTML = '';
+    
+    galleryImages.forEach((img, index) => {
+        const thumbDiv = document.createElement('div');
+        thumbDiv.className = 'lightbox-thumb-item ' + (index === currentGalleryIndex ? 'active' : '');
+        thumbDiv.onclick = () => { currentGalleryIndex = index; updateGalleryUI(); };
+        
+        const thumbImg = document.createElement('img');
+        thumbImg.src = img.src;
+        thumbImg.loading = 'lazy';
+        
+        thumbDiv.appendChild(thumbImg);
+        thumbContainer.appendChild(thumbDiv);
+    });
+    
+    setTimeout(() => {
+        const activeThumb = thumbContainer.querySelector('.active');
+        if (activeThumb) {
+            // Scroll just the inner container wrapper
+            const containerCenter = thumbContainer.clientWidth / 2;
+            const thumbCenter = activeThumb.offsetLeft + (activeThumb.clientWidth / 2);
+            thumbContainer.scrollTo({
+                left: thumbCenter - containerCenter,
+                behavior: 'smooth'
+            });
+        }
+    }, 50);
+}
+
+function updateZoomControls() {
+    const zoomOutBtn = document.getElementById('lightboxZoomOutBtn');
+    const zoomInBtn = document.getElementById('lightboxZoomInBtn');
+    
+    zoomOutBtn.disabled = (currentZoom <= 1);
+    zoomInBtn.disabled = (currentZoom >= 2.5); // Max 3 clicks (+0.5 each)
+}
+
+function applyTransform(withTransition = false) {
+    const mainImg = document.getElementById('lightboxImage');
+    if (!mainImg) return;
+    
+    mainImg.style.transition = withTransition ? 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none';
+    mainImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    
+    if (currentZoom <= 1) {
+        mainImg.style.cursor = 'default';
+    } else {
+        mainImg.style.cursor = isDragging ? 'grabbing' : 'grab';
+    }
+}
+
+function lightboxZoomIn() {
+    if (currentZoom < 2.5) {
+        currentZoom = Math.min(currentZoom + 0.5, 2.5);
+        applyTransform(true);
+        updateZoomControls();
+    }
+}
+
+function lightboxZoomOut() {
+    if (currentZoom > 1) {
+        currentZoom = Math.max(currentZoom - 0.5, 1);
+        if (currentZoom === 1) {
+            translateX = 0;
+            translateY = 0;
+        }
+        applyTransform(true);
+        updateZoomControls();
+    }
+}
+
+function lightboxNext() {
+    if (currentGalleryIndex < galleryImages.length - 1) {
+        currentGalleryIndex++;
+        updateGalleryUI();
+    }
+}
+
+function lightboxPrev() {
+    if (currentGalleryIndex > 0) {
+        currentGalleryIndex--;
+        updateGalleryUI();
+    }
+}
+
+
+
+// Global Drag & Pinch Listeners (Touch and Mouse)
+let initialPinchDistance = null;
+let initialPinchZoom = 1;
+
+document.addEventListener('mousedown', (e) => {
+    if (e.target.id === 'lightboxImage' && currentZoom > 1) {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        e.target.style.cursor = 'grabbing';
+        e.preventDefault(); 
+    }
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        applyTransform(false); 
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    if (isDragging) {
+        isDragging = false;
+        applyTransform(false); 
+    }
+});
+
+document.addEventListener('touchstart', (e) => {
+    const mainImg = document.getElementById('lightboxImage');
+    const modal = document.getElementById('imageLightboxModal');
+    
+    // Only intercept if modal is open and we touch the image or its container
+    if (modal && modal.classList.contains('show') && (e.target.id === 'lightboxImage' || e.target.id === 'galleryMainViewport')) {
+        
+        if (e.touches.length === 2) {
+            // Initiate pinch-to-zoom
+            isDragging = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            initialPinchDistance = Math.hypot(dx, dy);
+            initialPinchZoom = currentZoom;
+            e.preventDefault();
+            
+        } else if (e.touches.length === 1 && currentZoom > 1 && e.target.id === 'lightboxImage') {
+            // Initiate drag
+            isDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+            e.preventDefault();
+        }
+    }
+}, {passive: false});
+
+document.addEventListener('touchmove', (e) => {
+    if (initialPinchDistance && e.touches.length === 2) {
+        // Handle pinch-to-zoom
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const newDistance = Math.hypot(dx, dy);
+        
+        const scaleRatio = newDistance / initialPinchDistance;
+        let newZoom = initialPinchZoom * scaleRatio;
+        
+        // Clamp zoom between 1 and 3
+        newZoom = Math.max(1, Math.min(newZoom, 3));
+        currentZoom = newZoom;
+        
+        // Auto-center if zoomed out completely
+        if (currentZoom === 1) {
+            translateX = 0;
+            translateY = 0;
+        }
+        
+        applyTransform(false);
+        updateZoomControls();
+        e.preventDefault();
+        
+    } else if (isDragging && e.touches.length === 1) {
+        // Handle drag
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+        applyTransform(false);
+        e.preventDefault();
+    }
+}, {passive: false});
+
+document.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+        initialPinchDistance = null;
+    }
+    if (e.touches.length === 0 && isDragging) {
+        isDragging = false;
+        applyTransform(false);
+    }
+});
+
+document.addEventListener('touchcancel', (e) => {
+    initialPinchDistance = null;
+    isDragging = false;
+    applyTransform(false);
+});
+
+document.addEventListener('keydown', (e) => {
+
+
+    const modal = document.getElementById('imageLightboxModal');
+    if (modal && modal.classList.contains('show')) {
+        if (e.key === 'ArrowRight') lightboxNext();
+        if (e.key === 'ArrowLeft') lightboxPrev();
+        if (e.key === '=' || e.key === '+') lightboxZoomIn();
+        if (e.key === '-') lightboxZoomOut();
+        if (e.key === 'Escape') bootstrap.Modal.getInstance(modal).hide();
+    }
+});
+</script>
+
+
+
+
+
+
+
+

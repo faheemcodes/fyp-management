@@ -40,7 +40,7 @@
     color: var(--lp-text);
 }
 .footer-links { list-style: none; padding: 0; margin: 0; }
-.footer-links li { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; color: var(--lp-text-muted); font-size: 0.95rem; }
+.footer-links li { margin-bottom: 12px; display: flex; align-items: center; gap: 12px; color: var(--lp-text-muted); font-size: 0.95rem; }
 .footer-links a { 
     color: var(--lp-text-muted); 
     text-decoration: none; 
@@ -48,9 +48,23 @@
     display: inline-flex;
     align-items: center;
 }
+.footer-links a i.hover-arrow {
+    font-size: 0.9rem;
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: translateX(-15px);
+    display: inline-block;
+    color: var(--lp-accent);
+}
 .footer-links a:hover { 
     color: var(--lp-accent); 
-    transform: translateX(5px); 
+}
+.footer-links a:hover i.hover-arrow {
+    opacity: 1;
+    width: 22px;
+    transform: translateX(0);
 }
 .footer-contact-icon {
     color: var(--lp-accent);
@@ -131,11 +145,10 @@
             <div class="col-lg-3 offset-lg-1">
                 <h6>Quick Links</h6>
                 <ul class="footer-links">
-                    <li><a href="<?php echo $basePath; ?>/faculty">Faculty Directory</a></li>
-                    <li><a href="<?php echo $basePath; ?>/contact">Contact Us</a></li>
-                    <li><a href="<?php echo $basePath; ?>/login">Student Login</a></li>
-                    <li><a href="<?php echo $basePath; ?>/register">Registration</a></li>
-                    <li><a href="https://fet.usindh.edu.pk" target="_blank">FET Website</a></li>
+                    <li><a href="<?php echo $basePath; ?>/faculty"><i class="bi bi-arrow-right hover-arrow"></i>Faculty Directory</a></li>
+                    <li><a href="<?php echo $basePath; ?>/contact"><i class="bi bi-arrow-right hover-arrow"></i>Contact Us</a></li>
+                    <li><a href="<?php echo $basePath; ?>/login"><i class="bi bi-arrow-right hover-arrow"></i>Student Login</a></li>
+                    <li><a href="<?php echo $basePath; ?>/register"><i class="bi bi-arrow-right hover-arrow"></i>Registration</a></li>
                 </ul>
             </div>
             <div class="col-lg-3">

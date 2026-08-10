@@ -194,11 +194,16 @@ if ($basePath === '\\' || $basePath === '/') {
 
         .accordion-custom .faq-icon {
             width: 38px; height: 38px; border-radius: 50%; background: var(--lp-text); color: var(--lp-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; margin-left: auto; transition: all 0.3s ease;
+            pointer-events: none;
         }
+        .accordion-custom .faq-icon .icon-open { display: none; }
+        
         .accordion-custom .accordion-button:not(.collapsed) .faq-icon {
             background: transparent; color: var(--lp-text); border: 1px solid var(--lp-border);
-            transform: rotate(45deg);
+            transform: rotate(180deg);
         }
+        .accordion-custom .accordion-button:not(.collapsed) .faq-icon .icon-closed { display: none; }
+        .accordion-custom .accordion-button:not(.collapsed) .faq-icon .icon-open { display: block; }
 
         .accordion-custom .accordion-body { padding: 0 80px 30px 80px; color: var(--lp-text-muted); line-height: 1.7; font-size: 0.95rem; background: transparent; }
         
@@ -389,7 +394,10 @@ if ($basePath === '\\' || $basePath === '/') {
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
                         <span class="faq-num">1</span>
                         How do I register my project group?
-                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                        <span class="faq-icon">
+                            <i class="bi bi-plus icon-closed"></i>
+                            <i class="bi bi-dash icon-open"></i>
+                        </span>
                     </button>
                 </h2>
                 <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
@@ -404,7 +412,10 @@ if ($basePath === '\\' || $basePath === '/') {
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
                         <span class="faq-num">2</span>
                         What happens after I submit a project proposal?
-                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                        <span class="faq-icon">
+                            <i class="bi bi-plus icon-closed"></i>
+                            <i class="bi bi-dash icon-open"></i>
+                        </span>
                     </button>
                 </h2>
                 <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
@@ -419,7 +430,10 @@ if ($basePath === '\\' || $basePath === '/') {
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
                         <span class="faq-num">3</span>
                         How can I keep track of upcoming project deadlines?
-                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                        <span class="faq-icon">
+                            <i class="bi bi-plus icon-closed"></i>
+                            <i class="bi bi-dash icon-open"></i>
+                        </span>
                     </button>
                 </h2>
                 <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
@@ -434,7 +448,10 @@ if ($basePath === '\\' || $basePath === '/') {
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
                         <span class="faq-num">4</span>
                         Can I change my group members after submitting the proposal?
-                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                        <span class="faq-icon">
+                            <i class="bi bi-plus icon-closed"></i>
+                            <i class="bi bi-dash icon-open"></i>
+                        </span>
                     </button>
                 </h2>
                 <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
