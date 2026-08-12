@@ -8,6 +8,11 @@
     <img src="https://img.shields.io/badge/Features-AI%20Chatbot-00C7B7.svg?style=for-the-badge" alt="AI Features" />
     <img src="https://img.shields.io/badge/PHP-8.1+-777BB4.svg?style=for-the-badge&logo=php&logoColor=white" alt="PHP Version" />
   </p>
+  <p>
+    <a href="http://fet-fyp-portal.infinityfree.me">
+      <img src="https://img.shields.io/badge/LIVE_DEMO-Available_Now-FF5722?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+    </a>
+  </p>
 </div>
 
 <br />
