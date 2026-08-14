@@ -1,10 +1,5 @@
 <?php
-// Define custom session save path for portability and isolation across setups
-$sessionPath = __DIR__ . '/../sessions';
-if (!is_dir($sessionPath)) {
-    mkdir($sessionPath, 0700, true);
-}
-session_save_path($sessionPath);
+// Session configuration
 
 // Set session cookie security parameters
 $cookieParams = session_get_cookie_params();
@@ -48,6 +43,13 @@ spl_autoload_register(function ($class) {
     $fileConfig = __DIR__ . '/../config/' . $classPath . '.php';
     if (file_exists($fileConfig)) {
         require_once $fileConfig;
+        return;
+    }
+
+    // Fallback to lowercase for Linux case-sensitivity (e.g. database.php)
+    $fileConfigLower = __DIR__ . '/../config/' . strtolower($classPath) . '.php';
+    if (file_exists($fileConfigLower)) {
+        require_once $fileConfigLower;
         return;
     }
 });
