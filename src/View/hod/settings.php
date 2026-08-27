@@ -25,25 +25,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     border-radius: 10px;
     border: 1px solid var(--border-color);
 }
-.profile-save-footer {
-    position: sticky;
-    bottom: 0;
-    background: var(--card-bg);
-    border-top: 1px solid var(--border-color);
-    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    z-index: 10;
-    backdrop-filter: blur(12px);
-}
-.profile-save-footer .btn {
-    padding: 10px 32px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 10px;
-}
+
 
 /* Alert matching profile.php */
 .profile-alert {
@@ -163,10 +145,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
     
-    <div class="profile-save-footer mt-2">
-            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+    <div class="page-section">
+        <div class="d-flex align-items-center justify-content-end p-3">
+            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" style="padding: 10px 32px; font-weight: 600; border-radius: 10px;">
                 <i class="bi bi-check-circle-fill"></i> Save Settings
             </button>
         </div>
+    </div>
     </div>
 </form>
