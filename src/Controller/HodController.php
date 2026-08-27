@@ -96,8 +96,7 @@ class HodController extends BaseController {
             }
 
             $_SESSION['flash']['success'] = "Department settings updated successfully.";
-            header("Location: " . getBasePath() . "/hod/settings");
-            exit;
+            redirect('/hod/settings');
         }
     }
 
