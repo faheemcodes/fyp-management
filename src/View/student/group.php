@@ -334,7 +334,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                             <div class="col-md-6">
                                 <div class="manage-member-input">
                                     <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
-                                    <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
+                                    <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
                                 </div>
                             </div>
                             <?php endfor; ?>
