@@ -65,7 +65,7 @@ class AdminController extends BaseController {
         $supervisorsList = $db->query("
             SELECT s.user_id, s.name, s.department, 
             (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots,
-            COALESCE(ds.max_supervisor_slots, 5) * 2 as total_max_slots
+            (COALESCE(ds.max_morning_slots, 5) + COALESCE(ds.max_evening_slots, 5)) as total_max_slots
             FROM supervisors s
             LEFT JOIN department_settings ds ON s.department = ds.department
             ORDER BY s.name ASC

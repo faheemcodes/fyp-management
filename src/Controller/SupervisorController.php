@@ -282,10 +282,14 @@ class SupervisorController extends BaseController {
                             $proposalShift = $studentData['shift'] ?? 'Morning';
                             $proposalDept = $studentData['department'] ?? '';
 
-                            $stmtLimit = $db->prepare("SELECT max_supervisor_slots FROM department_settings WHERE department = ?");
+                            $stmtLimit = $db->prepare("SELECT max_morning_slots, max_evening_slots FROM department_settings WHERE department = ?");
                             $stmtLimit->execute([$proposalDept]);
-                            $maxSlots = $stmtLimit->fetchColumn();
-                            if (!$maxSlots) $maxSlots = 5;
+                            $settings = $stmtLimit->fetch();
+                            
+                            $maxSlots = 5;
+                            if ($settings) {
+                                $maxSlots = $proposalShift === 'Evening' ? $settings['max_evening_slots'] : $settings['max_morning_slots'];
+                            }
 
                             $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1 AND stu.shift = ?");
                             $stmtSlots->execute([$_SESSION['user_id'], $proposalShift]);

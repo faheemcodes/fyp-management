@@ -29,12 +29,19 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
     
     <form action="<?php echo $basePath; ?>/hod/settings/update" method="POST">
-        <div class="row align-items-end">
-            <div class="col-md-5">
-                <label class="form-label text-secondary fw5semibold">Max Supervisor Slots (per shift)</label>
+        <div class="row align-items-end mb-3">
+            <div class="col-md-4">
+                <label class="form-label text-secondary fw-semibold">Morning Shift Slots</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-light"><i class="bi bi-people text-muted"></i></span>
-                    <input type="number" name="max_supervisor_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_supervisor_slots'] ?? 5)); ?>" min="1" max="50" required>
+                    <span class="input-group-text bg-light"><i class="bi bi-brightness-high text-warning"></i></span>
+                    <input type="number" name="max_morning_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_morning_slots'] ?? 5)); ?>" min="1" max="50" required>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3 mt-md-0">
+                <label class="form-label text-secondary fw-semibold">Evening Shift Slots</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-moon-stars text-primary"></i></span>
+                    <input type="number" name="max_evening_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_evening_slots'] ?? 5)); ?>" min="1" max="50" required>
                 </div>
             </div>
             <div class="col-md-3 mt-4 mt-md-0">
@@ -47,7 +54,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <i class="bi bi-info-circle-fill text-primary mt-1"></i>
                 <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
                     <strong>Note:</strong> This limit applies to all supervisors in your department. 
-                    The limit is calculated <strong>per-shift</strong>. For example, if you set this to 5, a supervisor can be assigned up to 5 Morning shift projects AND 5 Evening shift projects (10 total).<br><br>
+                    The limits are calculated independently per-shift. For example, if you set Morning to 5 and Evening to 3, a supervisor can handle up to 5 Morning shift projects AND 3 Evening shift projects (8 total).<br><br>
                     Saving this setting will immediately notify all supervisors and students in your department.
                 </p>
             </div>

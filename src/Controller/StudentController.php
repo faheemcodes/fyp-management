@@ -358,10 +358,14 @@ class StudentController extends BaseController {
         $studentDept = $studentDetails['department'] ?? '';
         $studentShift = $studentDetails['shift'] ?? 'Morning';
 
-        $stmtLimit = $db->prepare("SELECT max_supervisor_slots FROM department_settings WHERE department = ?");
+        $stmtLimit = $db->prepare("SELECT max_morning_slots, max_evening_slots FROM department_settings WHERE department = ?");
         $stmtLimit->execute([$studentDept]);
-        $maxSlots = $stmtLimit->fetchColumn();
-        if (!$maxSlots) $maxSlots = 5;
+        $settings = $stmtLimit->fetch();
+        
+        $maxSlots = 5;
+        if ($settings) {
+            $maxSlots = $studentShift === 'Evening' ? $settings['max_evening_slots'] : $settings['max_morning_slots'];
+        }
 
         // Fetch supervisors from same dept who have < $maxSlots approved slots FOR THIS SHIFT and < 25 total proposals
         $currentSupervisorId = $project['supervisor_id'] ?? 0;

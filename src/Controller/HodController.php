@@ -71,14 +71,15 @@ class HodController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
-            $maxSlots = (int)($_POST['max_supervisor_slots'] ?? 5);
+            $maxMorningSlots = (int)($_POST['max_morning_slots'] ?? 5);
+            $maxEveningSlots = (int)($_POST['max_evening_slots'] ?? 5);
 
-            $stmt = $db->prepare("INSERT INTO department_settings (department, max_supervisor_slots) VALUES (?, ?) ON DUPLICATE KEY UPDATE max_supervisor_slots = ?");
-            $stmt->execute([$dept, $maxSlots, $maxSlots]);
+            $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?");
+            $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxMorningSlots, $maxEveningSlots]);
             
             // Notify supervisors of the updated slots
             $title = "Supervisor Slot Limits Updated";
-            $message = "The maximum number of project slots for supervisors in the $dept department has been updated to $maxSlots per shift.";
+            $message = "The maximum number of project slots for supervisors in the $dept department has been updated to $maxMorningSlots (Morning) and $maxEveningSlots (Evening).";
             $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
             $stmtSups->execute([$dept]);
             while ($sup = $stmtSups->fetch()) {
