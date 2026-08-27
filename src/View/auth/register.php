@@ -42,8 +42,6 @@ include __DIR__ . '/../layout/auth_header.php';
                     <select class="form-select" id="role" name="role" required onchange="toggleFields()">
                         <option value="student" <?php echo (!isset($old['role']) || $old['role'] === 'student') ? 'selected' : ''; ?>>Student</option>
                         <option value="supervisor" <?php echo (isset($old['role']) && $old['role'] === 'supervisor') ? 'selected' : ''; ?>>Teacher / Supervisor</option>
-                        <option value="coordinator" <?php echo (isset($old['role']) && $old['role'] === 'coordinator') ? 'selected' : ''; ?>>Coordinator</option>
-                        <option value="committee" <?php echo (isset($old['role']) && $old['role'] === 'committee') ? 'selected' : ''; ?>>Committee Member</option>
                         <option value="hod" <?php echo (isset($old['role']) && $old['role'] === 'hod') ? 'selected' : ''; ?>>HOD</option>
                     </select>
                 </div>
