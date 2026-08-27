@@ -70,7 +70,7 @@
                                     </div>
                                     <?php if (!empty($meeting['location_link'])): ?>
                                         <div class="d-flex align-items-center gap-1 fw-semibold text-primary" style="font-size: 0.8rem;">
-                                            <i class="bi bi-geo-alt-fill"></i>
+                                            <i class="bi <?php echo filter_var($meeting['location_link'], FILTER_VALIDATE_URL) ? 'bi-link-45deg fs-5' : 'bi-geo-alt-fill'; ?>"></i>
                                             <?php if (filter_var($meeting['location_link'], FILTER_VALIDATE_URL)): ?>
                                                 <a href="<?php echo htmlspecialchars($meeting['location_link']); ?>" target="_blank" class="text-decoration-none">Join Link</a>
                                             <?php else: ?>
