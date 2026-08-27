@@ -75,25 +75,61 @@ class HodController extends BaseController {
             $maxEveningSlots = (int)($_POST['max_evening_slots'] ?? 5);
             $maxGroupMembers = (int)($_POST['max_group_members'] ?? 3);
 
+            $stmtOld = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
+            $stmtOld->execute([$dept]);
+            $oldSettings = $stmtOld->fetch();
+            
+            $oldMorning = $oldSettings ? (int)$oldSettings['max_morning_slots'] : 5;
+            $oldEvening = $oldSettings ? (int)$oldSettings['max_evening_slots'] : 5;
+            $oldGroup = $oldSettings ? (int)$oldSettings['max_group_members'] : 3;
+
             $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots, max_group_members) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?, max_group_members = ?");
             $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers]);
             
-            // Notify supervisors of the updated slots
-            $title = "Department Limits Updated";
-            $message = "The maximum project slots for supervisors in $dept have been updated to $maxMorningSlots (Morning) and $maxEveningSlots (Evening). The max student group size is now set to $maxGroupMembers.";
-            $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
-            $stmtSups->execute([$dept]);
-            while ($sup = $stmtSups->fetch()) {
-                $this->addNotification($sup['user_id'], $title, $message);
-            }
-            
-            // Notify students
-            $stuTitle = "Group Limits Updated";
-            $stuMessage = "The maximum number of members allowed in a student project group has been updated to $maxGroupMembers. Supervisor slot capacities have also been updated.";
-            $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
-            $stmtStudents->execute([$dept]);
-            while ($stu = $stmtStudents->fetch()) {
-                $this->addNotification($stu['user_id'], $stuTitle, $stuMessage);
+            $changedMorning = ($oldMorning !== $maxMorningSlots);
+            $changedEvening = ($oldEvening !== $maxEveningSlots);
+            $changedGroup = ($oldGroup !== $maxGroupMembers);
+
+            // Fetch users once if we need to notify
+            if ($changedMorning || $changedEvening || $changedGroup) {
+                $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
+                $stmtSups->execute([$dept]);
+                $supervisors = $stmtSups->fetchAll();
+
+                $stmtStudents = $db->prepare("SELECT user_id, shift FROM students WHERE department = ?");
+                $stmtStudents->execute([$dept]);
+                $students = $stmtStudents->fetchAll();
+
+                if ($changedMorning) {
+                    $title = "Morning Slots Updated";
+                    $msgSup = "Your Morning Shift supervision capacity has been updated to $maxMorningSlots.";
+                    $msgStu = "Supervisor capacities for Morning Shift have been updated to $maxMorningSlots.";
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup); }
+                    foreach ($students as $stu) {
+                        if (($stu['shift'] ?? 'Morning') === 'Morning') {
+                            $this->addNotification($stu['user_id'], $title, $msgStu);
+                        }
+                    }
+                }
+
+                if ($changedEvening) {
+                    $title = "Evening Slots Updated";
+                    $msgSup = "Your Evening Shift supervision capacity has been updated to $maxEveningSlots.";
+                    $msgStu = "Supervisor capacities for Evening Shift have been updated to $maxEveningSlots.";
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup); }
+                    foreach ($students as $stu) {
+                        if (($stu['shift'] ?? '') === 'Evening') {
+                            $this->addNotification($stu['user_id'], $title, $msgStu);
+                        }
+                    }
+                }
+
+                if ($changedGroup) {
+                    $title = "Group Member Limit Updated";
+                    $msg = "The maximum number of members allowed in a student project group has been updated to $maxGroupMembers.";
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msg); }
+                    foreach ($students as $stu) { $this->addNotification($stu['user_id'], $title, $msg); }
+                }
             }
 
             $_SESSION['flash']['success'] = "Department settings updated successfully.";
