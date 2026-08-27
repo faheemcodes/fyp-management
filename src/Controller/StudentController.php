@@ -352,7 +352,7 @@ class StudentController extends BaseController {
             $groupMembers = $stmt->fetchAll();
         }
 
-        // Fetch supervisors who have < 8 approved slots AND < 15 total (pending+approved) proposals, or who are currently selected
+        // Fetch supervisors who have < 8 approved slots AND < 25 total (pending+approved) proposals, or who are currently selected
         $currentSupervisorId = $project['supervisor_id'] ?? 0;
         $stmt = $db->prepare("
             SELECT s.user_id, s.name 
@@ -368,7 +368,7 @@ class StudentController extends BaseController {
                     SELECT COUNT(*) 
                     FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id
                     WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved') AND b.is_active = 1
-                ) < 15
+                ) < 25
             ) OR s.user_id = ?
             ORDER BY s.name ASC
         ");
