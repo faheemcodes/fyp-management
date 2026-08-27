@@ -64,7 +64,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 <tr>
                     <th class="ps-4">Supervisor Name</th>
                     <th>Department</th>
-                    <th class="text-center">Slot Allocation (Current / 10)</th>
+                    <th class="text-center">Slot Allocation</th>
                     <th class="text-center">Remaining Slots</th>
                     <th class="text-end pe-4">Status</th>
                 </tr>
@@ -77,7 +77,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <?php else: ?>
                         <?php foreach($supervisorsList as $sup): 
                             $current = (int)$sup['current_slots'];
-                            $max = 10;
+                            $max = (int)$sup['total_max_slots'];
                             $remaining = $max - $current;
                             $percentage = ($current / $max) * 100;
                             $statusColor = $percentage >= 100 ? 'danger' : ($percentage >= 75 ? 'warning' : 'success');
@@ -95,7 +95,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                                     <div class="progress flex-grow-1" style="height: 6px;max-width: 120px;background: rgba(0,0,0,0.05)">
                                         <div class="progress-bar bg-<?php echo $statusColor; ?>" style="width: <?php echo min(100, $percentage);?>%"></div>
                                     </div>
-                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem;min-width: 20px;text-align: right"><?php echo htmlspecialchars((string)($current), ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="fw-semibold text-dark" style="font-size: 0.85rem;min-width: 40px;text-align: right"><?php echo $current . ' / ' . $max; ?></span>
                                 </div>
                             </td>
                             <td class="py-3 text-center">

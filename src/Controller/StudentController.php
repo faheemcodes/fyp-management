@@ -358,7 +358,12 @@ class StudentController extends BaseController {
         $studentDept = $studentDetails['department'] ?? '';
         $studentShift = $studentDetails['shift'] ?? 'Morning';
 
-        // Fetch supervisors from same dept who have < 5 approved slots FOR THIS SHIFT and < 25 total proposals
+        $stmtLimit = $db->prepare("SELECT max_supervisor_slots FROM department_settings WHERE department = ?");
+        $stmtLimit->execute([$studentDept]);
+        $maxSlots = $stmtLimit->fetchColumn();
+        if (!$maxSlots) $maxSlots = 5;
+
+        // Fetch supervisors from same dept who have < $maxSlots approved slots FOR THIS SHIFT and < 25 total proposals
         $currentSupervisorId = $project['supervisor_id'] ?? 0;
         $stmt = $db->prepare("
             SELECT s.user_id, s.name 
@@ -366,7 +371,7 @@ class StudentController extends BaseController {
             WHERE s.department = ? 
             AND (
                 (
-                    (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1 AND stu.shift = ?) < 5
+                    (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1 AND stu.shift = ?) < ?
                     AND
                     (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status IN ('Pending', 'Approved') AND b.is_active = 1) < 25
                 )
@@ -374,7 +379,7 @@ class StudentController extends BaseController {
             )
             ORDER BY s.name ASC
         ");
-        $stmt->execute([$studentDept, $studentShift, $currentSupervisorId]);
+        $stmt->execute([$studentDept, $studentShift, $maxSlots, $currentSupervisorId]);
         $supervisors = $stmt->fetchAll();
 
         $this->render('student/proposal', [

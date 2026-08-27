@@ -43,12 +43,36 @@ class HodController extends BaseController {
         $stmtNotices->execute([$dept]);
         $recentNotices = $stmtNotices->fetchAll();
 
+        // Get department settings
+        $stmtSettings = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
+        $stmtSettings->execute([$dept]);
+        $settings = $stmtSettings->fetch();
+        if (!$settings) {
+            $settings = ['max_supervisor_slots' => 5];
+        }
+
         $this->render('hod/dashboard', [
             'stats' => $stats,
             'recentSupervisors' => $recentSupervisors,
             'recentCommittee' => $recentCommittee,
-            'recentNotices' => $recentNotices
+            'recentNotices' => $recentNotices,
+            'settings' => $settings
         ]);
+    }
+
+    public function updateSettings() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+            $maxSlots = (int)($_POST['max_supervisor_slots'] ?? 5);
+
+            $stmt = $db->prepare("INSERT INTO department_settings (department, max_supervisor_slots) VALUES (?, ?) ON DUPLICATE KEY UPDATE max_supervisor_slots = ?");
+            $stmt->execute([$dept, $maxSlots, $maxSlots]);
+            
+            $_SESSION['flash']['success'] = "Department settings updated successfully.";
+            header("Location: " . getBasePath() . "/hod/dashboard");
+            exit;
+        }
     }
 
     public function supervisors() {

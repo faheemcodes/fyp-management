@@ -120,6 +120,7 @@ $routes = [
 
     // HOD routes
     '/hod/dashboard' => ['Controller\HodController', 'dashboard'],
+    '/hod/settings/update' => ['Controller\HodController', 'updateSettings'],
     '/hod/supervisors' => ['Controller\HodController', 'supervisors'],
     '/hod/supervisors/create' => ['Controller\HodController', 'createSupervisor'],
     '/hod/supervisors/edit' => ['Controller\HodController', 'editSupervisor'],

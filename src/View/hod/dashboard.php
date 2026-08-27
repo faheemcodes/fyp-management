@@ -106,7 +106,35 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
-
+<!-- ── Department Settings ── -->
+<div class="card border-0 p-3 p-md-4 mb-4">
+    <div class="page-section-header mb-4">
+        <div class="page-section-icon" style="background: rgba(139, 92, 246, 0.1);color: #8b5cf6">
+            <i class="bi bi-sliders"></i>
+        </div>
+        <div>
+            <h6>Department Settings</h6>
+            <small>Configure supervisor limits</small>
+        </div>
+    </div>
+    <form action="<?php echo $basePath; ?>/hod/settings/update" method="POST">
+        <div class="row align-items-end">
+            <div class="col-md-4">
+                <label class="form-label text-secondary fw-semibold">Max Supervisor Slots (per shift)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-people"></i></span>
+                    <input type="number" name="max_supervisor_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_supervisor_slots'] ?? 5)); ?>" min="1" max="50" required>
+                </div>
+            </div>
+            <div class="col-md-2 mt-3 mt-md-0">
+                <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="bi bi-save me-2"></i>Save</button>
+            </div>
+        </div>
+        <div class="mt-2 text-muted" style="font-size: 0.8rem;">
+            <i class="bi bi-info-circle me-1"></i> This limit applies to all supervisors in your department. The limit is per-shift (e.g., if set to 5, a supervisor can take 5 morning and 5 evening projects).
+        </div>
+    </form>
+</div>
 
 <!-- ── Recent Notices ── -->
 <div class="card border-0 p-3 p-md-4 mb-4">

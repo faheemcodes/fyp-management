@@ -275,16 +275,23 @@ class SupervisorController extends BaseController {
                         $db->beginTransaction();
 
                         if ($status === 'Approved') {
-                            // Get the shift of the proposal's group creator
-                            $stmtGroupShift = $db->prepare("SELECT stu.shift FROM `groups` g JOIN students stu ON g.created_by = stu.user_id WHERE g.id = ?");
+                            // Get the shift of the proposal's group creator and department
+                            $stmtGroupShift = $db->prepare("SELECT stu.shift, stu.department FROM `groups` g JOIN students stu ON g.created_by = stu.user_id WHERE g.id = ?");
                             $stmtGroupShift->execute([$proposal['group_id']]);
-                            $proposalShift = $stmtGroupShift->fetchColumn() ?: 'Morning';
+                            $studentData = $stmtGroupShift->fetch();
+                            $proposalShift = $studentData['shift'] ?? 'Morning';
+                            $proposalDept = $studentData['department'] ?? '';
+
+                            $stmtLimit = $db->prepare("SELECT max_supervisor_slots FROM department_settings WHERE department = ?");
+                            $stmtLimit->execute([$proposalDept]);
+                            $maxSlots = $stmtLimit->fetchColumn();
+                            if (!$maxSlots) $maxSlots = 5;
 
                             $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1 AND stu.shift = ?");
                             $stmtSlots->execute([$_SESSION['user_id'], $proposalShift]);
                             $slotsUsed = (int)$stmtSlots->fetchColumn();
-                            if ($slotsUsed >= 5) {
-                                throw new \Exception("Approval failed: You have already reached the maximum limit of 5 approved projects for the $proposalShift shift.");
+                            if ($slotsUsed >= $maxSlots) {
+                                throw new \Exception("Approval failed: You have already reached the maximum limit of $maxSlots approved projects for the $proposalShift shift.");
                             }
                         }
 
