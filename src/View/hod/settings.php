@@ -111,30 +111,47 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <form action="<?php echo $basePath; ?>/hod/settings/update" method="POST">
-    <div class="page-section">
+    <div class="page-section mb-4">
         <div class="page-section-header">
             <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
-                <i class="bi bi-shield-lock-fill"></i>
+                <i class="bi bi-person-badge-fill"></i>
             </div>
             <div>
-                <h6 class="mb-0 fw-bold">Department Limits</h6>
-                <small class="text-muted">Configure project capacities and group sizes</small>
+                <h6 class="mb-0 fw-bold">Supervisor Limits</h6>
+                <small class="text-muted">Configure the maximum number of groups per supervisor for each shift</small>
             </div>
         </div>
         
         <div class="page-section-body">
             <div class="row g-4">
-                <div class="col-md-4 pf-group">
+                <div class="col-md-6 pf-group">
                     <label class="form-label">Morning Shift Slots <span class="text-danger">*</span></label>
                     <input type="number" name="max_morning_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_morning_slots'] ?? 5)); ?>" min="1" max="50" required>
                 </div>
-                <div class="col-md-4 pf-group">
+                <div class="col-md-6 pf-group">
                     <label class="form-label">Evening Shift Slots <span class="text-danger">*</span></label>
                     <input type="number" name="max_evening_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_evening_slots'] ?? 5)); ?>" min="1" max="50" required>
                 </div>
-                <div class="col-md-4 pf-group">
+            </div>
+        </div>
+    </div>
+
+    <div class="page-section">
+        <div class="page-section-header">
+            <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h6 class="mb-0 fw-bold">Student Group Limits</h6>
+                <small class="text-muted">Configure the maximum number of students allowed in a single group</small>
+            </div>
+        </div>
+        
+        <div class="page-section-body">
+            <div class="row g-4">
+                <div class="col-md-6 pf-group">
                     <label class="form-label">Max Group Members <span class="text-danger">*</span></label>
-                    <input type="number" name="max_group_members" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_group_members'] ?? 3)); ?>" min="1" max="5" required>
+                    <input type="number" name="max_group_members" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_group_members'] ?? 3)); ?>" min="1" max="10" required>
                 </div>
             </div>
         </div>
