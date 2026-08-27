@@ -52,8 +52,9 @@
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
                                     <h6 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 1rem;"><?php echo htmlspecialchars($meeting['subject']); ?></h6>
-                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                    <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
                                         <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.7rem;"><i class="bi bi-folder-fill me-1"></i> <?php echo htmlspecialchars($meeting['project_title']); ?></span>
+                                        <span class="badge" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.7rem;"><i class="bi bi-people-fill me-1"></i> <?php echo htmlspecialchars($meeting['group_code'] ?? 'ID PENDING'); ?> (<?php echo htmlspecialchars(explode(' ', trim($meeting['group_leader_name'] ?? 'Group'))[0]); ?>)</span>
                                         <?php
                                             $bg = ''; $color = '';
                                             if ($meeting['status'] === 'Pending') { $bg = 'rgba(245,158,11,0.1)'; $color = '#f59e0b'; }
@@ -236,7 +237,7 @@
                             </div>
                             <h6 class="mb-1 fw-bold" style="font-size: 0.85rem; color: var(--text-primary)"><?php echo htmlspecialchars($meeting['subject']); ?></h6>
                             <span class="text-muted d-block mb-2" style="font-size: 0.75rem;">
-                                <?php echo htmlspecialchars($meeting['project_title']); ?>
+                                <?php echo htmlspecialchars($meeting['project_title']); ?> • <span class="fw-semibold text-success"><?php echo htmlspecialchars($meeting['group_code'] ?? 'ID PENDING'); ?> (<?php echo htmlspecialchars(explode(' ', trim($meeting['group_leader_name'] ?? 'Group'))[0]); ?>)</span>
                             </span>
                             
                             <?php if (!empty($meeting['supervisor_notes'])): ?>
