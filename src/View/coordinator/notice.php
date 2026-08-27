@@ -190,14 +190,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </div>
                     
-                    <div class="pf-group mb-4">
-                        <label class="form-label d-block">Public Visibility</label>
-                        
-                        <div class="form-check form-switch mt-2">
-                            <input class="form-check-input" type="checkbox" role="switch" id="is_public" name="is_public" value="1" checked style="cursor: pointer;border: 1px solid #ced4da;box-shadow: none">
-                            <label class="form-check-label ms-2 text-muted" for="is_public" style="cursor: pointer; font-size: 0.9rem;">Display on Public Home Page</label>
-                        </div>
-                    </div>
+
 
                     <div class="pf-group mb-3">
                         <label for="subject" class="form-label">Subject / Title <span class="text-danger">*</span></label>
