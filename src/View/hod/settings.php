@@ -1,6 +1,6 @@
 <?php
 $title = 'Department Settings';
-$basePath = dirname($_SERVER['SCRIPT_NAME']) :== '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
