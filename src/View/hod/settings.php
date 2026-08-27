@@ -3,24 +3,32 @@ $title = 'Department Settings';
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="mb-1 text-dark fw-bold" style="letter-spacing: -0.02em;">Department Settings</h4>
-        <p class="text-muted mb-0" style="font-size: 0.95rem;">Configure limits and preferences for your department</p>
+<!-- Top Hero Banner -->
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                <i class="bi bi-sliders"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Department Settings</h4>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Configure supervisor limits and system preferences for your department</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <?php if (isset($_SESSION['flash']['success'])): ?>
-    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #d1fae5; color: #065f46;">
-        <i class="bi bi-check-circle-fill me-2"></i> <?php echo $_SESSION['flash']['success']; unset($_SERVER['flash']['success']); ?>
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px; background-color: #d1fae5; color: #065f46;">
+        <i class="bi bi-check-circle-fill me-2"></i> <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 
-<div class="card border-0 p-4 shadow-sm" style="border-radius: 16px;">
-    <div class="page-section-header mb-4">
+<div class="page-section p-4 border-0">
+    <div class="page-section-header mb-4 border-bottom pb-3">
         <div class="page-section-icon" style="background: rgba(139, 92, 246, 0.1);color: #8b5cf6">
-            <i class="bi bi-sliders"></i>
+            <i class="bi bi-shield-lock"></i>
         </div>
         <div>
             <h6 class="mb-0 fw-bold">Supervisor Limits</h6>
