@@ -133,8 +133,7 @@
 $titleVal       = $project['title'] ?? '';
 $abstractVal    = $proposal['abstract'] ?? $project['description'] ?? '';
 $supervisorIdVal = $project['supervisor_id'] ?? '';
-$member1Val     = isset($groupMembers[0]) ? $groupMembers[0]['student_id'] : '';
-$member2Val     = isset($groupMembers[1]) ? $groupMembers[1]['student_id'] : '';
+$isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_id'] ?? 0);
 $basePath       = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 
 $statusMap = [
@@ -417,18 +416,18 @@ foreach (($supervisors ?? []) as $s) {
                         </div>
                         <div class="page-section-body">
                             <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <div class="prop-member-input">
-                                        <label><span class="num">1</span> Member Slot</label>
-                                        <input type="text" id="member1" name="member1" value="<?php echo htmlspecialchars($member1Val); ?>" placeholder="Roll No or Email address">
+                                <?php 
+                                    $slots = max(1, ($maxGroupMembers ?? 3) - 1); 
+                                    for ($i = 0; $i < $slots; $i++): 
+                                        $val = isset($groupMembers[$i]) ? $groupMembers[$i]['student_id'] : '';
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="prop-member-input">
+                                            <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
+                                            <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Roll No or Email address" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="prop-member-input">
-                                        <label><span class="num">2</span> Member Slot</label>
-                                        <input type="text" id="member2" name="member2" value="<?php echo htmlspecialchars($member2Val); ?>" placeholder="Roll No or Email address">
-                                    </div>
-                                </div>
+                                    <?php endfor; ?>
                             </div>
                         </div>
                         <div class="prop-save-footer">

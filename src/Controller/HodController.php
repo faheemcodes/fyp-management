@@ -73,9 +73,10 @@ class HodController extends BaseController {
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
             $maxMorningSlots = (int)($_POST['max_morning_slots'] ?? 5);
             $maxEveningSlots = (int)($_POST['max_evening_slots'] ?? 5);
+            $maxGroupMembers = (int)($_POST['max_group_members'] ?? 3);
 
-            $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?");
-            $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxMorningSlots, $maxEveningSlots]);
+            $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots, max_group_members) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?, max_group_members = ?");
+            $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers]);
             
             // Notify supervisors of the updated slots
             $title = "Supervisor Slot Limits Updated";

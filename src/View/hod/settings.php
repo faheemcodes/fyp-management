@@ -117,20 +117,24 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <div>
-                <h6 class="mb-0 fw-bold">Supervisor Limits</h6>
-                <small class="text-muted">Configure how many project groups a supervisor can handle</small>
+                <h6 class="mb-0 fw-bold">Department Limits</h6>
+                <small class="text-muted">Configure project capacities and group sizes</small>
             </div>
         </div>
         
         <div class="page-section-body">
             <div class="row g-4">
-                <div class="col-md-6 pf-group">
+                <div class="col-md-4 pf-group">
                     <label class="form-label">Morning Shift Slots <span class="text-danger">*</span></label>
                     <input type="number" name="max_morning_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_morning_slots'] ?? 5)); ?>" min="1" max="50" required>
                 </div>
-                <div class="col-md-6 pf-group">
+                <div class="col-md-4 pf-group">
                     <label class="form-label">Evening Shift Slots <span class="text-danger">*</span></label>
                     <input type="number" name="max_evening_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_evening_slots'] ?? 5)); ?>" min="1" max="50" required>
+                </div>
+                <div class="col-md-4 pf-group">
+                    <label class="form-label">Max Group Members <span class="text-danger">*</span></label>
+                    <input type="number" name="max_group_members" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_group_members'] ?? 3)); ?>" min="1" max="5" required>
                 </div>
             </div>
         </div>

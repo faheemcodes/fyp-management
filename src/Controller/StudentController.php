@@ -120,10 +120,21 @@ class StudentController extends BaseController {
             $groupMembers = $stmt->fetchAll();
         }
 
+        $maxGroupMembers = 3;
+        $studentDept = $_SESSION['department'] ?? '';
+        if ($studentDept) {
+            $stmtDept = $db->prepare("SELECT max_group_members FROM department_settings WHERE department = ?");
+            $stmtDept->execute([$studentDept]);
+            if ($val = $stmtDept->fetchColumn()) {
+                $maxGroupMembers = $val;
+            }
+        }
+
         $this->render('student/group', [
             'group' => $group,
             'members' => $members,
-            'groupMembers' => $groupMembers
+            'groupMembers' => $groupMembers,
+            'maxGroupMembers' => $maxGroupMembers
         ]);
     }
 
@@ -145,14 +156,28 @@ class StudentController extends BaseController {
                 redirect('/student/group');
             }
 
-            $member1_ident = trim($_POST['member1'] ?? '');
-            $member2_ident = trim($_POST['member2'] ?? '');
+            $maxGroupMembers = 3;
+            $studentDept = $_SESSION['department'] ?? '';
+            if ($studentDept) {
+                $stmtDept = $db->prepare("SELECT max_group_members FROM department_settings WHERE department = ?");
+                $stmtDept->execute([$studentDept]);
+                if ($val = $stmtDept->fetchColumn()) {
+                    $maxGroupMembers = $val;
+                }
+            }
+
+            $idents = array_filter($_POST['members'] ?? []);
+            
+            // Total members including leader should not exceed limit
+            if (count($idents) + 1 > $maxGroupMembers) {
+                $this->flash('error', "Maximum allowed group members is $maxGroupMembers (including the leader).");
+                redirect('/student/group');
+            }
 
             try {
                 $db->beginTransaction();
 
                 $member_ids = [];
-                $idents = array_filter([$member1_ident, $member2_ident]);
                 
                 // Get current student's registration ID / email to check if they tried to add themselves
                 $stmt = $db->prepare("SELECT s.student_id, u.email FROM students s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
@@ -309,6 +334,26 @@ class StudentController extends BaseController {
                 redirect('/student/group');
             }
 
+            // Check max group members limit
+            $maxGroupMembers = 3;
+            $studentDept = $_SESSION['department'] ?? '';
+            if ($studentDept) {
+                $stmtDept = $db->prepare("SELECT max_group_members FROM department_settings WHERE department = ?");
+                $stmtDept->execute([$studentDept]);
+                if ($val = $stmtDept->fetchColumn()) {
+                    $maxGroupMembers = $val;
+                }
+            }
+
+            $stmtCount = $db->prepare("SELECT COUNT(*) FROM group_members WHERE group_id = ?");
+            $stmtCount->execute([$group['id']]);
+            $currentCount = $stmtCount->fetchColumn();
+
+            if ($currentCount >= $maxGroupMembers) {
+                $this->flash('error', "Your group has reached the maximum limit of $maxGroupMembers members allowed by your department.");
+                redirect('/student/group');
+            }
+
             // Add to group
             try {
                 $stmt = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
@@ -358,7 +403,7 @@ class StudentController extends BaseController {
         $studentDept = $studentDetails['department'] ?? '';
         $studentShift = $studentDetails['shift'] ?? 'Morning';
 
-        $stmtLimit = $db->prepare("SELECT max_morning_slots, max_evening_slots FROM department_settings WHERE department = ?");
+        $stmtLimit = $db->prepare("SELECT max_morning_slots, max_evening_slots, max_group_members FROM department_settings WHERE department = ?");
         $stmtLimit->execute([$studentDept]);
         $settings = $stmtLimit->fetch();
         
@@ -386,13 +431,19 @@ class StudentController extends BaseController {
         $stmt->execute([$studentDept, $studentShift, $maxSlots, $currentSupervisorId]);
         $supervisors = $stmt->fetchAll();
 
+        $maxGroupMembers = 3;
+        if ($settings && isset($settings['max_group_members'])) {
+            $maxGroupMembers = $settings['max_group_members'];
+        }
+
         $this->render('student/proposal', [
             'group' => $group,
             'proposal' => $proposal,
             'project' => $project,
             'groupMembers' => $groupMembers,
             'isLeader' => $isLeader,
-            'supervisors' => $supervisors
+            'supervisors' => $supervisors,
+            'maxGroupMembers' => $maxGroupMembers
         ]);
     }
 
@@ -412,8 +463,7 @@ class StudentController extends BaseController {
             $title = trim($_POST['title'] ?? '');
             $abstract = trim($_POST['abstract'] ?? '');
             $supervisor_id = $_POST['supervisor_id'] ?? null;
-            $member1_ident = trim($_POST['member1'] ?? '');
-            $member2_ident = trim($_POST['member2'] ?? '');
+
 
             if (empty($title) || empty($abstract) || empty($supervisor_id)) {
                 $this->flash('error', 'Project Title, Abstract, and Supervisor are required fields.');
@@ -494,8 +544,22 @@ class StudentController extends BaseController {
                 $db->beginTransaction();
 
                 // Validate members
+                $maxGroupMembers = 3;
+                $studentDept = $_SESSION['department'] ?? '';
+                if ($studentDept) {
+                    $stmtDept = $db->prepare("SELECT max_group_members FROM department_settings WHERE department = ?");
+                    $stmtDept->execute([$studentDept]);
+                    if ($val = $stmtDept->fetchColumn()) {
+                        $maxGroupMembers = $val;
+                    }
+                }
+
                 $member_ids = [];
-                $idents = array_filter([$member1_ident, $member2_ident]);
+                $idents = array_filter($_POST['members'] ?? []);
+                
+                if (count($idents) + 1 > $maxGroupMembers) {
+                    throw new \Exception("Maximum allowed group members is $maxGroupMembers (including the leader).");
+                }
                 
                 // Get current student's registration ID / email to check if they tried to add themselves
                 $stmt = $db->prepare("SELECT s.student_id, u.email FROM students s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");

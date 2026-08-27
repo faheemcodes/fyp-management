@@ -709,12 +709,28 @@ class AdminController extends BaseController {
             try {
                 $db->beginTransaction();
                 
-                $stmtLeader = $db->prepare("SELECT created_by FROM `groups` WHERE id = ?");
+                $stmtLeader = $db->prepare("SELECT created_by, department FROM `groups` g JOIN students s ON g.created_by = s.user_id WHERE g.id = ?");
                 $stmtLeader->execute([$groupId]);
-                $leaderId = $stmtLeader->fetchColumn();
+                $groupData = $stmtLeader->fetch();
+                
+                $leaderId = $groupData ? $groupData['created_by'] : null;
+                $dept = $groupData ? $groupData['department'] : null;
+
+                $maxGroupMembers = 3;
+                if ($dept) {
+                    $stmtDept = $db->prepare("SELECT max_group_members FROM department_settings WHERE department = ?");
+                    $stmtDept->execute([$dept]);
+                    if ($val = $stmtDept->fetchColumn()) {
+                        $maxGroupMembers = $val;
+                    }
+                }
                 
                 if ($leaderId && !in_array($leaderId, $members)) {
                     $members[] = $leaderId;
+                }
+
+                if (count($members) > $maxGroupMembers) {
+                    throw new \Exception("Cannot exceed maximum group limit of $maxGroupMembers members for this department.");
                 }
                 
                 foreach ($members as $stdId) {
