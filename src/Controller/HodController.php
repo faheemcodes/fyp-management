@@ -79,21 +79,21 @@ class HodController extends BaseController {
             $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers]);
             
             // Notify supervisors of the updated slots
-            $title = "Supervisor Slot Limits Updated";
-            $message = "The maximum number of project slots for supervisors in the $dept department has been updated to $maxMorningSlots (Morning) and $maxEveningSlots (Evening).";
+            $title = "Department Limits Updated";
+            $message = "The maximum project slots for supervisors in $dept have been updated to $maxMorningSlots (Morning) and $maxEveningSlots (Evening). The max student group size is now set to $maxGroupMembers.";
             $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
             $stmtSups->execute([$dept]);
             while ($sup = $stmtSups->fetch()) {
-                $stmtNotify = $db->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
-                $stmtNotify->execute([$sup['user_id'], $title, $message]);
+                $this->addNotification($sup['user_id'], $title, $message);
             }
             
             // Notify students
+            $stuTitle = "Group Limits Updated";
+            $stuMessage = "The maximum number of members allowed in a student project group has been updated to $maxGroupMembers. Supervisor slot capacities have also been updated.";
             $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
             $stmtStudents->execute([$dept]);
             while ($stu = $stmtStudents->fetch()) {
-                $stmtNotify = $db->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
-                $stmtNotify->execute([$stu['user_id'], $title, $message]);
+                $this->addNotification($stu['user_id'], $stuTitle, $stuMessage);
             }
 
             $_SESSION['flash']['success'] = "Department settings updated successfully.";
