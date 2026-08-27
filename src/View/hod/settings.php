@@ -105,8 +105,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <i class="bi bi-info-circle-fill"></i>
     </div>
     <div>
-        <h6>How limits work</h6>
-        <p>Limits are calculated per-shift. Saving will immediately notify all supervisors and students in your department.</p>
+        <h6>How slot limits work</h6>
+        <p>Slot limits are calculated per-shift. Saving will immediately notify all supervisors and students in your department.</p>
     </div>
 </div>
 
