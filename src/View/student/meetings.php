@@ -28,7 +28,7 @@
         <h4 class="fw-bold mb-1" style="color: var(--text-primary); letter-spacing: -0.02em">Meetings</h4>
         <p class="text-muted small mb-0">Schedule and manage meetings with your supervisor</p>
     </div>
-    <?php if ($supervisor && $group['status'] === 'Approved'): ?>
+    <?php if ($supervisor && isset($group['project_status']) && $group['project_status'] === 'Approved'): ?>
         <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#requestMeetingModal" style="border-radius: 10px; font-weight: 600; padding: 10px 20px;">
             <i class="bi bi-calendar-plus me-2"></i> Request Meeting
         </button>
