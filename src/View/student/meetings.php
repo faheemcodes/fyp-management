@@ -1,14 +1,28 @@
-<!-- Student Meetings View -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-1" style="color: var(--text-primary); letter-spacing: -0.02em">Meetings</h4>
-        <p class="text-muted small mb-0">Schedule and manage meetings with your supervisor</p>
+<style>
+/* ─── Hero overrides ─── */
+.page-hero-icon i {
+    font-size: 2rem;
+}
+</style>
+
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <div class="d-flex align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon" style="background: rgba(255,255,255,0.15); color: #fff;">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.25rem; letter-spacing: -0.02em">Meetings</h4>
+                <p class="mb-0" style="font-size: 0.85rem; color: rgba(255,255,255,0.7)">Schedule and manage meetings with your supervisor</p>
+            </div>
+        </div>
+        
+        <?php if ($supervisor && isset($group['project_status']) && $group['project_status'] === 'Approved'): ?>
+            <button type="button" class="btn text-white fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#requestMeetingModal" style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3)">
+                <i class="bi bi-plus-lg"></i> Request Meeting
+            </button>
+        <?php endif; ?>
     </div>
-    <?php if ($supervisor && isset($group['project_status']) && $group['project_status'] === 'Approved'): ?>
-        <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#requestMeetingModal" style="border-radius: 10px; font-weight: 600; padding: 10px 20px;">
-            <i class="bi bi-plus-lg me-2"></i> Request Meeting
-        </button>
-    <?php endif; ?>
 </div>
 
 <?php if (!$group): ?>

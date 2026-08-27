@@ -1,8 +1,21 @@
-<!-- Supervisor Meetings View -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-1" style="color: var(--text-primary); letter-spacing: -0.02em">Meetings</h4>
-        <p class="text-muted small mb-0">Manage meeting requests from your assigned groups</p>
+<style>
+/* ─── Hero overrides ─── */
+.page-hero-icon i {
+    font-size: 2rem;
+}
+</style>
+
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <div class="d-flex align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon" style="background: rgba(255,255,255,0.15); color: #fff;">
+                <i class="bi bi-calendar2-check"></i>
+            </div>
+            <div>
+                <h4 class="text-white fw-bold mb-1" style="font-size: 1.25rem; letter-spacing: -0.02em">Meetings Dashboard</h4>
+                <p class="mb-0" style="font-size: 0.85rem; color: rgba(255,255,255,0.7)">Manage meeting requests from your assigned groups</p>
+            </div>
+        </div>
     </div>
 </div>
 
