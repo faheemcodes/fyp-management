@@ -509,5 +509,108 @@ class SupervisorController extends BaseController {
         }
         redirect('/supervisor/groups');
     }
+
+    public function meetings() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'];
+        
+        $stmt = $db->prepare("
+            SELECT m.*, p.title as project_title, g.name as group_name
+            FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            WHERE m.supervisor_id = ?
+            ORDER BY m.meeting_date ASC
+        ");
+        $stmt->execute([$userId]);
+        $meetings = $stmt->fetchAll();
+        
+        $this->render('supervisor/meetings', [
+            'meetings' => $meetings
+        ]);
+    }
+
+    public function updateMeetingStatus() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $supervisorId = $_SESSION['user_id'];
+            
+            $meetingId = $_POST['meeting_id'] ?? 0;
+            $status = $_POST['status'] ?? '';
+            $locationLink = $_POST['location_link'] ?? '';
+            $newDate = $_POST['new_date'] ?? '';
+            
+            // Verify ownership
+            $stmt = $db->prepare("SELECT * FROM meetings WHERE id = ? AND supervisor_id = ?");
+            $stmt->execute([$meetingId, $supervisorId]);
+            $meeting = $stmt->fetch();
+            
+            if (!$meeting) {
+                $this->flash('error', 'Meeting not found.');
+                redirect('/supervisor/meetings');
+            }
+            
+            try {
+                if ($status === 'Scheduled') {
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Scheduled', location_link = ? WHERE id = ?");
+                    $stmt->execute([$locationLink, $meetingId]);
+                    
+                    $this->addNotification($meeting['group_id'], "Meeting Scheduled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been confirmed.");
+                    $this->flash('success', 'Meeting scheduled successfully.');
+                    
+                } elseif ($status === 'Rescheduled') {
+                    if (empty($newDate)) {
+                        $this->flash('error', 'New date is required for rescheduling.');
+                        redirect('/supervisor/meetings');
+                    }
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Rescheduled', meeting_date = ? WHERE id = ?");
+                    $stmt->execute([$newDate, $meetingId]);
+                    
+                    $this->addNotification($meeting['group_id'], "Meeting Rescheduled", "Your meeting has been rescheduled to " . date('M d, Y h:i A', strtotime($newDate)));
+                    $this->flash('success', 'Meeting rescheduled successfully.');
+                    
+                } elseif ($status === 'Cancelled') {
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Cancelled' WHERE id = ?");
+                    $stmt->execute([$meetingId]);
+                    
+                    $this->addNotification($meeting['group_id'], "Meeting Cancelled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been cancelled.");
+                    $this->flash('success', 'Meeting cancelled.');
+                }
+            } catch (\Exception $e) {
+                $this->flash('error', 'Failed to update meeting.');
+            }
+            
+            redirect('/supervisor/meetings');
+        }
+    }
+
+    public function completeMeeting() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $supervisorId = $_SESSION['user_id'];
+            
+            $meetingId = $_POST['meeting_id'] ?? 0;
+            $notes = trim($_POST['supervisor_notes'] ?? '');
+            
+            $stmt = $db->prepare("UPDATE meetings SET status = 'Completed', supervisor_notes = ? WHERE id = ? AND supervisor_id = ?");
+            $stmt->execute([$notes, $meetingId, $supervisorId]);
+            
+            if ($stmt->rowCount() > 0) {
+                // Find group to notify
+                $stmt2 = $db->prepare("SELECT group_id FROM meetings WHERE id = ?");
+                $stmt2->execute([$meetingId]);
+                $gId = $stmt2->fetchColumn();
+                if ($gId) {
+                    $this->addNotification($gId, "Meeting Completed", "Supervisor has added notes for your recent meeting.");
+                }
+                
+                $this->flash('success', 'Meeting marked as completed.');
+            } else {
+                $this->flash('error', 'Meeting not found or unauthorized.');
+            }
+            
+            redirect('/supervisor/meetings');
+        }
+    }
 }
 

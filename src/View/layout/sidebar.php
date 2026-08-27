@@ -215,6 +215,11 @@ if ($role === 'supervisor') {
                 </a>
             </li>
             <?php endif; ?>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/student/meetings" class="nav-link <?php echo isActive('/student/meetings', $currentUri); ?>">
+                    <i class="bi bi-calendar-event-fill"></i> Meetings
+                </a>
+            </li>
 
         <?php elseif ($role === 'supervisor'): ?>
             <li class="nav-item">
@@ -243,6 +248,11 @@ if ($role === 'supervisor') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?>">
                     <i class="bi bi-chat-dots-fill"></i> Messages
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/supervisor/meetings" class="nav-link <?php echo isActive('/supervisor/meetings', $currentUri); ?>">
+                    <i class="bi bi-calendar-event-fill"></i> Meetings
                 </a>
             </li>
 

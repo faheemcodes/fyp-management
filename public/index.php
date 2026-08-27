@@ -150,6 +150,8 @@ $routes = [
     '/student/proposal/submit' => ['Controller\StudentController', 'submitProposal'],
     '/student/grade' => ['Controller\StudentController', 'grade'],
     '/student/chat' => ['Controller\StudentController', 'chat'],
+    '/student/meetings' => ['Controller\StudentController', 'meetings'],
+    '/student/meetings/request' => ['Controller\StudentController', 'requestMeeting'],
     
     // Supervisor routes
     '/supervisor/dashboard' => ['Controller\SupervisorController', 'dashboard'],
@@ -160,6 +162,9 @@ $routes = [
     '/supervisor/reviews' => ['Controller\SupervisorController', 'reviews'],
     '/supervisor/chat' => ['Controller\SupervisorController', 'chat'],
     '/supervisor/proposal/action' => ['Controller\SupervisorController', 'proposalAction'],
+    '/supervisor/meetings' => ['Controller\SupervisorController', 'meetings'],
+    '/supervisor/meetings/update' => ['Controller\SupervisorController', 'updateMeetingStatus'],
+    '/supervisor/meetings/complete' => ['Controller\SupervisorController', 'completeMeeting'],
     // Committee routes
     '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
     '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],

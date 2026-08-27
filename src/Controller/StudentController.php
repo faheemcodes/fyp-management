@@ -830,4 +830,69 @@ class StudentController extends BaseController {
             'profile' => $profile
         ]);
     }
+
+    public function meetings() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'];
+        
+        $group = $this->getStudentGroup($userId);
+        $meetings = [];
+        $supervisor = null;
+        
+        if ($group) {
+            $stmt = $db->prepare("SELECT * FROM meetings WHERE group_id = ? ORDER BY meeting_date DESC");
+            $stmt->execute([$group['id']]);
+            $meetings = $stmt->fetchAll();
+            
+            if ($group['supervisor_id']) {
+                $stmt = $db->prepare("SELECT u.id, s.name, u.email FROM users u JOIN supervisors s ON u.id = s.user_id WHERE u.id = ?");
+                $stmt->execute([$group['supervisor_id']]);
+                $supervisor = $stmt->fetch();
+            }
+        }
+        
+        $this->render('student/meetings', [
+            'group' => $group,
+            'meetings' => $meetings,
+            'supervisor' => $supervisor
+        ]);
+    }
+
+    public function requestMeeting() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'];
+            
+            $group = $this->getStudentGroup($userId);
+            if (!$group || empty($group['supervisor_id'])) {
+                $this->flash('error', 'You must have an assigned supervisor to request a meeting.');
+                redirect('/student/meetings');
+            }
+            
+            $subject = trim($_POST['subject'] ?? '');
+            $agenda = trim($_POST['agenda'] ?? '');
+            $meetingDate = trim($_POST['meeting_date'] ?? '');
+            $type = trim($_POST['type'] ?? 'In-Person');
+            
+            if (empty($subject) || empty($agenda) || empty($meetingDate)) {
+                $this->flash('error', 'Please fill in all required fields.');
+                redirect('/student/meetings');
+            }
+            
+            try {
+                $stmt = $db->prepare("INSERT INTO meetings (group_id, supervisor_id, subject, agenda, meeting_date, type, status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
+                $stmt->execute([$group['id'], $group['supervisor_id'], $subject, $agenda, $meetingDate, $type]);
+                
+                // Notify supervisor
+                $studentName = $_SESSION['name'] ?? 'A student';
+                $message = "Group ID {$group['id']} requested a meeting for " . date('M d, Y h:i A', strtotime($meetingDate));
+                $this->addNotification($group['supervisor_id'], "New Meeting Request", $message);
+                
+                $this->flash('success', 'Meeting requested successfully.');
+            } catch (\Exception $e) {
+                $this->flash('error', 'Error requesting meeting.');
+            }
+            redirect('/student/meetings');
+        }
+    }
 }
