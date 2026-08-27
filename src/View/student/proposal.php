@@ -30,6 +30,7 @@
     border-radius: 12px;
     padding: 14px 16px;
     transition: border-color 0.2s ease;
+    cursor: text;
 }
 .prop-member-input:focus-within {
     border-color: var(--primary-color);
@@ -422,9 +423,9 @@ foreach (($supervisors ?? []) as $s) {
                                         $val = isset($groupMembers[$i]) ? $groupMembers[$i]['student_id'] : '';
                                     ?>
                                     <div class="col-md-6">
-                                        <div class="prop-member-input">
-                                            <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
-                                            <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
+                                        <div class="prop-member-input" onclick="document.getElementById('prop_member_slot_<?php echo $i; ?>').focus()">
+                                            <label for="prop_member_slot_<?php echo $i; ?>"><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
+                                            <input type="text" id="prop_member_slot_<?php echo $i; ?>" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
                                         </div>
                                     </div>
                                     <?php endfor; ?>

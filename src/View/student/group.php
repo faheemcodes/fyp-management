@@ -114,6 +114,7 @@
     border-radius: 12px;
     padding: 14px 16px;
     transition: border-color 0.2s ease;
+    cursor: text;
 }
 .manage-member-input:focus-within {
     border-color: var(--primary-color);
@@ -332,9 +333,9 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                                 $val = isset($groupMembers[$i]) ? $groupMembers[$i]['student_id'] : '';
                             ?>
                             <div class="col-md-6">
-                                <div class="manage-member-input">
-                                    <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
-                                    <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
+                                <div class="manage-member-input" onclick="document.getElementById('member_slot_<?php echo $i; ?>').focus()">
+                                    <label for="member_slot_<?php echo $i; ?>"><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
+                                    <input type="text" id="member_slot_<?php echo $i; ?>" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
                                 </div>
                             </div>
                             <?php endfor; ?>
