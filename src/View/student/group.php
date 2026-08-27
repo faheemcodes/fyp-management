@@ -320,7 +320,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                     </div>
                     <div>
                         <h6>Manage Team</h6>
-                        <small>Add or remove members by Roll No or email</small>
+                        <small>Add or remove members by Roll No</small>
                     </div>
                 </div>
                 <div class="page-section-body">
@@ -334,7 +334,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                             <div class="col-md-6">
                                 <div class="manage-member-input">
                                     <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
-                                    <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Roll No or Email address" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
+                                    <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
                                 </div>
                             </div>
                             <?php endfor; ?>

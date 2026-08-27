@@ -424,7 +424,7 @@ foreach (($supervisors ?? []) as $s) {
                                     <div class="col-md-6">
                                         <div class="prop-member-input">
                                             <label><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
-                                            <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Roll No or Email address" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
+                                            <input type="text" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" class="form-control" style="background:transparent; border:none; padding:0; font-size:0.9rem; color:var(--text-primary);">
                                         </div>
                                     </div>
                                     <?php endfor; ?>
