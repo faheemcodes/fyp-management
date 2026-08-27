@@ -515,7 +515,7 @@ class SupervisorController extends BaseController {
         $userId = $_SESSION['user_id'];
         
         $stmt = $db->prepare("
-            SELECT m.*, p.title as project_title, g.name as group_name
+            SELECT m.*, p.title as project_title
             FROM meetings m
             JOIN `groups` g ON m.group_id = g.id
             JOIN projects p ON g.id = p.group_id
