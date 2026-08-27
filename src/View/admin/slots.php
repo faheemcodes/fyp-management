@@ -64,7 +64,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 <tr>
                     <th class="ps-4">Supervisor Name</th>
                     <th>Department</th>
-                    <th class="text-center">Slot Allocation (Current/8)</th>
+                    <th class="text-center">Slot Allocation (Current / 10)</th>
                     <th class="text-center">Remaining Slots</th>
                     <th class="text-end pe-4">Status</th>
                 </tr>
@@ -77,8 +77,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <?php else: ?>
                         <?php foreach($supervisorsList as $sup): 
                             $current = (int)$sup['current_slots'];
-                            $max = 8;
-                            $remaining = max(0, $max - $current);
+                            $max = 10;
+                            $remaining = $max - $current;
                             $percentage = ($current / $max) * 100;
                             $statusColor = $percentage >= 100 ? 'danger' : ($percentage >= 75 ? 'warning' : 'success');
                             $statusText = $percentage >= 100 ? 'Full' : 'Available';
