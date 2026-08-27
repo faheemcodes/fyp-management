@@ -43,7 +43,18 @@ class HodController extends BaseController {
         $stmtNotices->execute([$dept]);
         $recentNotices = $stmtNotices->fetchAll();
 
-        // Get department settings
+        $this->render('hod/dashboard', [
+            'stats' => $stats,
+            'recentSupervisors' => $recentSupervisors,
+            'recentCommittee' => $recentCommittee,
+            'recentNotices' => $recentNotices
+        ]);
+    }
+
+    public function settings() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+        
         $stmtSettings = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
         $stmtSettings->execute([$dept]);
         $settings = $stmtSettings->fetch();
@@ -51,11 +62,7 @@ class HodController extends BaseController {
             $settings = ['max_supervisor_slots' => 5];
         }
 
-        $this->render('hod/dashboard', [
-            'stats' => $stats,
-            'recentSupervisors' => $recentSupervisors,
-            'recentCommittee' => $recentCommittee,
-            'recentNotices' => $recentNotices,
+        $this->render('hod/settings', [
             'settings' => $settings
         ]);
     }
@@ -69,8 +76,26 @@ class HodController extends BaseController {
             $stmt = $db->prepare("INSERT INTO department_settings (department, max_supervisor_slots) VALUES (?, ?) ON DUPLICATE KEY UPDATE max_supervisor_slots = ?");
             $stmt->execute([$dept, $maxSlots, $maxSlots]);
             
+            // Notify supervisors of the updated slots
+            $title = "Supervisor Slot Limits Updated";
+            $message = "The maximum number of project slots for supervisors in the $dept department has been updated to $maxSlots per shift.";
+            $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
+            $stmtSups->execute([$dept]);
+            while ($sup = $stmtSups->fetch()) {
+                $stmtNotify = $db->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
+                $stmtNotify->execute([$sup['user_id'], $title, $message]);
+            }
+            
+            // Notify students
+            $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
+            $stmtStudents->execute([$dept]);
+            while ($stu = $stmtStudents->fetch()) {
+                $stmtNotify = $db->prepare("INSERT INTO notifications (user_id, title, message) VALUES (?, ?, ?)");
+                $stmtNotify->execute([$stu['user_id'], $title, $message]);
+            }
+
             $_SESSION['flash']['success'] = "Department settings updated successfully.";
-            header("Location: " . getBasePath() . "/hod/dashboard");
+            header("Location: " . getBasePath() . "/hod/settings");
             exit;
         }
     }

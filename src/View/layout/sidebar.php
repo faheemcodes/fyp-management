@@ -166,6 +166,11 @@ if ($role === 'supervisor') {
                     <?php endif; ?>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/hod/settings" class="nav-link <?php echo isActive('/hod/settings', $currentUri); ?>">
+                    <i class="bi bi-sliders"></i> Department Settings
+                </a>
+            </li>
 
 
         <?php elseif ($role === 'student'): ?>
