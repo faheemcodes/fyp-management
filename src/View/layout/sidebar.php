@@ -195,6 +195,11 @@ if ($role === 'supervisor') {
                 </a>
             </li>
             <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/student/previous-projects" class="nav-link <?php echo isActive('/student/previous-projects', $currentUri); ?>">
+                    <i class="bi bi-archive-fill"></i> Previous Projects
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/grade" class="nav-link <?php echo isActive('/student/grade', $currentUri); ?>">
                     <i class="bi bi-award-fill"></i> Final Grade
                 </a>
