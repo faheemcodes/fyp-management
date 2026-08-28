@@ -76,6 +76,14 @@
         <div class="col-md-2 text-end">
             <span id="resultCount" class="text-muted small fw-bold"><?php echo count($projects); ?> Projects</span>
         </div>
+        <?php if ($role === 'supervisor'): ?>
+        <div class="col-12 mt-3 pt-3 border-top">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="myProjectsToggle" checked>
+                <label class="form-check-label text-muted small fw-medium" for="myProjectsToggle">View only my supervised projects</label>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -166,10 +174,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultCount = document.getElementById('resultCount');
     const projectItems = document.querySelectorAll('.project-item');
 
+    const myProjectsToggle = document.getElementById('myProjectsToggle');
+    const currentUserName = <?php echo json_encode($currentUserName ?? ''); ?>;
+
     function filterProjects() {
         const query = searchInput.value.toLowerCase();
         const batch = batchFilter.value;
         const supervisor = supervisorFilter.value;
+        const myProjectsOnly = myProjectsToggle ? myProjectsToggle.checked : false;
         let visibleCount = 0;
 
         projectItems.forEach(item => {
@@ -184,8 +196,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesSearch = searchableText.includes(query);
             const matchesBatch = batch === "" || itemBatch === batch;
             const matchesSupervisor = supervisor === "" || itemSupervisor === supervisor;
+            
+            let matchesToggle = true;
+            if (myProjectsOnly && currentUserName) {
+                matchesToggle = (itemSupervisor === currentUserName);
+            }
 
-            if (matchesSearch && matchesBatch && matchesSupervisor) {
+            if (matchesSearch && matchesBatch && matchesSupervisor && matchesToggle) {
                 item.style.display = '';
                 visibleCount++;
             } else {
@@ -199,6 +216,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) searchInput.addEventListener('keyup', filterProjects);
     if (batchFilter) batchFilter.addEventListener('change', filterProjects);
     if (supervisorFilter) supervisorFilter.addEventListener('change', filterProjects);
+    if (myProjectsToggle) {
+        myProjectsToggle.addEventListener('change', function() {
+            // If toggle is ON, optionally disable the supervisor dropdown, or just let them work together
+            if (this.checked) {
+                supervisorFilter.value = "";
+                supervisorFilter.disabled = true;
+            } else {
+                supervisorFilter.disabled = false;
+            }
+            filterProjects();
+        });
+        
+        // Init state
+        if (myProjectsToggle.checked) {
+            supervisorFilter.disabled = true;
+        }
+    }
+    
+    // Initial run
+    filterProjects();
 });
 
 // Modal Logic

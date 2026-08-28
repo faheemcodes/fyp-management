@@ -49,11 +49,23 @@ class PreviousProjectsController extends BaseController {
         sort($batches);
         sort($supervisors);
 
-        // Render view (starting with student specific view as requested)
-        $this->render('student/previous_projects', [
+        $currentUserRole = $_SESSION['role'] ?? 'student';
+        $currentUserName = $_SESSION['name'] ?? ''; // Added to session on login typically, or we can fetch it if needed.
+        // If name is not in session, let's fetch it just in case.
+        if (empty($currentUserName)) {
+            if ($currentUserRole === 'supervisor') {
+                $stmt = $db->prepare("SELECT name FROM supervisors WHERE user_id = ?");
+                $stmt->execute([$_SESSION['user_id']]);
+                $currentUserName = $stmt->fetchColumn() ?: '';
+            }
+        }
+
+        $this->render('shared/previous_projects', [
             'projects' => $projects,
             'batches' => $batches,
-            'supervisors' => $supervisors
+            'supervisors' => $supervisors,
+            'role' => $currentUserRole,
+            'currentUserName' => $currentUserName
         ]);
     }
 }

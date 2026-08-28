@@ -166,6 +166,8 @@ $routes = [
     '/supervisor/meetings' => ['Controller\SupervisorController', 'meetings'],
     '/supervisor/meetings/update' => ['Controller\SupervisorController', 'updateMeetingStatus'],
     '/supervisor/meetings/complete' => ['Controller\SupervisorController', 'completeMeeting'],
+    '/supervisor/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    
     // Committee routes
     '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
     '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
@@ -191,6 +193,7 @@ $routes = [
     '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
     '/coordinator/meetings' => ['Controller\CoordinatorController', 'meetings'],
     '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
+    '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],

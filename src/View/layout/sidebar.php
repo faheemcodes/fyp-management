@@ -260,6 +260,11 @@ if ($role === 'supervisor') {
                     <i class="bi bi-calendar-event-fill"></i> Meetings
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/supervisor/previous-projects" class="nav-link <?php echo isActive('/supervisor/previous-projects', $currentUri); ?>">
+                    <i class="bi bi-archive-fill"></i> Previous Projects
+                </a>
+            </li>
 
         <?php elseif ($role === 'committee'): ?>
             <li class="nav-item">
@@ -333,6 +338,11 @@ if ($role === 'supervisor') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/coordinator/meetings" class="nav-link <?php echo isActive('/coordinator/meetings', $currentUri); ?>">
                     <i class="bi bi-calendar2-check-fill"></i> Meetings Audit
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/previous-projects" class="nav-link <?php echo isActive('/coordinator/previous-projects', $currentUri); ?>">
+                    <i class="bi bi-archive-fill"></i> Previous Projects
                 </a>
             </li>
         <?php endif; ?>
