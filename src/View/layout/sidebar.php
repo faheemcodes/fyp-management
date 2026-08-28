@@ -68,6 +68,40 @@ if ($role === 'supervisor') {
         // Ignore DB errors
     }
 }
+
+// Fetch pending meetings for Student
+$pendingStudentMeetings = 0;
+if ($role === 'student') {
+    try {
+        $dbSidebar = \Database::getInstance()->getConnection();
+        $stmtG = $dbSidebar->prepare("SELECT group_id FROM students s JOIN `groups` g ON s.user_id = g.created_by OR s.user_id IN (SELECT student_id FROM group_members WHERE group_id = g.id) WHERE s.user_id = ? LIMIT 1");
+        $stmtG->execute([$_SESSION['user_id'] ?? 0]);
+        $grpId = $stmtG->fetchColumn();
+        
+        if ($grpId) {
+            $stmtSM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE group_id = ? AND status = 'Scheduled' AND meeting_date >= NOW()");
+            $stmtSM->execute([$grpId]);
+            $pendingStudentMeetings = $stmtSM->fetchColumn();
+        }
+    } catch (Exception $e) {}
+}
+
+// Fetch pending meetings for Supervisor
+$pendingSupMeetings = 0;
+if ($role === 'supervisor') {
+    try {
+        $dbSidebar = \Database::getInstance()->getConnection();
+        $stmtSupM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE supervisor_id = ? AND status = 'Pending'");
+        $stmtSup = $dbSidebar->prepare("SELECT id FROM supervisors WHERE user_id = ?");
+        $stmtSup->execute([$_SESSION['user_id'] ?? 0]);
+        $supId = $stmtSup->fetchColumn();
+        
+        if ($supId) {
+            $stmtSupM->execute([$supId]);
+            $pendingSupMeetings = $stmtSupM->fetchColumn();
+        }
+    } catch (Exception $e) {}
+}
 ?>
 
 <!-- Sidebar -->
@@ -221,8 +255,11 @@ if ($role === 'supervisor') {
             </li>
             <?php endif; ?>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/student/meetings" class="nav-link <?php echo isActive('/student/meetings', $currentUri); ?>">
-                    <i class="bi bi-calendar-event-fill"></i> Meetings
+                <a href="<?php echo $urlPrefix; ?>/student/meetings" class="nav-link <?php echo isActive('/student/meetings', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-calendar-event-fill"></i> Meetings</span>
+                    <?php if (isset($pendingStudentMeetings) && $pendingStudentMeetings > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(59, 130, 246, 0.3);"><?php echo $pendingStudentMeetings; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
 
@@ -256,8 +293,11 @@ if ($role === 'supervisor') {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/supervisor/meetings" class="nav-link <?php echo isActive('/supervisor/meetings', $currentUri); ?>">
-                    <i class="bi bi-calendar-event-fill"></i> Meetings
+                <a href="<?php echo $urlPrefix; ?>/supervisor/meetings" class="nav-link <?php echo isActive('/supervisor/meetings', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-calendar-event-fill"></i> Meetings</span>
+                    <?php if (isset($pendingSupMeetings) && $pendingSupMeetings > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(59, 130, 246, 0.3);"><?php echo $pendingSupMeetings; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item">
