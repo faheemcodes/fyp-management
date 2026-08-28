@@ -58,6 +58,7 @@
 }
 .contact-info {
     overflow: hidden;
+    flex: 1;
 }
 .contact-name {
     font-size: 0.85rem;
@@ -718,9 +719,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             let badge = item.querySelector('.unread-badge');
             if (!badge) {
                 badge = document.createElement('span');
-                badge.className = 'unread-badge badge bg-danger rounded-pill float-end mt-1';
+                badge.className = 'unread-badge badge bg-danger rounded-pill';
                 badge.style.fontSize = '0.7rem';
-                item.querySelector('.contact-info').appendChild(badge);
+                item.appendChild(badge);
             }
             
             if (chatData) {
