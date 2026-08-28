@@ -71,6 +71,7 @@ if ($role === 'supervisor') {
 
 // Fetch pending meetings for Student
 $pendingStudentMeetings = 0;
+$unreadStudentChat = 0;
 if ($role === 'student') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
@@ -83,11 +84,17 @@ if ($role === 'student') {
             $stmtSM->execute([$grpId]);
             $pendingStudentMeetings = $stmtSM->fetchColumn();
         }
+        
+        // Chat count
+        $stmtChatCount = $dbSidebar->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND redirect_url LIKE '%/chat%'");
+        $stmtChatCount->execute([$_SESSION['user_id'] ?? 0]);
+        $unreadStudentChat = $stmtChatCount->fetchColumn();
     } catch (Exception $e) {}
 }
 
 // Fetch pending meetings for Supervisor
 $pendingSupMeetings = 0;
+$unreadSupChat = 0;
 if ($role === 'supervisor') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
@@ -100,6 +107,11 @@ if ($role === 'supervisor') {
             $stmtSupM->execute([$supId]);
             $pendingSupMeetings = $stmtSupM->fetchColumn();
         }
+        
+        // Chat count
+        $stmtChatCount = $dbSidebar->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND redirect_url LIKE '%/chat%'");
+        $stmtChatCount->execute([$_SESSION['user_id'] ?? 0]);
+        $unreadSupChat = $stmtChatCount->fetchColumn();
     } catch (Exception $e) {}
 }
 ?>
@@ -251,7 +263,9 @@ if ($role === 'supervisor') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                     <span class="d-flex align-items-center gap-2"><i class="bi bi-chat-dots-fill"></i> Chat with Supervisor</span>
-                    <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);">0</span>
+                    <?php if (isset($unreadStudentChat) && $unreadStudentChat > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);"><?php echo $unreadStudentChat; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <?php endif; ?>
@@ -291,7 +305,9 @@ if ($role === 'supervisor') {
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                     <span class="d-flex align-items-center gap-2"><i class="bi bi-chat-dots-fill"></i> Messages</span>
-                    <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);">0</span>
+                    <?php if (isset($unreadSupChat) && $unreadSupChat > 0): ?>
+                        <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);"><?php echo $unreadSupChat; ?></span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item">
