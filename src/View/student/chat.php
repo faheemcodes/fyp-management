@@ -556,7 +556,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
     <!-- Firebase Integration -->
     <script type="module">
-        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL } from '<?php echo $bp; ?>/js/firebase-config.js';
+        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, increment } from '<?php echo $bp; ?>/js/firebase-config.js';
 
         const studentId = "<?php echo htmlspecialchars((string)($studentId), ENT_QUOTES, 'UTF-8'); ?>";
         const supervisorId = "<?php echo htmlspecialchars((string)($supervisor['id']), ENT_QUOTES, 'UTF-8'); ?>";
@@ -651,7 +651,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         });
 
         // Reference to the messages subcollection
-        const messagesRef = collection(db, 'chats', chatId, 'messages');
+        await setDoc(chatDocRef, { unreadCount_student: 0 }, { merge: true });
+            const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
         // Listen for real-time updates
@@ -928,7 +929,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                     await setDoc(chatDocRef, {
                         participants: [studentId, supervisorId.toString()],
                         lastMessage: text || (selectedFile ? 'Attachment' : ''),
-                        lastUpdated: serverTimestamp()
+                        lastUpdated: serverTimestamp(),
+                        unreadCount_supervisor: increment(1)
                     }, { merge: true });
 
                     await addDoc(messagesRef, {

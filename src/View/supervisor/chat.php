@@ -690,6 +690,71 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     let unsubscribeSnapshot = null;
     let editingMsgId = null;
 
+    // --- Sort Contact List and Show Unread Badges ---
+    const contactsList = document.querySelector('.contacts-list');
+    const broadcastItem = document.querySelector('[data-leader-id="broadcast"]');
+    
+    const qChats = query(collection(db, "chats"), where("participants", "array-contains", supervisorId.toString()));
+    
+    onSnapshot(qChats, (snapshot) => {
+        let chatsData = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const otherId = data.participants.find(p => p !== supervisorId.toString());
+            chatsData.push({
+                leaderId: otherId,
+                lastUpdated: data.lastUpdated ? data.lastUpdated.toMillis() : 0,
+                lastMessage: data.lastMessage || '',
+                unreadCount: data.unreadCount_supervisor || 0
+            });
+        });
+        
+        const items = Array.from(contactsList.querySelectorAll('.contact-item:not([data-leader-id="broadcast"])'));
+        
+        items.forEach(item => {
+            const leaderId = item.getAttribute('data-leader-id');
+            const chatData = chatsData.find(c => c.leaderId === leaderId);
+            
+            let badge = item.querySelector('.unread-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'unread-badge badge bg-danger rounded-pill float-end mt-1';
+                badge.style.fontSize = '0.7rem';
+                item.querySelector('.contact-info').appendChild(badge);
+            }
+            
+            if (chatData) {
+                item.dataset.lastUpdated = chatData.lastUpdated;
+                if (chatData.unreadCount > 0 && currentLeaderId !== leaderId) {
+                    badge.textContent = chatData.unreadCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                    if (chatData.unreadCount > 0 && currentLeaderId === leaderId) {
+                        const cId = `chat_${leaderId}_${supervisorId}`;
+                        setDoc(doc(db, 'chats', cId), { unreadCount_supervisor: 0 }, { merge: true });
+                    }
+                }
+                
+                const previewEl = item.querySelector('.contact-project');
+                if (previewEl && chatData.lastMessage) {
+                    previewEl.textContent = chatData.lastMessage;
+                }
+            } else {
+                item.dataset.lastUpdated = 0;
+                badge.style.display = 'none';
+            }
+        });
+        
+        items.sort((a, b) => b.dataset.lastUpdated - a.dataset.lastUpdated);
+        
+        contactsList.innerHTML = '';
+        if (broadcastItem) contactsList.appendChild(broadcastItem);
+        items.forEach(item => contactsList.appendChild(item));
+    });
+    // ------------------------------------------------
+
+
     const allContactItems = document.querySelectorAll('.contact-item');
     const studentContactItems = document.querySelectorAll('.contact-item:not([data-leader-id="broadcast"])');
     const allLeaderIds = Array.from(studentContactItems).map(item => item.getAttribute('data-leader-id'));
@@ -819,12 +884,17 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         document.querySelector('.chat-wrapper').classList.remove('chat-active');
     });
 
-    function loadChat(leaderId) {
+    async function loadChat(leaderId) {
         if (unsubscribeSnapshot) {
             unsubscribeSnapshot();
         }
 
         const chatId = `chat_${leaderId}_${supervisorId}`;
+        
+        // Clear unread count for this chat
+        if (leaderId !== 'broadcast') {
+            await setDoc(doc(db, 'chats', chatId), { unreadCount_supervisor: 0 }, { merge: true });
+        }
         const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
@@ -1137,7 +1207,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 const broadcastDocRef = doc(db, 'chats', broadcastChatId);
                 await setDoc(broadcastDocRef, {
                     lastMessage: text || (selectedFile ? 'Attachment' : ''),
-                    lastUpdated: serverTimestamp()
+                    lastUpdated: serverTimestamp(),
+                    unreadCount_student: increment(1)
                 }, { merge: true });
                 const broadcastMsgsRef = collection(db, 'chats', broadcastChatId, 'messages');
                 const docRef = await addDoc(broadcastMsgsRef, {
@@ -1199,7 +1270,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 await setDoc(chatDocRef, {
                     participants: [currentLeaderId.toString(), supervisorId.toString()],
                     lastMessage: text || (selectedFile ? 'Attachment' : ''),
-                    lastUpdated: serverTimestamp()
+                    lastUpdated: serverTimestamp(),
+                    unreadCount_student: increment(1)
                 }, { merge: true });
 
                 const messagesRef = collection(db, 'chats', chatId, 'messages');
