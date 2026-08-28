@@ -372,7 +372,7 @@ class CoordinatorController extends BaseController {
         $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
 
         // Fetch proposals for groups where the group creator is a student in the coordinator's department
-        $stmt = $db->prepare("SELECT pr.*, g.group_code, p.title as project_title, sup.name as supervisor_name 
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, p.title as project_title, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
