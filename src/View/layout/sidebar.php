@@ -249,8 +249,9 @@ if ($role === 'supervisor') {
                 if ($stmtChat->fetchColumn()):
             ?>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?>">
-                    <i class="bi bi-chat-dots-fill"></i> Chat with Supervisor
+                <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-chat-dots-fill"></i> Chat with Supervisor</span>
+                    <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);">0</span>
                 </a>
             </li>
             <?php endif; ?>
@@ -288,8 +289,9 @@ if ($role === 'supervisor') {
                 </a>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?>">
-                    <i class="bi bi-chat-dots-fill"></i> Messages
+                <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
+                    <span class="d-flex align-items-center gap-2"><i class="bi bi-chat-dots-fill"></i> Messages</span>
+                    <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);">0</span>
                 </a>
             </li>
             <li class="nav-item">
