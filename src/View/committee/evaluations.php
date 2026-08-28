@@ -651,16 +651,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 </script>
-< ! - -   T h e s i s   D o c u m e n t   O f f c a n v a s   V i e w e r   - - > 
- < d i v   c l a s s = " o f f c a n v a s   o f f c a n v a s - e n d "   t a b i n d e x = " - 1 "   i d = " t h e s i s O f f c a n v a s "   a r i a - l a b e l l e d b y = " t h e s i s O f f c a n v a s L a b e l "   s t y l e = " w i d t h :   8 0 0 p x ;   m a x - w i d t h :   1 0 0 v w ; " > 
-         < d i v   c l a s s = " o f f c a n v a s - h e a d e r   b o r d e r - b o t t o m   p y - 3 "   s t y l e = " b a c k g r o u n d :   v a r ( - - c a r d - b g ) ; " > 
-                 < h 6   c l a s s = " o f f c a n v a s - t i t l e   f w - b o l d   m b - 0 "   s t y l e = " c o l o r :   v a r ( - - t e x t - p r i m a r y ) ;   f o n t - s i z e :   1 . 1 r e m ;   l e t t e r - s p a c i n g :   - 0 . 0 1 e m ; " > F i n a l   T h e s i s   D o c u m e n t < / h 6 > 
-                 < d i v   c l a s s = " d - f l e x   a l i g n - i t e m s - c e n t e r   g a p - 2 " > 
-                         < b u t t o n   t y p e = " b u t t o n "   c l a s s = " b t n - c l o s e "   d a t a - b s - d i s m i s s = " o f f c a n v a s "   a r i a - l a b e l = " C l o s e " > < / b u t t o n > 
-                 < / d i v > 
-         < / d i v > 
-         < d i v   c l a s s = " o f f c a n v a s - b o d y   p - 0 "   s t y l e = " b a c k g r o u n d :   # f 8 f a f c ; " > 
-                 < i f r a m e   i d = " t h e s i s I f r a m e "   s r c = " "   s t y l e = " w i d t h :   1 0 0 % ;   h e i g h t :   1 0 0 % ;   b o r d e r :   n o n e ; " > < / i f r a m e > 
-         < / d i v > 
- < / d i v >  
- 
+
+<script>
+function viewThesisOffcanvas(path) {
+    var offcanvasEl = document.getElementById('thesisOffcanvas');
+    var iframe = document.getElementById('thesisIframe');
+    iframe.src = '<?php echo $basePath; ?>/' + path;
+    var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+    
+    const openModal = document.querySelector('.modal.show');
+    if(openModal) {
+        const modalInstance = bootstrap.Modal.getInstance(openModal);
+        if(modalInstance) modalInstance.hide();
+    }
+    
+    offcanvas.show();
+}
+</script>
+
+<!-- Thesis Document Offcanvas Viewer -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="thesisOffcanvas" aria-labelledby="thesisOffcanvasLabel" style="width: 800px; max-width: 100vw;">
+    <div class="offcanvas-header border-bottom py-3" style="background: var(--card-bg);">
+        <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Final Thesis Document</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0" style="background: #f8fafc;">
+        <iframe id="thesisIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</div>
