@@ -574,19 +574,17 @@
 }
 
 .unread-badge {
-    background-color: #ef4444; /* red */
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    min-width: 20px;
-    height: 20px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.35em 0.65em;
+    border-radius: 50rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    padding: 0 6px;
-    margin-left: auto; /* Pushes badge to the far right */
-    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+    margin-left: auto;
 }
 </style>
 <?php
@@ -1580,19 +1578,17 @@ html.dark-theme .lightbox-thumb-item.active {
 }
 
 .unread-badge {
-    background-color: #ef4444; /* red */
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    min-width: 20px;
-    height: 20px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.35em 0.65em;
+    border-radius: 50rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    padding: 0 6px;
-    margin-left: auto; /* Pushes badge to the far right */
-    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+    margin-left: auto;
 }
 </style>
 
