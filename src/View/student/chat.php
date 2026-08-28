@@ -651,6 +651,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         });
 
         // Reference to the messages subcollection
+        const chatDocRef = doc(db, 'chats', chatId);
         setDoc(chatDocRef, { unreadCount_student: 0 }, { merge: true }).catch(console.error);
             const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
