@@ -251,6 +251,40 @@ foreach (($supervisors ?? []) as $s) {
         </div>
 
         <div class="col-lg-5">
+            <?php if ($project && $project['status'] === 'Approved'): ?>
+            <!-- Final Thesis Upload -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1);color: #3b82f6">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div>
+                        <h6>Final Thesis</h6>
+                        <small>Upload your final thesis document</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <?php if ($project['thesis_file']): ?>
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(16,185,129,0.05), rgba(16,185,129,0.1)); border: 1px dashed rgba(16,185,129,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(16,185,129,0.15); border-radius: 50%; color: #10b981;">
+                                <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
+                            </div>
+                            <h6 class="fw-bold mb-1" style="color: #059669;">Thesis Submitted</h6>
+                            <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
+                            <button type="button" class="btn btn-sm btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                                <i class="bi bi-eye-fill me-2"></i>Open Document
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center p-4 rounded-4 mt-3" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-3 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.8rem;">Only the group leader can upload the final thesis document.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Feedback -->
             <div class="page-section">
                 <div class="page-section-header">
@@ -537,25 +571,4 @@ foreach (($supervisors ?? []) as $s) {
     </div>
 
 <?php endif; ?>
-<script>
-function viewThesisOffcanvas(path) {
-    var offcanvasEl = document.getElementById('thesisOffcanvas');
-    var iframe = document.getElementById('thesisIframe');
-    iframe.src = '<?php echo $basePath; ?>/' + path;
-    var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-    offcanvas.show();
-}
-</script>
-
-<!-- Thesis Document Offcanvas Viewer -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="thesisOffcanvas" aria-labelledby="thesisOffcanvasLabel" style="width: 800px; max-width: 100vw;">
-    <div class="offcanvas-header border-bottom py-3" style="background: var(--card-bg);">
-        <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Final Thesis Document</h6>
-        <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-    </div>
-    <div class="offcanvas-body p-0" style="background: #f8fafc;">
-        <iframe id="thesisIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
-    </div>
-</div>
+<?php include __DIR__ . '/../shared/thesis_offcanvas.php'; ?>
