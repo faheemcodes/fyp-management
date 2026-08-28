@@ -5,6 +5,9 @@ class SupervisorController extends BaseController {
 
     public function chat() {
         $db = \Database::getInstance()->getConnection();
+        $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND redirect_url LIKE '%/chat%'")->execute([$_SESSION['user_id']]);
+
+        $db = \Database::getInstance()->getConnection();
         $supervisorId = $_SESSION['user_id'];
         
         // Fetch all group leaders for approved projects assigned to this supervisor
