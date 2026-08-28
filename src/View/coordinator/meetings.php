@@ -18,11 +18,11 @@
             </div>
         </div>
         <div class="position-relative">
-            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3" style="color: rgba(255,255,255,0.6);"></i>
-            <input type="text" id="meetingSearch" class="form-control text-white" placeholder="Search meetings..." style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding-left: 2.5rem; width: 250px; box-shadow: none;">
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3" style="color: var(--text-muted);"></i>
+            <input type="text" id="meetingSearch" class="form-control search-hero" placeholder="Search meetings..." style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 20px; padding-left: 2.5rem; width: 250px; box-shadow: none;">
             <style>
-                #meetingSearch::placeholder { color: rgba(255,255,255,0.6); }
-                #meetingSearch:focus { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+                .search-hero::placeholder { color: var(--text-muted); }
+                .search-hero:focus { background: var(--bg-surface); border-color: #3b82f6; outline: none; box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important; }
             </style>
         </div>
     </div>
