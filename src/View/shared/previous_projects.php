@@ -144,7 +144,8 @@
                             'abstract' => nl2br(htmlspecialchars($proj['abstract'])),
                             'batch' => $proj['batch_name'],
                             'supervisor' => $proj['supervisor_name'],
-                            'team' => $proj['team_members']
+                            'team' => $proj['team_members'],
+                            'thesis' => $proj['thesis_file'] ?? null
                         ])); ?>)">
                             Read More
                         </button>
@@ -165,9 +166,12 @@
             </div>
             <div class="modal-body px-4 py-4" style="background: var(--bg-color);">
                 
-                <div class="d-flex flex-wrap gap-2 mb-4">
-                    <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.8rem; padding: 0.5rem 0.75rem;"><i class="bi bi-clock-history me-1"></i> <span id="modalBatch">Batch</span></span>
-                    <span class="badge" style="background: rgba(139,92,246,0.1); color: #8b5cf6; font-size: 0.8rem; padding: 0.5rem 0.75rem;"><i class="bi bi-person-badge-fill me-1"></i> Sup. <span id="modalSupervisor">Supervisor</span></span>
+                <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between align-items-center">
+                    <div>
+                        <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.8rem; padding: 0.5rem 0.75rem;"><i class="bi bi-clock-history me-1"></i> <span id="modalBatch">Batch</span></span>
+                        <span class="badge" style="background: rgba(139,92,246,0.1); color: #8b5cf6; font-size: 0.8rem; padding: 0.5rem 0.75rem;"><i class="bi bi-person-badge-fill me-1"></i> Sup. <span id="modalSupervisor">Supervisor</span></span>
+                    </div>
+                    <div id="modalThesisBtnContainer"></div>
                 </div>
 
                 <div class="mb-4">
@@ -271,7 +275,35 @@ function viewProjectDetails(data) {
     document.getElementById('modalAbstract').innerHTML = data.abstract || 'No abstract provided.';
     document.getElementById('modalTeam').textContent = data.team || 'No team members listed.';
     
+    var thesisBtnContainer = document.getElementById('modalThesisBtnContainer');
+    if (data.thesis) {
+        thesisBtnContainer.innerHTML = `<button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="viewThesisOffcanvas('${data.thesis}')"><i class="bi bi-file-earmark-pdf-fill me-2"></i>View Thesis Document</button>`;
+    } else {
+        thesisBtnContainer.innerHTML = '';
+    }
+    
     var modal = new bootstrap.Modal(document.getElementById('projectDetailsModal'));
     modal.show();
 }
+
+function viewThesisOffcanvas(path) {
+    var offcanvasEl = document.getElementById('thesisOffcanvas');
+    var iframe = document.getElementById('thesisIframe');
+    iframe.src = '<?php echo $basePath; ?>/' + path;
+    var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+    offcanvas.show();
+}
 </script>
+
+<!-- Thesis Document Offcanvas Viewer -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="thesisOffcanvas" aria-labelledby="thesisOffcanvasLabel" style="width: 800px; max-width: 100vw;">
+    <div class="offcanvas-header border-bottom py-3" style="background: var(--card-bg);">
+        <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Final Thesis Document</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0" style="background: #f8fafc;">
+        <iframe id="thesisIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</div>

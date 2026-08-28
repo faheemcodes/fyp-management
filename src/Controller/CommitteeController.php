@@ -20,7 +20,7 @@ class CommitteeController extends BaseController {
         $pendingCount = max(0, ($totalGroups * 3) - $gradedCount);
 
         // Fetch groups list
-        $groups = $db->query("SELECT g.*, p.title as project_title, p.status as project_status, sup.name as supervisor_name
+        $groups = $db->query("SELECT g.*, p.title as project_title, p.thesis_file, p.status as project_status, sup.name as supervisor_name
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
@@ -54,7 +54,7 @@ class CommitteeController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch groups along with scheduled and graded evaluation records for this committee member, including abstract
-        $groups = $db->query("SELECT g.*, p.title as project_title, sup.name as supervisor_name, prop.abstract as proposal_abstract
+        $groups = $db->query("SELECT g.*, p.title as project_title, p.thesis_file, sup.name as supervisor_name, prop.abstract as proposal_abstract
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id

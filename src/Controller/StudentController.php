@@ -668,6 +668,78 @@ class StudentController extends BaseController {
         }
         redirect('/student/proposal');
     }
+    public function uploadThesis() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_SESSION['user_id'];
+            $db = \Database::getInstance()->getConnection();
+            $group = $this->getStudentGroup($userId);
+
+            if (!$group) {
+                $this->flash('error', 'You do not have a group yet.');
+                redirect('/student/proposal');
+            }
+            if ($group['created_by'] != $userId) {
+                $this->flash('error', 'Only the group leader can upload the thesis.');
+                redirect('/student/proposal');
+            }
+
+            // Ensure project is Approved before allowing thesis upload
+            $stmt = $db->prepare("SELECT id, status, thesis_file FROM projects WHERE group_id = ?");
+            $stmt->execute([$group['id']]);
+            $project = $stmt->fetch();
+
+            if (!$project || $project['status'] !== 'Approved') {
+                $this->flash('error', 'Your proposal must be Approved before you can upload the final thesis.');
+                redirect('/student/proposal');
+            }
+
+            if (!isset($_FILES['thesis_document']) || $_FILES['thesis_document']['error'] !== UPLOAD_ERR_OK) {
+                $this->flash('error', 'Please select a valid PDF file.');
+                redirect('/student/proposal');
+            }
+
+            $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($fileInfo, $_FILES['thesis_document']['tmp_name']);
+            finfo_close($fileInfo);
+
+            if ($mimeType !== 'application/pdf') {
+                $this->flash('error', 'Only PDF files are allowed for thesis submissions.');
+                redirect('/student/proposal');
+            }
+
+            if ($_FILES['thesis_document']['size'] > 15 * 1024 * 1024) {
+                $this->flash('error', 'File size must be less than 15MB.');
+                redirect('/student/proposal');
+            }
+
+            $uploadDir = __DIR__ . '/../../public/uploads/theses/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $fileName = $group['group_code'] . '_Thesis_' . time() . '.pdf';
+            $destPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['thesis_document']['tmp_name'], $destPath)) {
+                // Delete old thesis if exists
+                if ($project['thesis_file']) {
+                    $oldPath = __DIR__ . '/../../public/' . $project['thesis_file'];
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+
+                $dbPath = 'uploads/theses/' . $fileName;
+                $stmt = $db->prepare("UPDATE projects SET thesis_file = ? WHERE id = ?");
+                $stmt->execute([$dbPath, $project['id']]);
+
+                $this->flash('success', 'Final thesis uploaded successfully.');
+            } else {
+                $this->flash('error', 'Failed to save the uploaded file.');
+            }
+            redirect('/student/proposal');
+        }
+    }
 
 
     public function grade() {

@@ -16,6 +16,7 @@ class PreviousProjectsController extends BaseController {
                 p.id as project_id, 
                 p.title, 
                 p.description as abstract, 
+                p.thesis_file,
                 g.group_code, 
                 b.name as batch_name,
                 sup.name as supervisor_name,

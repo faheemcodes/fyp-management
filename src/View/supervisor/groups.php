@@ -422,11 +422,18 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                <div class="mb-4">
-                    <h5 class="fw-bold mb-2" style="color: var(--text-primary)"><?php echo htmlspecialchars($g['project_title']); ?></h5>
-                    <span class="badge" style="background: rgba(16,185,129,0.1);color: #10b981;font-weight: 600;padding: 6px 12px;border-radius: 20px">
-                        Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
-                    </span>
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold mb-2" style="color: var(--text-primary)"><?php echo htmlspecialchars($g['project_title']); ?></h5>
+                        <span class="badge" style="background: rgba(16,185,129,0.1);color: #10b981;font-weight: 600;padding: 6px 12px;border-radius: 20px">
+                            Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
+                        </span>
+                    </div>
+                    <?php if (!empty($g['thesis_file'])): ?>
+                        <button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($g['thesis_file']); ?>')">
+                            <i class="bi bi-file-earmark-pdf-fill me-2"></i>View Thesis
+                        </button>
+                    <?php endif; ?>
                 </div>
                 
                 <div class="mb-4">
@@ -526,11 +533,40 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 <?php endforeach; ?>
 
 <script>
+    function viewThesisOffcanvas(path) {
+        var offcanvasEl = document.getElementById('thesisOffcanvas');
+        var iframe = document.getElementById('thesisIframe');
+        iframe.src = '<?php echo $basePath; ?>/' + path;
+        var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+        
+        // Hide currently open modal if any to avoid backdrop clash
+        const openModal = document.querySelector('.modal.show');
+        if(openModal) {
+            const modalInstance = bootstrap.Modal.getInstance(openModal);
+            if(modalInstance) modalInstance.hide();
+        }
+        
+        offcanvas.show();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Move all modals to the body to prevent z-index issues from CSS stacking contexts
-        const modals = document.querySelectorAll('.modal');
+        const modals = document.querySelectorAll('.modal, .offcanvas');
         modals.forEach(modal => {
             document.body.appendChild(modal);
         });
     });
 </script>
+
+<!-- Thesis Document Offcanvas Viewer -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="thesisOffcanvas" aria-labelledby="thesisOffcanvasLabel" style="width: 800px; max-width: 100vw;">
+    <div class="offcanvas-header border-bottom py-3" style="background: var(--card-bg);">
+        <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Final Thesis Document</h6>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0" style="background: #f8fafc;">
+        <iframe id="thesisIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</div>

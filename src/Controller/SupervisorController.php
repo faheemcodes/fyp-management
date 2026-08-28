@@ -77,7 +77,7 @@ class SupervisorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch all supervised groups with grades
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.thesis_file
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             JOIN academic_batches b ON g.batch_id = b.id

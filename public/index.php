@@ -153,6 +153,7 @@ $routes = [
     '/student/meetings' => ['Controller\StudentController', 'meetings'],
     '/student/meetings/request' => ['Controller\StudentController', 'requestMeeting'],
     '/student/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    '/student/thesis/upload' => ['Controller\StudentController', 'uploadThesis'],
     
     // Supervisor routes
     '/supervisor/dashboard' => ['Controller\SupervisorController', 'dashboard'],
