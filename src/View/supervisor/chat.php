@@ -70,7 +70,7 @@
     text-overflow: ellipsis;
 }
 .contact-project {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -301,7 +301,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     flex-shrink: 0;
     transition: background 0.2s;
 }
@@ -577,9 +577,9 @@
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.3);
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    padding: 0.35em 0.65em;
+    padding: 0.2em 0.5em;
     border-radius: 50rem;
     display: inline-flex;
     align-items: center;
@@ -1581,9 +1581,9 @@ html.dark-theme .lightbox-thumb-item.active {
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.3);
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    padding: 0.35em 0.65em;
+    padding: 0.2em 0.5em;
     border-radius: 50rem;
     display: inline-flex;
     align-items: center;
