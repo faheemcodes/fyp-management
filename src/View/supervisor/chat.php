@@ -572,6 +572,22 @@
     .file-img-wrap { max-width: 240px; }
     .file-doc-card { min-width: 190px; max-width: 250px; }
 }
+
+.unread-badge {
+    background-color: #ef4444; /* red */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 0 6px;
+    margin-left: auto; /* Pushes badge to the far right */
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
 </style>
 <?php
 $title = 'Messages';
@@ -719,8 +735,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             let badge = item.querySelector('.unread-badge');
             if (!badge) {
                 badge = document.createElement('span');
-                badge.className = 'unread-badge badge bg-danger rounded-pill';
-                badge.style.fontSize = '0.7rem';
+                badge.className = 'unread-badge';
                 item.appendChild(badge);
             }
             
@@ -728,7 +743,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 item.dataset.lastUpdated = chatData.lastUpdated;
                 if (chatData.unreadCount > 0 && currentLeaderId !== leaderId) {
                     badge.textContent = chatData.unreadCount;
-                    badge.style.display = 'inline-block';
+                    badge.style.display = 'inline-flex';
                 } else {
                     badge.style.display = 'none';
                     if (chatData.unreadCount > 0 && currentLeaderId === leaderId) {
@@ -1562,6 +1577,22 @@ html.dark-theme .lightbox-thumb-item.active {
         height: 80px !important;
         padding: 0 15px !important;
     }
+}
+
+.unread-badge {
+    background-color: #ef4444; /* red */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 0 6px;
+    margin-left: auto; /* Pushes badge to the far right */
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
 }
 </style>
 
