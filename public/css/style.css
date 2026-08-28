@@ -390,7 +390,7 @@ html.dark-theme .table-light th {
 }
 
 /* ─── Forms ─── */
-.form-control, .form-select, .form-check-input {
+.form-control, .form-select {
     padding: 10px 14px;
     border-radius: var(--border-radius-sm);
     border: 1px solid #cbd5e1 !important; /* Soft, distinct grey border */
@@ -410,9 +410,15 @@ html.dark-theme .table-light th {
     border-color: #cbd5e1 !important;
 }
 
+html.dark-theme .form-control:focus,
+html.dark-theme .form-select:focus {
+    background-color: #18181b !important;
+    border-color: #3b82f6 !important;
+    color: #e2e8f0;
+}
+
 html.dark-theme .form-control, 
-html.dark-theme .form-select,
-html.dark-theme .form-check-input {
+html.dark-theme .form-select {
     border: 1px solid #3f3f46 !important; /* Visible soft grey border for dark theme */
     background-color: #18181b !important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;

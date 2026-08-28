@@ -32,6 +32,31 @@
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
+
+/* ─── Modern Switch ─── */
+.modern-switch .form-check-input {
+    width: 2.6em;
+    height: 1.3em;
+    margin-top: 0.15em;
+    cursor: pointer;
+    background-color: var(--border-color);
+    border: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-position 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease !important;
+}
+.modern-switch .form-check-input:checked {
+    background-color: #475569; /* Sleek Slate Gray */
+    border-color: #475569;
+}
+.modern-switch .form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(71, 85, 105, 0.25);
+}
+.modern-switch .form-check-label {
+    padding-left: 0.4rem;
+    padding-top: 0.1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
 </style>
 
 <div class="page-hero mb-4">
@@ -78,9 +103,9 @@
         </div>
         <?php if ($role === 'supervisor'): ?>
         <div class="col-12 mt-3 pt-3 border-top">
-            <div class="form-check form-switch">
+            <div class="form-check form-switch modern-switch d-flex align-items-center">
                 <input class="form-check-input" type="checkbox" id="myProjectsToggle" checked>
-                <label class="form-check-label text-muted small fw-medium" for="myProjectsToggle">View only my supervised projects</label>
+                <label class="form-check-label text-muted fw-medium" for="myProjectsToggle">View only my supervised projects</label>
             </div>
         </div>
         <?php endif; ?>
