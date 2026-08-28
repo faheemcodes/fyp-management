@@ -75,7 +75,7 @@ $unreadStudentChat = 0;
 if ($role === 'student') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
-        $stmtG = $dbSidebar->prepare("SELECT group_id FROM students s JOIN `groups` g ON s.user_id = g.created_by OR s.user_id IN (SELECT student_id FROM group_members WHERE group_id = g.id) WHERE s.user_id = ? LIMIT 1");
+        $stmtG = $dbSidebar->prepare("SELECT g.id FROM students s JOIN `groups` g ON s.user_id = g.created_by OR s.user_id IN (SELECT student_id FROM group_members WHERE group_id = g.id) WHERE s.user_id = ? LIMIT 1");
         $stmtG->execute([$_SESSION['user_id'] ?? 0]);
         $grpId = $stmtG->fetchColumn();
         
