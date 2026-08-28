@@ -450,23 +450,25 @@ foreach (($supervisors ?? []) as $s) {
         <div class="col-lg-5">
             <?php if ($project && $project['status'] === 'Approved'): ?>
             <!-- Final Thesis Upload -->
-            <div class="page-section border-primary">
-                <div class="page-section-header bg-primary bg-opacity-10">
-                    <div class="page-section-icon bg-primary text-white">
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1);color: #3b82f6">
                         <i class="bi bi-book-half"></i>
                     </div>
                     <div>
-                        <h6 class="text-primary fw-bold mb-0">Final Thesis</h6>
-                        <small class="text-muted">Upload your final thesis document</small>
+                        <h6>Final Thesis</h6>
+                        <small>Upload your final thesis document</small>
                     </div>
                 </div>
                 <div class="page-section-body">
                     <?php if ($project['thesis_file']): ?>
                         <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2);">
-                            <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+                            <div class="fs-2 text-success" style="line-height: 1;"><i class="bi bi-check-circle-fill"></i></div>
                             <div>
-                                <h6 class="mb-1 text-success fw-bold">Thesis Uploaded</h6>
-                                <button type="button" class="btn btn-link p-0 text-decoration-none small" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')"><i class="bi bi-file-earmark-pdf-fill me-1"></i>View Document</button>
+                                <h6 class="mb-1 fw-bold" style="color: #059669; font-size: 0.9rem;">Thesis Uploaded</h6>
+                                <button type="button" class="btn btn-link p-0 text-decoration-none" style="font-size: 0.8rem; font-weight: 500;" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Document
+                                </button>
                             </div>
                         </div>
                     <?php endif; ?>
