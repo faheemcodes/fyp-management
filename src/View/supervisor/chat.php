@@ -871,7 +871,16 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 
                 let fileContent = '';
                 if (data.fileUrl) {
+                    let isImage = false;
                     if (data.fileType && data.fileType.startsWith('image/')) {
+                        isImage = true;
+                    } else if (data.fileName) {
+                        const ext = data.fileName.split('.').pop().toLowerCase();
+                        if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'jfif'].includes(ext)) {
+                            isImage = true;
+                        }
+                    }
+                    if (isImage) {
                         fileContent = `
                         <div class="file-img-wrap mb-1" style="position: relative; cursor: pointer;" onclick="openLightbox('${data.fileUrl}', '${data.fileName || 'image'}')">
                             <img src="${data.fileUrl}" alt="${data.fileName || 'Image'}" loading="lazy" style="display: block; width: 100%;">
