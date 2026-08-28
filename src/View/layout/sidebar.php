@@ -325,6 +325,11 @@ if ($role === 'supervisor') {
                     <i class="bi bi-megaphone-fill"></i> Notice Generator
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="<?php echo $urlPrefix; ?>/coordinator/meetings" class="nav-link <?php echo isActive('/coordinator/meetings', $currentUri); ?>">
+                    <i class="bi bi-calendar2-check-fill"></i> Meetings Audit
+                </a>
+            </li>
         <?php endif; ?>
         
         

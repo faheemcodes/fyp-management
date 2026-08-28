@@ -213,7 +213,7 @@
             
             <?php 
             $pastMeetings = array_filter($meetings, function($m) {
-                return in_array($m['status'], ['Completed', 'Cancelled']);
+                return in_array($m['status'], ['Completed', 'Cancelled', 'Verified']);
             });
             
             if (empty($pastMeetings)): ?>
@@ -231,9 +231,15 @@
                                 <?php
                                     $bg = ''; $color = '';
                                     if ($meeting['status'] === 'Completed') { $bg = 'rgba(59,130,246,0.1)'; $color = '#3b82f6'; }
+                                    elseif ($meeting['status'] === 'Verified') { $bg = 'rgba(16,185,129,0.1)'; $color = '#10b981'; }
                                     elseif ($meeting['status'] === 'Cancelled') { $bg = 'rgba(239,68,68,0.1)'; $color = '#ef4444'; }
                                 ?>
-                                <span class="badge" style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-size: 0.65rem;"><?php echo $meeting['status']; ?></span>
+                                <span class="badge" style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-size: 0.65rem;">
+                                    <?php if ($meeting['status'] === 'Verified'): ?>
+                                        <i class="bi bi-shield-check me-1"></i>
+                                    <?php endif; ?>
+                                    <?php echo $meeting['status']; ?>
+                                </span>
                             </div>
                             <h6 class="mb-1 fw-bold" style="font-size: 0.85rem; color: var(--text-primary)"><?php echo htmlspecialchars($meeting['subject']); ?></h6>
                             <span class="text-muted d-block mb-2" style="font-size: 0.75rem;">

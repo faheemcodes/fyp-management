@@ -523,4 +523,61 @@ class CoordinatorController extends BaseController {
             }
         }
     }
+
+    public function meetings() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+
+        $stmt = $db->prepare("
+            SELECT m.*, p.title as project_title, g.group_code, s.name as group_leader_name, sup.name as supervisor_name
+            FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            JOIN supervisors sup ON m.supervisor_id = sup.user_id
+            WHERE s.department = ? AND m.status IN ('Completed', 'Verified')
+            ORDER BY m.meeting_date DESC
+        ");
+        $stmt->execute([$dept]);
+        $meetings = $stmt->fetchAll();
+
+        $this->render('coordinator/meetings', [
+            'meetings' => $meetings
+        ]);
+    }
+
+    public function verifyMeeting() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $meetingId = $_POST['meeting_id'] ?? null;
+            $status = $_POST['status'] ?? ''; 
+
+            if ($meetingId && $status === 'Verified') {
+                $db = \Database::getInstance()->getConnection();
+                
+                $userId = $_SESSION['user_id'];
+                $dept = $this->getCoordinatorDept($db, $userId);
+
+                $stmt = $db->prepare("
+                    SELECT m.id 
+                    FROM meetings m
+                    JOIN `groups` g ON m.group_id = g.id
+                    JOIN students s ON g.created_by = s.user_id
+                    WHERE m.id = ? AND s.department = ?
+                ");
+                $stmt->execute([$meetingId, $dept]);
+                $isValid = $stmt->fetchColumn();
+
+                if ($isValid) {
+                    $stmtUpdate = $db->prepare("UPDATE meetings SET status = 'Verified' WHERE id = ?");
+                    $stmtUpdate->execute([$meetingId]);
+                    $this->flash('success', 'Meeting successfully verified.');
+                } else {
+                    $this->flash('error', 'Unauthorized action.');
+                }
+            }
+        }
+        redirect('/coordinator/meetings');
+    }
 }

@@ -188,6 +188,8 @@ $routes = [
     '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
     '/coordinator/assessment' => ['Controller\CoordinatorController', 'externalAssessment'],
     '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
+    '/coordinator/meetings' => ['Controller\CoordinatorController', 'meetings'],
+    '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
     
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
