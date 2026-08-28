@@ -462,26 +462,41 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
                 <div class="page-section-body">
                     <?php if ($project['thesis_file']): ?>
-                        <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2);">
-                            <div class="fs-2 text-success" style="line-height: 1;"><i class="bi bi-check-circle-fill"></i></div>
-                            <div>
-                                <h6 class="mb-1 fw-bold" style="color: #059669; font-size: 0.9rem;">Thesis Uploaded</h6>
-                                <button type="button" class="btn btn-link p-0 text-decoration-none" style="font-size: 0.8rem; font-weight: 500;" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
-                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Document
-                                </button>
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(16,185,129,0.05), rgba(16,185,129,0.1)); border: 1px dashed rgba(16,185,129,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(16,185,129,0.15); border-radius: 50%; color: #10b981;">
+                                <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
                             </div>
+                            <h6 class="fw-bold mb-1" style="color: #059669;">Thesis Submitted</h6>
+                            <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
+                            <button type="button" class="btn btn-sm btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                                <i class="bi bi-eye-fill me-2"></i>Open Document
+                            </button>
                         </div>
                     <?php endif; ?>
                     
                     <?php if ($isLeader): ?>
                     <form action="<?php echo $basePath; ?>/student/thesis/upload" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Select Thesis (PDF only)</label>
-                            <input class="form-control form-control-sm" type="file" name="thesis_document" accept="application/pdf" required>
+                        
+                        <div class="p-3 rounded-4 mb-3" style="background: var(--body-bg); border: 1px solid var(--border-color);">
+                            <label class="form-label fw-bold d-flex align-items-center" style="font-size: 0.85rem; color: var(--text-primary);">
+                                <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i><?php echo $project['thesis_file'] ? 'Update Document' : 'Upload Document'; ?>
+                            </label>
+                            <p class="text-muted" style="font-size: 0.75rem; margin-bottom: 12px; line-height: 1.4;">Please select a PDF file. Uploading a new file will replace the current one.</p>
+                            <input class="form-control form-control-sm shadow-none" type="file" name="thesis_document" accept="application/pdf" required style="border-radius: 6px;">
                         </div>
-                        <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold"><i class="bi bi-cloud-arrow-up-fill me-2"></i><?php echo $project['thesis_file'] ? 'Update Thesis' : 'Upload Thesis'; ?></button>
+                        
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold shadow-sm" style="padding: 0.6rem;">
+                            <?php echo $project['thesis_file'] ? 'Submit Replacement' : 'Submit Thesis'; ?>
+                        </button>
                     </form>
+                    <?php else: ?>
+                        <?php if (!$project['thesis_file']): ?>
+                        <div class="text-center p-4 rounded-4 mt-3" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-3 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.8rem;">Only the group leader can upload the final thesis document.</p>
+                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
