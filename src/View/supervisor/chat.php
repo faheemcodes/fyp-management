@@ -683,7 +683,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 <!-- Firebase Integration -->
 <script type="module">
-        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, getDocs, where } from '<?php echo $bp; ?>/js/firebase-config.js';
+        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, getDocs, where, increment } from '<?php echo $bp; ?>/js/firebase-config.js?v=2';
 
     const supervisorId = "<?php echo $supervisorId; ?>";
     let currentLeaderId = null;

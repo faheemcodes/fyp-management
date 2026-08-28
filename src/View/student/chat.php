@@ -556,7 +556,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
 
     <!-- Firebase Integration -->
     <script type="module">
-        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, increment } from '<?php echo $bp; ?>/js/firebase-config.js';
+        import { db, storage, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, updateDoc, deleteDoc, ref, uploadBytes, getDownloadURL, increment } from '<?php echo $bp; ?>/js/firebase-config.js?v=2';
 
         const studentId = "<?php echo htmlspecialchars((string)($studentId), ENT_QUOTES, 'UTF-8'); ?>";
         const supervisorId = "<?php echo htmlspecialchars((string)($supervisor['id']), ENT_QUOTES, 'UTF-8'); ?>";
@@ -651,7 +651,7 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
         });
 
         // Reference to the messages subcollection
-        await setDoc(chatDocRef, { unreadCount_student: 0 }, { merge: true });
+        setDoc(chatDocRef, { unreadCount_student: 0 }, { merge: true }).catch(console.error);
             const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
