@@ -307,33 +307,35 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
 
 /* ─── Mobile Responsiveness ─── */
 @media (max-width: 768px) {
-    .gs-hero {
-        padding: 12px 16px;
-        position: sticky; /* Keep sticky on mobile */
-        top: 60px; /* Mobile top navbar is usually shorter */
+    .page-hero, .gs-hero {
+        padding: 16px !important;
         margin-bottom: 16px;
     }
+    .page-hero .d-flex.flex-column > div,
     .gs-hero .d-flex.flex-column > div {
         width: 100%;
-        justify-content: flex-start;
     }
-    .gs-hero-icon {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 1rem !important;
-    }
-    .gs-hero h4 {
-        font-size: 1.1rem !important;
-    }
-    .gs-hero p.mb-0 {
-        display: none; /* Hide subtitle to save vertical space on mobile */
-    }
+    .page-hero .search-and-print,
     .gs-hero .search-and-print {
-        flex-wrap: wrap;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 10px !important;
+        margin-top: 6px;
     }
     .custom-search-bar {
-        max-width: 100%;
+        max-width: 100% !important;
+        width: 100% !important;
         flex: 1 1 auto;
+    }
+    .search-and-print .btn {
+        width: 100% !important;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px !important;
     }
     .eval-table-wrapper {
         padding-bottom: 10px;
