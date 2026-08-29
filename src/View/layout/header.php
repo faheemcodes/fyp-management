@@ -18,8 +18,8 @@
     }
     ?>
     <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
-    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.1" rel="stylesheet">
-    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.1" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.2" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.2" rel="stylesheet">
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark-theme');
@@ -32,7 +32,7 @@
         }
     </script>
 </head>
-<body>
+<body data-role="<?php echo htmlspecialchars($_SESSION['role'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <?php include __DIR__ . '/loader.php'; ?>
 <div class="d-flex">
     <!-- Sidebar component is loaded separately right after header -->
