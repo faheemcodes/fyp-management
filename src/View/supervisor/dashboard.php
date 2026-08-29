@@ -10,41 +10,18 @@ $firstName = explode(' ', $fullName)[0];
 
 <!-- Top Hero Banner -->
 <div class="page-hero">
-    <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
-        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
-            <div class="page-hero-icon">
-                <i class="bi bi-person-workspace"></i>
-            </div>
-            <div>
-                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
-                    Welcome Back
-                </p>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
-                    <?php echo htmlspecialchars($fullName); ?>
-                </h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Manage your assigned groups and track their progress</p>
-            </div>
+    <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+        <div class="page-hero-icon">
+            <i class="bi bi-person-workspace"></i>
         </div>
-
-        <div class="d-flex flex-wrap hero-stats-container">
-            <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num text-white"><?php echo htmlspecialchars((string)($groupCount), ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span class="stat-label text-white">Assigned Groups</span>
-                </div>
-            </a>
-            <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
-                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($pendingProposals), ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span class="stat-label text-white">Pending Proposals</span>
-                </div>
-            </a>
-            <a href="<?php echo $basePath; ?>/supervisor/meetings" class="text-decoration-none">
-                <div class="page-stat-pill" style="margin-right: 0;transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <span class="stat-num text-white"><?php echo htmlspecialchars((string)($meetingsCount ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span class="stat-label text-white">Meetings</span>
-                </div>
-            </a>
+        <div>
+            <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
+                Welcome Back
+            </p>
+            <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                <?php echo htmlspecialchars($fullName); ?>
+            </h4>
+            <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Manage your assigned groups and track their progress</p>
         </div>
     </div>
 </div>
