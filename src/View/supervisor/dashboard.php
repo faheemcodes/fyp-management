@@ -34,19 +34,20 @@ $firstName = explode(' ', $fullName)[0];
                 </div>
             </a>
             <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
-                <div class="page-stat-pill" style="margin-right: 0;transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="page-stat-pill" style="transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <span class="stat-num text-warning"><?php echo htmlspecialchars((string)($pendingProposals), ENT_QUOTES, 'UTF-8'); ?></span>
                     <span class="stat-label text-white">Pending Proposals</span>
+                </div>
+            </a>
+            <a href="<?php echo $basePath; ?>/supervisor/meetings" class="text-decoration-none">
+                <div class="page-stat-pill" style="margin-right: 0;transition: transform 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span class="stat-num text-white"><?php echo htmlspecialchars((string)($meetingsCount ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span class="stat-label text-white">Meetings</span>
                 </div>
             </a>
         </div>
     </div>
 </div>
-
-<?php
-// Set a default for unread messages since the table isn't set up yet
-$unreadMessages = 0;
-?>
 
 <!-- -- Premium Stat Cards Row -- -->
 <div class="row g-3 mb-4">
@@ -92,18 +93,18 @@ $unreadMessages = 0;
         </a>
     </div>
 
-    <!-- Messages Card -->
+    <!-- Meetings Card -->
     <div class="col-xl-4 col-md-12">
-        <a href="<?php echo $basePath; ?>/supervisor/chat" class="text-decoration-none">
+        <a href="<?php echo $basePath; ?>/supervisor/meetings" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-purple">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
                     <div class="premium-card-icon premium-icon-purple">
-                        <i class="bi bi-chat-dots-fill"></i>
+                        <i class="bi bi-calendar-event-fill"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($unreadMessages), ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="premium-card-label">Unread Messages</div>
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($meetingsCount ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Scheduled Meetings</div>
                     </div>
                     <div class="premium-card-arrow">
                         <i class="bi bi-arrow-right-short"></i>

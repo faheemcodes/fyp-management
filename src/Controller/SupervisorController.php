@@ -72,9 +72,15 @@ class SupervisorController extends BaseController {
         $stmtNotices->execute([$department]);
         $recentNotices = $stmtNotices->fetchAll();
 
+        // Get count of scheduled and pending meetings
+        $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings WHERE supervisor_id = ? AND status IN ('Pending', 'Scheduled')");
+        $stmtMeetings->execute([$supervisorId]);
+        $meetingsCount = $stmtMeetings->fetchColumn();
+
         $this->render('supervisor/dashboard', [
             'groupCount' => $groupCount,
             'pendingProposals' => $pendingProposals,
+            'meetingsCount' => $meetingsCount,
             'groups' => $groups,
             'recentNotices' => $recentNotices
         ]);
