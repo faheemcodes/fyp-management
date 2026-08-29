@@ -5,10 +5,14 @@ class SupervisorController extends BaseController {
 
     public function chat() {
         $db = \Database::getInstance()->getConnection();
-        $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND redirect_url LIKE '%/chat%'")->execute([$_SESSION['user_id']]);
-
-        $db = \Database::getInstance()->getConnection();
         $supervisorId = $_SESSION['user_id'];
+
+        // If a specific user is targeted in query param, mark only that user's notifications as read
+        if (!empty($_GET['user']) && is_numeric($_GET['user'])) {
+            $targetUser = (int)$_GET['user'];
+            $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND (redirect_url LIKE ? OR redirect_url LIKE ?)")
+               ->execute([$supervisorId, '%user=' . $targetUser, '%user_id=' . $targetUser]);
+        }
         
         // Fetch all group leaders for approved projects assigned to this supervisor
         $stmt = $db->prepare("

@@ -151,7 +151,7 @@ class ChatController extends BaseController {
         }
 
         $title = "New Message from " . $senderName;
-        $redirectUrl = ($_SESSION['role'] === 'student') ? '/supervisor/chat' : '/student/chat'; // recipient's route
+        $redirectUrl = ($_SESSION['role'] === 'student') ? '/supervisor/chat?user=' . (int)$senderId : '/student/chat'; // recipient's route
 
         $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url, created_at) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$recipientId, $title, substr($messagePreview, 0, 100), $redirectUrl, date('Y-m-d H:i:s')]);

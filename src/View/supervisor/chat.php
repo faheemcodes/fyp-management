@@ -865,51 +865,86 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         }
     });
 
-    allContactItems.forEach(item => {
-        item.addEventListener('click', () => {
-            // UI Selection
-            allContactItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
+    function selectContact(item) {
+        if (!item) return;
 
-            // Mobile toggle
-            document.querySelector('.chat-wrapper').classList.add('chat-active');
+        // UI Selection
+        contactsList.querySelectorAll('.contact-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
 
-            // Setup chat
-            currentLeaderId = item.getAttribute('data-leader-id');
-            const leaderName = item.getAttribute('data-leader-name');
-            const avatarUrl = item.getAttribute('data-avatar');
-            const initial = item.getAttribute('data-initial');
-            const groupCode = item.getAttribute('data-group-code');
-            const chatHeaderSubtitle = document.getElementById('chatHeaderSubtitle');
-            
-            chatHeaderName.textContent = leaderName;
-            
-            if (chatHeaderSubtitle) {
-                if (currentLeaderId === 'broadcast') {
-                    chatHeaderSubtitle.textContent = 'Broadcast Announcement';
-                } else if (groupCode && groupCode.trim() !== '') {
-                    chatHeaderSubtitle.textContent = `Group Leader - ${groupCode}`;
-                } else {
-                    chatHeaderSubtitle.textContent = 'Group Leader';
-                }
-            }
-            
-            if (avatarUrl) {
-                chatHeaderAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">`;
+        // Mobile toggle
+        document.querySelector('.chat-wrapper').classList.add('chat-active');
+
+        // Setup chat
+        currentLeaderId = item.getAttribute('data-leader-id');
+        const leaderName = item.getAttribute('data-leader-name');
+        const avatarUrl = item.getAttribute('data-avatar');
+        const initial = item.getAttribute('data-initial');
+        const groupCode = item.getAttribute('data-group-code');
+        const chatHeaderSubtitle = document.getElementById('chatHeaderSubtitle');
+        
+        chatHeaderName.textContent = leaderName;
+        
+        if (chatHeaderSubtitle) {
+            if (currentLeaderId === 'broadcast') {
+                chatHeaderSubtitle.textContent = 'Broadcast Announcement';
+            } else if (groupCode && groupCode.trim() !== '') {
+                chatHeaderSubtitle.textContent = `Group Leader - ${groupCode}`;
             } else {
-                chatHeaderAvatar.innerHTML = `<span class="fw-bold">${initial}</span>`;
+                chatHeaderSubtitle.textContent = 'Group Leader';
             }
-            
-            emptyState.style.display = 'none';
-            activeChat.style.display = 'flex';
-            
-            loadChat(currentLeaderId);
-        });
+        }
+        
+        if (avatarUrl) {
+            chatHeaderAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">`;
+        } else {
+            chatHeaderAvatar.innerHTML = `<span class="fw-bold">${initial}</span>`;
+        }
+        
+        emptyState.style.display = 'none';
+        activeChat.style.display = 'flex';
+        
+        // Mark MySQL notification for this specific sender as read
+        if (currentLeaderId !== 'broadcast') {
+            fetch('<?php echo $bp; ?>/api/notifications/read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '<?php echo $_SESSION['csrf_token'] ?? ''; ?>'
+                },
+                body: JSON.stringify({ sender_user_id: currentLeaderId })
+            }).then(() => {
+                if (typeof window.fetchNotifications === 'function') {
+                    window.fetchNotifications();
+                }
+            }).catch(e => console.error(e));
+        }
+
+        loadChat(currentLeaderId);
+    }
+
+    contactsList.addEventListener('click', (e) => {
+        const item = e.target.closest('.contact-item');
+        if (item) {
+            selectContact(item);
+        }
     });
 
     document.getElementById('backToContacts').addEventListener('click', () => {
         document.querySelector('.chat-wrapper').classList.remove('chat-active');
+        currentLeaderId = null;
+        contactsList.querySelectorAll('.contact-item').forEach(i => i.classList.remove('active'));
     });
+
+    // Auto-open chat if ?user=ID is in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetUserId = urlParams.get('user');
+    if (targetUserId) {
+        const targetItem = contactsList.querySelector(`[data-leader-id="${targetUserId}"]`);
+        if (targetItem) {
+            selectContact(targetItem);
+        }
+    }
 
     async function loadChat(leaderId) {
         if (unsubscribeSnapshot) {

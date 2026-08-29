@@ -603,10 +603,14 @@ class AuthController extends BaseController {
             $this->validateCsrf();
             $data = json_decode(file_get_contents('php://input'), true);
             $notifId = $data['id'] ?? null;
+            $senderUserId = $data['sender_user_id'] ?? null;
             
             if ($notifId) {
                 $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?");
                 $stmt->execute([$notifId, $userId]);
+            } else if ($senderUserId) {
+                $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND (redirect_url LIKE ? OR redirect_url LIKE ?)");
+                $stmt->execute([$userId, '%user=' . (int)$senderUserId, '%user_id=' . (int)$senderUserId]);
             } else {
                 // Mark all as read
                 $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?");
