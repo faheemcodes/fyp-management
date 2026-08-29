@@ -111,7 +111,10 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     top: 0;
     bottom: 0;
     left: 0;
+    height: 100%;
     height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     z-index: 1040;
     background: var(--sidebar-bg);
     color: var(--text-primary);
@@ -132,12 +135,14 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 #sidebar .sidebar-footer {
     flex-shrink: 0;
     background: var(--sidebar-bg);
     border-top: 1px solid var(--border-color);
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
 #sidebar .nav,
@@ -893,9 +898,18 @@ html.dark-theme .accordion-button::after {
 @media (max-width: 991.98px) {
     #sidebar {
         margin-left: calc(-1 * var(--sidebar-width));
+        height: 100%;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100dvh;
+        top: 0;
+        bottom: 0;
     }
     #sidebar.show {
         margin-left: 0;
+    }
+    #sidebar .sidebar-footer {
+        padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
     }
     #content {
         margin-left: 0;
