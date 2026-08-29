@@ -604,7 +604,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         </div>
         
         <div class="contacts-list">
-            <div class="contact-item" data-leader-id="broadcast" data-leader-name="Broadcast to All Groups" data-avatar="" data-initial="B">
+            <div class="contact-item" data-leader-id="broadcast" data-leader-name="Broadcast to All Groups" data-avatar="" data-initial="B" data-group-code="">
                 <div class="contact-avatar" style="overflow: hidden; background: linear-gradient(135deg, var(--primary-color), #2b4034);">
                     <i class="bi bi-megaphone-fill"></i>
                 </div>
@@ -623,8 +623,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     $hasAvatar = !empty($leader['leader_avatar']) && file_exists(__DIR__ . '/../../../public/uploads/avatars/' . $leader['leader_avatar']);
                     $avatarUrl = $hasAvatar ? $bp . '/uploads/avatars/' . $leader['leader_avatar'] : '';
                     $initial = strtoupper(substr($leader['leader_name'], 0, 1));
+                    $groupCode = $leader['group_code'] ?? '';
                 ?>
-                    <div class="contact-item" data-leader-id="<?php echo $leader['leader_id']; ?>" data-leader-name="<?php echo htmlspecialchars($leader['leader_name']); ?>" data-avatar="<?php echo htmlspecialchars($avatarUrl); ?>" data-initial="<?php echo $initial; ?>">
+                    <div class="contact-item" data-leader-id="<?php echo $leader['leader_id']; ?>" data-leader-name="<?php echo htmlspecialchars($leader['leader_name']); ?>" data-avatar="<?php echo htmlspecialchars($avatarUrl); ?>" data-initial="<?php echo $initial; ?>" data-group-code="<?php echo htmlspecialchars($groupCode); ?>">
                         <div class="contact-avatar" style="overflow: hidden">
                             <?php if ($hasAvatar): ?>
                                 <img src="<?php echo $avatarUrl; ?>" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">
@@ -659,7 +660,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 </div>
                 <div>
                     <h6 class="fw-bold mb-0 text-dark" id="chatHeaderName">Student Name</h6>
-                    <small class="text-muted">Group Leader</small>
+                    <small class="text-muted" id="chatHeaderSubtitle">Group Leader</small>
                 </div>
             </div>
 
@@ -878,8 +879,20 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
             const leaderName = item.getAttribute('data-leader-name');
             const avatarUrl = item.getAttribute('data-avatar');
             const initial = item.getAttribute('data-initial');
+            const groupCode = item.getAttribute('data-group-code');
+            const chatHeaderSubtitle = document.getElementById('chatHeaderSubtitle');
             
             chatHeaderName.textContent = leaderName;
+            
+            if (chatHeaderSubtitle) {
+                if (currentLeaderId === 'broadcast') {
+                    chatHeaderSubtitle.textContent = 'Broadcast Announcement';
+                } else if (groupCode && groupCode.trim() !== '') {
+                    chatHeaderSubtitle.textContent = `Group Leader - ${groupCode}`;
+                } else {
+                    chatHeaderSubtitle.textContent = 'Group Leader';
+                }
+            }
             
             if (avatarUrl) {
                 chatHeaderAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">`;
