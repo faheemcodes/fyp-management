@@ -149,7 +149,7 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             $heroHasAvatar = !empty($heroAvatar) && file_exists($heroAvatarPath);
             $heroInitial = strtoupper(substr(trim($_SESSION['name'] ?? 'S'), 0, 1));
             ?>
-            <div class="page-hero-icon" style="padding: 0; overflow: hidden;">
+            <div class="page-hero-icon page-hero-avatar" style="padding: 0; overflow: hidden;">
                 <?php if($heroHasAvatar): ?>
                     <img src="<?php echo htmlspecialchars($heroBasePath, ENT_QUOTES, 'UTF-8'); ?>/uploads/avatars/<?php echo htmlspecialchars($heroAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
                 <?php else: ?>

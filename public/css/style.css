@@ -1099,7 +1099,7 @@ html.dark-theme .offcanvas .btn-close:hover {
     .page-hero { padding: 24px 16px; }
     .page-stat-pill { margin-bottom: 10px; min-width: calc(50% - 12px); }
     .hero-stats-container { flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-    body[data-role="supervisor"] .page-hero-icon {
+    .page-hero-icon:not(.page-hero-avatar) {
         display: none !important;
     }
 }
