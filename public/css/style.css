@@ -194,7 +194,9 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     background: rgba(var(--primary-rgb), 0.15);
 }
 
-#sidebar .nav-link i {
+#sidebar .nav-link > i,
+#sidebar .nav-link > div > i,
+#sidebar .nav-link i:not(.switch-sun):not(.switch-moon) {
     font-size: 1.05rem;
     flex-shrink: 0;
     width: 28px;
@@ -206,11 +208,13 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     transition: all 0.2s ease;
 }
 
-#sidebar .nav-link.active i {
+#sidebar .nav-link.active > i,
+#sidebar .nav-link.active > div > i {
     color: var(--primary-color);
     background: rgba(var(--primary-rgb), 0.15);
 }
-:root[data-theme="dark"] #sidebar .nav-link.active i {
+:root[data-theme="dark"] #sidebar .nav-link.active > i,
+:root[data-theme="dark"] #sidebar .nav-link.active > div > i {
     color: var(--primary-hover);
     background: rgba(var(--primary-rgb), 0.25);
 }
@@ -234,20 +238,34 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     top: 2px;
     left: 2px;
     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.switch-sun,
+.switch-moon,
+#sidebar .nav-link .theme-switch i {
+    font-size: 0.7rem !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    color: #1e293b !important;
+    position: absolute !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    display: inline-block !important;
+    line-height: 1 !important;
 }
 .switch-sun {
-    font-size: 0.7rem;
-    color: #1e293b;
-    position: absolute;
-    transition: all 0.3s ease;
+    opacity: 1 !important;
+    transform: scale(1) rotate(0deg) !important;
+    transition: all 0.3s ease !important;
 }
 .switch-moon {
-    font-size: 0.7rem;
-    color: #1e293b;
-    position: absolute;
-    transition: all 0.3s ease;
-    opacity: 0;
-    transform: scale(0.5) rotate(90deg);
+    opacity: 0 !important;
+    transform: scale(0.5) rotate(90deg) !important;
+    transition: all 0.3s ease !important;
 }
 html.dark-theme .theme-switch {
     background: #334155 !important;
@@ -255,11 +273,13 @@ html.dark-theme .theme-switch {
 html.dark-theme .theme-switch-knob {
     left: calc(100% - 22px) !important;
 }
-html.dark-theme .switch-sun {
+html.dark-theme .switch-sun,
+html.dark-theme #sidebar .nav-link .theme-switch i.switch-sun {
     opacity: 0 !important;
     transform: scale(0.5) rotate(-90deg) !important;
 }
-html.dark-theme .switch-moon {
+html.dark-theme .switch-moon,
+html.dark-theme #sidebar .nav-link .theme-switch i.switch-moon {
     opacity: 1 !important;
     transform: scale(1) rotate(0deg) !important;
 }

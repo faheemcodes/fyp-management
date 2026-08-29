@@ -404,16 +404,16 @@ if ($role === 'supervisor') {
         <ul class="list-unstyled nav flex-column flex-nowrap mb-0">
             <li class="nav-item mt-1">
                 <a href="#" class="nav-link d-flex align-items-center justify-content-between" id="theme-toggle">
-                    <div class="d-flex align-items-center gap-2 text-truncate">
+                    <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-palette-fill"></i>
                         <span>Appearance</span>
                     </div>
                     
                     <!-- Tiny Pill Switch -->
-                    <div class="theme-switch">
-                        <div class="theme-switch-knob shadow-sm d-flex align-items-center justify-content-center">
-                            <i class="bi bi-brightness-high switch-sun"></i>
-                            <i class="bi bi-moon-stars switch-moon"></i>
+                    <div class="theme-switch" style="width: 44px; height: 24px; border-radius: 24px; background: #cbd5e1; position: relative; transition: all 0.3s ease; flex-shrink: 0;">
+                        <div class="theme-switch-knob shadow-sm d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; border-radius: 50%; background: #ffffff; position: absolute; top: 2px; left: 2px; transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);">
+                            <i class="bi bi-brightness-high switch-sun" style="font-size: 0.7rem; color: #1e293b; position: absolute; transition: all 0.3s ease;"></i>
+                            <i class="bi bi-moon-stars switch-moon" style="font-size: 0.7rem; color: #1e293b; position: absolute; transition: all 0.3s ease; opacity: 0; transform: scale(0.5) rotate(90deg);"></i>
                         </div>
                     </div>
                 </a>
