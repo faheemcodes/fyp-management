@@ -111,13 +111,15 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     top: 0;
     bottom: 0;
     left: 0;
+    height: 100vh;
     z-index: 1040;
     background: var(--sidebar-bg);
     color: var(--text-primary);
-    transition: all var(--transition-speed) ease;
+    transition: width var(--transition-speed) ease, margin-left var(--transition-speed) ease, background-color var(--transition-speed) ease;
     box-shadow: 4px 0 24px rgba(0,0,0,0.04);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     border-right: 1px solid var(--border-color);
 }
 
@@ -125,9 +127,30 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     box-shadow: 4px 0 24px rgba(0,0,0,0.18);
 }
 
-#sidebar::-webkit-scrollbar { width: 4px; }
-#sidebar::-webkit-scrollbar-track { background: transparent; }
-#sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+#sidebar .sidebar-nav-container {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+}
+
+#sidebar .sidebar-footer {
+    flex-shrink: 0;
+    background: var(--sidebar-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+#sidebar .nav,
+#sidebar ul.nav {
+    flex-wrap: nowrap !important;
+}
+
+#sidebar::-webkit-scrollbar,
+#sidebar .sidebar-nav-container::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track,
+#sidebar .sidebar-nav-container::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb,
+#sidebar .sidebar-nav-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
 #sidebar .sidebar-header {
     height: 73px;
@@ -136,6 +159,7 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 #sidebar .nav-link {
@@ -149,6 +173,7 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
     gap: 10px;
     border-radius: 10px;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 #sidebar .nav-link:hover {
@@ -188,6 +213,55 @@ html.dark-theme ::-webkit-scrollbar-thumb:hover {
 :root[data-theme="dark"] #sidebar .nav-link.active i {
     color: var(--primary-hover);
     background: rgba(var(--primary-rgb), 0.25);
+}
+
+/* Sidebar Theme Switch */
+.theme-switch {
+    width: 44px;
+    height: 24px;
+    border-radius: 24px;
+    background: #cbd5e1;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.theme-switch-knob {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+.switch-sun {
+    font-size: 0.7rem;
+    color: #1e293b;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+.switch-moon {
+    font-size: 0.7rem;
+    color: #1e293b;
+    position: absolute;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: scale(0.5) rotate(90deg);
+}
+html.dark-theme .theme-switch {
+    background: #334155 !important;
+}
+html.dark-theme .theme-switch-knob {
+    left: calc(100% - 22px) !important;
+}
+html.dark-theme .switch-sun {
+    opacity: 0 !important;
+    transform: scale(0.5) rotate(-90deg) !important;
+}
+html.dark-theme .switch-moon {
+    opacity: 1 !important;
+    transform: scale(1) rotate(0deg) !important;
 }
 
 /* ─── Content ─── */
@@ -769,12 +843,22 @@ html.dark-theme .accordion-button::after {
     }
     .sidebar-collapsed #sidebar .nav-link {
         color: transparent !important;
+        padding: 11px 0;
+        justify-content: center;
+        margin: 2px 8px;
+    }
+    .sidebar-collapsed #sidebar .nav-link span,
+    .sidebar-collapsed #sidebar .nav-link .badge,
+    .sidebar-collapsed #sidebar .nav-link .theme-switch,
+    .sidebar-collapsed #sidebar .nav-link div.text-truncate span {
+        display: none !important;
     }
     .sidebar-collapsed #sidebar .nav-link.active {
-        background: transparent !important;
+        background: rgba(var(--primary-rgb), 0.1) !important;
     }
     .sidebar-collapsed #sidebar .nav-link i {
         color: var(--sidebar-link);
+        margin: 0;
     }
     .sidebar-collapsed #sidebar .nav-link.active i {
         color: var(--primary-color) !important;

@@ -169,7 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (themeMoonIcon) themeMoonIcon.classList.remove('d-none');
         }
 
-        themeToggleBtn.addEventListener('click', function() {
+        themeToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
             document.documentElement.classList.toggle('dark-theme');
             
             let theme = 'light';
