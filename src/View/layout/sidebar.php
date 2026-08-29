@@ -69,25 +69,34 @@ if ($role === 'supervisor') {
     }
 }
 
-// Fetch pending meetings for Student
+// Fetch pending meetings and status for Student
 $pendingStudentMeetings = 0;
 $unreadStudentChat = 0;
+$hasApprovedStudentProject = false;
 if ($role === 'student') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
-        $stmtG = $dbSidebar->prepare("SELECT g.id FROM students s JOIN `groups` g ON s.user_id = g.created_by OR s.user_id IN (SELECT student_id FROM group_members WHERE group_id = g.id) WHERE s.user_id = ? LIMIT 1");
-        $stmtG->execute([$_SESSION['user_id'] ?? 0]);
-        $grpId = $stmtG->fetchColumn();
+        $stmtG = $dbSidebar->prepare("
+            SELECT g.id, p.status AS proj_status 
+            FROM `groups` g 
+            LEFT JOIN projects p ON p.group_id = g.id
+            WHERE g.created_by = ? OR g.id IN (SELECT group_id FROM group_members WHERE student_id = ?) 
+            LIMIT 1
+        ");
+        $userId = $_SESSION['user_id'] ?? 0;
+        $stmtG->execute([$userId, $userId]);
+        $grp = $stmtG->fetch(PDO::FETCH_ASSOC);
         
-        if ($grpId) {
+        if ($grp) {
+            $hasApprovedStudentProject = ($grp['proj_status'] === 'Approved');
             $stmtSM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE group_id = ? AND status = 'Scheduled' AND meeting_date >= NOW()");
-            $stmtSM->execute([$grpId]);
+            $stmtSM->execute([$grp['id']]);
             $pendingStudentMeetings = $stmtSM->fetchColumn();
         }
         
         // Chat count
         $stmtChatCount = $dbSidebar->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND redirect_url LIKE '%/chat%'");
-        $stmtChatCount->execute([$_SESSION['user_id'] ?? 0]);
+        $stmtChatCount->execute([$userId]);
         $unreadStudentChat = $stmtChatCount->fetchColumn();
     } catch (Exception $e) { }
 }
@@ -245,16 +254,7 @@ if ($role === 'supervisor') {
                         <i class="bi bi-award-fill"></i> <span>Final Grade</span>
                     </a>
                 </li>
-                <?php 
-                    $dbSidebar = \Database::getInstance()->getConnection();
-                    $stmtChat = $dbSidebar->prepare("
-                        SELECT 1 FROM projects p 
-                        JOIN `groups` g ON p.group_id = g.id 
-                        WHERE g.created_by = ? AND p.status = 'Approved'
-                    ");
-                    $stmtChat->execute([$_SESSION['user_id'] ?? 0]);
-                    if ($stmtChat->fetchColumn()):
-                ?>
+                <?php if (!empty($hasApprovedStudentProject)): ?>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-chat-dots-fill"></i> <span>Chat with Supervisor</span></div>

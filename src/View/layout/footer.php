@@ -17,7 +17,7 @@ if ($basePath === '/') {
     window.appBasePath = '<?php echo $basePath; ?>';
     window.csrfToken = '<?php echo $_SESSION['csrf_token'] ?? ''; ?>';
 </script>
-<script src="<?php echo $basePath; ?>/js/app.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo $basePath; ?>/js/app.js?v=1.2.0"></script>
 <?php
 // Include Chatbot Widget for students (except on the live chat page)
 $isChatPage = strpos($_SERVER['REQUEST_URI'] ?? '', '/student/chat') !== false;

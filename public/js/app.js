@@ -7,9 +7,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modal);
     });
 
-    // Initialize Notifications
+    // Initialize Notifications with smart visibility-based polling
     fetchNotifications();
-    setInterval(fetchNotifications, 20000); // Poll every 20 seconds
+    setInterval(function() {
+        if (!document.hidden) {
+            fetchNotifications();
+        }
+    }, 30000); // Poll every 30 seconds when tab is active
+
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            fetchNotifications();
+        }
+    });
 
     // Setup Notification Mark as Read Click Handlers
     const notifBtn = document.getElementById('mark-all-read');
