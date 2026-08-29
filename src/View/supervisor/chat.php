@@ -574,17 +574,20 @@
 }
 
 .unread-badge {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    font-size: 0.6rem;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 0.2em 0.5em;
-    border-radius: 50rem;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-left: auto;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
 }
 </style>
 <?php
@@ -624,8 +627,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     $avatarUrl = $hasAvatar ? $bp . '/uploads/avatars/' . $leader['leader_avatar'] : '';
                     $initial = strtoupper(substr($leader['leader_name'], 0, 1));
                     $groupCode = $leader['group_code'] ?? '';
+                    $unreadCount = (int)($leader['unread_count'] ?? 0);
                 ?>
-                    <div class="contact-item" data-leader-id="<?php echo $leader['leader_id']; ?>" data-leader-name="<?php echo htmlspecialchars($leader['leader_name']); ?>" data-avatar="<?php echo htmlspecialchars($avatarUrl); ?>" data-initial="<?php echo $initial; ?>" data-group-code="<?php echo htmlspecialchars($groupCode); ?>">
+                    <div class="contact-item" data-leader-id="<?php echo $leader['leader_id']; ?>" data-leader-name="<?php echo htmlspecialchars($leader['leader_name']); ?>" data-avatar="<?php echo htmlspecialchars($avatarUrl); ?>" data-initial="<?php echo $initial; ?>" data-group-code="<?php echo htmlspecialchars($groupCode); ?>" data-initial-unread="<?php echo $unreadCount; ?>">
                         <div class="contact-avatar" style="overflow: hidden">
                             <?php if ($hasAvatar): ?>
                                 <img src="<?php echo $avatarUrl; ?>" alt="Profile" style="width: 100%;height: 100%;object-fit: cover">
@@ -637,6 +641,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <div class="contact-name"><?php echo htmlspecialchars($leader['leader_name']); ?></div>
                             <div class="contact-project"><?php echo htmlspecialchars($leader['project_title']); ?></div>
                         </div>
+                        <?php if ($unreadCount > 0): ?>
+                            <span class="unread-badge"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -743,11 +750,19 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 if (chatData.unreadCount > 0 && currentLeaderId !== leaderId) {
                     badge.textContent = chatData.unreadCount;
                     badge.style.display = 'inline-flex';
-                } else {
+                } else if (currentLeaderId === leaderId) {
                     badge.style.display = 'none';
-                    if (chatData.unreadCount > 0 && currentLeaderId === leaderId) {
+                    if (chatData.unreadCount > 0) {
                         const cId = `chat_${leaderId}_${supervisorId}`;
                         setDoc(doc(db, 'chats', cId), { unreadCount_supervisor: 0 }, { merge: true });
+                    }
+                } else {
+                    const initUnread = parseInt(item.getAttribute('data-initial-unread') || '0');
+                    if (initUnread > 0 && currentLeaderId !== leaderId) {
+                        badge.textContent = initUnread;
+                        badge.style.display = 'inline-flex';
+                    } else {
+                        badge.style.display = 'none';
                     }
                 }
                 
@@ -757,7 +772,13 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 }
             } else {
                 item.dataset.lastUpdated = 0;
-                badge.style.display = 'none';
+                const initUnread = parseInt(item.getAttribute('data-initial-unread') || '0');
+                if (initUnread > 0 && currentLeaderId !== leaderId) {
+                    badge.textContent = initUnread;
+                    badge.style.display = 'inline-flex';
+                } else {
+                    badge.style.display = 'none';
+                }
             }
         });
         
@@ -877,6 +898,9 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
         // Setup chat
         currentLeaderId = item.getAttribute('data-leader-id');
+        item.setAttribute('data-initial-unread', '0');
+        const selectedBadge = item.querySelector('.unread-badge');
+        if (selectedBadge) selectedBadge.style.display = 'none';
         const leaderName = item.getAttribute('data-leader-name');
         const avatarUrl = item.getAttribute('data-avatar');
         const initial = item.getAttribute('data-initial');

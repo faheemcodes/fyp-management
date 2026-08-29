@@ -14,16 +14,17 @@ class SupervisorController extends BaseController {
                ->execute([$supervisorId, '%user=' . $targetUser, '%user_id=' . $targetUser]);
         }
         
-        // Fetch all group leaders for approved projects assigned to this supervisor
+        // Fetch all group leaders for approved projects assigned to this supervisor with unread notifications count
         $stmt = $db->prepare("
-            SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar
+            SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar,
+                   (SELECT COUNT(*) FROM notifications n WHERE n.user_id = ? AND n.is_read = 0 AND (n.redirect_url LIKE CONCAT('%user=', g.created_by) OR n.redirect_url LIKE CONCAT('%user_id=', g.created_by))) as unread_count
             FROM projects p
             JOIN `groups` g ON p.group_id = g.id
             JOIN students s ON g.created_by = s.user_id
             JOIN users u ON s.user_id = u.id
             WHERE p.supervisor_id = ? AND p.status = 'Approved'
         ");
-        $stmt->execute([$supervisorId]);
+        $stmt->execute([$supervisorId, $supervisorId]);
         $leaders = $stmt->fetchAll();
 
         $this->render('supervisor/chat', [
