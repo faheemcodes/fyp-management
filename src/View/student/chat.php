@@ -511,8 +511,8 @@ $studentAvatar = $_SESSION['avatar'] ?? '';
                 <span class="fw-bold"><?php echo htmlspecialchars((string)($supervisorInitial), ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
             <div>
-                <h6 class="fw-bold mb-0 text-dark"><?php echo htmlspecialchars($supervisor['name']); ?></h6>
-                <small class="text-muted">Project Supervisor</small>
+                <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.92rem;"><?php echo htmlspecialchars($supervisor['name']); ?></h6>
+                <small class="text-muted" style="font-size: 0.72rem; font-weight: 500; display: block; margin-top: 1px; opacity: 0.85;">Project Supervisor</small>
             </div>
         </div>
 

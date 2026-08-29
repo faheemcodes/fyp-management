@@ -659,8 +659,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <!-- Avatar injected here -->
                 </div>
                 <div>
-                    <h6 class="fw-bold mb-0 text-dark" id="chatHeaderName">Student Name</h6>
-                    <small class="text-muted" id="chatHeaderSubtitle">Group Leader</small>
+                    <h6 class="fw-bold mb-0 text-dark" id="chatHeaderName" style="font-size: 0.92rem;">Student Name</h6>
+                    <small class="text-muted" id="chatHeaderSubtitle" style="font-size: 0.72rem; font-weight: 500; display: block; margin-top: 1px; opacity: 0.85;">Group Leader</small>
                 </div>
             </div>
 
