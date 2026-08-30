@@ -1,3 +1,4 @@
+<style>
 .notice-minimal-item {
     background: var(--form-bg);
     border: 1px solid var(--border-color);
