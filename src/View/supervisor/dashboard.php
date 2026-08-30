@@ -265,7 +265,7 @@ $firstName = explode(' ', $fullName)[0];
                                 <?php echo date('M d', strtotime($n['notice_date'])); ?>
                             </span>
                         </div>
-                        <div class="fw-semibold text-truncate" style="font-size: 0.88rem; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
                             <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
                     </div>
