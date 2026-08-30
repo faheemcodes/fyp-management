@@ -127,12 +127,32 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-1.5">
                             <?php if (!empty($p['proposal_file'])): ?>
-                            <a href="<?php echo $basePath; ?>/uploads/proposals/<?php echo htmlspecialchars($p['proposal_file'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-primary border" title="View Proposal PDF">
+                            <?php 
+                                $propUrl = trim($p['proposal_file']);
+                                if (!str_contains($propUrl, 'uploads/')) {
+                                    $propUrl = '/uploads/proposals/' . ltrim($propUrl, '/');
+                                }
+                                if (!str_starts_with($propUrl, '/')) {
+                                    $propUrl = '/' . $propUrl;
+                                }
+                                $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
+                            ?>
+                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-primary border" title="View Proposal Document">
                                 <i class="bi bi-file-earmark-pdf-fill me-1"></i> <span style="font-size: 0.75rem;">Proposal</span>
                             </a>
                             <?php endif; ?>
                             <?php if (!empty($p['thesis_file'])): ?>
-                            <a href="<?php echo $basePath; ?>/uploads/thesis/<?php echo htmlspecialchars($p['thesis_file'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-success border" title="Download Thesis Document">
+                            <?php 
+                                $thUrl = trim($p['thesis_file']);
+                                if (!str_contains($thUrl, 'uploads/')) {
+                                    $thUrl = '/uploads/thesis/' . ltrim($thUrl, '/');
+                                }
+                                if (!str_starts_with($thUrl, '/')) {
+                                    $thUrl = '/' . $thUrl;
+                                }
+                                $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
+                            ?>
+                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-success border" title="Download Thesis Document">
                                 <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> <span style="font-size: 0.75rem;">Thesis</span>
                             </a>
                             <?php endif; ?>
