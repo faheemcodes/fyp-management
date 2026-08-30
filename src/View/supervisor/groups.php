@@ -336,9 +336,21 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                 <?php echo htmlspecialchars($g['project_title']); ?>
                             </div>
                             <?php if (!empty($g['proposal_file_path'])): ?>
-                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
-                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>Proposal PDF
-                                </a>
+                                <?php $ext = strtolower(pathinfo($g['proposal_file_path'], PATHINFO_EXTENSION)); ?>
+                                <?php if ($ext === 'pdf'): ?>
+                                    <!-- Laptop Offcanvas trigger -->
+                                    <span role="button" class="small text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #10b981;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                        <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
+                                    </span>
+                                    <!-- Mobile new tab trigger -->
+                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i>View PDF
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
+                                    </a>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -410,9 +422,17 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                             <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
                         </span>
                     </div>
-                    <h6 class="fw-bold text-dark mb-2" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
+                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.95rem;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden; color: var(--text-primary) !important;">
                         <?php echo htmlspecialchars($g['project_title']); ?>
                     </h6>
+                    <?php if(!empty($g['proposal_file_path'])): ?>
+                        <?php $ext = strtolower(pathinfo($g['proposal_file_path'], PATHINFO_EXTENSION)); ?>
+                        <div class="mb-2">
+                            <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                <i class="bi <?php echo ($ext === 'pdf') ? 'bi-box-arrow-up-right' : 'bi-file-earmark-arrow-down-fill'; ?> me-1"></i> <?php echo ($ext === 'pdf') ? 'View PDF' : 'Download'; ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
                     <div class="mb-3">
                         <span class="progress-stage-chip" style="font-size: 0.65rem;">
                             <?php echo htmlspecialchars($g['progress_stage']); ?>
@@ -494,8 +514,13 @@ foreach($groups as $g):
                             <i class="bi bi-file-earmark-pdf-fill me-2"></i>View Thesis
                         </button>
                     <?php elseif (!empty($g['proposal_file_path'])): ?>
-                        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
-                            <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Proposal PDF
+                        <!-- Desktop Offcanvas trigger -->
+                        <button class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm d-none d-md-inline-flex align-items-center gap-1" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                            <i class="bi bi-layout-sidebar-reverse me-1"></i>View Proposal PDF
+                        </button>
+                        <!-- Mobile new tab trigger -->
+                        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm d-inline-flex d-md-none align-items-center gap-1" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>View Proposal PDF
                         </a>
                     <?php endif; ?>
                 </div>
@@ -630,8 +655,13 @@ foreach($groups as $g):
                         <div class="fw-semibold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></div>
                         <?php if (!empty($g['proposal_file_path'])): ?>
                             <div class="mt-2">
-                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
-                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Proposal PDF
+                                <!-- Desktop Offcanvas trigger -->
+                                <button type="button" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-none d-md-inline-flex align-items-center gap-1" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <i class="bi bi-layout-sidebar-reverse me-1"></i>View Proposal PDF
+                                </button>
+                                <!-- Mobile new tab trigger -->
+                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-inline-flex d-md-none align-items-center gap-1" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i>View Proposal PDF
                                 </a>
                             </div>
                         <?php endif; ?>
@@ -658,6 +688,32 @@ foreach($groups as $g):
             </form>
         </div>
     </div>
+</div>
+<?php endif; ?>
+
+<?php if(!empty($g['proposal_file_path']) && strtolower(pathinfo($g['proposal_file_path'], PATHINFO_EXTENSION)) === 'pdf'): ?>
+<!-- PDF Offcanvas (Right Side) -->
+<div class="offcanvas offcanvas-end shadow-lg border-start-0" tabindex="-1" id="pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="width: 75vw; max-width: 1400px; min-width: 320px; z-index: 1060; background: var(--main-bg);">
+  <div class="offcanvas-header px-4 py-3" style="background: var(--card-bg); border-bottom: 1px solid var(--border-color);">
+    <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 40px; height: 40px; background: rgba(13,148,136,0.1); color: #0d9488;">
+            <i class="bi bi-file-earmark-pdf-fill fs-5"></i>
+        </div>
+        <div>
+            <h6 class="offcanvas-title fw-bold mb-0" style="color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Proposal Document</h6>
+            <div class="text-muted small fw-medium mt-1 text-truncate" style="max-width: 400px;"><?php echo htmlspecialchars($g['project_title']); ?></div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
+            <i class="bi bi-box-arrow-up-right"></i> Open New Tab
+        </a>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+  </div>
+  <div class="offcanvas-body p-0" style="background: #e5e7eb;">
+    <iframe src="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" width="100%" height="100%" style="border: none; width: 100%; height: 100%;"></iframe>
+  </div>
 </div>
 <?php endif; ?>
 
