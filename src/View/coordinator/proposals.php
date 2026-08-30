@@ -474,13 +474,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </select>
                         </div>
 
-                        <!-- Group Code -->
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Group Code</label>
-                            <input type="text" name="group_code" class="form-control font-monospace" value="<?php echo htmlspecialchars($pr['group_code'] ?? ''); ?>" placeholder="e.g. FYP-26-CS-01 (Leave blank to auto-generate upon approval)">
-                            <small class="text-muted" style="font-size: 0.72rem;">If left blank and approved, the system will auto-generate the official group code format.</small>
-                        </div>
-
                         <!-- Coordinator Feedback / Remarks -->
                         <div class="col-12">
                             <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Coordinator Remarks &amp; Feedback</label>

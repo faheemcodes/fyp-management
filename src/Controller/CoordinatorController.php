@@ -465,25 +465,35 @@ class CoordinatorController extends BaseController {
             $stmtP = $db->prepare("UPDATE projects SET status = ?, supervisor_id = ? WHERE id = ?");
             $stmtP->execute([$status, $newSupervisorId, $projectId]);
 
-            // 3. Update groups table
-            if (!empty($groupCode)) {
-                $stmtG = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
-                $stmtG->execute([$groupCode, $groupId]);
-            }
-
+            // 3. Update groups table & Auto-assign Group Code
             if ($status === 'Approved') {
                 $stage = 'Proposal Defence Preparation';
-                // Auto-generate group code if not provided
-                if (empty($groupCode) && empty($prop['current_group_code'])) {
-                    $year = date('y');
-                    $deptClean = preg_replace('/[^A-Za-z]/', '', $dept);
-                    $deptCode = strtoupper(substr($deptClean, 0, 2));
-                    $prefix = "FYP-{$year}-{$deptCode}-";
+                // Auto-generate group code if not already assigned
+                if (empty($prop['current_group_code'])) {
+                    $stmtLeader = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
+                    $stmtLeader->execute([$prop['created_by']]);
+                    $studentInfo = $stmtLeader->fetch();
+                    
+                    $rollNo = $studentInfo['student_id'] ?? '';
+                    $parts = explode('/', $rollNo);
+                    $year = !empty($parts[0]) ? trim($parts[0]) : '2k23';
+                    
+                    $deptMap = [
+                        'Software Engineering' => 'SWE',
+                        'Information Technology' => 'IT',
+                        'Data Science' => 'DS',
+                        'Electronic Engineering' => 'EL',
+                        'Telecommunication Engineering' => 'TL'
+                    ];
+                    $deptCode = $deptMap[$studentInfo['department'] ?? ''] ?? 'GEN';
+                    $shiftLetter = (($studentInfo['shift'] ?? '') === 'Evening') ? 'E' : 'M';
+                    
+                    $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
                     
                     $stmtCount = $db->prepare("SELECT COUNT(*) FROM `groups` WHERE group_code LIKE ?");
                     $stmtCount->execute([$prefix . '%']);
                     $count = (int)$stmtCount->fetchColumn();
-                    $nextNumber = str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+                    $nextNumber = $count + 1;
                     $autoGroupCode = $prefix . $nextNumber;
                     
                     $stmtUpdateCode = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
