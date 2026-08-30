@@ -1538,6 +1538,17 @@ html.dark-theme .offcanvas .btn-close:hover {
         margin: -1.5rem -1.5rem 1.5rem -1.5rem !important;
     }
 }
+.page-section-header .btn,
+.page-section-header a.btn {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+@media (max-width: 575.98px) {
+    .page-section-header {
+        padding: 0.85rem 1rem !important;
+        gap: 10px !important;
+    }
+}
 
 
 

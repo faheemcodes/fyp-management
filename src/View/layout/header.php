@@ -18,8 +18,8 @@
     }
     ?>
     <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
-    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.4" rel="stylesheet">
-    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.4" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.5" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.5" rel="stylesheet">
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.classList.add('dark-theme');

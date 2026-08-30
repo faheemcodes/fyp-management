@@ -119,6 +119,23 @@ html.dark-theme .text-dark {
         padding: 24px 20px;
         border-radius: 20px;
     }
+    .page-section-header {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+    .page-section-header .section-header-left {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    .page-section-header .section-header-actions {
+        flex-shrink: 0;
+    }
+    .view-all-btn {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 6px 14px !important;
+        font-size: 0.75rem !important;
+    }
 }
 </style>
 <!-- Coordinator Dashboard View -->
@@ -229,22 +246,22 @@ $supervisors = $supervisors ?? [];
 <div class="row">
     <div class="col-12">
         <div class="card border-0 p-3 p-md-4 mb-4" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
-            <div class="page-section-header d-flex justify-content-between align-items-center mb-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(13, 148, 136, 0.1); color: #0d9488;">
+            <div class="page-section-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <div class="d-flex align-items-center gap-3 section-header-left">
+                    <div class="page-section-icon flex-shrink-0" style="background: rgba(13, 148, 136, 0.1); color: #0d9488;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                     </div>
-                    <div>
-                        <h6 class="fw-bold m-0" style="color: var(--text-primary);">Pending &amp; Unverified Proposals</h6>
-                        <small class="text-muted">Review, endorse, and finalize departmental project submissions</small>
+                    <div style="min-width: 0;">
+                        <h6 class="fw-bold m-0" style="color: var(--text-primary); line-height: 1.3;">Pending &amp; Unverified Proposals</h6>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Review, endorse, and finalize departmental project submissions</small>
                     </div>
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge rounded-pill fw-bold shadow-sm d-none d-sm-inline-block" style="font-size: 0.78rem; background: rgba(13, 148, 136, 0.12); color: #0d9488; border: 1px solid rgba(13, 148, 136, 0.25); padding: 6px 14px;">
+                <div class="d-flex align-items-center gap-2 section-header-actions ms-auto ms-sm-0 flex-shrink-0">
+                    <span class="badge rounded-pill fw-bold shadow-sm d-none d-sm-inline-block" style="font-size: 0.78rem; background: rgba(13, 148, 136, 0.12); color: #0d9488; border: 1px solid rgba(13, 148, 136, 0.25); padding: 6px 14px; white-space: nowrap;">
                         <?php echo count($pendingProposals); ?> Awaiting Review
                     </span>
-                    <a href="<?php echo $bp; ?>/coordinator/proposals" class="btn btn-outline-primary btn-sm rounded-pill px-3" style="font-size: 0.75rem; font-weight: 600;">
-                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    <a href="<?php echo $bp; ?>/coordinator/proposals" class="btn btn-outline-primary btn-sm rounded-pill view-all-btn text-nowrap flex-shrink-0" style="font-size: 0.75rem; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                        <span>View All</span> <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
             </div>
