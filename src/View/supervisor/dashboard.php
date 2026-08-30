@@ -123,6 +123,26 @@
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.3);
 }
+
+.notice-list {
+    padding-right: 8px;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.notice-list::-webkit-scrollbar {
+    width: 5px;
+}
+.notice-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.notice-list::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.25);
+    border-radius: 10px;
+}
+.notice-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.45);
+}
 </style>
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
@@ -234,7 +254,7 @@ $firstName = explode(' ', $fullName)[0];
                 </div>
             </div>
             
-            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
+            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto; padding-right: 8px;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                     <div class="notice-accent-bar"></div>
