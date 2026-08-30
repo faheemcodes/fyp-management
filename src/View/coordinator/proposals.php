@@ -213,11 +213,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar-stack">
-                                    <?php foreach(array_slice($pr['members'], 0, 4) as $m): ?>
-                                        <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                        <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
-                                             title="<?php echo htmlspecialchars($m['student_name']); ?>"
-                                             alt="Avatar">
+                                    <?php 
+                                    $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger'];
+                                    foreach(array_slice($pr['members'], 0, 4) as $idx => $m): 
+                                        $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
+                                        $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                                        $initials = strtoupper(substr($m['student_name'] ?? 'U', 0, 1));
+                                        $colClass = $colors[$idx % count($colors)];
+                                    ?>
+                                        <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                            <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
+                                                 title="<?php echo htmlspecialchars($m['student_name']); ?> (Click to view)"
+                                                 alt="Avatar"
+                                                 style="cursor: pointer;"
+                                                 onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                        <?php else: ?>
+                                            <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
+                                                 style="width: 36px; height: 36px; margin-left: <?php echo $idx > 0 ? '-12px' : '0'; ?>; font-size: 0.8rem; font-weight: 600; flex-shrink: 0; cursor: pointer;"
+                                                 title="<?php echo htmlspecialchars($m['student_name']); ?> (Click to view)"
+                                                 onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                                <?php echo $initials; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </div>
                                 <?php if(count($pr['members']) > 4): ?>
@@ -286,11 +303,27 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </h6>
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <div class="avatar-stack">
-                            <?php foreach(array_slice($pr['members'], 0, 4) as $m): ?>
-                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
-                                     title="<?php echo htmlspecialchars($m['student_name']); ?>"
-                                     alt="Avatar" style="width: 24px; height: 24px;">
+                            <?php 
+                            $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger'];
+                            foreach(array_slice($pr['members'], 0, 4) as $idx => $m): 
+                                $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
+                                $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                                $initials = strtoupper(substr($m['student_name'] ?? 'U', 0, 1));
+                                $colClass = $colors[$idx % count($colors)];
+                            ?>
+                                <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
+                                         title="<?php echo htmlspecialchars($m['student_name']); ?> (Click to view)"
+                                         alt="Avatar" style="width: 24px; height: 24px; cursor: pointer;"
+                                         onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                <?php else: ?>
+                                    <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
+                                         style="width: 24px; height: 24px; margin-left: <?php echo $idx > 0 ? '-8px' : '0'; ?>; font-size: 0.65rem; font-weight: 600; flex-shrink: 0; cursor: pointer;"
+                                         title="<?php echo htmlspecialchars($m['student_name']); ?> (Click to view)"
+                                         onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                        <?php echo $initials; ?>
+                                    </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
                         <?php if(count($pr['members']) > 4): ?>
@@ -364,11 +397,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div>
                     <label class="form-label small fw-semibold text-secondary text-uppercase mb-3" style="letter-spacing: 0.04em">Team Members</label>
                     <div class="row g-3">
-                        <?php foreach($pr['members'] as $m): ?>
+                        <?php foreach($pr['members'] as $m): 
+                            $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; 
+                            $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                            $initials = strtoupper(substr($m['student_name'] ?? 'U', 0, 1));
+                        ?>
                         <div class="col-md-6">
                             <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color);background: var(--card-bg)">
-                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar">
+                                <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
+                                         class="rounded-circle me-3 border border-2 border-white shadow-sm" 
+                                         style="width: 48px;height: 48px;object-fit: cover; cursor: pointer;" 
+                                         alt="Avatar"
+                                         title="Click to view photo"
+                                         onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', 'bg-primary');">
+                                <?php else: ?>
+                                    <div class="rounded-circle me-3 border border-2 border-white shadow-sm d-flex align-items-center justify-content-center bg-primary text-white fw-bold" 
+                                         style="width: 48px; height: 48px; font-size: 1.1rem; flex-shrink: 0; cursor: pointer;" 
+                                         title="Click to view details" 
+                                         onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['student_name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no'] ?? '')); ?>', '<?php echo $initials; ?>', 'bg-primary');">
+                                        <?php echo $initials; ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div>
                                     <div class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
                                         <?php echo htmlspecialchars($m['student_name']); ?>
@@ -498,12 +548,68 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php endforeach; ?>
 
+<!-- AVATAR ENLARGED POPUP MODAL -->
+<div class="modal fade" id="avatarPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1070">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: var(--card-bg);">
+            <div class="modal-header border-0 p-3 pb-0 d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4 pt-1">
+                <div class="position-relative d-inline-block mb-3">
+                    <div class="rounded-circle p-1" style="background: linear-gradient(135deg, #10b981, #0d9488);">
+                        <img id="avatarPreviewImg" src="" alt="Student Photo" class="rounded-circle shadow-lg border border-4 border-white d-none" style="width: 170px; height: 170px; object-fit: cover;">
+                        <div id="avatarPreviewInitials" class="rounded-circle shadow-lg border border-4 border-white d-none align-items-center justify-content-center text-white fw-bold" style="width: 170px; height: 170px; font-size: 4.5rem;">
+                            U
+                        </div>
+                    </div>
+                </div>
+                <h5 id="avatarPreviewName" class="fw-bold mb-1" style="color: var(--text-primary);">Student Name</h5>
+                <div id="avatarPreviewRoll" class="badge bg-light text-dark font-monospace mb-1" style="font-size: 0.85rem; border: 1px solid var(--border-color);">Roll No</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    function showAvatarPopup(imgSrc, name, rollNo, initials, colorClass) {
+        const imgEl = document.getElementById('avatarPreviewImg');
+        const initEl = document.getElementById('avatarPreviewInitials');
+        const nameEl = document.getElementById('avatarPreviewName');
+        const rollEl = document.getElementById('avatarPreviewRoll');
+        
+        if (nameEl) nameEl.textContent = name || 'Student';
+        if (rollEl) {
+            rollEl.textContent = rollNo || '';
+            rollEl.style.display = rollNo ? 'inline-block' : 'none';
+        }
+        
+        if (imgSrc && imgSrc.trim() !== '') {
+            imgEl.src = imgSrc;
+            imgEl.classList.remove('d-none');
+            initEl.classList.add('d-none');
+            initEl.classList.remove('d-flex');
+        } else {
+            imgEl.classList.add('d-none');
+            initEl.classList.remove('d-none');
+            initEl.classList.add('d-flex');
+            initEl.textContent = initials || (name ? name.charAt(0).toUpperCase() : 'U');
+            initEl.className = 'rounded-circle shadow-lg border border-4 border-white d-flex align-items-center justify-content-center text-white fw-bold ' + (colorClass || 'bg-primary');
+        }
+        
+        const modalEl = document.getElementById('avatarPreviewModal');
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalEl);
+        }
+        modal.show();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Move all modals to the body to prevent z-index issues from CSS stacking contexts
-        const modals = document.querySelectorAll('.modal, .offcanvas');
-        modals.forEach(modal => {
-            document.body.appendChild(modal);
+        // Move all modals and offcanvas elements to the body to prevent z-index/stacking context issues
+        const overlays = document.querySelectorAll('.modal, .offcanvas');
+        overlays.forEach(el => {
+            document.body.appendChild(el);
         });
     });
 </script>
