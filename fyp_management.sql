@@ -790,7 +790,7 @@ CREATE TABLE `projects` (
   `supervisor_id` int(11) DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `status` enum('Draft','Submitted','Under Review','Approved','Rejected','Revision Requested') DEFAULT 'Draft',
+  `status` enum('Draft','Submitted','Under Review','Supervisor Approved','Approved','Rejected','Revision Requested') DEFAULT 'Draft',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -813,7 +813,7 @@ CREATE TABLE `proposals` (
   `group_id` int(11) NOT NULL,
   `abstract` text NOT NULL,
   `file_path` varchar(255) NOT NULL,
-  `status` enum('Draft','Submitted','Under Review','Approved','Rejected','Revision Requested') DEFAULT 'Draft',
+  `status` enum('Draft','Submitted','Under Review','Supervisor Approved','Approved','Rejected','Revision Requested') DEFAULT 'Draft',
   `feedback` text DEFAULT NULL,
   `submitted_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()

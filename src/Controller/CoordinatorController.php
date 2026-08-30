@@ -425,7 +425,7 @@ class CoordinatorController extends BaseController {
         $groupCode = trim($_POST['group_code'] ?? '');
         $remarks = trim($_POST['remarks'] ?? '');
 
-        $allowedStatuses = ['Approved', 'Revision Requested', 'Rejected', 'Submitted'];
+        $allowedStatuses = ['Approved', 'Supervisor Approved', 'Revision Requested', 'Rejected', 'Submitted'];
         if (!$proposalId || !in_array($status, $allowedStatuses)) {
             $this->flash('error', 'Invalid proposal review data.');
             redirect('/coordinator/proposals');

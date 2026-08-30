@@ -75,8 +75,19 @@ class SupervisorController extends BaseController {
             $pr['members'] = $stmt->fetchAll();
         }
 
-        // Fetch assigned groups
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status FROM `groups` g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
+        // Fetch assigned groups with latest proposal status
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status, pr.status as proposal_status, pr.feedback as proposal_feedback 
+            FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id 
+            JOIN academic_batches b ON g.batch_id = b.id 
+            LEFT JOIN (
+                SELECT pr1.* FROM proposals pr1
+                INNER JOIN (
+                    SELECT group_id, MAX(id) as max_id FROM proposals GROUP BY group_id
+                ) pr2 ON pr1.id = pr2.max_id
+            ) pr ON g.id = pr.group_id
+            WHERE p.supervisor_id = ? AND b.is_active = 1 
+            ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
