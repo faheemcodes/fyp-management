@@ -55,6 +55,74 @@
     color: #0d9488;
     border-color: rgba(13,148,136,0.2);
 }
+
+.notice-minimal-item {
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.notice-minimal-item:hover {
+    background: var(--card-bg);
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+.notice-minimal-item .notice-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3.5px;
+    background: #10b981;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.notice-minimal-item:hover .notice-accent-bar {
+    opacity: 1;
+}
+.notice-date-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.02em;
+}
+.notice-view-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
+}
+.notice-minimal-item:hover .notice-view-btn {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
 </style>
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
@@ -168,18 +236,23 @@ $firstName = explode(' ', $fullName)[0];
             
             <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
-                <div class="notice-item p-3 mb-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                        <div class="fw-semibold text-truncate" style="font-size: 0.88rem; color: var(--text-primary); max-width: 75%;" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
+                    <div class="notice-accent-bar"></div>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="notice-date-badge">
+                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                            </span>
+                        </div>
+                        <div class="fw-semibold text-truncate" style="font-size: 0.88rem; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
                             <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
-                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 6px;">
-                            <?php echo date('M d', strtotime($n['notice_date'])); ?>
-                        </span>
                     </div>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link text-decoration-none fw-bold p-0" style="color: #10b981; font-size: 0.85rem;">View</button>
-                    </div>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                        <span>View</span>
+                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
+                    </button>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
