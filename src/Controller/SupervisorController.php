@@ -45,16 +45,16 @@ class SupervisorController extends BaseController {
         // Get count of pending proposals under review
         $stmt = $db->prepare("SELECT COUNT(*) FROM proposals pr
             JOIN projects p ON pr.group_id = p.group_id
-            WHERE p.supervisor_id = ? AND pr.status = 'Submitted'");
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested')");
         $stmt->execute([$supervisorId]);
         $pendingProposals = $stmt->fetchColumn();
 
-        // Fetch proposals for assigned projects
+        // Fetch only pending proposals for assigned projects
         $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
-            WHERE p.supervisor_id = ? 
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested')
             ORDER BY 
                 CASE 
                     WHEN pr.status = 'Submitted' THEN 1 
