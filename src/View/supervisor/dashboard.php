@@ -5,7 +5,6 @@
     color: var(--text-primary);
     line-height: 1.4;
     font-size: 0.9rem;
-    max-width: 380px;
 }
 
 .avatar-stack img, .avatar-stack .rounded-circle, .member-avatar-click {
@@ -313,9 +312,9 @@ $firstName = explode(' ', $fullName)[0];
                     <thead>
                         <tr>
                             <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Title</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Team Members</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Status</th>
-                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Actions</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 140px; white-space: nowrap;">Team Members</th>
+                            <th class="py-3 px-3 border-0 text-uppercase text-center" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 130px; white-space: nowrap;">Status</th>
+                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 190px; white-space: nowrap;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -349,7 +348,7 @@ $firstName = explode(' ', $fullName)[0];
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
+                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important; width: 140px; white-space: nowrap;">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="avatar-stack">
                                         <?php 
@@ -380,12 +379,12 @@ $firstName = explode(' ', $fullName)[0];
                                     <?php endif; ?>
                                 </div>
                             </td>
-                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
+                            <td class="px-3 py-3 border-bottom text-center" style="border-color: var(--border-color) !important; width: 130px; white-space: nowrap;">
                                 <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 5px 12px;border-radius: 20px;display: inline-flex;align-items: center">
                                     <?php echo htmlspecialchars($st); ?>
                                 </span>
                             </td>
-                            <td class="px-3 py-3 border-bottom text-end" style="border-color: var(--border-color) !important">
+                            <td class="px-3 py-3 border-bottom text-end" style="border-color: var(--border-color) !important; width: 190px; white-space: nowrap;">
                                 <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
                                     <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="bi bi-info-circle-fill"></i> <span>Details</span>
