@@ -661,7 +661,7 @@ foreach($groups as $g):
                     <div class="mb-4">
                         <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Review Decision</label>
                         <select class="form-select fw-medium" name="status" style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);" required>
-                            <option value="Approved" <?php echo ($g['proposal_status'] ?? '') === 'Approved' ? 'selected' : ''; ?>>Approve (Accept Project)</option>
+                            <option value="Supervisor Approved" <?php echo in_array($g['proposal_status'] ?? '', ['Supervisor Approved', 'Approved']) ? 'selected' : ''; ?>>Endorse &amp; Approve (Supervisor Approved)</option>
                             <option value="Revision Requested" <?php echo ($g['proposal_status'] ?? '') === 'Revision Requested' ? 'selected' : ''; ?>>Request Revision</option>
                             <option value="Rejected" <?php echo ($g['proposal_status'] ?? '') === 'Rejected' ? 'selected' : ''; ?>>Reject</option>
                         </select>

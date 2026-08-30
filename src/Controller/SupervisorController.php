@@ -286,7 +286,7 @@ class SupervisorController extends BaseController {
     public function proposalAction() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $proposalId = $_POST['proposal_id'] ?? null;
-            $status = $_POST['status'] ?? ''; // Approved, Rejected, Revision Requested
+            $status = $_POST['status'] ?? ''; // Supervisor Approved, Revision Requested, Rejected
             $feedback = trim($_POST['feedback'] ?? '');
 
             if ($proposalId && $status) {
@@ -301,7 +301,10 @@ class SupervisorController extends BaseController {
                     try {
                         $db->beginTransaction();
 
-                        if ($status === 'Approved') {
+                        // Normalize approval status to 'Supervisor Approved'
+                        if ($status === 'Approved' || $status === 'Supervisor Approved') {
+                            $status = 'Supervisor Approved';
+
                             // Get the shift of the proposal's group creator and department
                             $stmtGroupShift = $db->prepare("SELECT stu.shift, stu.department FROM `groups` g JOIN students stu ON g.created_by = stu.user_id WHERE g.id = ?");
                             $stmtGroupShift->execute([$proposal['group_id']]);
@@ -318,7 +321,7 @@ class SupervisorController extends BaseController {
                                 $maxSlots = $proposalShift === 'Evening' ? $settings['max_evening_slots'] : $settings['max_morning_slots'];
                             }
 
-                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1 AND stu.shift = ?");
+                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = ? AND (p.status = 'Approved' OR p.status = 'Supervisor Approved') AND b.is_active = 1 AND stu.shift = ?");
                             $stmtSlots->execute([$_SESSION['user_id'], $proposalShift]);
                             $slotsUsed = (int)$stmtSlots->fetchColumn();
                             if ($slotsUsed >= $maxSlots) {
@@ -334,48 +337,14 @@ class SupervisorController extends BaseController {
                         $stmt = $db->prepare("UPDATE projects SET status = ? WHERE group_id = ?");
                         $stmt->execute([$status, $proposal['group_id']]);
 
-                        // Update group stage if approved
+                        // Update group stage
                         $stage = 'Proposal Submitted';
-                        if ($status === 'Approved') {
-                            $stage = 'Proposal Approved';
-                            
-                            // Check if group_code is already assigned
-                            $stmtCodeCheck = $db->prepare("SELECT group_code, created_by FROM `groups` WHERE id = ?");
-                            $stmtCodeCheck->execute([$proposal['group_id']]);
-                            $groupData = $stmtCodeCheck->fetch();
-                            
-                            if (empty($groupData['group_code'])) {
-                                // Fetch group leader info
-                                $stmtLeader = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
-                                $stmtLeader->execute([$groupData['created_by']]);
-                                $studentInfo = $stmtLeader->fetch();
-                                
-                                $rollNo = $studentInfo['student_id'] ?? '';
-                                $parts = explode('/', $rollNo);
-                                $year = !empty($parts[0]) ? trim($parts[0]) : '2k23';
-                                
-                                $deptMap = [
-                                    'Software Engineering' => 'SWE',
-                                    'Information Technology' => 'IT',
-                                    'Data Science' => 'DS',
-                                    'Electronic Engineering' => 'EL',
-                                    'Telecommunication Engineering' => 'TL'
-                                ];
-                                $deptCode = $deptMap[$studentInfo['department'] ?? ''] ?? 'GEN';
-                                $shiftLetter = (($studentInfo['shift'] ?? '') === 'Evening') ? 'E' : 'M';
-                                
-                                $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
-                                
-                                $stmtCount = $db->prepare("SELECT COUNT(*) FROM `groups` WHERE group_code LIKE ?");
-                                $stmtCount->execute([$prefix . '%']);
-                                $count = (int)$stmtCount->fetchColumn();
-                                $nextNumber = $count + 1;
-                                $groupCode = $prefix . $nextNumber;
-                                
-                                // Update group_code in DB
-                                $stmtUpdateCode = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
-                                $stmtUpdateCode->execute([$groupCode, $proposal['group_id']]);
-                            }
+                        if ($status === 'Supervisor Approved') {
+                            $stage = 'Supervisor Approved';
+                        } elseif ($status === 'Revision Requested') {
+                            $stage = 'Revision Requested';
+                        } elseif ($status === 'Rejected') {
+                            $stage = 'Proposal Rejected';
                         }
                         
                         $stmt = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
@@ -388,14 +357,30 @@ class SupervisorController extends BaseController {
                         $mStmt->execute([$proposal['group_id']]);
                         $members = $mStmt->fetchAll();
                         
+                        $notifMsg = ($status === 'Supervisor Approved')
+                            ? "Your project proposal has been endorsed as 'Supervisor Approved' by your supervisor and forwarded to the Department Coordinator."
+                            : "Your project proposal has been marked as '$status' by your supervisor." . (!empty($feedback) ? " Feedback: $feedback" : "");
+
                         foreach ($members as $m) {
-                            $this->addNotification($m['student_id'], 'Proposal Reviewed', "Your project proposal has been $status by your supervisor.");
+                            $this->addNotification($m['student_id'], 'Proposal Reviewed by Supervisor', $notifMsg);
                         }
 
-                        $this->flash('success', "Proposal status updated to '$status'.");
+                        // Notify Department Coordinator if endorsed
+                        if ($status === 'Supervisor Approved' && !empty($proposalDept)) {
+                            $stmtCoord = $db->prepare("SELECT user_id FROM coordinators WHERE department = ?");
+                            $stmtCoord->execute([$proposalDept]);
+                            $coords = $stmtCoord->fetchAll();
+                            foreach ($coords as $c) {
+                                $this->addNotification($c['user_id'], 'Proposal Endorsed by Supervisor', "A student group proposal has been endorsed by the supervisor and is ready for Coordinator review.", '/coordinator/proposals');
+                            }
+                        }
+
+                        $this->flash('success', ($status === 'Supervisor Approved') 
+                            ? "Proposal endorsed as 'Supervisor Approved' successfully and forwarded to Coordinator."
+                            : "Proposal status updated to '$status'.");
                     } catch (\Exception $e) {
                         $db->rollBack();
-                        $this->flash('error', 'Failed to update proposal: . Please try again.');
+                        $this->flash('error', $e->getMessage() ?: 'Failed to update proposal. Please try again.');
                     }
                 }
             }

@@ -321,6 +321,7 @@ $firstName = explode(' ', $fullName)[0];
                         <?php 
                         $statusMap = [
                             'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                            'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488'],
                             'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
                             'Revision Requested' => ['rgba(139,92,246,0.1)', '#8b5cf6'],
                             'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
@@ -687,7 +688,7 @@ foreach($noticesForModal as $n):
                     <div class="mb-4">
                         <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em;color: var(--text-secondary)">Review Decision</label>
                         <select class="form-select fw-medium" name="status" style="background-color: var(--form-bg);border-color: var(--border-color);color: var(--text-primary)" required>
-                            <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approve</option>
+                            <option value="Supervisor Approved" <?php echo in_array($pr['status'], ['Supervisor Approved', 'Approved']) ? 'selected' : ''; ?>>Endorse &amp; Approve (Supervisor Approved)</option>
                             <option value="Revision Requested" <?php echo $pr['status'] === 'Revision Requested' ? 'selected' : ''; ?>>Request Revision</option>
                             <option value="Rejected" <?php echo $pr['status'] === 'Rejected' ? 'selected' : ''; ?>>Reject</option>
                         </select>

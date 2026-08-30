@@ -138,10 +138,13 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
 $basePath       = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 
 $statusMap = [
-    'Draft'    => ['rgba(107,114,128,0.1)', '#6b7280',  'bi-pencil-fill'],
-    'Pending'  => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
-    'Approved' => ['rgba(16,185,129,0.1)',  '#059669',  'bi-patch-check-fill'],
-    'Rejected' => ['rgba(239,68,68,0.1)',   '#dc2626',  'bi-x-circle-fill'],
+    'Draft'               => ['rgba(107,114,128,0.1)', '#6b7280',  'bi-pencil-fill'],
+    'Submitted'           => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
+    'Pending'             => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
+    'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488',  'bi-person-check-fill'],
+    'Approved'            => ['rgba(16,185,129,0.1)',  '#059669',  'bi-patch-check-fill'],
+    'Revision Requested'  => ['rgba(139,92,246,0.1)',  '#8b5cf6',  'bi-arrow-repeat'],
+    'Rejected'            => ['rgba(239,68,68,0.1)',   '#dc2626',  'bi-x-circle-fill'],
 ];
 $st  = $proposal['status'] ?? 'Draft';
 $sc  = $statusMap[$st] ?? $statusMap['Draft'];
@@ -218,34 +221,33 @@ foreach (($supervisors ?? []) as $s) {
             </div>
 
             <!-- Details -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-section">
-                        <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
-                                <i class="bi bi-info-circle-fill"></i>
-                            </div>
-                            <div><h6>Details</h6></div>
-                        </div>
-                        <div class="page-section-body d-flex flex-wrap gap-5 align-items-start">
-                            <div>
-                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Supervisor</div>
-                                <div class="fw-semibold" style="font-size: 0.875rem"><?php echo htmlspecialchars($supName); ?></div>
-                            </div>
-                            <div>
-                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Group Code</div>
-                                <div class="fw-bold font-monospace" style="color: #10b981"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
-                            </div>
-                            <?php if ($proposal && $proposal['file_path']): ?>
-                            <div>
-                                <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 6px">Proposal File</div>
-                                <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-3 px-3">
-                                    <i class="bi bi-download me-1"></i>Download
-                                </a>
-                            </div>
-                            <?php endif; ?>
-                        </div>
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(99,102,241,0.1);color: #6366f1">
+                        <i class="bi bi-info-circle-fill"></i>
                     </div>
+                    <div>
+                        <h6>Project Details</h6>
+                        <small>Key information and status</small>
+                    </div>
+                </div>
+                <div class="page-section-body d-flex flex-wrap gap-5 align-items-start">
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Supervisor</div>
+                        <div class="fw-semibold" style="font-size: 0.875rem"><?php echo htmlspecialchars($supName); ?></div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Group Code</div>
+                        <div class="fw-bold font-monospace" style="color: #10b981"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
+                    </div>
+                    <?php if ($proposal && $proposal['file_path']): ?>
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 6px">Proposal File</div>
+                        <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-3 px-3">
+                            <i class="bi bi-download me-1"></i>Download
+                        </a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -292,20 +294,20 @@ foreach (($supervisors ?? []) as $s) {
                         <i class="bi bi-chat-left-text-fill"></i>
                     </div>
                     <div>
-                        <h6>Supervisor Feedback</h6>
-                        <small>Review comments from your supervisor</small>
+                        <h6>Review Feedback</h6>
+                        <small>Comments and remarks from reviewers</small>
                     </div>
                 </div>
                 <div class="page-section-body">
                     <?php if ($proposal && $proposal['feedback']): ?>
                         <div class="prop-feedback-bubble">
                             <p class="mb-2" style="font-size: 0.82rem;line-height: 1.65;color: var(--text-primary)"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
-                            <div class="text-end"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
+                            <div class="text-end"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'] ?? 'now')); ?></small></div>
                         </div>
                     <?php else: ?>
                         <div class="text-center py-5">
                             <i class="bi bi-chat-left-dots text-muted" style="font-size: 2.2rem;opacity: 0.2"></i>
-                            <p class="text-muted mt-3 mb-0" style="font-size: 0.82rem">No feedback from supervisor yet.</p>
+                            <p class="text-muted mt-3 mb-0" style="font-size: 0.82rem">No feedback recorded yet.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -349,19 +351,31 @@ foreach (($supervisors ?? []) as $s) {
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <?php if ($proposal && $proposal['status'] === 'Approved'): ?>
-                <!-- Approved State -->
+            <?php if ($proposal && in_array($proposal['status'], ['Approved', 'Supervisor Approved'])): ?>
+                <!-- Approved or Supervisor Approved State -->
                 <div class="page-section">
                     <div class="page-section-body prop-approved-card">
-                        <div class="prop-approved-icon">
-                            <i class="bi bi-patch-check-fill"></i>
-                        </div>
-                        <h5 class="fw-bold mb-2" style="color: #059669">Proposal Approved!</h5>
-                        <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 380px;margin: 0 auto 16px">Your FYP proposal has been formally approved by your supervisor. You may now proceed to the next stage.</p>
-                        <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(5,150,105,0.08);border: 1px solid rgba(5,150,105,0.2)">
-                            <i class="bi bi-person-badge-fill" style="color: #059669"></i>
-                            <span class="fw-semibold" style="font-size: 0.875rem;color: #059669"><?php echo htmlspecialchars($supName); ?></span>
-                        </div>
+                        <?php if ($proposal['status'] === 'Supervisor Approved'): ?>
+                            <div class="prop-approved-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+                                <i class="bi bi-person-check-fill fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #0d9488">Endorsed by Supervisor!</h5>
+                            <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 440px;margin: 0 auto 16px">Your supervisor has accepted and endorsed your proposal. It is now awaiting final departmental review and official Group Code assignment by the Department Coordinator.</p>
+                            <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(13,148,136,0.08);border: 1px solid rgba(13,148,136,0.2)">
+                                <i class="bi bi-person-badge-fill" style="color: #0d9488"></i>
+                                <span class="fw-semibold" style="font-size: 0.875rem;color: #0d9488"><?php echo htmlspecialchars($supName); ?></span>
+                            </div>
+                        <?php else: ?>
+                            <div class="prop-approved-icon">
+                                <i class="bi bi-patch-check-fill"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #059669">Proposal Approved &amp; Registered!</h5>
+                            <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 440px;margin: 0 auto 16px">Your FYP proposal has been formally approved by the Department Coordinator. You may now proceed with your project development.</p>
+                            <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(5,150,105,0.08);border: 1px solid rgba(5,150,105,0.2)">
+                                <i class="bi bi-patch-check-fill" style="color: #059669"></i>
+                                <span class="fw-semibold font-monospace" style="font-size: 0.875rem;color: #059669"><?php echo htmlspecialchars($group['group_code'] ?? 'Approved'); ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -372,13 +386,13 @@ foreach (($supervisors ?? []) as $s) {
                             <i class="bi bi-file-text-fill"></i>
                         </div>
                         <div>
-                            <h6>Approved Abstract</h6>
-                            <small>Final approved project summary</small>
+                            <h6>Project Abstract</h6>
+                            <small>Submitted research summary</small>
                         </div>
                     </div>
                     <div class="page-section-body">
                         <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.8;text-align: justify">
-                            <?php echo nl2br(htmlspecialchars($abstractVal)); ?>
+                            <?php echo $abstractVal ? nl2br(htmlspecialchars($abstractVal)) : '<em>No abstract added yet.</em>'; ?>
                         </p>
                         <?php if ($proposal['file_path']): ?>
                             <div class="mt-4 pt-3 border-top">

@@ -229,6 +229,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <?php 
                             $statusMap = [
                                 'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                                'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488'],
                                 'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
                                 'Revision Requested' => ['rgba(139,92,246,0.1)', '#8b5cf6'],
                                 'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
@@ -267,6 +268,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php 
                         $statusMap = [
                             'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                            'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488'],
                             'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
                             'Revision Requested' => ['rgba(139,92,246,0.1)', '#8b5cf6'],
                             'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
@@ -452,7 +454,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Proposal Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-select" required>
-                                <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approved</option>
+                                <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approved (Final Approval &amp; Group Code)</option>
+                                <option value="Supervisor Approved" <?php echo $pr['status'] === 'Supervisor Approved' ? 'selected' : ''; ?>>Supervisor Approved (Pending Coordinator)</option>
                                 <option value="Submitted" <?php echo $pr['status'] === 'Submitted' ? 'selected' : ''; ?>>Submitted (Under Review)</option>
                                 <option value="Revision Requested" <?php echo $pr['status'] === 'Revision Requested' ? 'selected' : ''; ?>>Revision Requested</option>
                                 <option value="Rejected" <?php echo $pr['status'] === 'Rejected' ? 'selected' : ''; ?>>Rejected</option>
