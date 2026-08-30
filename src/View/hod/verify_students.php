@@ -74,21 +74,21 @@ $pendingCount = count($students);
                                  alt="Avatar"
                                  onclick="showStudentPhotoModal('<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($s['name']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($s['student_id']), ENT_QUOTES, 'UTF-8'); ?>')">
                             <div>
-                                <div class="fw-semibold text-dark" style="font-size: 0.92rem;"><?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?></div>
                                 <small class="text-muted" style="font-size: 0.78rem;"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
-                    <td class="fw-bold text-secondary font-monospace"><?php echo htmlspecialchars($s['student_id'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><span class="badge bg-light text-dark border px-2.5 py-1"><?php echo htmlspecialchars($s['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td class="fw-bold font-monospace" style="color: var(--text-secondary);"><?php echo htmlspecialchars($s['student_id'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><span class="badge border px-2.5 py-1" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($s['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td class="small text-muted"><?php echo !empty($s['registered_at']) ? date('M d, Y', strtotime($s['registered_at'])) : 'Recent'; ?></td>
                     <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 small">Pending Verification</span></td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="<?php echo $basePath; ?>/hod/students/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.1);color: #10b981;border: none;font-weight: 600" onmouseover="this.style.background='rgba(16, 185, 129, 0.18)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)';" onclick="confirmAction(event, 'Are you sure you want to approve this student?')">
+                            <a href="<?php echo $basePath; ?>/hod/students/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.12);color: #10b981;border: 1px solid rgba(16, 185, 129, 0.25);font-weight: 600" onmouseover="this.style.background='rgba(16, 185, 129, 0.2)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.12)';" onclick="confirmAction(event, 'Are you sure you want to approve this student?')">
                                 <i class="bi bi-check-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Approve</span>
                             </a>
-                            <button type="button" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(239, 68, 68, 0.1);color: #ef4444;border: none;font-weight: 600" onmouseover="this.style.background='rgba(239, 68, 68, 0.18)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)';" onclick="openRejectModal('<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($s['name']), ENT_QUOTES, 'UTF-8'); ?>')">
+                            <button type="button" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(239, 68, 68, 0.12);color: #ef4444;border: 1px solid rgba(239, 68, 68, 0.25);font-weight: 600" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.12)';" onclick="openRejectModal('<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($s['name']), ENT_QUOTES, 'UTF-8'); ?>')">
                                 <i class="bi bi-x-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Reject</span>
                             </button>
                         </div>
@@ -112,7 +112,7 @@ $pendingCount = count($students);
 <!-- Rejection Modal -->
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
             <div class="modal-header border-0 bg-danger bg-opacity-10 py-3 px-4">
                 <div class="d-flex align-items-center gap-2 text-danger">
                     <i class="bi bi-exclamation-triangle-fill fs-5"></i>
@@ -124,13 +124,13 @@ $pendingCount = count($students);
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                 <input type="hidden" name="id" id="rejectStudentId">
                 <div class="modal-body p-4">
-                    <p class="text-muted small mb-3">Rejecting registration for <strong id="rejectStudentName" class="text-dark"></strong>. Please provide a clear reason that will be emailed to the student.</p>
+                    <p class="text-muted small mb-3">Rejecting registration for <strong id="rejectStudentName" style="color: var(--text-primary);"></strong>. Please provide a clear reason that will be emailed to the student.</p>
                     <div class="mb-3">
                         <label class="form-label fw-semibold small text-secondary">Reason for Rejection *</label>
                         <textarea class="form-control" name="reason" rows="3" placeholder="e.g. Invalid roll number or incorrect department selected..." required></textarea>
                     </div>
                 </div>
-                <div class="modal-footer border-0 p-3 bg-light">
+                <div class="modal-footer border-0 p-3" style="background: var(--form-bg); border-top: 1px solid var(--border-color) !important;">
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger rounded-pill px-4 fw-semibold">Confirm Rejection</button>
                 </div>
@@ -147,8 +147,8 @@ $pendingCount = count($students);
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="d-flex flex-column align-items-center mt-2">
                     <img id="modalStudentPhoto" src="" class="rounded-circle shadow mb-3" style="width: 130px; height: 130px; object-fit: cover; border: 4px solid var(--form-bg);" alt="Student Photo">
-                    <h6 class="fw-bold mb-0 text-dark" id="modalStudentName"></h6>
-                    <span class="badge bg-light text-secondary border font-monospace mt-1 px-2.5 py-1" id="modalStudentRoll"></span>
+                    <h6 class="fw-bold mb-0" style="color: var(--text-primary);" id="modalStudentName"></h6>
+                    <span class="badge border font-monospace mt-1 px-2.5 py-1" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;" id="modalStudentRoll"></span>
                 </div>
             </div>
         </div>

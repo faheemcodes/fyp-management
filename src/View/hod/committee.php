@@ -20,7 +20,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75);font-size: 0.85rem">Manage evaluation committee members who grade presentations & defense</p>
             </div>
         </div>
-        <button class="btn btn-light rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold text-primary d-inline-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
+        <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
             <i class="bi bi-person-plus-fill"></i> <span>Add Committee Member</span>
         </button>
     </div>
@@ -62,24 +62,24 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php echo strtoupper(substr($c['name'], 0, 1)); ?>
                             </div>
                             <div>
-                                <div class="fw-semibold text-dark" style="font-size: 0.95rem"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></div>
                                 <small class="text-muted" style="font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge bg-light text-dark border px-2.5 py-1.5"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="font-monospace text-secondary small px-2 py-1 bg-light border rounded"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="font-monospace small px-2 py-1 border rounded" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td>
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1);color: #047fb0;border: none;font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
+                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.12);color: #047fb0;border: 1px solid rgba(4, 127, 176, 0.25);font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.2)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.12)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <i class="bi bi-pencil-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Edit</span>
                             </button>
-                            <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;border: none;font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Are you sure you want to delete this committee member? This will permanently delete their user account.')">
+                            <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.12);color: #a80a34;border: 1px solid rgba(168, 10, 52, 0.25);font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.2)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.12)';" onclick="confirmAction(event, 'Are you sure you want to delete this committee member? This will permanently delete their user account.')">
                                 <i class="bi bi-trash3-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Delete</span>
                             </a>
                         </div>
@@ -89,7 +89,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden;">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden; background: var(--card-bg);">
                             <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                                 <div class="position-absolute top-0 end-0 p-3">
                                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -97,7 +97,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 56px;height: 56px">
                                     <i class="bi bi-pencil-square text-primary" style="font-size: 1.5rem"></i>
                                 </div>
-                                <h5 class="fw-bold mb-1 text-dark text-center">Edit Committee Member</h5>
+                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);">Edit Committee Member</h5>
                                 <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1);font-size: 0.85rem;padding: 0.35rem 0.75rem;">
                                     <?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
@@ -126,7 +126,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
                                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Save Changes</button>
+                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #ffffff;">Save Changes</button>
                                     </div>
                                 </div>
                             </form>
@@ -150,7 +150,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Create Committee Modal -->
 <div class="modal fade" id="createCommitteeModal" tabindex="-1" aria-labelledby="createCommitteeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden; background: var(--card-bg);">
             <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                 <div class="position-absolute top-0 end-0 p-3">
                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -158,7 +158,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 56px;height: 56px">
                     <i class="bi bi-person-plus-fill text-primary" style="font-size: 1.5rem"></i>
                 </div>
-                <h5 class="fw-bold mb-1 text-dark text-center" id="createCommitteeModalLabel">Add New Committee Member</h5>
+                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);" id="createCommitteeModalLabel">Add New Committee Member</h5>
                 <p class="text-muted small mb-0">Department: <strong class="text-primary"><?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?></strong></p>
             </div>
             <form action="<?php echo $basePath; ?>/hod/committee/create" method="POST">

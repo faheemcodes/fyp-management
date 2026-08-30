@@ -630,8 +630,62 @@ html.dark-theme .form-select:disabled {
     color: var(--text-primary) !important;
 }
 
+html.dark-theme .text-dark,
+:root[data-theme="dark"] .text-dark {
+    color: #f8fafc !important;
+}
+
 .text-muted {
     color: var(--text-secondary) !important;
+}
+
+html.dark-theme .text-secondary,
+:root[data-theme="dark"] .text-secondary {
+    color: #94a3b8 !important;
+}
+
+.btn-light {
+    background-color: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.btn-light:hover {
+    background-color: var(--table-hover-bg) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.badge.bg-light,
+.badge.bg-light.text-dark {
+    background-color: var(--form-bg) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+html.dark-theme .badge.bg-light,
+html.dark-theme .badge.bg-light.text-dark,
+:root[data-theme="dark"] .badge.bg-light,
+:root[data-theme="dark"] .badge.bg-light.text-dark {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.btn-filter-pill {
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+.btn-filter-pill:hover {
+    background: var(--form-bg);
+    color: var(--text-primary);
+}
+.btn-filter-pill.active {
+    background: #10b981 !important;
+    color: #ffffff !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
 }
 
 .border {

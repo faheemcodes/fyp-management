@@ -291,8 +291,8 @@ $supervisors = $supervisors ?? [];
                         <i class="bi bi-journal-check"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">External Assessment</div>
-                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Generate dynamic grading sheets</div>
+                        <div class="fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em; color: var(--text-primary);">External Assessment</div>
+                        <div class="mt-1" style="font-size: 0.78rem; color: var(--text-secondary);">Generate dynamic grading sheets</div>
                     </div>
                     <div class="premium-card-arrow">
                         <i class="bi bi-arrow-right-short"></i>

@@ -165,10 +165,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
-            <a href="<?php echo $basePath; ?>/hod/projects" class="btn btn-light rounded-pill px-3.5 py-2 fw-semibold shadow-sm border-0 d-inline-flex align-items-center gap-2" style="color: #047fb0; font-size: 0.85rem;">
+            <a href="<?php echo $basePath; ?>/hod/projects" class="btn rounded-pill px-3.5 py-2 fw-semibold shadow-sm border-0 d-inline-flex align-items-center gap-2" style="background: #ffffff; color: #047fb0; font-size: 0.85rem;">
                 <i class="bi bi-kanban-fill"></i> <span>View All Projects</span>
             </a>
-            <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-outline-light rounded-pill px-3.5 py-2 fw-semibold shadow-sm d-inline-flex align-items-center gap-2" style="font-size: 0.85rem;">
+            <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn rounded-pill px-3.5 py-2 fw-semibold shadow-sm d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
                 <i class="bi bi-person-plus-fill"></i> <span>Manage Faculty</span>
             </a>
         </div>
@@ -507,23 +507,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <?php foreach($recentNotices as $n): ?>
 <div class="modal fade" id="noticeModal<?php echo $n['id']; ?>" tabindex="-1" aria-labelledby="noticeModalLabel<?php echo $n['id']; ?>" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable notice-modal-dialog">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: #ffffff;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: var(--card-bg); color: var(--text-primary);">
             
-            <div class="modal-header border-0 bg-light py-2 px-3 d-flex justify-content-between align-items-center">
+            <div class="modal-header border-0 py-2 px-3 d-flex justify-content-between align-items-center" style="background: var(--form-bg); border-bottom: 1px solid var(--border-color) !important;">
                 <span class="badge bg-secondary-subtle text-secondary border px-2 py-1" style="font-size: 0.75rem;">Official Notice</span>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
             <div class="modal-body p-4 p-md-5">
                 <div class="mb-4 text-center">
-                    <h5 class="fw-bold text-dark mb-1"><?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                    <h5 class="fw-bold mb-1" style="color: var(--text-primary);"><?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?></h5>
                     <small class="text-muted">Issued on <?php echo date('F d, Y', strtotime($n['notice_date'])); ?></small>
                 </div>
-                <div class="p-3 bg-light rounded-3 text-dark" style="white-space: pre-line; line-height: 1.6; font-size: 0.92rem;">
+                <div class="p-3 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); color: var(--text-primary); white-space: pre-line; line-height: 1.6; font-size: 0.92rem;">
                     <?php echo htmlspecialchars($n['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                 </div>
             </div>
-            <div class="modal-footer border-0 bg-light py-2 px-3">
+            <div class="modal-footer border-0 py-2 px-3" style="background: var(--form-bg); border-top: 1px solid var(--border-color) !important;">
                 <button type="button" class="btn btn-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

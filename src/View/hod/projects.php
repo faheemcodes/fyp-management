@@ -39,10 +39,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <!-- Stage Filter Pills -->
             <div class="col-md-7 pe-0 d-flex justify-content-md-end gap-1.5 flex-wrap">
-                <button class="btn btn-sm btn-light border rounded-pill px-3 fw-semibold active-filter-btn" onclick="filterProjects('all')">All (<?php echo count($projects); ?>)</button>
-                <button class="btn btn-sm btn-light border rounded-pill px-3 fw-semibold text-muted" onclick="filterProjects('proposal')">Proposal</button>
-                <button class="btn btn-sm btn-light border rounded-pill px-3 fw-semibold text-muted" onclick="filterProjects('defense')">Defense</button>
-                <button class="btn btn-sm btn-light border rounded-pill px-3 fw-semibold text-muted" onclick="filterProjects('final')">Final / Complete</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold active" onclick="filterProjects('all', this)">All (<?php echo count($projects); ?>)</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('proposal', this)">Proposal</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('defense', this)">Defense</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('final', this)">Final / Complete</button>
             </div>
         </div>
     </div>
@@ -73,12 +73,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td class="ps-4">
                         <div class="d-flex flex-column" style="max-width: 320px;">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 font-monospace px-2 py-0.5" style="font-size: 0.72rem;">
+                                <span class="badge font-monospace px-2 py-0.5" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem;">
                                     <?php echo htmlspecialchars($p['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                                 <small class="text-muted" style="font-size: 0.7rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
                             </div>
-                            <div class="fw-bold text-dark text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title not registered yet', ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.92rem;">
+                            <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title not registered yet', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.92rem;">
                                 <?php echo htmlspecialchars($p['project_title'] ?? 'Project Title Pending Submission', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
                             <?php if (!empty($p['abstract'])): ?>
@@ -95,12 +95,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php echo strtoupper(substr($p['supervisor_name'], 0, 1)); ?>
                             </div>
                             <div>
-                                <div class="fw-semibold text-dark" style="font-size: 0.85rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.85rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
                                 <small class="text-muted" style="font-size: 0.72rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                         <?php else: ?>
-                        <span class="badge bg-light text-muted border px-2 py-1 small">Not Assigned</span>
+                        <span class="badge border px-2 py-1 small" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;">Not Assigned</span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -120,7 +120,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                     </td>
                     <td>
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1" style="font-size: 0.75rem;">
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.75rem;">
                             <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </td>
@@ -137,8 +137,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-primary border" title="View Proposal Document">
-                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> <span style="font-size: 0.75rem;">Proposal</span>
+                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.75rem;" title="View Proposal Document">
+                                <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
                             </a>
                             <?php endif; ?>
                             <?php if (!empty($p['thesis_file'])): ?>
@@ -152,8 +152,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm btn-light rounded-pill px-2.5 py-1 text-success border" title="Download Thesis Document">
-                                <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> <span style="font-size: 0.75rem;">Thesis</span>
+                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.75rem;" title="Download Thesis Document">
+                                <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
                             </a>
                             <?php endif; ?>
                             <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
@@ -184,8 +184,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="d-flex flex-column align-items-center mt-2">
                     <img id="modalStudentPhoto" src="" class="rounded-circle shadow mb-3" style="width: 130px; height: 130px; object-fit: cover; border: 4px solid var(--form-bg);" alt="Student Photo">
-                    <h6 class="fw-bold mb-0 text-dark" id="modalStudentName"></h6>
-                    <span class="badge bg-light text-secondary border font-monospace mt-1 px-2.5 py-1" id="modalStudentRoll"></span>
+                    <h6 class="fw-bold mb-0" style="color: var(--text-primary);" id="modalStudentName"></h6>
+                    <span class="badge border font-monospace mt-1 px-2.5 py-1" style="background: var(--form-bg); color: var(--text-secondary);" id="modalStudentRoll"></span>
                 </div>
             </div>
         </div>
@@ -200,7 +200,11 @@ function showStudentPhotoModal(src, name, roll) {
     new bootstrap.Modal(document.getElementById('studentPhotoModal')).show();
 }
 
-function filterProjects(category) {
+function filterProjects(category, btn) {
+    if (btn) {
+        document.querySelectorAll('.btn-filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
     const rows = document.querySelectorAll('#department-projects-table tbody tr');
     rows.forEach(row => {
         const cat = row.getAttribute('data-stage-cat');
