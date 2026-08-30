@@ -169,19 +169,15 @@ $firstName = explode(' ', $fullName)[0];
             <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-item p-3 mb-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); transition: all 0.2s ease;">
-                    <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
-                        <div class="fw-semibold text-truncate" style="font-size: 0.85rem; color: var(--text-primary); max-width: 75%;" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <div class="fw-semibold text-truncate" style="font-size: 0.88rem; color: var(--text-primary); max-width: 75%;" title="<?php echo htmlspecialchars($n['subject']); ?>">
                             <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
                         <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 6px;">
                             <?php echo date('M d', strtotime($n['notice_date'])); ?>
                         </span>
                     </div>
-                    <p class="text-muted small mb-2" style="font-size: 0.75rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        <?php echo htmlspecialchars($n['body']); ?>
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color: var(--border-color) !important;">
-                        <span class="text-muted" style="font-size: 0.7rem;">Ref: <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?></span>
+                    <div class="d-flex justify-content-end align-items-center">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link text-decoration-none fw-bold p-0" style="color: #10b981; font-size: 0.85rem;">View</button>
                     </div>
                 </div>
