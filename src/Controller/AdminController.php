@@ -312,7 +312,7 @@ class AdminController extends BaseController {
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN students creator ON g.created_by = creator.user_id
-            LEFT JOIN grades gr ON g.id = gr.group_id
+            LEFT JOIN grades gr ON (g.id = gr.group_id AND g.created_by = gr.student_id)
             ORDER BY g.created_at DESC")->fetchAll();
 
         // Get list of group members for each group
@@ -641,8 +641,8 @@ class AdminController extends BaseController {
                 $stmtM->execute([$groupId, $created_by]);
                 
                 // Create grade record
-                $stmtG = $db->prepare("INSERT INTO grades (group_id) VALUES (?)");
-                $stmtG->execute([$groupId]);
+                $stmtG = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
+                $stmtG->execute([$created_by, $groupId]);
                 
                 $db->commit();
                 $this->flash('success', "Group $group_code created successfully.");
@@ -747,9 +747,11 @@ class AdminController extends BaseController {
                 $stmtDel->execute([$groupId]);
                 
                 $stmtIns = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
+                $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
                 foreach ($members as $stdId) {
                     if (!empty($stdId)) {
                         $stmtIns->execute([$groupId, $stdId]);
+                        $stmtGrade->execute([$stdId, $groupId]);
                     }
                 }
                 
@@ -852,20 +854,6 @@ class AdminController extends BaseController {
             try {
                 $db->beginTransaction();
                 
-                $stmt = $db->prepare("UPDATE grades SET 
-                    proposal_defense_marks = ?, 
-                    progress_presentation_marks = ?, 
-                    final_presentation_marks = ?, 
-                    supervision_marks = ? 
-                    WHERE group_id = ?");
-                $stmt->execute([
-                    $proposal_defense_marks, 
-                    $progress_presentation_marks, 
-                    $final_presentation_marks, 
-                    $supervision_marks, 
-                    $groupId
-                ]);
-                
                 $total = round(
                     (float)$proposal_defense_marks + 
                     (float)$progress_presentation_marks + 
@@ -887,8 +875,61 @@ class AdminController extends BaseController {
                 
                 $status = ($percentage >= 50) ? 'Pass' : 'Fail';
 
-                $stmtUpdateGrades = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE group_id = ?");
-                $stmtUpdateGrades->execute([$total, $percentage, $grade, $status, $groupId]);
+                // Update/insert grades per group member
+                $stmtMembers = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                $stmtMembers->execute([$groupId]);
+                $groupMembers = $stmtMembers->fetchAll();
+                
+                if (!empty($groupMembers)) {
+                    $stmtUpsert = $db->prepare("INSERT INTO grades (student_id, group_id, proposal_defense_marks, progress_presentation_marks, final_presentation_marks, supervision_marks, total_marks, percentage, grade, status) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                        ON DUPLICATE KEY UPDATE 
+                            group_id = VALUES(group_id),
+                            proposal_defense_marks = VALUES(proposal_defense_marks),
+                            progress_presentation_marks = VALUES(progress_presentation_marks),
+                            final_presentation_marks = VALUES(final_presentation_marks),
+                            supervision_marks = VALUES(supervision_marks),
+                            total_marks = VALUES(total_marks),
+                            percentage = VALUES(percentage),
+                            grade = VALUES(grade),
+                            status = VALUES(status)");
+                    foreach ($groupMembers as $gm) {
+                        $stmtUpsert->execute([
+                            $gm['student_id'],
+                            $groupId,
+                            $proposal_defense_marks,
+                            $progress_presentation_marks,
+                            $final_presentation_marks,
+                            $supervision_marks,
+                            $total,
+                            $percentage,
+                            $grade,
+                            $status
+                        ]);
+                    }
+                } else {
+                    $stmtUpdate = $db->prepare("UPDATE grades SET 
+                        proposal_defense_marks = ?, 
+                        progress_presentation_marks = ?, 
+                        final_presentation_marks = ?, 
+                        supervision_marks = ?,
+                        total_marks = ?,
+                        percentage = ?,
+                        grade = ?,
+                        status = ?
+                        WHERE group_id = ?");
+                    $stmtUpdate->execute([
+                        $proposal_defense_marks, 
+                        $progress_presentation_marks, 
+                        $final_presentation_marks, 
+                        $supervision_marks,
+                        $total,
+                        $percentage,
+                        $grade,
+                        $status,
+                        $groupId
+                    ]);
+                }
                 
                 $db->commit();
                 $this->flash('success', 'Grades updated and recalculated successfully.');

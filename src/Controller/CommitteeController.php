@@ -385,14 +385,14 @@ class CommitteeController extends BaseController {
                             $averageScore = $countEvals > 0 ? round($studentTotal / $countEvals) : 0;
 
                             if ($stage === 'Proposal Defence Presentation') {
-                                $stmtGrade = $db->prepare("UPDATE grades SET proposal_defense_marks = ? WHERE student_id = ?");
-                                $stmtGrade->execute([$averageScore, $sId]);
+                                $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, proposal_defense_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE proposal_defense_marks = VALUES(proposal_defense_marks), group_id = VALUES(group_id)");
+                                $stmtGrade->execute([$sId, $groupId, $averageScore]);
                             } else if ($stage === 'FYP Progress Presentation') {
-                                $stmtGrade = $db->prepare("UPDATE grades SET progress_presentation_marks = ? WHERE student_id = ?");
-                                $stmtGrade->execute([$averageScore, $sId]);
+                                $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, progress_presentation_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE progress_presentation_marks = VALUES(progress_presentation_marks), group_id = VALUES(group_id)");
+                                $stmtGrade->execute([$sId, $groupId, $averageScore]);
                             } else if ($stage === 'Final Presentation') {
-                                $stmtGrade = $db->prepare("UPDATE grades SET final_presentation_marks = ? WHERE student_id = ?");
-                                $stmtGrade->execute([$averageScore, $sId]);
+                                $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, final_presentation_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE final_presentation_marks = VALUES(final_presentation_marks), group_id = VALUES(group_id)");
+                                $stmtGrade->execute([$sId, $groupId, $averageScore]);
                             }
 
                             // Recalculate overall grades per student
@@ -576,14 +576,14 @@ class CommitteeController extends BaseController {
                         $averageScore = $countEvals > 0 ? round($studentTotal / $countEvals) : 0;
 
                         if ($stage === 'Proposal Defence Presentation') {
-                            $stmtGrade = $db->prepare("UPDATE grades SET proposal_defense_marks = ? WHERE student_id = ?");
-                            $stmtGrade->execute([$averageScore, $sId]);
+                            $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, proposal_defense_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE proposal_defense_marks = VALUES(proposal_defense_marks), group_id = VALUES(group_id)");
+                            $stmtGrade->execute([$sId, $groupId, $averageScore]);
                         } else if ($stage === 'FYP Progress Presentation') {
-                            $stmtGrade = $db->prepare("UPDATE grades SET progress_presentation_marks = ? WHERE student_id = ?");
-                            $stmtGrade->execute([$averageScore, $sId]);
+                            $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, progress_presentation_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE progress_presentation_marks = VALUES(progress_presentation_marks), group_id = VALUES(group_id)");
+                            $stmtGrade->execute([$sId, $groupId, $averageScore]);
                         } else if ($stage === 'Final Presentation') {
-                            $stmtGrade = $db->prepare("UPDATE grades SET final_presentation_marks = ? WHERE student_id = ?");
-                            $stmtGrade->execute([$averageScore, $sId]);
+                            $stmtGrade = $db->prepare("INSERT INTO grades (student_id, group_id, final_presentation_marks) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE final_presentation_marks = VALUES(final_presentation_marks), group_id = VALUES(group_id)");
+                            $stmtGrade->execute([$sId, $groupId, $averageScore]);
                         }
 
                         // Recalculate overall grades per student

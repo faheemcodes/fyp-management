@@ -167,18 +167,22 @@ class SupervisorController extends BaseController {
                     
                     // Update grades per student
                     foreach ($marksArray as $studentId => $markData) {
-                        $supervisionMarks = isset($markData['supervision']) ? round((float)$markData['supervision']) : null;
+                        $supervisionMarks = isset($markData['supervision']) && $markData['supervision'] !== '' ? round((float)$markData['supervision']) : null;
                         
-                        $stmtCheck = $db->prepare("SELECT student_id FROM grades WHERE student_id = ?");
-                        $stmtCheck->execute([$studentId]);
-                        
-                        if ($stmtCheck->fetch()) {
-                            $stmtUpdate = $db->prepare("UPDATE grades SET supervision_marks = ?, show_supervision_to_student = ? WHERE student_id = ?");
-                            $stmtUpdate->execute([$supervisionMarks, $show_supervision_to_student, $studentId]);
-                        } else {
-                            $stmtInsert = $db->prepare("INSERT INTO grades (group_id, student_id, supervision_marks, show_supervision_to_student) VALUES (?, ?, ?, ?)");
-                            $stmtInsert->execute([$groupId, $studentId, $supervisionMarks, $show_supervision_to_student]);
+                        // Verify student belongs to this group
+                        $stmtCheckMember = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ? AND student_id = ?");
+                        $stmtCheckMember->execute([$groupId, $studentId]);
+                        if (!$stmtCheckMember->fetch()) {
+                            continue;
                         }
+                        
+                        $stmtUpsert = $db->prepare("INSERT INTO grades (student_id, group_id, supervision_marks, show_supervision_to_student) 
+                            VALUES (?, ?, ?, ?) 
+                            ON DUPLICATE KEY UPDATE 
+                                supervision_marks = VALUES(supervision_marks), 
+                                show_supervision_to_student = VALUES(show_supervision_to_student),
+                                group_id = VALUES(group_id)");
+                        $stmtUpsert->execute([$studentId, $groupId, $supervisionMarks, $show_supervision_to_student]);
                     }
                     
                     // Recalculate overall grades per student

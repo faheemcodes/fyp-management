@@ -225,9 +225,11 @@ class StudentController extends BaseController {
                 $stmt->execute([$groupId, $userId]);
 
                 // Add selected group members
+                $stmtG = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
                 foreach ($member_ids as $mId) {
                     $stmt = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
                     $stmt->execute([$groupId, $mId]);
+                    $stmtG->execute([$mId, $groupId]);
                 }
 
                 $db->commit();
@@ -285,8 +287,8 @@ class StudentController extends BaseController {
                 $stmt->execute([$groupId, $projectTitle, $projectDesc]);
 
                 // Insert grades placeholder
-                $stmt = $db->prepare("INSERT INTO grades (group_id) VALUES (?)");
-                $stmt->execute([$groupId]);
+                $stmt = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
+                $stmt->execute([$userId, $groupId]);
 
                 $db->commit();
                 $this->flash('success', 'Group created successfully! You can now invite team members.');
@@ -361,6 +363,9 @@ class StudentController extends BaseController {
             try {
                 $stmt = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
                 $stmt->execute([$group['id'], $targetId]);
+
+                $stmtG = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
+                $stmtG->execute([$targetId, $group['id']]);
 
                 $this->addNotification($targetId, 'Added to Group', "You have been added to the project group by {$_SESSION['name']}.");
                 $this->flash('success', "Student {$targetStudent['name']} added to group successfully.");
@@ -622,8 +627,8 @@ class StudentController extends BaseController {
                     $stmt->execute([$groupId, $title, $abstract, $supervisor_id]);
 
                     // Insert grades placeholder
-                    $stmt = $db->prepare("INSERT INTO grades (group_id) VALUES (?)");
-                    $stmt->execute([$groupId]);
+                    $stmt = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
+                    $stmt->execute([$userId, $groupId]);
                 } else {
                     $groupId = $group['id'];
                     
@@ -641,9 +646,11 @@ class StudentController extends BaseController {
                 }
 
                 // Add selected group members
+                $stmtG = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
                 foreach ($member_ids as $mId) {
                     $stmt = $db->prepare("INSERT INTO group_members (group_id, student_id) VALUES (?, ?)");
                     $stmt->execute([$groupId, $mId]);
+                    $stmtG->execute([$mId, $groupId]);
                 }
 
                 // Insert/Update proposals table
