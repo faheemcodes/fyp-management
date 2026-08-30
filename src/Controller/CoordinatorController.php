@@ -372,7 +372,7 @@ class CoordinatorController extends BaseController {
         $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
 
         // Fetch proposals for groups where the group creator is a student in the coordinator's department
-        $stmt = $db->prepare("SELECT pr.*, g.group_code, p.title as project_title, p.thesis_file, sup.name as supervisor_name 
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
@@ -382,6 +382,15 @@ class CoordinatorController extends BaseController {
             ORDER BY pr.submitted_at DESC");
         $stmt->execute([$dept]);
         $proposals = $stmt->fetchAll();
+
+        // Fetch departmental supervisors for re-assignment
+        $stmtSups = $db->prepare("SELECT s.user_id, s.name, s.designation 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE s.department = ? AND u.status = 'approved' 
+            ORDER BY s.name ASC");
+        $stmtSups->execute([$dept]);
+        $supervisors = $stmtSups->fetchAll();
 
         // Fetch members for each proposal group
         foreach ($proposals as &$pr) {
@@ -394,8 +403,131 @@ class CoordinatorController extends BaseController {
         }
 
         $this->render('coordinator/proposals', [
-            'proposals' => $proposals
+            'proposals' => $proposals,
+            'supervisors' => $supervisors
         ]);
+    }
+
+    public function reviewProposal() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('/coordinator/proposals');
+        }
+
+        // Validate CSRF token
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+            $this->flash('error', 'Invalid security token.');
+            redirect('/coordinator/proposals');
+        }
+
+        $proposalId = (int)($_POST['proposal_id'] ?? 0);
+        $status = trim($_POST['status'] ?? '');
+        $supervisorId = !empty($_POST['supervisor_id']) ? (int)$_POST['supervisor_id'] : null;
+        $groupCode = trim($_POST['group_code'] ?? '');
+        $remarks = trim($_POST['remarks'] ?? '');
+
+        $allowedStatuses = ['Approved', 'Revision Requested', 'Rejected', 'Submitted'];
+        if (!$proposalId || !in_array($status, $allowedStatuses)) {
+            $this->flash('error', 'Invalid proposal review data.');
+            redirect('/coordinator/proposals');
+        }
+
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+        try {
+            $db->beginTransaction();
+
+            // Fetch proposal & verify department
+            $stmt = $db->prepare("SELECT pr.*, g.id as group_id, g.group_code as current_group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id as current_supervisor_id 
+                FROM proposals pr
+                JOIN `groups` g ON pr.group_id = g.id
+                JOIN projects p ON g.id = p.group_id
+                JOIN students s ON g.created_by = s.user_id
+                WHERE pr.id = ? AND s.department = ?");
+            $stmt->execute([$proposalId, $dept]);
+            $prop = $stmt->fetch();
+
+            if (!$prop) {
+                $db->rollBack();
+                $this->flash('error', 'Proposal not found or access denied.');
+                redirect('/coordinator/proposals');
+            }
+
+            $groupId = $prop['group_id'];
+            $projectId = $prop['project_id'];
+
+            // 1. Update proposals table
+            $stmtPr = $db->prepare("UPDATE proposals SET status = ?, review_notes = ?, reviewed_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmtPr->execute([$status, $remarks, $proposalId]);
+
+            // 2. Update projects table (status and supervisor)
+            $newSupervisorId = $supervisorId ?: $prop['current_supervisor_id'];
+            $stmtP = $db->prepare("UPDATE projects SET status = ?, supervisor_id = ? WHERE id = ?");
+            $stmtP->execute([$status, $newSupervisorId, $projectId]);
+
+            // 3. Update groups table
+            if (!empty($groupCode)) {
+                $stmtG = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
+                $stmtG->execute([$groupCode, $groupId]);
+            }
+
+            if ($status === 'Approved') {
+                $stage = 'Proposal Defence Preparation';
+                // Auto-generate group code if not provided
+                if (empty($groupCode) && empty($prop['current_group_code'])) {
+                    $year = date('y');
+                    $deptClean = preg_replace('/[^A-Za-z]/', '', $dept);
+                    $deptCode = strtoupper(substr($deptClean, 0, 2));
+                    $prefix = "FYP-{$year}-{$deptCode}-";
+                    
+                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM `groups` WHERE group_code LIKE ?");
+                    $stmtCount->execute([$prefix . '%']);
+                    $count = (int)$stmtCount->fetchColumn();
+                    $nextNumber = str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+                    $autoGroupCode = $prefix . $nextNumber;
+                    
+                    $stmtUpdateCode = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
+                    $stmtUpdateCode->execute([$autoGroupCode, $groupId]);
+                    $groupCode = $autoGroupCode;
+                }
+                
+                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
+                $stmtProg->execute([$stage, $groupId]);
+            } elseif ($status === 'Revision Requested') {
+                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = 'Revision Requested' WHERE id = ?");
+                $stmtProg->execute([$groupId]);
+            }
+
+            // 4. Send Notifications
+            $displayCode = !empty($groupCode) ? $groupCode : (!empty($prop['current_group_code']) ? $prop['current_group_code'] : 'Proposal #' . $proposalId);
+            
+            // Notify student group members
+            $stmtMembers = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+            $stmtMembers->execute([$groupId]);
+            $memberIds = $stmtMembers->fetchAll(\PDO::FETCH_COLUMN);
+
+            $notifMsg = "Your project proposal has been reviewed by the Department Coordinator. Status: $status." . (!empty($remarks) ? " Remarks: $remarks" : "");
+            foreach ($memberIds as $mId) {
+                $this->addNotification($mId, 'Proposal Reviewed by Coordinator', $notifMsg);
+            }
+
+            // Notify supervisor
+            if ($newSupervisorId) {
+                $supNotifMsg = "Group ($displayCode) proposal has been marked as '$status' by the Coordinator." . (!empty($remarks) ? " Remarks: $remarks" : "");
+                if ($newSupervisorId != $prop['current_supervisor_id']) {
+                    $supNotifMsg = "Group ($displayCode) has been assigned to you as supervisor by the Coordinator.";
+                }
+                $this->addNotification($newSupervisorId, 'Coordinator Proposal Update', $supNotifMsg);
+            }
+
+            $db->commit();
+            $this->flash('success', "Proposal successfully updated to '$status'.");
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->flash('error', 'Error updating proposal. Please try again.');
+        }
+
+        redirect('/coordinator/proposals');
     }
 
     public function profile() {

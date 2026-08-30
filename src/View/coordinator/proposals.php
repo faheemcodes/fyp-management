@@ -78,12 +78,15 @@
     color: var(--text-secondary);
     font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+.action-btn.review {
+    color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.2);
 }
-.action-btn:hover {
-    background: rgba(16,185,129,0.1);
-    color: #10b981;
-    border-color: rgba(16,185,129,0.2);
+.action-btn.review:hover {
+    background: #8b5cf6;
+    color: #fff;
+    border-color: #8b5cf6;
 }
 
 @media (max-width: 768px) {
@@ -237,11 +240,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 5px 12px;border-radius: 20px;display: inline-flex;align-items: center">
                                 <?php echo htmlspecialchars($st); ?>
                             </span>
-                        </td>
                         <td class="text-end pe-4">
-                            <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                <i class="bi bi-info-circle-fill"></i> <span>Details</span>
-                            </button>
+                            <div class="d-flex align-items-center justify-content-end gap-2">
+                                <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <i class="bi bi-info-circle-fill"></i> <span>Details</span>
+                                </button>
+                                <button class="action-btn review" title="Review Proposal" data-bs-toggle="modal" data-bs-target="#reviewProposalModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <i class="bi bi-clipboard-check-fill"></i> <span>Review</span>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -303,6 +310,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php endif; ?>
                         <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#proposalDetailsModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
                             <i class="bi bi-info-circle-fill"></i> Details
+                        </button>
+                        <button class="action-btn review" title="Review Proposal" data-bs-toggle="modal" data-bs-target="#reviewProposalModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                            <i class="bi bi-clipboard-check-fill"></i> Review
                         </button>
                     </div>
                 </div>
@@ -401,6 +411,94 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
   </div>
 </div>
 <?php endif; ?>
+
+<!-- REVIEW PROPOSAL MODAL (COORDINATOR) -->
+<div class="modal fade" id="reviewProposalModal<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <form action="<?php echo $urlPrefix; ?>/coordinator/proposals/review" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="proposal_id" value="<?php echo htmlspecialchars((string)$pr['id']); ?>">
+                
+                <div class="modal-header border-bottom py-3 px-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                            <i class="bi bi-clipboard-check-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="modal-title fw-bold m-0" style="color: var(--text-primary);">Coordinator Proposal Review</h6>
+                            <small class="text-muted">Evaluate, set status, assign group code, or re-assign supervisor</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body p-4">
+                    <!-- Project Title & Group Code Header -->
+                    <div class="p-3 rounded-3 mb-4" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-2">
+                            <span class="group-code-badge">
+                                <?php echo htmlspecialchars($pr['group_code'] ?? 'Group Code Pending'); ?>
+                            </span>
+                            <span class="badge" style="background: <?php echo $bg;?>; color: <?php echo $color;?>; font-weight: 600; font-size: 0.72rem; padding: 5px 12px; border-radius: 20px;">
+                                Current Status: <?php echo htmlspecialchars($st); ?>
+                            </span>
+                        </div>
+                        <h6 class="fw-bold mb-1" style="color: var(--text-primary);"><?php echo htmlspecialchars($pr['project_title'] ?? 'Untitled'); ?></h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Decision Status -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Proposal Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-select" required>
+                                <option value="Approved" <?php echo $pr['status'] === 'Approved' ? 'selected' : ''; ?>>Approved</option>
+                                <option value="Submitted" <?php echo $pr['status'] === 'Submitted' ? 'selected' : ''; ?>>Submitted (Under Review)</option>
+                                <option value="Revision Requested" <?php echo $pr['status'] === 'Revision Requested' ? 'selected' : ''; ?>>Revision Requested</option>
+                                <option value="Rejected" <?php echo $pr['status'] === 'Rejected' ? 'selected' : ''; ?>>Rejected</option>
+                            </select>
+                        </div>
+
+                        <!-- Supervisor Assignment -->
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Assigned Supervisor</label>
+                            <select name="supervisor_id" class="form-select">
+                                <option value="">-- Keep Current / No Change --</option>
+                                <?php if(!empty($supervisors)): ?>
+                                    <?php foreach($supervisors as $sup): ?>
+                                        <option value="<?php echo $sup['user_id']; ?>" <?php echo ($pr['supervisor_id'] == $sup['user_id']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($sup['name'] . (!empty($sup['designation']) ? ' (' . $sup['designation'] . ')' : '')); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <!-- Group Code -->
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Group Code</label>
+                            <input type="text" name="group_code" class="form-control font-monospace" value="<?php echo htmlspecialchars($pr['group_code'] ?? ''); ?>" placeholder="e.g. FYP-26-CS-01 (Leave blank to auto-generate upon approval)">
+                            <small class="text-muted" style="font-size: 0.72rem;">If left blank and approved, the system will auto-generate the official group code format.</small>
+                        </div>
+
+                        <!-- Coordinator Feedback / Remarks -->
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Coordinator Remarks &amp; Feedback</label>
+                            <textarea name="remarks" class="form-control" rows="3" placeholder="Provide notes, suggestions, or conditions for the student group and supervisor..."><?php echo htmlspecialchars($pr['review_notes'] ?? ''); ?></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer border-0 p-3 px-4 rounded-bottom-4 d-flex justify-content-between align-items-center" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill"></i> Save Decision
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <?php endforeach; ?>
 
