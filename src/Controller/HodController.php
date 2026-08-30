@@ -669,7 +669,7 @@ class HodController extends BaseController {
 
         $stmt = $db->prepare("
             SELECT g.id as group_id, g.group_code, g.progress_stage, g.created_at,
-                   p.id as project_id, p.title as project_title, p.abstract, p.status as project_status, p.thesis_file,
+                   p.id as project_id, p.title as project_title, p.description as abstract, p.status as project_status, p.thesis_file,
                    pr.id as proposal_id, pr.file_path as proposal_file, pr.status as proposal_status,
                    sup.name as supervisor_name, sup.designation as supervisor_designation
             FROM `groups` g
