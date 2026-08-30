@@ -108,7 +108,7 @@ $firstName = explode(' ', $fullName)[0];
 
     <!-- Review Proposals Card -->
     <div class="col-xl-4 col-md-6">
-        <a href="<?php echo $basePath; ?>/supervisor/reviews" class="text-decoration-none">
+        <a href="#pending-proposals" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-blue">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">

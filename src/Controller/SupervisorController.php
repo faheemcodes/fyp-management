@@ -416,7 +416,7 @@ class SupervisorController extends BaseController {
                 }
             }
         }
-        redirect('/supervisor/reviews');
+        redirect('/supervisor/dashboard');
     }
 
 
