@@ -513,15 +513,6 @@ foreach($groups as $g):
                         <button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($g['thesis_file']); ?>')">
                             <i class="bi bi-file-earmark-pdf-fill me-2"></i>View Thesis
                         </button>
-                    <?php elseif (!empty($g['proposal_file_path'])): ?>
-                        <!-- Desktop Offcanvas trigger -->
-                        <button class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm d-none d-md-inline-flex align-items-center gap-1" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
-                            <i class="bi bi-layout-sidebar-reverse me-1"></i>View Proposal PDF
-                        </button>
-                        <!-- Mobile new tab trigger -->
-                        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm d-inline-flex d-md-none align-items-center gap-1" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
-                            <i class="bi bi-box-arrow-up-right me-1"></i>View Proposal PDF
-                        </a>
                     <?php endif; ?>
                 </div>
                 
