@@ -202,8 +202,8 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                             </h4>
                             <span class="badge bg-success text-white border border-light border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">HOD</span>
                         </div>
-                        <p class="mb-2" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">
-                            Head of <?php echo htmlspecialchars($departmentVal); ?>
+                        <p class="mb-2" style="color: rgba(255,255,255,0.9); font-size: 0.88rem; font-weight: 500;">
+                            Head of <strong class="text-white"><?php echo htmlspecialchars($departmentVal); ?></strong>
                         </p>
                         
                         <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3">
