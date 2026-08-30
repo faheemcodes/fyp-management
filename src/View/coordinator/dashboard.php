@@ -7,7 +7,7 @@
 html.dark-theme .text-dark {
     color: #f8fafc !important;
 }
-</style>
+
 .notice-minimal-item {
     background: var(--form-bg);
     border: 1px solid var(--border-color);
