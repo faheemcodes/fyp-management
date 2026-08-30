@@ -34,8 +34,6 @@ class SupervisorController extends BaseController {
     }
 
     public function dashboard() {
-
-
         $supervisorId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 
@@ -50,6 +48,32 @@ class SupervisorController extends BaseController {
             WHERE p.supervisor_id = ? AND pr.status = 'Submitted'");
         $stmt->execute([$supervisorId]);
         $pendingProposals = $stmt->fetchColumn();
+
+        // Fetch proposals for assigned projects
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            WHERE p.supervisor_id = ? 
+            ORDER BY 
+                CASE 
+                    WHEN pr.status = 'Submitted' THEN 1 
+                    WHEN pr.status = 'Revision Requested' THEN 2 
+                    ELSE 3 
+                END, 
+                pr.submitted_at DESC");
+        $stmt->execute([$supervisorId]);
+        $proposals = $stmt->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($proposals as &$pr) {
+            $stmt = $db->prepare("SELECT s.*, u.email FROM group_members gm 
+                JOIN students s ON gm.student_id = s.user_id 
+                JOIN users u ON s.user_id = u.id 
+                WHERE gm.group_id = ?");
+            $stmt->execute([$pr['group_id']]);
+            $pr['members'] = $stmt->fetchAll();
+        }
 
         // Fetch assigned groups
         $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status FROM `groups` g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
@@ -81,6 +105,7 @@ class SupervisorController extends BaseController {
             'groupCount' => $groupCount,
             'pendingProposals' => $pendingProposals,
             'meetingsCount' => $meetingsCount,
+            'proposals' => $proposals,
             'groups' => $groups,
             'recentNotices' => $recentNotices
         ]);
