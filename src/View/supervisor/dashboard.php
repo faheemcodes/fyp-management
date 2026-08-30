@@ -5,7 +5,11 @@
     color: var(--text-primary);
     line-height: 1.4;
     font-size: 0.9rem;
-    max-width: 280px;
+    max-width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 .avatar-stack {
@@ -212,10 +216,10 @@ $firstName = explode(' ', $fullName)[0];
                 <table class="table modern-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Title</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Team Members</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Status</th>
-                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Actions</th>
+                            <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 38%;">Project Title</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 22%;">Team Members</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 16%;">Status</th>
+                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 24%;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -232,8 +236,8 @@ $firstName = explode(' ', $fullName)[0];
                             $color = $statusMap[$st][1] ?? '#6b7280';
                         ?>
                         <tr style="transition: background-color 0.2s">
-                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
-                                <div class="project-title-cell text-truncate" title="<?php echo htmlspecialchars($pr['project_title']); ?>">
+                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important; max-width: 240px; overflow: hidden;">
+                                <div class="project-title-cell" title="<?php echo htmlspecialchars($pr['project_title']); ?>">
                                     <?php echo htmlspecialchars($pr['project_title']); ?>
                                 </div>
                                 <?php if(!empty($pr['file_path'])): ?>

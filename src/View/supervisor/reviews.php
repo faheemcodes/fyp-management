@@ -42,6 +42,10 @@
     line-height: 1.4;
     font-size: 0.9rem;
     max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
 }
 
 .avatar-stack {
