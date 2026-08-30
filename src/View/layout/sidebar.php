@@ -286,7 +286,7 @@ if ($role === 'supervisor') {
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/supervisor/groups" class="nav-link <?php echo isActive('/supervisor/groups', $currentUri); ?>">
-                        <i class="bi bi-people-fill"></i> <span>Assigned Groups</span>
+                        <i class="bi bi-people-fill"></i> <span>FYP Groups</span>
                     </a>
                 </li>
                 <li class="nav-item">

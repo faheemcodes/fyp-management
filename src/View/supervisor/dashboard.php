@@ -96,7 +96,7 @@ $firstName = explode(' ', $fullName)[0];
                     </div>
                     <div class="flex-grow-1">
                         <div class="premium-card-count"><?php echo htmlspecialchars((string)($groupCount), ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="premium-card-label">Assigned Groups</div>
+                        <div class="premium-card-label">FYP Groups</div>
                     </div>
                     <div class="premium-card-arrow">
                         <i class="bi bi-arrow-right-short"></i>
