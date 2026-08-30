@@ -868,9 +868,26 @@ html.dark-theme .accordion-button::after {
     }
     .sidebar-collapsed #sidebar .nav-link {
         color: transparent !important;
-        padding: 11px 0;
-        justify-content: center;
-        margin: 2px 8px;
+        padding: 0 !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 4px 10px !important;
+        height: 42px !important;
+        display: flex !important;
+        border-radius: 10px !important;
+        gap: 0 !important;
+    }
+    .sidebar-collapsed #sidebar .nav-link > div,
+    .sidebar-collapsed #sidebar .nav-link div.text-truncate,
+    .sidebar-collapsed #sidebar .nav-link .d-flex {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        max-width: none !important;
     }
     .sidebar-collapsed #sidebar .nav-link span,
     .sidebar-collapsed #sidebar .nav-link .badge,
@@ -879,14 +896,33 @@ html.dark-theme .accordion-button::after {
         display: none !important;
     }
     .sidebar-collapsed #sidebar .nav-link.active {
-        background: rgba(var(--primary-rgb), 0.1) !important;
+        background: rgba(var(--primary-rgb), 0.12) !important;
     }
-    .sidebar-collapsed #sidebar .nav-link i {
+    .sidebar-collapsed #sidebar .nav-link:hover {
+        background: rgba(var(--primary-rgb), 0.06) !important;
+    }
+    .sidebar-collapsed #sidebar .nav-link i,
+    .sidebar-collapsed #sidebar .nav-link > div > i,
+    .sidebar-collapsed #sidebar .nav-link i:not(.switch-sun):not(.switch-moon) {
         color: var(--sidebar-link);
-        margin: 0;
+        margin: 0 auto !important;
+        font-size: 1.15rem !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        flex-shrink: 0 !important;
+        background: transparent !important;
     }
-    .sidebar-collapsed #sidebar .nav-link.active i {
+    .sidebar-collapsed #sidebar .nav-link.active i,
+    .sidebar-collapsed #sidebar .nav-link.active > div > i {
         color: var(--primary-color) !important;
+    }
+    .sidebar-collapsed #sidebar .nav-link:hover i,
+    .sidebar-collapsed #sidebar .nav-link:hover > div > i {
+        color: var(--sidebar-link-hover) !important;
     }
     .sidebar-collapsed #content {
         margin-left: var(--sidebar-collapsed-width);
