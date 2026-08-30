@@ -43,6 +43,14 @@ class CoordinatorController extends BaseController {
         $stmt->execute([$userId]);
         $stats['total_notices'] = $stmt->fetchColumn();
 
+        // Department meetings awaiting verification (Completed status)
+        $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE s.department = ? AND m.status = 'Completed'");
+        $stmtMeetings->execute([$dept]);
+        $stats['pending_meetings'] = $stmtMeetings->fetchColumn();
+
         // Unverified / Pending Proposals count (Supervisor Approved, Submitted, Under Review, Revision Requested)
         $stmtPendingCount = $db->prepare("SELECT COUNT(*) FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id

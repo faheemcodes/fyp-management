@@ -239,13 +239,55 @@ $supervisors = $supervisors ?? [];
         </a>
     </div>
 
+    <!-- Verify Meetings Card -->
+    <div class="col-xl-4 col-md-6">
+        <a href="<?php echo $bp; ?>/coordinator/meetings" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-green">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-green">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_meetings'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Verify Meetings</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Notices Generated Card -->
+    <div class="col-xl-6 col-md-6">
+        <a href="<?php echo $bp; ?>/coordinator/notice" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-rose">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-rose">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_notices'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Notices Generated</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
     <!-- External Assessment Card -->
-    <div class="col-xl-4 col-md-12">
+    <div class="col-xl-6 col-md-12">
         <a href="<?php echo $bp; ?>/coordinator/assessment" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-blue">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
-                    <div class="premium-card-icon premium-icon-blue" style="width: 54px; height: 54px; font-size: 1.4rem;">
+                    <div class="premium-card-icon premium-icon-blue" style="width: 50px; height: 50px; font-size: 1.3rem;">
                         <i class="bi bi-journal-check"></i>
                     </div>
                     <div class="flex-grow-1">
