@@ -136,7 +136,9 @@ $routes = [
     '/hod/coordinators/delete' => ['Controller\HodController', 'deleteCoordinator'],
     '/hod/students/verify' => ['Controller\HodController', 'verifyStudents'],
     '/hod/students/approve' => ['Controller\HodController', 'approveStudent'],
+    '/hod/students/approve-all' => ['Controller\HodController', 'approveAllStudents'],
     '/hod/students/reject' => ['Controller\HodController', 'rejectStudent'],
+    '/hod/projects' => ['Controller\HodController', 'projects'],
     '/hod/profile' => ['Controller\HodController', 'profile'],
     
     // Student routes

@@ -28,6 +28,58 @@ class HodController extends BaseController {
         $stmtCoordCount = $db->prepare("SELECT COUNT(*) FROM coordinators WHERE department = ?");
         $stmtCoordCount->execute([$dept]);
         $stats['coordinators'] = $stmtCoordCount->fetchColumn();
+
+        // FYP Progress Stages Funnel
+        $stages = [
+            'Proposal Submitted' => 0,
+            'Proposal Approved' => 0,
+            'Proposal Defence Presentation Completed' => 0,
+            'FYP Progress Presentation Completed' => 0,
+            'Final Presentation Completed' => 0,
+            'Final Grading Completed' => 0
+        ];
+
+        $stmtStages = $db->prepare("SELECT g.progress_stage, COUNT(*) as count 
+            FROM `groups` g 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE s.department = ? 
+            GROUP BY g.progress_stage");
+        $stmtStages->execute([$dept]);
+        $stageResults = $stmtStages->fetchAll();
+
+        foreach ($stageResults as $r) {
+            $stageName = $r['progress_stage'];
+            if (isset($stages[$stageName])) {
+                $stages[$stageName] = (int)$r['count'];
+            } elseif ($stageName === 'Account Created' || $stageName === 'Group Created') {
+                // If group is created, count under initial setup/proposal
+                $stages['Proposal Submitted'] += (int)$r['count'];
+            }
+        }
+
+        // Supervisor Workload & Capacity Matrix
+        $stmtSettings = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
+        $stmtSettings->execute([$dept]);
+        $deptSettings = $stmtSettings->fetch();
+        $maxMorning = $deptSettings ? (int)($deptSettings['max_morning_slots'] ?? 5) : 5;
+        $maxEvening = $deptSettings ? (int)($deptSettings['max_evening_slots'] ?? 5) : 5;
+
+        $stmtWorkload = $db->prepare("
+            SELECT s.user_id, s.name, s.designation, u.email,
+                COALESCE(SUM(CASE WHEN st.shift = 'Morning' OR st.shift IS NULL THEN 1 ELSE 0 END), 0) as morning_projects,
+                COALESCE(SUM(CASE WHEN st.shift = 'Evening' THEN 1 ELSE 0 END), 0) as evening_projects,
+                COUNT(p.id) as total_projects
+            FROM supervisors s
+            JOIN users u ON s.user_id = u.id
+            LEFT JOIN projects p ON s.user_id = p.supervisor_id
+            LEFT JOIN `groups` g ON p.group_id = g.id
+            LEFT JOIN students st ON g.created_by = st.user_id
+            WHERE s.department = ?
+            GROUP BY s.user_id, s.name, s.designation, u.email
+            ORDER BY s.name ASC
+        ");
+        $stmtWorkload->execute([$dept]);
+        $supervisorsWorkload = $stmtWorkload->fetchAll();
         
         // Fetch recent supervisors and committee members scoped to this department
         $stmtRecentSup = $db->prepare("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.department = ? ORDER BY u.created_at DESC LIMIT 5");
@@ -45,9 +97,14 @@ class HodController extends BaseController {
 
         $this->render('hod/dashboard', [
             'stats' => $stats,
+            'stages' => $stages,
+            'supervisorsWorkload' => $supervisorsWorkload,
+            'maxMorning' => $maxMorning,
+            'maxEvening' => $maxEvening,
             'recentSupervisors' => $recentSupervisors,
             'recentCommittee' => $recentCommittee,
-            'recentNotices' => $recentNotices
+            'recentNotices' => $recentNotices,
+            'department' => $dept
         ]);
     }
 
@@ -63,12 +120,14 @@ class HodController extends BaseController {
         }
 
         $this->render('hod/settings', [
-            'settings' => $settings
+            'settings' => $settings,
+            'department' => $dept
         ]);
     }
 
     public function updateSettings() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
             $maxMorningSlots = (int)($_POST['max_morning_slots'] ?? 5);
@@ -139,16 +198,29 @@ class HodController extends BaseController {
 
     public function supervisors() {
         $db = \Database::getInstance()->getConnection();
-        $supervisors = $db->query("SELECT s.*, u.email FROM supervisors s JOIN users u ON s.user_id = u.id ORDER BY s.name ASC")->fetchAll();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+        
+        $stmt = $db->prepare("SELECT s.*, u.email, u.cnic,
+            (SELECT COUNT(*) FROM projects p WHERE p.supervisor_id = s.user_id) as active_projects
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE s.department = ? 
+            ORDER BY s.name ASC");
+        $stmt->execute([$dept]);
+        $supervisors = $stmt->fetchAll();
         
         $this->render('hod/supervisors', [
-            'supervisors' => $supervisors
+            'supervisors' => $supervisors,
+            'department' => $dept
         ]);
     }
 
     public function createSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -156,15 +228,14 @@ class HodController extends BaseController {
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $designation = trim($_POST['designation'] ?? '');
-            $department = trim($_POST['department'] ?? '');
+            $department = $dept; // Auto-lock to HOD's department
 
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation)) {
                 $this->flash('error', 'Please fill in all required fields.');
                 redirect('/hod/supervisors');
             }
 
             $cnic = str_replace('-', '', $cnic);
-            $db = \Database::getInstance()->getConnection();
 
             // Check if email already exists
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
@@ -194,13 +265,13 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $department]);
 
                 // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Supervisor');
 
                 $db->commit();
-                $this->flash('success', "Supervisor $fullName added successfully and credentials sent.");
+                $this->flash('success', "Supervisor $fullName added successfully to Department of $department and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding supervisor. Please try again.');
@@ -212,19 +283,41 @@ class HodController extends BaseController {
     public function editSupervisor() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
-            $department = trim($_POST['department'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
 
-            if ($userId && $name && $designation && $department) {
-                $db = \Database::getInstance()->getConnection();
-                $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ?, department = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $department, $userId]);
+            if ($userId && $name && $designation) {
+                // Verify supervisor is in HOD's department
+                $stmtCheck = $db->prepare("SELECT department FROM supervisors WHERE user_id = ?");
+                $stmtCheck->execute([$userId]);
+                if ($stmtCheck->fetchColumn() !== $dept) {
+                    $this->flash('error', 'Unauthorized: Supervisor is not in your department.');
+                    redirect('/hod/supervisors');
+                }
+
+                $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ? WHERE user_id = ?");
+                $stmt->execute([$name, $designation, $userId]);
+
+                if (!empty($email)) {
+                    $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
+                    $stmtU->execute([$email, $userId]);
+                }
+
+                if (!empty($password)) {
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmtPass = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmtPass->execute([$hashed, $userId]);
+                }
                 
                 $this->flash('success', "Supervisor profile updated.");
             } else {
-                $this->flash('error', "Failed to update supervisor profile. Fill all fields.");
+                $this->flash('error', "Failed to update supervisor profile. Fill all required fields.");
             }
         }
         redirect('/hod/supervisors');
@@ -234,16 +327,23 @@ class HodController extends BaseController {
         $id = $_GET['id'] ?? null;
         if ($id) {
             $db = \Database::getInstance()->getConnection();
-            try {
-                $db->beginTransaction();
-                // Deleting from users will cascade delete from supervisors
-                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                $stmt->execute([$id]);
-                $db->commit();
-                $this->flash('success', "Supervisor deleted successfully.");
-            } catch (\Exception $e) {
-                $db->rollBack();
-                $this->flash('error', 'Failed to delete supervisor. Please try again.');
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+            $stmtCheck = $db->prepare("SELECT department FROM supervisors WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            if ($stmtCheck->fetchColumn() === $dept) {
+                try {
+                    $db->beginTransaction();
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $db->commit();
+                    $this->flash('success', "Supervisor deleted successfully.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Failed to delete supervisor. Please try again.');
+                }
+            } else {
+                $this->flash('error', 'Unauthorized: Supervisor is not in your department.');
             }
         }
         redirect('/hod/supervisors');
@@ -251,16 +351,24 @@ class HodController extends BaseController {
 
     public function committee() {
         $db = \Database::getInstance()->getConnection();
-        $committees = $db->query("SELECT c.*, u.email FROM committees c JOIN users u ON c.user_id = u.id ORDER BY c.name ASC")->fetchAll();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+        $stmt = $db->prepare("SELECT c.*, u.email, u.cnic FROM committees c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.name ASC");
+        $stmt->execute([$dept]);
+        $committees = $stmt->fetchAll();
         
         $this->render('hod/committee', [
-            'committees' => $committees
+            'committees' => $committees,
+            'department' => $dept
         ]);
     }
 
     public function createCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -268,15 +376,14 @@ class HodController extends BaseController {
             $designation = trim($_POST['designation'] ?? '');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
-            $department = trim($_POST['department'] ?? '');
+            $department = $dept; // Auto-lock to HOD department
 
-            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($password) || empty($department)) {
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($password)) {
                 $this->flash('error', 'All fields are required.');
                 redirect('/hod/committee');
             }
 
             $cnic = str_replace('-', '', $cnic);
-            $db = \Database::getInstance()->getConnection();
 
             // Check if email already exists
             $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
@@ -306,13 +413,13 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $department]);
 
                 // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
                 $db->commit();
-                $this->flash('success', "Committee Member $fullName added successfully and credentials sent.");
+                $this->flash('success', "Committee Member $fullName added successfully to Department of $department and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding committee member. Please try again.');
@@ -324,14 +431,36 @@ class HodController extends BaseController {
     public function editCommittee() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
-            $department = trim($_POST['department'] ?? '');
+            $designation = trim($_POST['designation'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
 
-            if ($userId && $name && $department) {
-                $db = \Database::getInstance()->getConnection();
-                $stmt = $db->prepare("UPDATE committees SET name = ?, department = ? WHERE user_id = ?");
-                $stmt->execute([$name, $department, $userId]);
+            if ($userId && $name) {
+                $stmtCheck = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
+                $stmtCheck->execute([$userId]);
+                if ($stmtCheck->fetchColumn() !== $dept) {
+                    $this->flash('error', 'Unauthorized: Committee member is not in your department.');
+                    redirect('/hod/committee');
+                }
+
+                $stmt = $db->prepare("UPDATE committees SET name = ?, designation = ? WHERE user_id = ?");
+                $stmt->execute([$name, $designation, $userId]);
+
+                if (!empty($email)) {
+                    $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
+                    $stmtU->execute([$email, $userId]);
+                }
+
+                if (!empty($password)) {
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmtPass = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmtPass->execute([$hashed, $userId]);
+                }
                 
                 $this->flash('success', "Committee member details updated.");
             } else {
@@ -345,15 +474,23 @@ class HodController extends BaseController {
         $id = $_GET['id'] ?? null;
         if ($id) {
             $db = \Database::getInstance()->getConnection();
-            try {
-                $db->beginTransaction();
-                $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                $stmt->execute([$id]);
-                $db->commit();
-                $this->flash('success', "Committee member deleted successfully.");
-            } catch (\Exception $e) {
-                $db->rollBack();
-                $this->flash('error', 'Failed to delete committee member. Please try again.');
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+            $stmtCheck = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            if ($stmtCheck->fetchColumn() === $dept) {
+                try {
+                    $db->beginTransaction();
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $db->commit();
+                    $this->flash('success', "Committee member deleted successfully.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Failed to delete committee member. Please try again.');
+                }
+            } else {
+                $this->flash('error', 'Unauthorized: Committee member is not in your department.');
             }
         }
         redirect('/hod/committee');
@@ -369,12 +506,17 @@ class HodController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
         
-        $students = $db->prepare("SELECT s.*, u.email, u.status FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ? ORDER BY u.created_at DESC");
+        $students = $db->prepare("SELECT s.*, u.email, u.status, u.created_at as registered_at 
+            FROM students s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE u.status = 'pending' AND s.department = ? 
+            ORDER BY u.created_at DESC");
         $students->execute([$dept]);
         $pending = $students->fetchAll();
         
         $this->render('hod/verify_students', [
-            'students' => $pending
+            'students' => $pending,
+            'department' => $dept
         ]);
     }
 
@@ -394,7 +536,7 @@ class HodController extends BaseController {
                 
                 // Fetch student details for email
                 $stmtUser = $db->prepare("
-                    SELECT u.email, s.student_id 
+                    SELECT u.email, s.student_id, s.name 
                     FROM users u 
                     JOIN students s ON u.id = s.user_id 
                     WHERE u.id = ?
@@ -403,12 +545,12 @@ class HodController extends BaseController {
                 $user = $stmtUser->fetch();
 
                 if ($user) {
-                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.');
                     
                     $subject = "Your Account has been Approved";
                     $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
                     
-                    $message = "Hello,\n\nYour account on the FYP Management Portal has been approved by your HOD.\n\n"
+                    $message = "Hello " . ($user['name'] ?? 'Student') . ",\n\nYour account on the FYP Management Portal has been approved by your Head of Department ($dept).\n\n"
                              . "Your Login Credentials:\n"
                              . $identifierStr . "\n\n"
                              . "You can now log in to the portal.\n\nRegards,\nFYP Management Team";
@@ -419,6 +561,53 @@ class HodController extends BaseController {
                 $this->flash('success', 'Student account approved successfully.');
             } else {
                 $this->flash('error', 'Unauthorized: Student is not in your department.');
+            }
+        }
+        redirect('/hod/students/verify');
+    }
+
+    public function approveAllStudents() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+            $stmtPending = $db->prepare("SELECT s.user_id, s.name, s.student_id, u.email 
+                FROM students s 
+                JOIN users u ON s.user_id = u.id 
+                WHERE u.status = 'pending' AND s.department = ?");
+            $stmtPending->execute([$dept]);
+            $pendingStudents = $stmtPending->fetchAll();
+
+            if (empty($pendingStudents)) {
+                $this->flash('info', 'No pending student accounts found to approve.');
+                redirect('/hod/students/verify');
+            }
+
+            try {
+                $db->beginTransaction();
+
+                $stmtUpdate = $db->prepare("UPDATE users SET status = 'approved' WHERE id = ?");
+                foreach ($pendingStudents as $stu) {
+                    $stmtUpdate->execute([$stu['user_id']]);
+                    $this->addNotification($stu['user_id'], 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.');
+                    
+                    $subject = "Your Account has been Approved";
+                    $identifierStr = "Roll Number: " . $stu['student_id'] . "\nPassword: (The password you chose during registration)";
+                    $message = "Hello " . $stu['name'] . ",\n\nYour account on the FYP Management Portal has been approved by your Head of Department ($dept).\n\n"
+                             . "Your Login Credentials:\n"
+                             . $identifierStr . "\n\n"
+                             . "You can now log in to the portal.\n\nRegards,\nFYP Management Team";
+                             
+                    $this->sendEmail($stu['email'], $subject, $message);
+                }
+
+                $db->commit();
+                $count = count($pendingStudents);
+                $this->flash('success', "Successfully approved all $count pending student registration(s).");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error approving students. Please try again.');
             }
         }
         redirect('/hod/students/verify');
@@ -447,13 +636,14 @@ class HodController extends BaseController {
                         }
                     }
                     
-                    $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
-                    $stmtUser->execute([$id]);
-                    $userEmail = $stmtUser->fetchColumn();
+                    $stmtUser = $db->prepare("SELECT email, (SELECT name FROM students WHERE user_id = ?) as student_name FROM users WHERE id = ?");
+                    $stmtUser->execute([$id, $id]);
+                    $userData = $stmtUser->fetch();
+                    $userEmail = $userData ? $userData['email'] : null;
                     
                     if ($userEmail) {
                         $subject = "Your Registration has been Rejected";
-                        $message = "Hello,\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your HOD.\n\n"
+                        $message = "Hello " . ($userData['student_name'] ?? 'Student') . ",\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your HOD.\n\n"
                                  . "Reason for rejection:\n$reason\n\n"
                                  . "Please correct the issues mentioned above and create a new account, or contact your department if you believe this was a mistake.\n\n"
                                  . "Regards,\nFYP Management Team";
@@ -471,6 +661,45 @@ class HodController extends BaseController {
             }
         }
         redirect('/hod/students/verify');
+    }
+
+    public function projects() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+        $stmt = $db->prepare("
+            SELECT g.id as group_id, g.group_code, g.progress_stage, g.created_at,
+                   p.id as project_id, p.title as project_title, p.abstract, p.status as project_status, p.thesis_file,
+                   pr.id as proposal_id, pr.file_path as proposal_file, pr.status as proposal_status,
+                   sup.name as supervisor_name, sup.designation as supervisor_designation
+            FROM `groups` g
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN projects p ON g.id = p.group_id
+            LEFT JOIN proposals pr ON g.id = pr.group_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ?
+            ORDER BY g.created_at DESC
+        ");
+        $stmt->execute([$dept]);
+        $projects = $stmt->fetchAll();
+
+        // Fetch team members for each group
+        foreach ($projects as &$proj) {
+            $stmtM = $db->prepare("
+                SELECT s.user_id, s.student_id as roll_no, s.name as student_name, s.avatar, s.shift, u.email
+                FROM group_members gm
+                JOIN students s ON gm.student_id = s.user_id
+                JOIN users u ON s.user_id = u.id
+                WHERE gm.group_id = ?
+            ");
+            $stmtM->execute([$proj['group_id']]);
+            $proj['members'] = $stmtM->fetchAll();
+        }
+
+        $this->render('hod/projects', [
+            'projects' => $projects,
+            'department' => $dept
+        ]);
     }
 
     public function coordinators() {

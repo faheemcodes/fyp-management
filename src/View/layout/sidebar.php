@@ -195,6 +195,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/hod/projects" class="nav-link <?php echo isActive('/hod/projects', $currentUri); ?>">
+                        <i class="bi bi-kanban-fill"></i> <span>Department Projects</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/hod/supervisors" class="nav-link <?php echo isActive('/hod/supervisors', $currentUri); ?>">
                         <i class="bi bi-person-badge-fill"></i> <span>Supervisors</span>
                     </a>

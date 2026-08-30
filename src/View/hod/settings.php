@@ -93,6 +93,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <form action="<?php echo $basePath; ?>/hod/settings/update" method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
     <div class="row">
         <!-- Supervisor Limits (70% on large screens) -->
         <div class="col-lg-8 mb-4">

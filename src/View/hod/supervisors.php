@@ -3,21 +3,25 @@
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
-
 <!-- Top Hero Banner -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
             <div class="page-hero-icon">
-                <i class="bi bi-building-fill"></i>
+                <i class="bi bi-person-badge-fill"></i>
             </div>
             <div>
-                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Supervisor Faculty Directory</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">Create, edit, or remove FYP supervisors under your faculty</p>
+                <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
+                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Supervisor Faculty Directory</h4>
+                    <span class="badge rounded-pill bg-white bg-opacity-20 text-white px-3 py-1 fw-semibold" style="font-size: 0.8rem">
+                        <?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                </div>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75);font-size: 0.85rem">Register and manage project supervisors under your department</p>
             </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0" style="background: linear-gradient(135deg, #10b981, #059669)" data-bs-toggle="modal" data-bs-target="#createSupervisorModal">
-            <i class="bi bi-person-plus-fill me-2"></i> Add New Supervisor
+        <button class="btn btn-light rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold text-primary d-inline-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#createSupervisorModal">
+            <i class="bi bi-person-plus-fill"></i> <span>Add New Supervisor</span>
         </button>
     </div>
 </div>
@@ -29,8 +33,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <div class="col-md-6 ps-0">
                 <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
                     <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search supervisors by name, email, department..." data-target="supervisors-table">
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search supervisors by name, email, designation..." data-target="supervisors-table">
                 </div>
+            </div>
+            <div class="col-md-6 pe-0 text-md-end text-muted small">
+                Showing <strong><?php echo count($supervisors); ?></strong> supervisor(s) in <strong><?php echo htmlspecialchars($department ?? 'FET'); ?></strong>
             </div>
         </div>
     </div>
@@ -39,10 +46,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <table class="table modern-table m-0" id="supervisors-table">
             <thead>
                 <tr>
-                    <th class="ps-4">Supervisor Details</th>
+                    <th class="ps-4">Supervisor Name &amp; Email</th>
                     <th>Designation</th>
-                    <th>Department</th>
-                    <th>Email Address</th>
+                    <th>CNIC</th>
+                    <th>Active FYP Projects</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
@@ -55,97 +62,92 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php echo strtoupper(substr($s['name'], 0, 1)); ?>
                             </div>
                             <div>
-                                <div class="fw-semibold text-dark" style="font-size: 0.95rem"><?php echo htmlspecialchars($s['name']); ?></div>
-                                <small class="text-muted" style="font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($s['email']); ?></small>
+                                <div class="fw-semibold text-dark" style="font-size: 0.95rem"><?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <small class="text-muted" style="font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge bg-light text-dark border px-2.5 py-1.5"><?php echo htmlspecialchars($s['designation']); ?></span></td>
+                    <td><span class="badge bg-light text-dark border px-2.5 py-1.5"><?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="text-secondary small fw-medium"><?php echo htmlspecialchars($s['department']); ?></span>
+                        <span class="font-monospace text-secondary small px-2 py-1 bg-light border rounded"><?php echo htmlspecialchars($s['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td>
-                        <div class="small text-muted" style="max-width: 250px;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;white-space: normal" title="<?php echo htmlspecialchars($s['email'] ?? 'Not specified'); ?>">
-                            <?php echo htmlspecialchars($s['email'] ?? 'Not specified'); ?>
-                        </div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 font-monospace">
+                            <?php echo (int)($s['active_projects'] ?? 0); ?> Projects
+                        </span>
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
                             <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1);color: #047fb0;border: none;font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                <i class="bi bi-pencil-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Edit</span>
+                                <i class="bi bi-pencil-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Edit</span>
                             </button>
-                            <a href="<?php echo $basePath; ?>/hod/supervisors/delete?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;border: none;font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Are you sure you want to delete this supervisor? This will delete their user account permanently.')">
-                                <i class="bi bi-trash3-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Delete</span>
+                            <a href="<?php echo $basePath; ?>/hod/supervisors/delete?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;border: none;font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Are you sure you want to delete this supervisor? This will permanently delete their user account.')">
+                                <i class="bi bi-trash3-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Delete</span>
                             </a>
                         </div>
                     </td>
                 </tr>
+
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content border-0" style="border-radius: 1.5rem;overflow: hidden;box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)">
-                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem;border-bottom: 1px solid var(--border-color) !important">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden;">
+                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                                 <div class="position-absolute top-0 end-0 p-3">
                                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="rounded-circle p-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 64px;height: 64px">
-                                    <i class="bi bi-pencil-square text-primary" style="font-size: 1.75rem"></i>
+                                <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 56px;height: 56px">
+                                    <i class="bi bi-pencil-square text-primary" style="font-size: 1.5rem"></i>
                                 </div>
-                                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem;letter-spacing: -0.02em">Edit Supervisor Profile</h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1);font-size: 0.85rem;padding: 0.4rem 0.8rem;font-weight: 600">
-                                    <?php echo htmlspecialchars($s['name']); ?>
+                                <h5 class="fw-bold mb-1 text-dark text-center">Edit Supervisor Details</h5>
+                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1);font-size: 0.85rem;padding: 0.35rem 0.75rem;">
+                                    <?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                             </div>
-                            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/edit" method="POST">
-                                <div class="modal-body p-4">
-                                    <input type="hidden" name="user_id" value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                    
+                            <form action="<?php echo $basePath; ?>/hod/supervisors/edit" method="POST">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                                <input type="hidden" name="user_id" value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                <div class="modal-body p-4 pt-2">
                                     <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Full Name</label>
-                                        <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="name" value="<?php echo htmlspecialchars($s['name']); ?>" required>
+                                        <label class="form-label small fw-bold text-muted">Full Name</label>
+                                        <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
-
                                     <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Designation</label>
-                                        <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="designation" required>
+                                        <label class="form-label small fw-bold text-muted">Designation</label>
+                                        <select class="form-select" name="designation" required>
                                             <option value="Lecturer" <?php echo $s['designation'] === 'Lecturer' ? 'selected' : ''; ?>>Lecturer</option>
                                             <option value="Assistant Professor" <?php echo $s['designation'] === 'Assistant Professor' ? 'selected' : ''; ?>>Assistant Professor</option>
                                             <option value="Associate Professor" <?php echo $s['designation'] === 'Associate Professor' ? 'selected' : ''; ?>>Associate Professor</option>
                                             <option value="Professor" <?php echo $s['designation'] === 'Professor' ? 'selected' : ''; ?>>Professor</option>
                                         </select>
                                     </div>
-
                                     <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Department</label>
-                                        <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" name="department" required>
-                                            <option value="Computer Science" <?php echo $s['department'] === 'Computer Science' ? 'selected' : ''; ?>>Computer Science</option>
-                                            <option value="Software Engineering" <?php echo $s['department'] === 'Software Engineering' ? 'selected' : ''; ?>>Software Engineering</option>
-                                            <option value="Information Technology" <?php echo $s['department'] === 'Information Technology' ? 'selected' : ''; ?>>Information Technology</option>
-                                            <option value="Data Science" <?php echo $s['department'] === 'Data Science' ? 'selected' : ''; ?>>Data Science</option>
-                                            <option value="Telecommunication Engineering" <?php echo $s['department'] === 'Telecommunication Engineering' ? 'selected' : ''; ?>>Telecommunication Engineering</option>
-                                            <option value="Electronic Engineering" <?php echo $s['department'] === 'Electronic Engineering' ? 'selected' : ''; ?>>Electronic Engineering</option>
-                                        </select>
+                                        <label class="form-label small fw-bold text-muted">Email Address</label>
+                                        <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
-
-
+                                    <div class="mb-2 text-start">
+                                        <label class="form-label small fw-bold text-muted">Reset Password (leave empty to keep current)</label>
+                                        <input type="password" class="form-control" name="password" placeholder="••••••••">
+                                    </div>
                                 </div>
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
-                                        <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1);color: var(--text-primary);padding: 0.6rem 0" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669);padding: 0.6rem 0" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Save Changes</button>
+                                        <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Save Changes</button>
                                     </div>
                                 </div>
-                            
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-</form>
+                            </form>
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if (empty($supervisors)): ?>
-                    <tr>
-                        <td colspan="5" class="text-center text-muted py-4">No supervisors are registered yet.</td>
-                    </tr>
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-5">
+                        <i class="bi bi-people fs-2 d-block mb-2 opacity-50"></i>
+                        No supervisors registered in this department yet.
+                    </td>
+                </tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -155,45 +157,46 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Create Supervisor Modal -->
 <div class="modal fade" id="createSupervisorModal" tabindex="-1" aria-labelledby="createSupervisorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0" style="border-radius: 1.5rem;overflow: hidden;box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)">
-            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2.5rem 2rem 1.5rem;border-bottom: 1px solid var(--border-color) !important">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;overflow: hidden;">
+            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                 <div class="position-absolute top-0 end-0 p-3">
                     <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="rounded-circle p-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 64px;height: 64px">
-                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 1.75rem"></i>
+                <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg);border: 1px solid var(--border-color);width: 56px;height: 56px">
+                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 1.5rem"></i>
                 </div>
-                <h5 class="fw-bold mb-1 text-primary text-center" style="font-size: 1.35rem;letter-spacing: -0.02em" id="createSupervisorModalLabel">Add New Faculty Supervisor</h5>
-                <p class="text-muted small mb-0">Fill in the details to register a new supervisor.</p>
+                <h5 class="fw-bold mb-1 text-dark text-center" id="createSupervisorModalLabel">Add New Faculty Supervisor</h5>
+                <p class="text-muted small mb-0">Department: <strong class="text-primary"><?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?></strong></p>
             </div>
-            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/hod/supervisors/create" method="POST">
+            <form action="<?php echo $basePath; ?>/hod/supervisors/create" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                 <div class="modal-body p-4">
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="supFirstName" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">First Name</label>
-                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supFirstName" name="first_name" required placeholder="e.g. Faheem">
+                            <label class="form-label small fw-bold text-muted">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" required placeholder="e.g. Faheem">
                         </div>
                         <div class="col-md-6">
-                            <label for="supLastName" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Last Name</label>
-                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supLastName" name="last_name" required placeholder="e.g. Soomro">
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label for="supEmail" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Email Address</label>
-                            <input type="email" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supEmail" name="email" required placeholder="name@university.edu">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="supCnic" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">CNIC (no dashes)</label>
-                            <input type="text" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supCnic" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
+                            <label class="form-label small fw-bold text-muted">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" required placeholder="e.g. Soomro">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="supDesignation" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Designation</label>
-                            <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supDesignation" name="designation" required>
+                            <label class="form-label small fw-bold text-muted">Email Address *</label>
+                            <input type="email" class="form-control" name="email" required placeholder="name@university.edu">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">CNIC (no dashes) *</label>
+                            <input type="text" class="form-control" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Designation *</label>
+                            <select class="form-select" name="designation" required>
                                 <option value="Lecturer">Lecturer</option>
                                 <option value="Assistant Professor" selected>Assistant Professor</option>
                                 <option value="Associate Professor">Associate Professor</option>
@@ -201,35 +204,44 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="supDept" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Department</label>
-                            <select class="form-select border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supDept" name="department" required>
-                                <option value="Computer Science">Computer Science</option>
-                                <option value="Software Engineering">Software Engineering</option>
-                                <option value="Information Technology">Information Technology</option>
-                                <option value="Data Science">Data Science</option>
-                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
-                                <option value="Electronic Engineering">Electronic Engineering</option>
-                            </select>
+                            <label class="form-label small fw-bold text-muted">Contact Number</label>
+                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
                         </div>
                     </div>
 
                     <div class="mb-0">
-                        <label for="supPassword" class="form-label small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px">Password</label>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label small fw-bold text-muted m-0">Password *</label>
+                            <button type="button" class="btn btn-link p-0 text-decoration-none small text-primary fw-semibold" onclick="generateRandomPassword('supPassword')">
+                                <i class="bi bi-magic me-1"></i>Generate Password
+                            </button>
+                        </div>
                         <div class="position-relative">
-                            <input type="password" class="form-control border-0 shadow-sm rounded-3 py-2 px-3 fw-medium" id="supPassword" name="password" required placeholder="••••••••" style="padding-right: 56px">
-                            <button type="button" style="position: absolute;right: 14px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.8rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('supPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                            <input type="text" class="form-control font-monospace" id="supPassword" name="password" required placeholder="Enter or generate password">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-4 pt-0">
                     <div class="d-flex w-100 gap-2">
-                        <button type="button" class="btn flex-grow-1 rounded-pill fw-bold transition-all" style="background: rgba(100, 116, 139, 0.1);color: var(--text-primary);padding: 0.6rem 0" onmouseover="this.style.background='rgba(100, 116, 139, 0.18)';" onmouseout="this.style.background='rgba(100, 116, 139, 0.1)';" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm" style="background: linear-gradient(135deg, #10b981, #059669);padding: 0.6rem 0" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">Add Supervisor</button>
+                        <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Add Supervisor</button>
                     </div>
                 </div>
-            
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-</form>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+function generateRandomPassword(elementId) {
+    const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%';
+    let pass = '';
+    for (let i = 0; i < 10; i++) {
+        pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const input = document.getElementById(elementId);
+    if (input) {
+        input.value = pass;
+    }
+}
+</script>
