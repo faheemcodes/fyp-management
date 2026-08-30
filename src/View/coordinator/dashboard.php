@@ -8,11 +8,92 @@ html.dark-theme .text-dark {
     color: #f8fafc !important;
 }
 </style>
-<style>
-@media (max-width: 768px) {
-    
-    
-    
+.notice-minimal-item {
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.notice-minimal-item:hover {
+    background: var(--card-bg);
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+.notice-minimal-item .notice-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3.5px;
+    background: #10b981;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.notice-minimal-item:hover .notice-accent-bar {
+    opacity: 1;
+}
+.notice-date-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.02em;
+}
+.notice-view-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
+}
+.notice-minimal-item:hover .notice-view-btn {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.notice-list {
+    padding-right: 8px;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.notice-list::-webkit-scrollbar {
+    width: 5px;
+}
+.notice-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.notice-list::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.25);
+    border-radius: 10px;
+}
+.notice-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.45);
 }
 
 /* ── Modern Table overrides ── */
@@ -215,86 +296,37 @@ $firstName = explode(' ', $fullName)[0];
         </a>
     </div>
 
-            <!-- Desktop Table -->
-            <div class="table-responsive d-none d-md-block custom-table-scroll" style="max-height: 320px; overflow-y: auto;">
-                <table class="table table-hover align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Ref No.</th>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            <th>Target</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($recentNotices as $n): ?>
-                        <tr>
-                            <td>
-                                <span class="fw-semibold text-secondary" style="font-family: monospace;font-size: 0.8rem;background: var(--form-bg);padding: 4px 8px;border-radius: 6px;border: 1px solid var(--border-color)">
-                                    <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="fw-semibold text-dark text-wrap" title="<?php echo htmlspecialchars($n['subject']); ?>" style="max-width: 400px;line-height: 1.4;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden">
-                                    <?php echo htmlspecialchars($n['subject']); ?>
-                                </div>
-                            </td>
-                            <td style="white-space: nowrap">
-                                <span style="font-size: 0.8rem;color: var(--text-secondary)">
-                                    <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                </span>
-                            </td>
-                            <td>
-                                <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase">
+            <div class="notice-list custom-scroll" style="max-height: 320px; overflow-y: auto;">
+                <?php foreach($recentNotices as $n): ?>
+                <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
+                    <div class="notice-accent-bar"></div>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="notice-date-badge">
+                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                            </span>
+                            <?php if(!empty($n['target_audience'])): ?>
+                                <span style="font-size: 0.62rem; background: rgba(59, 130, 246, 0.1); color: #2563eb; padding: 2px 8px; border-radius: 6px; font-weight: 600; text-transform: uppercase;">
                                     <?php echo htmlspecialchars($n['target_audience']); ?>
                                 </span>
-                            </td>
-                            <td class="text-end">
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm text-primary" style="background: rgba(16,185,129,0.1);border-radius: 8px;font-weight: 600;font-size: 0.75rem;padding: 6px 12px; border: none;"><i class="bi bi-eye-fill me-1"></i>View</button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if(empty($recentNotices)): ?>
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                                    No notices generated by you yet.
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Mobile Cards View -->
-            <div class="d-md-none p-3 pb-4 custom-table-scroll" style="max-height: 320px; overflow-y: auto;">
-                <?php foreach($recentNotices as $n): ?>
-                <div class="mb-3 p-3 shadow-sm" style="background: var(--form-bg);border-radius: 16px;border: 1px solid var(--border-color);transition: transform 0.2s">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold" style="font-family: monospace;font-size: 0.75rem;color: var(--text-secondary);background: rgba(0,0,0,0.05);padding: 4px 8px;border-radius: 6px">
-                            <i class="bi bi-hash me-1"></i><?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
-                        </span>
-                        <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 800;text-transform: uppercase;letter-spacing: 0.05em">
-                            <?php echo htmlspecialchars($n['target_audience']); ?>
-                        </span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                            <?php echo htmlspecialchars($n['subject']); ?>
+                        </div>
                     </div>
-                    <h6 class="fw-bold mb-3 text-dark lh-base" style="font-size: 0.95rem">
-                        <?php echo htmlspecialchars($n['subject']); ?>
-                    </h6>
-                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--border-color)">
-                        <span class="fw-semibold" style="font-size: 0.75rem;color: var(--text-secondary)">
-                            <i class="bi bi-calendar3 me-2"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                        </span>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-4 py-1 fw-bold shadow-sm" style="font-size: 0.75rem; border: none;">View</button>
-                    </div>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                        <span>View</span>
+                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
+                    </button>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
-                    <div class="text-center text-muted py-5">
-                        <i class="bi bi-inbox fs-1 d-block mb-2 text-opacity-25"></i>
-                        No notices generated yet.
-                    </div>
+                <div class="text-center text-muted py-5">
+                    <i class="bi bi-inbox fs-1 d-block mb-2 text-opacity-25"></i>
+                    No notices generated yet.
+                </div>
                 <?php endif; ?>
             </div>
         </div>

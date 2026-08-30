@@ -63,6 +63,95 @@
     color: #fff;
     box-shadow: 0 0 0 4px rgba(5,150,105,0.12);
 }
+
+.notice-minimal-item {
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.notice-minimal-item:hover {
+    background: var(--card-bg);
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+.notice-minimal-item .notice-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3.5px;
+    background: #10b981;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.notice-minimal-item:hover .notice-accent-bar {
+    opacity: 1;
+}
+.notice-date-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.02em;
+}
+.notice-view-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
+}
+.notice-minimal-item:hover .notice-view-btn {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.notice-list {
+    padding-right: 8px;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.notice-list::-webkit-scrollbar {
+    width: 5px;
+}
+.notice-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.notice-list::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.25);
+    border-radius: 10px;
+}
+.notice-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.45);
+}
+
 .h-step.active .h-step-dot {
     background: #3b82f6;
     border-color: #3b82f6;
@@ -320,37 +409,34 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
                 </div>
             </div>
 
-            <?php if (empty($recentNotices)): ?>
-                <div class="text-center py-3">
-                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50 text-muted"></i>
-                    <p class="text-muted mb-0 mt-2" style="font-size: 0.82rem">No recent notices found.</p>
+            <div class="notice-list custom-scroll" style="max-height: 220px; overflow-y: auto;">
+                <?php foreach($recentNotices as $n): ?>
+                <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
+                    <div class="notice-accent-bar"></div>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="notice-date-badge">
+                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                            </span>
+                        </div>
+                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                            <?php echo htmlspecialchars($n['subject']); ?>
+                        </div>
+                    </div>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                        <span>View</span>
+                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
+                    </button>
                 </div>
-            <?php else: ?>
-                <ul class="list-unstyled m-0 p-0" style="max-height: 180px; overflow-y: auto; padding-right: 4px !important;">
-                    <?php foreach ($recentNotices as $i => $n):
-                        $isLast = ($i === count($recentNotices) - 1);
-                    ?>
-                        <li class="d-flex align-items-start gap-3 <?php echo !$isLast ? 'pb-3 mb-3 border-bottom' : ''; ?>">
-                            <div style="width: 8px;height: 8px;border-radius: 50%;background: var(--primary-color);margin-top: 5px;flex-shrink: 0"></div>
-                            <div style="flex: 1;min-width: 0">
-                                <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <span class="fw-semibold text-truncate" style="font-size: 0.82rem; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
-                                        <?php echo htmlspecialchars($n['subject']); ?>
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between mt-1">
-                                    <span class="text-muted" style="font-size: 0.72rem">
-                                        <i class="bi bi-calendar-event me-1"></i><?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                    </span>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link p-0 text-primary" style="font-size: 0.75rem; text-decoration: none; font-weight: 600;">
-                                        View
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+                <?php endforeach; ?>
+                <?php if(empty($recentNotices)): ?>
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
+                    No recent notices found.
+                </div>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
