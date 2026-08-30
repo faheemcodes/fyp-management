@@ -308,7 +308,7 @@ $firstName = explode(' ', $fullName)[0];
                 </span>
             </div>
             
-            <div class="d-none d-md-block table-responsive custom-table-scroll" style="max-height: 380px; overflow-y: auto;">
+            <div class="d-none d-md-block table-responsive custom-table-scroll" style="max-height: 400px; overflow-y: auto;">
                 <table class="table modern-table align-middle mb-0">
                     <thead>
                         <tr>
