@@ -5,7 +5,7 @@
     color: var(--text-primary);
     line-height: 1.4;
     font-size: 0.9rem;
-    max-width: 280px;
+    max-width: 380px;
 }
 
 .avatar-stack img, .avatar-stack .rounded-circle, .member-avatar-click {
@@ -239,8 +239,8 @@ $firstName = explode(' ', $fullName)[0];
 
 <!-- -- Main Content Grid (Pending Proposals & Notices) -- -->
 <div class="row g-4 mb-4">
-    <!-- -- Recent Notices -- -->
-    <div class="col-xl-4">
+    <!-- -- Recent Notices (25%) -- -->
+    <div class="col-lg-3 col-xl-3">
         <div class="card border-0 p-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
             <div class="page-section-header mb-4 position-relative">
                 <div class="d-flex align-items-center gap-3">
@@ -287,8 +287,8 @@ $firstName = explode(' ', $fullName)[0];
 
 
 
-    <!-- -- Pending Proposals -- -->
-    <div class="col-xl-8">
+    <!-- -- Pending Proposals (75%) -- -->
+    <div class="col-lg-9 col-xl-9">
         <div class="card border-0 p-3 p-md-4 h-100" id="pending-proposals" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
             <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
