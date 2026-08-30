@@ -62,20 +62,17 @@
     border-radius: 12px;
     padding: 12px 14px;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
 }
 .notice-minimal-item:hover {
     background: var(--card-bg);
-    border-color: rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.35);
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 .notice-minimal-item .notice-accent-bar {
     position: absolute;
@@ -102,36 +99,45 @@
     gap: 4px;
     letter-spacing: 0.02em;
 }
-.notice-view-btn {
-    font-size: 0.78rem;
-    font-weight: 600;
+.notice-arrow-icon {
+    font-size: 0.72rem;
     color: var(--text-secondary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 5px 12px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
     transition: all 0.2s ease;
-    white-space: nowrap;
-    text-decoration: none;
-    line-height: 1;
 }
-.notice-minimal-item:hover .notice-view-btn {
-    background: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
+.notice-minimal-item:hover .notice-arrow-icon {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+    transform: translate(2px, -2px);
+}
+.notice-subject-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 8px;
 }
 
 .notice-list {
-    padding-right: 8px;
+    padding-right: 6px;
     padding-left: 2px;
     padding-top: 2px;
     padding-bottom: 2px;
 }
 .notice-list::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 .notice-list::-webkit-scrollbar-track {
     background: transparent;
@@ -241,38 +247,35 @@ $firstName = explode(' ', $fullName)[0];
 <div class="row g-4 mb-4">
     <!-- -- Recent Notices (25%) -- -->
     <div class="col-lg-3 col-xl-3">
-        <div class="card border-0 p-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
-            <div class="page-section-header mb-4 position-relative">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
+        <div class="card border-0 p-3 p-xl-3 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
+            <div class="page-section-header mb-3 position-relative">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6; width: 34px; height: 34px; font-size: 0.9rem;">
                         <i class="bi bi-bell-fill"></i>
                     </div>
                     <div>
-                        <h6>Recent Notices</h6>
-                        <small>Latest updates & announcements</small>
+                        <h6 class="mb-0" style="font-size: 0.92rem;">Recent Notices</h6>
+                        <small style="font-size: 0.72rem;">Latest updates</small>
                     </div>
                 </div>
             </div>
             
-            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto; padding-right: 8px;">
+            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                     <div class="notice-accent-bar"></div>
-                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <span class="notice-date-badge">
-                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
-                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
-                            </span>
-                        </div>
-                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
-                            <?php echo htmlspecialchars($n['subject']); ?>
-                        </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="notice-date-badge">
+                            <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                            <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                        </span>
+                        <span class="notice-arrow-icon">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
-                        <span>View</span>
-                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
-                    </button>
+                    <div class="notice-subject-text" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                        <?php echo htmlspecialchars($n['subject']); ?>
+                    </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
