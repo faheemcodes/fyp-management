@@ -337,16 +337,8 @@ class SupervisorController extends BaseController {
                         $stmt = $db->prepare("UPDATE projects SET status = ? WHERE group_id = ?");
                         $stmt->execute([$status, $proposal['group_id']]);
 
-                        // Update group stage
-                        $stage = 'Proposal Submitted';
-                        if ($status === 'Supervisor Approved') {
-                            $stage = 'Supervisor Approved';
-                        } elseif ($status === 'Revision Requested') {
-                            $stage = 'Revision Requested';
-                        } elseif ($status === 'Rejected') {
-                            $stage = 'Proposal Rejected';
-                        }
-                        
+                        // Update group stage (must be a valid enum in groups table)
+                        $stage = ($status === 'Approved') ? 'Proposal Approved' : 'Proposal Submitted';
                         $stmt = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
                         $stmt->execute([$stage, $proposal['group_id']]);
 

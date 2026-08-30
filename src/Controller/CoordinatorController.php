@@ -503,8 +503,8 @@ class CoordinatorController extends BaseController {
                 
                 $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
                 $stmtProg->execute([$stage, $groupId]);
-            } elseif ($status === 'Revision Requested') {
-                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = 'Revision Requested' WHERE id = ?");
+            } else {
+                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = 'Proposal Submitted' WHERE id = ?");
                 $stmtProg->execute([$groupId]);
             }
 

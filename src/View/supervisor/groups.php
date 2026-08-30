@@ -321,14 +321,37 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     <tr>
                         <th class="ps-4">Group Code</th>
                         <th>Project Title</th>
-                        <th>Progress Stage</th>
+                        <th>Status / Stage</th>
                         <th>Team Members</th>
                         <th class="text-end pe-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($groups as $g): 
-                        $isAccepted = (($g['project_status'] ?? '') === 'Approved' || ($g['proposal_status'] ?? '') === 'Approved' || (!empty($g['progress_stage']) && $g['progress_stage'] !== 'Proposal Submitted'));
+                        $isAccepted = (($g['project_status'] ?? '') === 'Approved' || ($g['proposal_status'] ?? '') === 'Approved');
+                        
+                        $statusMap = [
+                            'Approved' => ['rgba(5,150,105,0.1)', '#059669'],
+                            'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488'],
+                            'Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
+                            'Proposal Submitted' => ['rgba(245,158,11,0.1)', '#d97706'],
+                            'Revision Requested' => ['rgba(139,92,246,0.12)', '#8b5cf6'],
+                            'Rejected' => ['rgba(220,38,38,0.1)', '#dc2626']
+                        ];
+
+                        $displayStatus = 'Submitted';
+                        if (!empty($g['proposal_status'])) {
+                            $displayStatus = $g['proposal_status'];
+                        } elseif (!empty($g['project_status'])) {
+                            $displayStatus = $g['project_status'];
+                        }
+
+                        if ($isAccepted && !empty($g['progress_stage']) && $g['progress_stage'] !== 'Proposal Submitted' && $g['progress_stage'] !== 'Group Created') {
+                            $displayStatus = $g['progress_stage'];
+                        }
+
+                        $bg = $statusMap[$displayStatus][0] ?? 'rgba(5,150,105,0.1)';
+                        $color = $statusMap[$displayStatus][1] ?? '#059669';
                     ?>
                     <tr>
                         <td class="ps-4">
@@ -359,8 +382,8 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="progress-stage-chip">
-                                <?php echo htmlspecialchars($g['progress_stage']); ?>
+                            <span style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; font-size: 0.72rem; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; white-space: nowrap;">
+                                <?php echo htmlspecialchars($displayStatus); ?>
                             </span>
                         </td>
                         <td>
@@ -439,8 +462,13 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         </div>
                     <?php endif; ?>
                     <div class="mb-3">
-                        <span class="progress-stage-chip" style="font-size: 0.65rem;">
-                            <?php echo htmlspecialchars($g['progress_stage']); ?>
+                        <?php 
+                        $displayStatus = !empty($g['proposal_status']) ? $g['proposal_status'] : (!empty($g['project_status']) ? $g['project_status'] : 'Submitted');
+                        $bg = $statusMap[$displayStatus][0] ?? 'rgba(5,150,105,0.1)';
+                        $color = $statusMap[$displayStatus][1] ?? '#059669';
+                        ?>
+                        <span style="background: <?php echo $bg; ?>; color: <?php echo $color; ?>; font-weight: 600; font-size: 0.68rem; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center;">
+                            <?php echo htmlspecialchars($displayStatus); ?>
                         </span>
                     </div>
                     <div class="d-flex align-items-center gap-2 mb-3">
@@ -509,9 +537,14 @@ foreach($groups as $g):
             <div class="modal-body p-4">
                 <div class="mb-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="fw-bold mb-2" style="color: var(--text-primary)"><?php echo htmlspecialchars($g['project_title']); ?></h5>
-                        <span class="badge" style="background: rgba(16,185,129,0.1);color: #10b981;font-weight: 600;padding: 6px 12px;border-radius: 20px">
-                            Stage: <?php echo htmlspecialchars($g['progress_stage']); ?>
+                        <h5 class="fw-bold mb-2" style="color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></h5>
+                        <?php 
+                        $modalStatus = !empty($g['proposal_status']) ? $g['proposal_status'] : (!empty($g['project_status']) ? $g['project_status'] : ($g['progress_stage'] ?? 'Submitted'));
+                        $mbg = $statusMap[$modalStatus][0] ?? 'rgba(5,150,105,0.1)';
+                        $mcolor = $statusMap[$modalStatus][1] ?? '#059669';
+                        ?>
+                        <span class="badge" style="background: <?php echo $mbg; ?>; color: <?php echo $mcolor; ?>; font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                            Status: <?php echo htmlspecialchars($modalStatus); ?>
                         </span>
                     </div>
                     <?php if (!empty($g['thesis_file'])): ?>
