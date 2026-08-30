@@ -260,7 +260,7 @@ $firstName = explode(' ', $fullName)[0];
                 </div>
             </div>
             
-            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
+            <div class="notice-list custom-scroll" style="max-height: 300px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                     <div class="notice-accent-bar"></div>
