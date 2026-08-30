@@ -717,8 +717,8 @@ foreach($groups as $g):
 <div class="modal fade" id="avatarPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1070;">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
         <div class="modal-content border-0 rounded-4 shadow-lg text-center overflow-hidden" style="background: var(--card-bg);">
-            <div class="modal-header border-0 pb-0 justify-content-end p-3">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header border-0 border-bottom-0 pb-0 justify-content-end p-3" style="border: none !important; border-bottom: none !important;">
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 pb-4 pt-1">
                 <div class="d-flex justify-content-center mb-3">

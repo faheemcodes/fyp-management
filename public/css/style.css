@@ -691,8 +691,15 @@ html.dark-theme .form-select:disabled {
 }
 
 .modal-header {
-    border-bottom: 1px solid var(--border-color) !important;
+    border-bottom: 1px solid var(--border-color);
     padding: 20px 24px;
+}
+
+.modal-header.border-0,
+.modal-header.border-bottom-0,
+#avatarPreviewModal .modal-header {
+    border-bottom: none !important;
+    border: none !important;
 }
 
 .modal-body {

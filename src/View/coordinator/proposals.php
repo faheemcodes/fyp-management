@@ -552,8 +552,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="avatarPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1070">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: var(--card-bg);">
-            <div class="modal-header border-0 p-3 pb-0 d-flex justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header border-0 border-bottom-0 p-3 pb-0 d-flex justify-content-end" style="border: none !important; border-bottom: none !important;">
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center p-4 pt-1">
                 <div class="position-relative d-inline-block mb-3">
