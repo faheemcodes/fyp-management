@@ -119,15 +119,15 @@
     transform: translate(2px, -2px);
 }
 .notice-subject-text {
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 400;
     color: var(--text-primary);
-    line-height: 1.4;
+    line-height: 1.35;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .notice-list {
