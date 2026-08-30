@@ -53,9 +53,9 @@
     white-space: nowrap;
 }
 
-.avatar-stack {
-    display: flex;
-    align-items: center;
+.avatar-stack img, .avatar-stack .rounded-circle, .member-avatar-click, .eval-student-avatar {
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .avatar-stack img {
     width: 36px;
@@ -64,14 +64,14 @@
     object-fit: cover;
     border: 2px solid var(--card-bg);
     margin-left: -12px;
-    transition: transform 0.2s ease;
 }
 .avatar-stack img:first-child {
     margin-left: 0;
 }
-.avatar-stack img:hover {
-    transform: translateY(-3px);
-    z-index: 10;
+.avatar-stack img:hover, .avatar-stack .rounded-circle:hover, .member-avatar-click:hover, .eval-student-avatar:hover {
+    transform: scale(1.18) translateY(-2px);
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18) !important;
 }
 
 .action-btn {
@@ -349,11 +349,27 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar-stack">
-                                    <?php foreach(array_slice($g['members'], 0, 4) as $m): ?>
-                                        <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                        <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
-                                             title="<?php echo htmlspecialchars($m['name']); ?>"
-                                             alt="Avatar">
+                                    <?php 
+                                    $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger'];
+                                    foreach(array_slice($g['members'], 0, 4) as $idx => $m): 
+                                        $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
+                                        $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                                        $initials = strtoupper(substr($m['name'] ?? 'U', 0, 1));
+                                        $colClass = $colors[$idx % count($colors)];
+                                    ?>
+                                        <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                            <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
+                                                 title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                                 alt="Avatar"
+                                                 onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                        <?php else: ?>
+                                            <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
+                                                 style="width: 36px; height: 36px; margin-left: <?php echo $idx > 0 ? '-12px' : '0'; ?>; font-size: 0.8rem; font-weight: 600; flex-shrink: 0;"
+                                                 title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                                 onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                                <?php echo $initials; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </div>
                                 <?php if(count($g['members']) > 4): ?>
@@ -404,11 +420,27 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     </div>
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <div class="avatar-stack">
-                            <?php foreach(array_slice($g['members'], 0, 4) as $m): ?>
-                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" 
-                                     title="<?php echo htmlspecialchars($m['name']); ?>"
-                                     alt="Avatar" style="width: 24px; height: 24px;">
+                            <?php 
+                            $colors = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger'];
+                            foreach(array_slice($g['members'], 0, 4) as $idx => $m): 
+                                $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
+                                $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                                $initials = strtoupper(substr($m['name'] ?? 'U', 0, 1));
+                                $colClass = $colors[$idx % count($colors)];
+                            ?>
+                                <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
+                                         title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                         alt="Avatar" style="width: 24px; height: 24px;"
+                                         onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                <?php else: ?>
+                                    <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
+                                         style="width: 24px; height: 24px; margin-left: <?php echo $idx > 0 ? '-8px' : '0'; ?>; font-size: 0.6rem; font-weight: 600;"
+                                         title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                         onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
+                                        <?php echo $initials; ?>
+                                    </div>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
                         <?php if(count($g['members']) > 4): ?>
@@ -481,8 +513,17 @@ foreach($groups as $g):
                         <?php foreach($g['members'] as $m): ?>
                         <div class="col-md-6">
                             <div class="d-flex align-items-center p-3 rounded-3 h-100" style="border: 1px solid var(--border-color);background: var(--card-bg)">
-                                <?php $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar">
+                                <?php 
+                                $avatarFile = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; 
+                                $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
+                                ?>
+                                <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
+                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm member-avatar-click" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar" title="Click to view photo" onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>', 'bg-primary');">
+                                <?php else: ?>
+                                    <div class="rounded-circle me-3 border border-2 border-white shadow-sm d-flex align-items-center justify-content-center bg-primary text-white fw-bold member-avatar-click" style="width: 48px; height: 48px; font-size: 1.1rem; flex-shrink: 0;" title="Click to view details" onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>', 'bg-primary');">
+                                        <?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div>
                                     <div class="fw-semibold" style="font-size: 0.9rem;color: var(--text-primary)">
                                         <?php echo htmlspecialchars($m['name']); ?>
@@ -535,8 +576,17 @@ foreach($groups as $g):
                                 <?php foreach($g['members'] as $m): ?>
                                 <tr>
                                     <td class="text-start ps-3">
+                                        <?php 
+                                        $mAvatarPath = !empty($m['avatar']) ? $basePath . '/uploads/avatars/' . $m['avatar'] : null; 
+                                        ?>
                                         <div class="eval-student-info">
-                                            <div class="eval-student-avatar"><?php echo strtoupper(substr($m['name'], 0, 1)); ?></div>
+                                            <div class="eval-student-avatar member-avatar-click" title="Click to view student" onclick="showAvatarPopup('<?php echo ($mAvatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . $mAvatarPath)) ? htmlspecialchars($mAvatarPath) : ''; ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>', 'bg-primary');">
+                                                <?php if ($mAvatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . $mAvatarPath)): ?>
+                                                    <img src="<?php echo htmlspecialchars($mAvatarPath); ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                                <?php else: ?>
+                                                    <?php echo strtoupper(substr($m['name'], 0, 1)); ?>
+                                                <?php endif; ?>
+                                            </div>
                                             <div>
                                                 <div class="eval-student-name"><?php echo htmlspecialchars($m['name']); ?></div>
                                                 <div class="eval-student-roll"><?php echo htmlspecialchars($m['student_id']); ?></div>
@@ -616,7 +666,63 @@ foreach($groups as $g):
 
 <?php include __DIR__ . '/../shared/thesis_offcanvas.php'; ?>
 
+<!-- AVATAR PREVIEW POPUP MODAL -->
+<div class="modal fade" id="avatarPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1070;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+        <div class="modal-content border-0 rounded-4 shadow-lg text-center overflow-hidden" style="background: var(--card-bg);">
+            <div class="modal-header border-0 pb-0 justify-content-end p-3">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 pb-4 pt-1">
+                <div class="d-flex justify-content-center mb-3">
+                    <div class="position-relative">
+                        <img id="avatarPreviewImg" src="" alt="Student Avatar" class="rounded-circle shadow-lg border border-4 border-white d-none" style="width: 170px; height: 170px; object-fit: cover;">
+                        <div id="avatarPreviewInitials" class="rounded-circle shadow-lg border border-4 border-white d-none align-items-center justify-content-center text-white fw-bold" style="width: 170px; height: 170px; font-size: 4.5rem;">
+                            U
+                        </div>
+                    </div>
+                </div>
+                <h5 id="avatarPreviewName" class="fw-bold mb-1" style="color: var(--text-primary);">Student Name</h5>
+                <div id="avatarPreviewRoll" class="badge bg-light text-dark font-monospace mb-1" style="font-size: 0.85rem; border: 1px solid var(--border-color);">Roll No</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    function showAvatarPopup(imgSrc, name, rollNo, initials, colorClass) {
+        const imgEl = document.getElementById('avatarPreviewImg');
+        const initEl = document.getElementById('avatarPreviewInitials');
+        const nameEl = document.getElementById('avatarPreviewName');
+        const rollEl = document.getElementById('avatarPreviewRoll');
+        
+        if (nameEl) nameEl.textContent = name || 'Student';
+        if (rollEl) {
+            rollEl.textContent = rollNo || '';
+            rollEl.style.display = rollNo ? 'inline-block' : 'none';
+        }
+        
+        if (imgSrc && imgSrc.trim() !== '') {
+            imgEl.src = imgSrc;
+            imgEl.classList.remove('d-none');
+            initEl.classList.add('d-none');
+            initEl.classList.remove('d-flex');
+        } else {
+            imgEl.classList.add('d-none');
+            initEl.classList.remove('d-none');
+            initEl.classList.add('d-flex');
+            initEl.textContent = initials || (name ? name.charAt(0).toUpperCase() : 'U');
+            initEl.className = 'rounded-circle shadow-lg border border-4 border-white d-flex align-items-center justify-content-center text-white fw-bold ' + (colorClass || 'bg-primary');
+        }
+        
+        const modalEl = document.getElementById('avatarPreviewModal');
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalEl);
+        }
+        modal.show();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Move all modals to the body to prevent z-index issues from CSS stacking contexts
         const modals = document.querySelectorAll('.modal, .offcanvas');

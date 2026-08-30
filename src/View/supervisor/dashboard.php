@@ -8,9 +8,9 @@
     max-width: 280px;
 }
 
-.avatar-stack {
-    display: flex;
-    align-items: center;
+.avatar-stack img, .avatar-stack .rounded-circle, .member-avatar-click {
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .avatar-stack img {
     width: 32px;
@@ -19,14 +19,14 @@
     object-fit: cover;
     border: 2px solid var(--card-bg);
     margin-left: -10px;
-    transition: transform 0.2s ease;
 }
 .avatar-stack img:first-child {
     margin-left: 0;
 }
-.avatar-stack img:hover {
-    transform: translateY(-3px);
-    z-index: 10;
+.avatar-stack img:hover, .avatar-stack .rounded-circle:hover, .member-avatar-click:hover {
+    transform: scale(1.18) translateY(-2px);
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18) !important;
 }
 
 .action-btn {
@@ -270,12 +270,14 @@ $firstName = explode(' ', $fullName)[0];
                                         ?>
                                             <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
                                                 <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
-                                                     title="<?php echo htmlspecialchars($m['name']); ?>"
-                                                     alt="Avatar">
+                                                     title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                                     alt="Avatar"
+                                                     onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
                                             <?php else: ?>
                                                 <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
                                                      style="width: 32px; height: 32px; margin-left: <?php echo $idx > 0 ? '-10px' : '0'; ?>; font-size: 0.75rem; font-weight: 600; flex-shrink: 0;"
-                                                     title="<?php echo htmlspecialchars($m['name']); ?>">
+                                                     title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                                     onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
                                                     <?php echo $initials; ?>
                                                 </div>
                                             <?php endif; ?>
@@ -352,12 +354,14 @@ $firstName = explode(' ', $fullName)[0];
                                 ?>
                                     <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
                                         <img src="<?php echo htmlspecialchars($avatarPath); ?>" 
-                                             title="<?php echo htmlspecialchars($m['name']); ?>"
-                                             alt="Avatar" style="width: 24px; height: 24px;">
+                                             title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                             alt="Avatar" style="width: 24px; height: 24px;"
+                                             onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
                                     <?php else: ?>
                                         <div class="rounded-circle shadow-sm border border-2 border-white d-flex align-items-center justify-content-center text-white <?php echo $colClass; ?>" 
                                              style="width: 24px; height: 24px; margin-left: <?php echo $idx > 0 ? '-8px' : '0'; ?>; font-size: 0.6rem; font-weight: 600;"
-                                             title="<?php echo htmlspecialchars($m['name']); ?>">
+                                             title="<?php echo htmlspecialchars($m['name']); ?> (Click to view)"
+                                             onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo $initials; ?>', '<?php echo $colClass; ?>'); event.stopPropagation();">
                                             <?php echo $initials; ?>
                                         </div>
                                     <?php endif; ?>
@@ -548,9 +552,9 @@ foreach($noticesForModal as $n):
                                 $avatarPath = $basePath . '/uploads/avatars/' . $avatarFile;
                                 ?>
                                 <?php if (!empty($m['avatar']) && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
-                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar">
+                                    <img src="<?php echo htmlspecialchars($avatarPath); ?>" class="rounded-circle me-3 border border-2 border-white shadow-sm member-avatar-click" style="width: 48px;height: 48px;object-fit: cover" alt="Avatar" title="Click to view photo" onclick="showAvatarPopup('<?php echo htmlspecialchars($avatarPath); ?>', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>', 'bg-primary');">
                                 <?php else: ?>
-                                    <div class="rounded-circle me-3 border border-2 border-white shadow-sm d-flex align-items-center justify-content-center bg-primary text-white fw-bold" style="width: 48px; height: 48px; font-size: 1.1rem; flex-shrink: 0;">
+                                    <div class="rounded-circle me-3 border border-2 border-white shadow-sm d-flex align-items-center justify-content-center bg-primary text-white fw-bold member-avatar-click" style="width: 48px; height: 48px; font-size: 1.1rem; flex-shrink: 0;" title="Click to view details" onclick="showAvatarPopup('', '<?php echo htmlspecialchars(addslashes($m['name'] ?? '')); ?>', '<?php echo htmlspecialchars(addslashes($m['student_id'] ?? '')); ?>', '<?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>', 'bg-primary');">
                                         <?php echo strtoupper(substr($m['name'] ?? 'U', 0, 1)); ?>
                                     </div>
                                 <?php endif; ?>
@@ -640,7 +644,63 @@ foreach($noticesForModal as $n):
 
 <?php endforeach; ?>
 
+<!-- AVATAR PREVIEW POPUP MODAL -->
+<div class="modal fade" id="avatarPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1070;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+        <div class="modal-content border-0 rounded-4 shadow-lg text-center overflow-hidden" style="background: var(--card-bg);">
+            <div class="modal-header border-0 pb-0 justify-content-end p-3">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4 pb-4 pt-1">
+                <div class="d-flex justify-content-center mb-3">
+                    <div class="position-relative">
+                        <img id="avatarPreviewImg" src="" alt="Student Avatar" class="rounded-circle shadow-lg border border-4 border-white d-none" style="width: 170px; height: 170px; object-fit: cover;">
+                        <div id="avatarPreviewInitials" class="rounded-circle shadow-lg border border-4 border-white d-none align-items-center justify-content-center text-white fw-bold" style="width: 170px; height: 170px; font-size: 4.5rem;">
+                            U
+                        </div>
+                    </div>
+                </div>
+                <h5 id="avatarPreviewName" class="fw-bold mb-1" style="color: var(--text-primary);">Student Name</h5>
+                <div id="avatarPreviewRoll" class="badge bg-light text-dark font-monospace mb-1" style="font-size: 0.85rem; border: 1px solid var(--border-color);">Roll No</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    function showAvatarPopup(imgSrc, name, rollNo, initials, colorClass) {
+        const imgEl = document.getElementById('avatarPreviewImg');
+        const initEl = document.getElementById('avatarPreviewInitials');
+        const nameEl = document.getElementById('avatarPreviewName');
+        const rollEl = document.getElementById('avatarPreviewRoll');
+        
+        if (nameEl) nameEl.textContent = name || 'Student';
+        if (rollEl) {
+            rollEl.textContent = rollNo || '';
+            rollEl.style.display = rollNo ? 'inline-block' : 'none';
+        }
+        
+        if (imgSrc && imgSrc.trim() !== '') {
+            imgEl.src = imgSrc;
+            imgEl.classList.remove('d-none');
+            initEl.classList.add('d-none');
+            initEl.classList.remove('d-flex');
+        } else {
+            imgEl.classList.add('d-none');
+            initEl.classList.remove('d-none');
+            initEl.classList.add('d-flex');
+            initEl.textContent = initials || (name ? name.charAt(0).toUpperCase() : 'U');
+            initEl.className = 'rounded-circle shadow-lg border border-4 border-white d-flex align-items-center justify-content-center text-white fw-bold ' + (colorClass || 'bg-primary');
+        }
+        
+        const modalEl = document.getElementById('avatarPreviewModal');
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalEl);
+        }
+        modal.show();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Move all modals and offcanvas elements to the body to prevent z-index/stacking context issues
         const overlays = document.querySelectorAll('.modal, .offcanvas');
