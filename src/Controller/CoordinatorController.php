@@ -43,14 +43,57 @@ class CoordinatorController extends BaseController {
         $stmt->execute([$userId]);
         $stats['total_notices'] = $stmt->fetchColumn();
 
-        // Fetch recent notices
-        $stmt = $db->prepare("SELECT * FROM notices WHERE sender_id = ? ORDER BY created_at DESC LIMIT 5");
-        $stmt->execute([$userId]);
-        $recentNotices = $stmt->fetchAll();
+        // Unverified / Pending Proposals count (Supervisor Approved, Submitted, Under Review, Revision Requested)
+        $stmtPendingCount = $db->prepare("SELECT COUNT(*) FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')");
+        $stmtPendingCount->execute([$dept]);
+        $stats['pending_proposals'] = $stmtPendingCount->fetchColumn();
+
+        // Fetch unverified proposals for the department
+        $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')
+            ORDER BY 
+                CASE 
+                    WHEN pr.status = 'Supervisor Approved' THEN 1 
+                    WHEN pr.status = 'Submitted' THEN 2 
+                    WHEN pr.status = 'Under Review' THEN 3
+                    WHEN pr.status = 'Revision Requested' THEN 4
+                    ELSE 5 
+                END, 
+                pr.submitted_at DESC");
+        $stmtProposals->execute([$dept]);
+        $pendingProposals = $stmtProposals->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($pendingProposals as &$pr) {
+            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                JOIN users u_m ON s_m.user_id = u_m.id 
+                WHERE gm.group_id = ?");
+            $stmtM->execute([$pr['group_id']]);
+            $pr['members'] = $stmtM->fetchAll();
+        }
+
+        // Fetch departmental supervisors for re-assignment inside review modal
+        $stmtSups = $db->prepare("SELECT s.user_id, s.name, s.designation 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE s.department = ? AND u.status = 'approved' 
+            ORDER BY s.name ASC");
+        $stmtSups->execute([$dept]);
+        $supervisors = $stmtSups->fetchAll();
 
         $this->render('coordinator/dashboard', [
             'stats' => $stats,
-            'recentNotices' => $recentNotices,
+            'pendingProposals' => $pendingProposals,
+            'supervisors' => $supervisors,
             'department' => $dept
         ]);
     }
