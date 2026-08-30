@@ -1,5 +1,10 @@
 <!-- Supervisor Dashboard View -->
 <style>
+#avatarPreviewModal .modal-header {
+    border: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
 .project-title-cell {
     font-weight: 600;
     color: var(--text-primary);

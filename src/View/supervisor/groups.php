@@ -1,5 +1,10 @@
 <style>
 /* ─── Group Page Scoped Styles ─── */
+#avatarPreviewModal .modal-header {
+    border: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
 
 
 
