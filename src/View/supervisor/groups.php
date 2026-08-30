@@ -99,6 +99,11 @@
     color: #0d9488;
     border-color: rgba(13,148,136,0.2);
 }
+.action-btn.review:hover {
+    background: rgba(13,148,136,0.1);
+    color: #0d9488;
+    border-color: rgba(13,148,136,0.2);
+}
 
 @media (max-width: 768px) {
     
@@ -256,7 +261,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                 Supervision Dashboard
             </p>
             <h4 class="text-white fw-bold mb-3" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
-                Assigned FYP Groups
+                FYP Groups
             </h4>
             <div class="d-flex align-items-center justify-content-center justify-content-md-start">
                 <form action="<?php echo $basePath; ?>/supervisor/groups/toggle-visibility" method="POST" class="m-0">
@@ -317,7 +322,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($groups as $g): ?>
+                    <?php foreach($groups as $g): 
+                        $isAccepted = (($g['project_status'] ?? '') === 'Approved' || ($g['proposal_status'] ?? '') === 'Approved' || (!empty($g['progress_stage']) && $g['progress_stage'] !== 'Proposal Submitted'));
+                    ?>
                     <tr>
                         <td class="ps-4">
                             <span class="group-code-badge">
@@ -328,6 +335,11 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                             <div class="project-title-cell text-truncate" title="<?php echo htmlspecialchars($g['project_title']); ?>">
                                 <?php echo htmlspecialchars($g['project_title']); ?>
                             </div>
+                            <?php if (!empty($g['proposal_file_path'])): ?>
+                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>Proposal PDF
+                                </a>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <span class="progress-stage-chip">
@@ -354,9 +366,15 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                 <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <i class="bi bi-info-circle-fill"></i> <span>Details</span>
                                 </button>
-                                <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                    <i class="bi bi-pencil-fill"></i> <span>Grade</span>
-                                </button>
+                                <?php if ($isAccepted): ?>
+                                    <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                        <i class="bi bi-pencil-fill"></i> <span>Grade</span>
+                                    </button>
+                                <?php else: ?>
+                                    <button class="action-btn review" title="Review Proposal" data-bs-toggle="modal" data-bs-target="#proposalReviewModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                        <i class="bi bi-clipboard-check-fill"></i> <span>Review</span>
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
@@ -367,7 +385,9 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 
         <!-- Mobile Card List -->
         <div class="d-block d-md-none mt-3">
-            <?php foreach($groups as $g): ?>
+            <?php foreach($groups as $g): 
+                $isAccepted = (($g['project_status'] ?? '') === 'Approved' || ($g['proposal_status'] ?? '') === 'Approved' || (!empty($g['progress_stage']) && $g['progress_stage'] !== 'Proposal Submitted'));
+            ?>
                 <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
                     <div class="mb-2">
                         <span class="group-code-badge" style="font-size: 0.75rem;">
@@ -399,9 +419,15 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         <button class="action-btn" title="View Details" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
                             <i class="bi bi-info-circle-fill"></i> Details
                         </button>
-                        <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
-                            <i class="bi bi-pencil-fill"></i> Grade
-                        </button>
+                        <?php if ($isAccepted): ?>
+                            <button class="action-btn grade" title="Manage Grades" data-bs-toggle="modal" data-bs-target="#gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                                <i class="bi bi-pencil-fill"></i> Grade
+                            </button>
+                        <?php else: ?>
+                            <button class="action-btn review" title="Review Proposal" data-bs-toggle="modal" data-bs-target="#proposalReviewModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" style="font-size: 0.75rem; padding: 4px 10px;">
+                                <i class="bi bi-clipboard-check-fill"></i> Review
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -410,8 +436,10 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
 
 <?php endif; ?>
 
-<!-- Modals outside of loop to avoid z-index issues -->
-<?php foreach($groups as $g): ?>
+<?php 
+foreach($groups as $g): 
+    $isAccepted = (($g['project_status'] ?? '') === 'Approved' || ($g['proposal_status'] ?? '') === 'Approved' || (!empty($g['progress_stage']) && $g['progress_stage'] !== 'Proposal Submitted'));
+?>
 
 <!-- DETAILS MODAL -->
 <div class="modal fade" id="detailsModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
@@ -433,13 +461,17 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                         <button class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($g['thesis_file']); ?>')">
                             <i class="bi bi-file-earmark-pdf-fill me-2"></i>View Thesis
                         </button>
+                    <?php elseif (!empty($g['proposal_file_path'])): ?>
+                        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm rounded-pill px-3 fw-bold shadow-sm" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+                            <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Proposal PDF
+                        </a>
                     <?php endif; ?>
                 </div>
                 
                 <div class="mb-4">
                     <label class="form-label small fw-semibold text-secondary text-uppercase mb-2" style="letter-spacing: 0.04em">Project Abstract / Description</label>
                     <div class="p-3 rounded-3 text-muted" style="background: var(--form-bg);border: 1px solid var(--border-color);font-size: 0.85rem;line-height: 1.65;text-align: justify;max-height: 250px;overflow-y: auto">
-                        <?php echo nl2br(htmlspecialchars($g['project_description'])); ?>
+                        <?php echo nl2br(htmlspecialchars($g['project_description'] ?? $g['proposal_abstract'] ?? '')); ?>
                     </div>
                 </div>
 
@@ -477,6 +509,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
     </div>
 </div>
 
+<?php if ($isAccepted): ?>
 <!-- MANUAL GRADING MODAL -->
 <div class="modal fade eval-modal" id="gradeGroupModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -523,12 +556,60 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
                     <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488;border-color: #0d9488">Save Marks</button>
                 </div>
-            
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-</form>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+            </form>
         </div>
     </div>
 </div>
+<?php else: ?>
+<!-- PROPOSAL REVIEW MODAL -->
+<div class="modal fade" id="proposalReviewModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true" style="z-index: 1055">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3">
+                <h6 class="modal-title fw-bold" style="color: var(--text-primary)"><i class="bi bi-clipboard-check-fill me-2" style="color: #0d9488;"></i>Review Project Proposal</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo $basePath; ?>/supervisor/proposal/action" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                <div class="modal-body p-4 text-start">
+                    <input type="hidden" name="proposal_id" value="<?php echo htmlspecialchars((string)($g['proposal_id'] ?? $g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Project Title</label>
+                        <div class="fw-semibold" style="font-size: 0.95rem; color: var(--text-primary);"><?php echo htmlspecialchars($g['project_title']); ?></div>
+                        <?php if (!empty($g['proposal_file_path'])): ?>
+                            <div class="mt-2">
+                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>View Proposal PDF
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Review Decision</label>
+                        <select class="form-select fw-medium" name="status" style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);" required>
+                            <option value="Approved" <?php echo ($g['proposal_status'] ?? '') === 'Approved' ? 'selected' : ''; ?>>Approve (Accept Project)</option>
+                            <option value="Revision Requested" <?php echo ($g['proposal_status'] ?? '') === 'Revision Requested' ? 'selected' : ''; ?>>Request Revision</option>
+                            <option value="Rejected" <?php echo ($g['proposal_status'] ?? '') === 'Rejected' ? 'selected' : ''; ?>>Reject</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Feedback Remarks (Optional)</label>
+                        <textarea class="form-control" name="feedback" rows="4" placeholder="Enter comments, revision notes, or feedback here..." style="background-color: var(--form-bg); border-color: var(--border-color); color: var(--text-primary);"><?php echo htmlspecialchars($g['proposal_feedback'] ?? ''); ?></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill px-4 py-2 fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color);">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold" style="background: #0d9488; border-color: #0d9488;">Submit Decision</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <?php endforeach; ?>
 

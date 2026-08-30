@@ -115,12 +115,20 @@ class SupervisorController extends BaseController {
         $supervisorId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 
-        // Fetch all supervised groups with grades
-        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.thesis_file
+        // Fetch all supervised groups with grades and proposal info
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.thesis_file,
+            pr.id as proposal_id, pr.status as proposal_status, pr.file_path as proposal_file_path, pr.abstract as proposal_abstract, pr.feedback as proposal_feedback
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             JOIN academic_batches b ON g.batch_id = b.id
-            WHERE p.supervisor_id = ? AND b.is_active = 1 ORDER BY g.created_at DESC");
+            LEFT JOIN (
+                SELECT pr1.* FROM proposals pr1
+                INNER JOIN (
+                    SELECT group_id, MAX(id) as max_id FROM proposals GROUP BY group_id
+                ) pr2 ON pr1.id = pr2.max_id
+            ) pr ON g.id = pr.group_id
+            WHERE p.supervisor_id = ? AND b.is_active = 1 
+            ORDER BY g.created_at DESC");
         $stmt->execute([$supervisorId]);
         $groups = $stmt->fetchAll();
 
@@ -392,7 +400,12 @@ class SupervisorController extends BaseController {
                 }
             }
         }
-        redirect('/supervisor/dashboard');
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, 'groups') !== false) {
+            redirect('/supervisor/groups');
+        } else {
+            redirect('/supervisor/dashboard#pending-proposals');
+        }
     }
 
 
