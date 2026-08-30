@@ -477,7 +477,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <!-- Coordinator Feedback / Remarks -->
                         <div class="col-12">
                             <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 0.04em; color: var(--text-secondary);">Coordinator Remarks &amp; Feedback</label>
-                            <textarea name="remarks" class="form-control" rows="3" placeholder="Provide notes, suggestions, or conditions for the student group and supervisor..."><?php echo htmlspecialchars($pr['review_notes'] ?? ''); ?></textarea>
+                            <textarea name="remarks" class="form-control" rows="3" placeholder="Provide notes, suggestions, or conditions for the student group and supervisor..."><?php echo htmlspecialchars($pr['feedback'] ?? ''); ?></textarea>
                         </div>
                     </div>
                 </div>

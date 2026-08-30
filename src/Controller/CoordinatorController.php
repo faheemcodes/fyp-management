@@ -457,7 +457,7 @@ class CoordinatorController extends BaseController {
             $projectId = $prop['project_id'];
 
             // 1. Update proposals table
-            $stmtPr = $db->prepare("UPDATE proposals SET status = ?, review_notes = ?, reviewed_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmtPr = $db->prepare("UPDATE proposals SET status = ?, feedback = ? WHERE id = ?");
             $stmtPr->execute([$status, $remarks, $proposalId]);
 
             // 2. Update projects table (status and supervisor)
@@ -467,7 +467,7 @@ class CoordinatorController extends BaseController {
 
             // 3. Update groups table & Auto-assign Group Code
             if ($status === 'Approved') {
-                $stage = 'Proposal Defence Preparation';
+                $stage = 'Proposal Approved';
                 // Auto-generate group code if not already assigned
                 if (empty($prop['current_group_code'])) {
                     $stmtLeader = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
