@@ -290,14 +290,6 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/supervisor/reviews" class="nav-link <?php echo isActive('/supervisor/reviews', $currentUri); ?> d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-clipboard-check-fill"></i> <span>Review Proposals</span></div>
-                        <?php if (isset($pendingProposalsCount) && $pendingProposalsCount > 0): ?>
-                            <span class="badge rounded-pill ms-auto" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(245, 158, 11, 0.3);"><?php echo $pendingProposalsCount; ?></span>
-                        <?php endif; ?>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-chat-dots-fill"></i> <span>Messages</span></div>
                         <?php if (isset($unreadSupChat) && $unreadSupChat > 0): ?>

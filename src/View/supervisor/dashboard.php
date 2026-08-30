@@ -5,11 +5,7 @@
     color: var(--text-primary);
     line-height: 1.4;
     font-size: 0.9rem;
-    max-width: 240px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
+    max-width: 280px;
 }
 
 .avatar-stack {
@@ -153,31 +149,39 @@ $firstName = explode(' ', $fullName)[0];
     </div>
 </div>
 
+<!-- -- Main Content Grid (Pending Proposals & Notices) -- -->
 <div class="row g-4 mb-4">
     <!-- -- Recent Notices -- -->
     <div class="col-xl-4">
-        <div class="card border-0 p-3 p-md-4 h-100">
-            <div class="page-section-header mb-4">
-                <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
-                    <i class="bi bi-megaphone-fill"></i>
-                </div>
-                <div>
-                    <h6>Recent Notices</h6>
-                    <small>View latest announcements and updates</small>
+        <div class="card border-0 p-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
+            <div class="page-section-header mb-4 position-relative">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6">
+                        <i class="bi bi-bell-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Recent Notices</h6>
+                        <small>Latest updates & announcements</small>
+                    </div>
                 </div>
             </div>
-            <div class="custom-table-scroll" style="max-height: 320px; overflow-y: auto; padding-right: 8px;">
+            
+            <div class="notice-list custom-scroll" style="max-height: 380px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
-                <div class="d-flex align-items-start py-3" style="border-bottom: 1px solid var(--border-color);">
-                    <div class="flex-grow-1 min-w-0" style="min-width: 0;">
-                        <div class="fw-semibold text-truncate pe-2" title="<?php echo htmlspecialchars($n['subject']); ?>" style="font-size: 0.9rem; color: var(--text-primary);">
+                <div class="notice-item p-3 mb-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); transition: all 0.2s ease;">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                        <div class="fw-semibold text-truncate" style="font-size: 0.85rem; color: var(--text-primary); max-width: 75%;" title="<?php echo htmlspecialchars($n['subject']); ?>">
                             <?php echo htmlspecialchars($n['subject']); ?>
                         </div>
-                        <div class="mt-1" style="font-size: 0.8rem; color: var(--text-secondary);">
-                            <i class="bi bi-calendar3 me-1 opacity-75"></i> <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                        </div>
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 6px;">
+                            <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                        </span>
                     </div>
-                    <div class="ms-2 align-self-center">
+                    <p class="text-muted small mb-2" style="font-size: 0.75rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        <?php echo htmlspecialchars($n['body']); ?>
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color: var(--border-color) !important;">
+                        <span class="text-muted" style="font-size: 0.7rem;">Ref: <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?></span>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="btn btn-link text-decoration-none fw-bold p-0" style="color: #10b981; font-size: 0.85rem;">View</button>
                     </div>
                 </div>
@@ -196,7 +200,7 @@ $firstName = explode(' ', $fullName)[0];
 
     <!-- -- Pending Proposals -- -->
     <div class="col-xl-8">
-        <div class="card border-0 p-3 p-md-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
+        <div class="card border-0 p-3 p-md-4 h-100" id="pending-proposals" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
             <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
                     <div class="page-section-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6">
@@ -207,19 +211,19 @@ $firstName = explode(' ', $fullName)[0];
                         <small>Evaluate and review student project submissions</small>
                     </div>
                 </div>
-                <a href="<?php echo $basePath; ?>/supervisor/reviews" class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm" style="font-size: 0.8rem; background: #10b981; color: #fff; border: none;">
-                    View All Proposals
-                </a>
+                <span class="badge rounded-pill fw-bold shadow-sm" style="font-size: 0.78rem; background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px;">
+                    <?php echo count($proposals); ?> Pending
+                </span>
             </div>
             
             <div class="d-none d-md-block table-responsive custom-table-scroll" style="max-height: 380px; overflow-y: auto;">
                 <table class="table modern-table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 38%;">Project Title</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 22%;">Team Members</th>
-                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 16%;">Status</th>
-                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em; width: 24%;">Actions</th>
+                            <th class="py-3 px-3 border-0 text-uppercase rounded-start" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Project Title</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Team Members</th>
+                            <th class="py-3 px-3 border-0 text-uppercase" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Status</th>
+                            <th class="py-3 px-3 border-0 text-uppercase text-end rounded-end" style="font-size: 0.75rem;font-weight: 600;color: var(--text-secondary);letter-spacing: 0.05em">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -236,8 +240,8 @@ $firstName = explode(' ', $fullName)[0];
                             $color = $statusMap[$st][1] ?? '#6b7280';
                         ?>
                         <tr style="transition: background-color 0.2s">
-                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important; max-width: 240px; overflow: hidden;">
-                                <div class="project-title-cell" title="<?php echo htmlspecialchars($pr['project_title']); ?>">
+                            <td class="px-3 py-3 border-bottom" style="border-color: var(--border-color) !important">
+                                <div class="project-title-cell text-truncate" title="<?php echo htmlspecialchars($pr['project_title']); ?>">
                                     <?php echo htmlspecialchars($pr['project_title']); ?>
                                 </div>
                                 <?php if(!empty($pr['file_path'])): ?>
