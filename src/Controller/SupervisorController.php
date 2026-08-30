@@ -272,31 +272,7 @@ class SupervisorController extends BaseController {
     }
 
     public function reviews() {
-        $supervisorId = $_SESSION['user_id'];
-        $db = \Database::getInstance()->getConnection();
-
-        // Fetch proposals for assigned groups
-        $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
-            FROM proposals pr
-            JOIN `groups` g ON pr.group_id = g.id
-            JOIN projects p ON g.id = p.group_id
-            WHERE p.supervisor_id = ? ORDER BY pr.submitted_at DESC");
-        $stmt->execute([$supervisorId]);
-        $proposals = $stmt->fetchAll();
-
-        // Fetch members for each proposal group
-        foreach ($proposals as &$pr) {
-            $stmt = $db->prepare("SELECT s.*, u.email FROM group_members gm 
-                JOIN students s ON gm.student_id = s.user_id 
-                JOIN users u ON s.user_id = u.id 
-                WHERE gm.group_id = ?");
-            $stmt->execute([$pr['group_id']]);
-            $pr['members'] = $stmt->fetchAll();
-        }
-
-        $this->render('supervisor/reviews', [
-            'proposals' => $proposals
-        ]);
+        redirect('/supervisor/dashboard#pending-proposals');
     }
 
     public function proposalAction() {
