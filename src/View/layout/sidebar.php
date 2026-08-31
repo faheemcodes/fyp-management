@@ -404,6 +404,27 @@ if ($role === 'supervisor') {
     <!-- Pinned Bottom Links Footer -->
     <div class="sidebar-footer flex-shrink-0 pt-2 pb-3">
         <ul class="list-unstyled nav flex-column flex-nowrap mb-0">
+            <?php if (isset($_SESSION['available_roles']) && count($_SESSION['available_roles']) > 1): ?>
+                <?php foreach($_SESSION['available_roles'] as $aRole): ?>
+                    <?php if ($aRole !== $role): ?>
+                        <?php 
+                        $labelMap = [
+                            'supervisor' => ['Switch to Supervisor', 'bi-person-badge'],
+                            'committee' => ['Switch to Committee', 'bi-shield-check'],
+                            'coordinator' => ['Switch to Coordinator', 'bi-person-workspace'],
+                            'hod' => ['Switch to HOD', 'bi-award-fill'],
+                            'student' => ['Switch to Student', 'bi-mortarboard-fill']
+                        ];
+                        $roleInfo = $labelMap[$aRole] ?? ['Switch to ' . ucfirst($aRole), 'bi-arrow-repeat'];
+                        ?>
+                        <li class="nav-item">
+                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link" style="color: #8b5cf6;">
+                                <i class="bi <?php echo $roleInfo[1]; ?>" style="color: #8b5cf6;"></i> <span><?php echo $roleInfo[0]; ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
             <li class="nav-item mt-1">
                 <a href="#" class="nav-link d-flex align-items-center justify-content-between" id="theme-toggle">
                     <div class="d-flex align-items-center gap-2">
@@ -420,27 +441,6 @@ if ($role === 'supervisor') {
                     </div>
                 </a>
             </li>
-            <?php if (isset($_SESSION['available_roles']) && count($_SESSION['available_roles']) > 1): ?>
-                <?php foreach($_SESSION['available_roles'] as $aRole): ?>
-                    <?php if ($aRole !== $role): ?>
-                        <?php 
-                        $labelMap = [
-                            'supervisor' => ['Switch to Supervisor', 'bi-person-badge'],
-                            'committee' => ['Switch to Committee', 'bi-shield-check'],
-                            'coordinator' => ['Switch to Coordinator', 'bi-person-workspace'],
-                            'hod' => ['Switch to HOD', 'bi-award-fill'],
-                            'student' => ['Switch to Student', 'bi-mortarboard-fill']
-                        ];
-                        $roleInfo = $labelMap[$aRole] ?? ['Switch to ' . ucfirst($aRole), 'bi-arrow-repeat'];
-                        ?>
-                        <li class="nav-item">
-                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link">
-                                <i class="bi <?php echo $roleInfo[1]; ?>"></i> <span><?php echo $roleInfo[0]; ?></span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">
                     <i class="bi bi-shield-lock-fill"></i> <span>Change Password</span>
