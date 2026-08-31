@@ -251,7 +251,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
         <form action="<?php echo $basePath; ?>/hod/profile" method="POST">
             <div class="row g-4">
 
-                <!-- ═══════════════ COLUMN 1: Professional Identity ═══════════════ -->
+                <!-- ═══════════════ COLUMN 1: Personal Details ═══════════════ -->
                 <div class="col-lg-6">
                     <div class="page-section h-100">
                         <div class="page-section-header">
@@ -259,8 +259,8 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                 <i class="bi bi-person-badge-fill"></i>
                             </div>
                             <div>
-                                <h6>Professional Identity</h6>
-                                <small>Your official academic identity details</small>
+                                <h6>Personal Details</h6>
+                                <small>Academic and identity details</small>
                             </div>
                         </div>
                         <div class="page-section-body">
@@ -320,7 +320,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                     </div>
                 </div>
 
-                <!-- ═══════════════ COLUMN 2: Contact & Location ═══════════════ -->
+                <!-- ═══════════════ COLUMN 2: Contact Details ═══════════════ -->
                 <div class="col-lg-6">
                     <div class="page-section h-100">
                         <div class="page-section-header">
@@ -328,8 +328,8 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
                                 <i class="bi bi-telephone-fill"></i>
                             </div>
                             <div>
-                                <h6>Contact &amp; Location</h6>
-                                <small>Email, phone, and office details</small>
+                                <h6>Contact Details</h6>
+                                <small>Email, phone, and address</small>
                             </div>
                         </div>
                         <div class="page-section-body">

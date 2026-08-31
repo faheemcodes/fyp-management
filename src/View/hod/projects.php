@@ -12,17 +12,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <div>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em">Department FYP Projects Directory</h4>
+                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Department Projects</h4>
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75);font-size: 0.85rem">High-level academic repository of all project groups, assigned supervisors, and milestones</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">All registered project groups and milestones</p>
             </div>
         </div>
         <div class="text-white text-end d-none d-md-block">
             <div class="fs-4 fw-bold"><?php echo count($projects); ?></div>
-            <div class="small opacity-75">Active FYP Groups</div>
+            <div class="small opacity-75">Active Groups</div>
         </div>
     </div>
 </div>
@@ -34,15 +34,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <div class="col-md-5 ps-0">
                 <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
                     <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search by title, group code, supervisor, student..." data-target="department-projects-table">
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search projects, supervisors, groups..." data-target="department-projects-table">
                 </div>
             </div>
             <!-- Stage Filter Pills -->
             <div class="col-md-7 pe-0 d-flex justify-content-md-end gap-1.5 flex-wrap">
-                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold active" onclick="filterProjects('all', this)">All (<?php echo count($projects); ?>)</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold active" onclick="filterProjects('all', this)">All</button>
                 <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('proposal', this)">Proposal</button>
                 <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('defense', this)">Defense</button>
-                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('final', this)">Final / Complete</button>
+                <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('final', this)">Final</button>
             </div>
         </div>
     </div>
@@ -51,10 +51,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <table class="table modern-table m-0" id="department-projects-table">
             <thead>
                 <tr>
-                    <th class="ps-4">Group & Project Title</th>
-                    <th>Assigned Supervisor</th>
+                    <th class="ps-4">Group &amp; Title</th>
+                    <th>Supervisor</th>
                     <th>Team Members</th>
-                    <th>Progress Milestone</th>
+                    <th>Milestone</th>
                     <th class="text-end pe-4">Documents</th>
                 </tr>
             </thead>
@@ -78,7 +78,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 </span>
                                 <small class="text-muted" style="font-size: 0.7rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
                             </div>
-                            <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title not registered yet', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.92rem;">
+                            <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title pending', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.92rem;">
                                 <?php echo htmlspecialchars($p['project_title'] ?? 'Project Title Pending Submission', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
                             <?php if (!empty($p['abstract'])): ?>
@@ -91,7 +91,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td>
                         <?php if (!empty($p['supervisor_name'])): ?>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 34px;height: 34px;font-size: 0.85rem">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem">
                                 <?php echo strtoupper(substr($p['supervisor_name'], 0, 1)); ?>
                             </div>
                             <div>
@@ -109,7 +109,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <?php $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                             <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
                                  class="rounded-circle border shadow-2xs" 
-                                 style="width: 32px;height: 32px;object-fit: cover; cursor: pointer;" 
+                                 style="width: 32px; height: 32px; object-fit: cover; cursor: pointer;" 
                                  alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>"
                                  title="<?php echo htmlspecialchars($m['student_name'] . ' (' . $m['roll_no'] . ')', ENT_QUOTES, 'UTF-8'); ?>"
                                  onclick="showStudentPhotoModal('<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no']), ENT_QUOTES, 'UTF-8'); ?>')">
@@ -157,7 +157,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </a>
                             <?php endif; ?>
                             <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
-                            <span class="text-muted small">None</span>
+                            <span class="text-muted small">—</span>
                             <?php endif; ?>
                         </div>
                     </td>
@@ -167,7 +167,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <td colspan="5" class="text-center py-5 text-muted">
                         <i class="bi bi-folder2-open fs-2 d-block mb-2 opacity-50"></i>
-                        No FYP projects registered under this department yet.
+                        No FYP projects registered yet.
                     </td>
                 </tr>
                 <?php endif; ?>

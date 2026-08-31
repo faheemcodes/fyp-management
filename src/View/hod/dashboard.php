@@ -263,20 +263,20 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
             </div>
             <div>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <h4 class="text-white fw-bold m-0" style="font-size: 1.45rem; letter-spacing: -0.02em">HOD Department Command Center</h4>
+                    <h4 class="text-white fw-bold m-0" style="font-size: 1.45rem; letter-spacing: -0.02em">Department Overview</h4>
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.78); font-size: 0.85rem">Live academic tracking, supervisor workload balancing, and faculty management</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.78); font-size: 0.85rem">Project milestones, supervisor workload, and faculty directory</p>
             </div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
             <a href="<?php echo $basePath; ?>/hod/projects" class="btn rounded-pill px-3.5 py-2 fw-semibold shadow-sm border-0 d-inline-flex align-items-center gap-2" style="background: #ffffff; color: #047fb0; font-size: 0.85rem;">
-                <i class="bi bi-kanban-fill"></i> <span>View All Projects</span>
+                <i class="bi bi-kanban-fill"></i> <span>Projects</span>
             </a>
             <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn rounded-pill px-3.5 py-2 fw-semibold shadow-sm d-inline-flex align-items-center gap-2" style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
-                <i class="bi bi-person-plus-fill"></i> <span>Manage Faculty</span>
+                <i class="bi bi-person-plus-fill"></i> <span>Faculty</span>
             </a>
         </div>
     </div>
@@ -386,7 +386,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                             <div class="d-flex align-items-center gap-2">
                                 <span class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_approvals'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
                                 <?php if (!empty($stats['pending_approvals'])): ?>
-                                    <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Action Required</span>
+                                    <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Pending</span>
                                 <?php endif; ?>
                             </div>
                             <div class="premium-card-label">Verify Students</div>
@@ -401,7 +401,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── 1. Live FYP Stage Progress Funnel ── -->
+<!-- ── 1. FYP Stage Progress Funnel ── -->
 <div class="hod-section-card">
     <div class="hod-section-header">
         <div class="hod-section-title-wrap">
@@ -409,8 +409,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 <i class="bi bi-filter-circle-fill"></i>
             </div>
             <div>
-                <h6 class="hod-section-title">Live FYP Stage Progress Funnel</h6>
-                <small class="hod-section-subtitle">Real-time breakdown of all departmental project batches across 6 progressive milestones</small>
+                <h6 class="hod-section-title">FYP Stage Progress</h6>
+                <small class="hod-section-subtitle">Milestone breakdown across projects</small>
             </div>
         </div>
         <div class="hod-section-actions">
@@ -418,7 +418,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 <span class="fw-bolder"><?php echo $totalProjectsInFunnel; ?></span> Active Projects
             </span>
             <a href="<?php echo $basePath; ?>/hod/projects" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem;">
-                <span>Explore All Projects</span>
+                <span>All Projects</span>
                 <i class="bi bi-arrow-right-short" style="font-size: 1.15rem; line-height: 1;"></i>
             </a>
         </div>
@@ -478,7 +478,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── 2. Supervisor Workload & Capacity Balancing ── -->
+<!-- ── 2. Supervisor Workload ── -->
 <div class="hod-section-card">
     <div class="hod-section-header">
         <div class="hod-section-title-wrap">
@@ -486,8 +486,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 <i class="bi bi-bar-chart-steps"></i>
             </div>
             <div>
-                <h6 class="hod-section-title">Supervisor Workload &amp; Capacity Balancing</h6>
-                <small class="hod-section-subtitle">Monitor allocated project slots &amp; quota limits (Cap: <?php echo (int)$maxMorning; ?> Morning / <?php echo (int)$maxEvening; ?> Evening)</small>
+                <h6 class="hod-section-title">Supervisor Workload</h6>
+                <small class="hod-section-subtitle">Slot allocation &amp; capacity limits</small>
             </div>
         </div>
         <div class="hod-section-actions">
@@ -505,12 +505,12 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
             <table class="table modern-table m-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Supervisor Name</th>
+                        <th class="ps-4">Supervisor</th>
                         <th>Designation</th>
-                        <th>Morning Shift Load</th>
-                        <th>Evening Shift Load</th>
-                        <th>Total Projects</th>
-                        <th class="text-end pe-4">Capacity Status</th>
+                        <th>Morning</th>
+                        <th>Evening</th>
+                        <th>Total</th>
+                        <th class="text-end pe-4">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -526,10 +526,10 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                         $badgeText = 'Available';
                         if ($mCount >= $maxMorning && $eCount >= $maxEvening) {
                             $badgeClass = 'bg-danger-subtle text-danger border-danger-subtle';
-                            $badgeText = 'Fully Booked';
+                            $badgeText = 'Full';
                         } elseif ($mCount >= $maxMorning || $eCount >= $maxEvening) {
                             $badgeClass = 'bg-warning-subtle text-warning border-warning-subtle';
-                            $badgeText = 'Partially Full';
+                            $badgeText = 'Partial';
                         }
                     ?>
                     <tr>
@@ -587,7 +587,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── 3. Department Notices & Announcements ── -->
+<!-- ── 3. Department Notices ── -->
 <div class="hod-section-card">
     <div class="hod-section-header">
         <div class="hod-section-title-wrap">
@@ -595,13 +595,13 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 <i class="bi bi-megaphone-fill"></i>
             </div>
             <div>
-                <h6 class="hod-section-title">Department Notices &amp; Announcements</h6>
-                <small class="hod-section-subtitle">Official circulars, circular deadlines, and university alerts</small>
+                <h6 class="hod-section-title">Department Notices</h6>
+                <small class="hod-section-subtitle">Recent circulars and announcements</small>
             </div>
         </div>
         <div class="hod-section-actions">
             <span class="badge rounded-pill fw-bold" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 5px 12px; font-size: 0.75rem;">
-                <?php echo count($recentNotices); ?> Active Circulars
+                <?php echo count($recentNotices); ?> Notices
             </span>
         </div>
     </div>
@@ -631,7 +631,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
             <?php if(empty($recentNotices)): ?>
             <div class="text-center text-muted py-4">
                 <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                No recent notices found.
+                No notices found.
             </div>
             <?php endif; ?>
         </div>
