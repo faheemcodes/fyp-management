@@ -123,7 +123,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.78rem;">
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
                             <i class="bi bi-moon-stars-fill me-1"></i><?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups
                         </span>
                     </td>
@@ -187,7 +187,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Evening Projects</span>
-                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-0.5"><?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups</span>
+                                            <span class="badge border rounded-pill px-2.5 py-0.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important;"><?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups</span>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Total Projects</span>
