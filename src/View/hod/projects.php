@@ -171,9 +171,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="View Proposal Document">
+                            <button type="button" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
                                 <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
-                            </a>
+                            </button>
                             <?php endif; ?>
                             <?php if (!empty($p['thesis_file'])): ?>
                             <?php 
@@ -186,9 +186,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Download Thesis Document">
+                            <button type="button" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
                                 <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
-                            </a>
+                            </button>
                             <?php endif; ?>
                             <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
                             <span class="text-muted small" style="font-size: 0.72rem;">—</span>
@@ -210,6 +210,38 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
+<!-- In-Page Document Viewer Modal -->
+<div class="modal fade" id="documentViewerModal" tabindex="-1" aria-labelledby="documentViewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-width: 92vw;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
+            <div class="modal-header border-bottom px-4 py-3" style="border-color: var(--border-color) !important;">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" id="docTypeIconBox" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; width: 38px; height: 38px;">
+                        <i class="bi bi-file-earmark-pdf-fill fs-5" id="docTypeIcon"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h6 class="modal-title fw-bold m-0" id="docModalTitle" style="color: var(--text-primary); font-size: 1rem;">Document Preview</h6>
+                            <span class="badge rounded-pill font-monospace" id="docModalGroup" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem;"></span>
+                            <span class="badge rounded-pill" id="docModalBadge" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; font-size: 0.72rem;"></span>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Viewing in-page document viewer</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a id="docDownloadBtn" href="#" target="_blank" download class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.78rem;">
+                        <i class="bi bi-box-arrow-up-right"></i> <span>Open Full / Download</span>
+                    </a>
+                    <button type="button" class="btn-close shadow-none ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body p-0" style="background: #525659; min-height: 78vh; display: flex; align-items: stretch;">
+                <iframe id="docViewerIframe" src="about:blank" style="width: 100%; height: 78vh; border: none; display: block;" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Student Avatar Preview Modal -->
 <div class="modal fade" id="studentPhotoModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -227,6 +259,41 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <script>
+function previewDocument(fileUrl, docType, title, groupCode) {
+    document.getElementById('docModalTitle').innerText = (docType === 'Proposal' ? 'Proposal: ' : 'Thesis: ') + (title || 'Project Document');
+    document.getElementById('docModalBadge').innerText = docType;
+    document.getElementById('docModalGroup').innerText = groupCode || '';
+    document.getElementById('docDownloadBtn').href = fileUrl;
+
+    const iconBox = document.getElementById('docTypeIconBox');
+    const icon = document.getElementById('docTypeIcon');
+    const badge = document.getElementById('docModalBadge');
+
+    if (docType === 'Thesis') {
+        iconBox.style.background = 'rgba(16, 185, 129, 0.12)';
+        iconBox.style.color = '#10b981';
+        badge.style.background = 'rgba(16, 185, 129, 0.15)';
+        badge.style.color = '#10b981';
+        icon.className = 'bi bi-file-earmark-arrow-down-fill fs-5';
+    } else {
+        iconBox.style.background = 'rgba(59, 130, 246, 0.12)';
+        iconBox.style.color = '#3b82f6';
+        badge.style.background = 'rgba(59, 130, 246, 0.15)';
+        badge.style.color = '#3b82f6';
+        icon.className = 'bi bi-file-earmark-pdf-fill fs-5';
+    }
+
+    const iframe = document.getElementById('docViewerIframe');
+    iframe.src = fileUrl;
+
+    new bootstrap.Modal(document.getElementById('documentViewerModal')).show();
+}
+
+// Reset iframe when modal closes to prevent memory leaks and background audio/rendering
+document.getElementById('documentViewerModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('docViewerIframe').src = 'about:blank';
+});
+
 function showStudentPhotoModal(src, name, roll) {
     document.getElementById('modalStudentPhoto').src = src;
     document.getElementById('modalStudentName').innerText = name;
