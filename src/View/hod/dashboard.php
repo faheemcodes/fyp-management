@@ -640,11 +640,11 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                         <td class="ps-4">
                             <div class="d-flex align-items-center gap-3">
                                 <div class="workload-user-avatar">
-                                    <?php echo strtoupper(substr($sup['name'], 0, 1)); ?>
+                                    <?php echo getNameInitial($sup['name']); ?>
                                 </div>
                                 <div>
                                     <div class="fw-semibold text-dark sup-name" style="font-size: 0.9rem"><?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                    <small class="text-muted sup-email" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                    <small class="text-muted sup-email d-block" style="font-size: 0.72rem"><?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                                 </div>
                             </div>
                         </td>

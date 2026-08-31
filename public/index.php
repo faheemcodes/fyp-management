@@ -69,6 +69,17 @@ function redirect($path) {
     exit;
 }
 
+// Global helper to extract real first name initial (ignoring academic/honorific prefixes)
+if (!function_exists('getNameInitial')) {
+    function getNameInitial($name) {
+        $clean = trim((string)$name);
+        // Strip common prefixes (Dr., Prof., Engr., Mr., Mrs., Ms., Sheikh, Syed, Sir, etc.)
+        $clean = preg_replace('/^(dr\.|dr|prof\.|prof|engr\.|engr|mr\.|mr|mrs\.|mrs|ms\.|ms|sir|madam|adv\.|adv)\s+/i', '', $clean);
+        $clean = trim($clean);
+        return strtoupper(substr($clean, 0, 1)) ?: 'U';
+    }
+}
+
 // Simple router
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $scriptName = $_SERVER['SCRIPT_NAME'];
