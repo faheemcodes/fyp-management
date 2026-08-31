@@ -21,37 +21,37 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 
 .hod-section-header {
-    padding: 1.15rem 1.5rem;
+    padding: 1.1rem 1.35rem;
     background: var(--form-bg, #f8fafc);
     border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
 }
 
 .hod-section-title-wrap {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     min-width: 0;
 }
 
 .hod-section-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .hod-section-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary, #1e293b);
     margin: 0;
@@ -60,7 +60,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 
 .hod-section-subtitle {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--text-secondary, #64748b);
     margin: 2px 0 0 0;
     display: block;
@@ -74,15 +74,15 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 
 .hod-section-body {
-    padding: 1.5rem;
+    padding: 1.35rem;
 }
 
 /* ── Funnel Step Cards ── */
 .funnel-step-card {
     background: var(--card-bg, #ffffff);
     border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
-    border-radius: 16px;
-    padding: 18px 12px;
+    border-radius: 14px;
+    padding: 14px 10px;
     text-align: center;
     position: relative;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,34 +93,34 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     overflow: hidden;
 }
 .funnel-step-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     border-color: rgba(59, 130, 246, 0.35);
 }
 .funnel-step-num {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: rgba(59, 130, 246, 0.1);
     color: #3b82f6;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    margin: 0 auto 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 .funnel-step-count {
-    font-size: 1.75rem;
+    font-size: 1.55rem;
     font-weight: 800;
     line-height: 1.1;
     color: var(--text-primary, #1e293b);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     letter-spacing: -0.02em;
 }
 .funnel-step-title {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 600;
     color: var(--text-secondary, #64748b);
     line-height: 1.25;
@@ -151,13 +151,13 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 .notice-minimal-item {
     background: var(--form-bg, #f8fafc);
     border: 1px solid var(--border-color, rgba(0, 0, 0, 0.07));
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
+    border-radius: 12px;
+    padding: 11px 13px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 10px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -167,14 +167,14 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     background: var(--card-bg, #ffffff);
     border-color: rgba(16, 185, 129, 0.35);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 .notice-minimal-item .notice-accent-bar {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px;
+    width: 3.5px;
     background: #10b981;
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -183,28 +183,28 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     opacity: 1;
 }
 .notice-date-badge {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 600;
     color: #10b981;
     background: rgba(16, 185, 129, 0.1);
-    padding: 3px 8px;
-    border-radius: 6px;
+    padding: 2px 7px;
+    border-radius: 5px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     letter-spacing: 0.02em;
 }
 .notice-view-btn {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 600;
     color: var(--text-secondary, #64748b);
     background: var(--card-bg, #ffffff);
     border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: 4px 10px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     transition: all 0.2s ease;
     white-space: nowrap;
     text-decoration: none;
@@ -217,13 +217,13 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 
 .notice-list {
-    padding-right: 6px;
+    padding-right: 4px;
     padding-left: 2px;
     padding-top: 2px;
     padding-bottom: 2px;
 }
 .notice-list::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 .notice-list::-webkit-scrollbar-track {
     background: transparent;
@@ -238,7 +238,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 
 @media (max-width: 767.98px) {
     .hod-section-header {
-        padding: 1rem 1.15rem;
+        padding: 0.95rem 1.15rem;
     }
     .hod-section-body {
         padding: 1.15rem;
@@ -249,7 +249,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     .hod-section-actions {
         width: 100%;
         justify-content: flex-start;
-        margin-top: 4px;
+        margin-top: 2px;
     }
 }
 </style>
@@ -401,85 +401,143 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── 1. FYP Stage Progress Funnel ── -->
-<div class="hod-section-card">
-    <div class="hod-section-header">
-        <div class="hod-section-title-wrap">
-            <div class="hod-section-icon" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6;">
-                <i class="bi bi-filter-circle-fill"></i>
+<!-- ── Combined Row: FYP Stage Progress (70%) + Department Notices (30%) ── -->
+<div class="row g-3 mb-4 align-items-stretch">
+    <!-- Left: FYP Stage Progress (70% on large screens) -->
+    <div class="col-12 col-lg-8 d-flex">
+        <div class="hod-section-card w-100 d-flex flex-column mb-0">
+            <div class="hod-section-header">
+                <div class="hod-section-title-wrap">
+                    <div class="hod-section-icon" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6;">
+                        <i class="bi bi-filter-circle-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="hod-section-title">FYP Stage Progress</h6>
+                        <small class="hod-section-subtitle">Milestone breakdown across projects</small>
+                    </div>
+                </div>
+                <div class="hod-section-actions">
+                    <span class="badge rounded-pill fw-bold" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); padding: 5px 10px; font-size: 0.75rem;">
+                        <span class="fw-bolder"><?php echo $totalProjectsInFunnel; ?></span> Projects
+                    </span>
+                    <a href="<?php echo $basePath; ?>/hod/projects" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="font-size: 0.78rem;">
+                        <span>All Projects</span>
+                        <i class="bi bi-arrow-right-short" style="font-size: 1.1rem; line-height: 1;"></i>
+                    </a>
+                </div>
             </div>
-            <div>
-                <h6 class="hod-section-title">FYP Stage Progress</h6>
-                <small class="hod-section-subtitle">Milestone breakdown across projects</small>
+
+            <div class="hod-section-body flex-grow-1 d-flex flex-column justify-content-center">
+                <div class="row g-2.5">
+                    <!-- Stage 1 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">1</div>
+                            <div class="funnel-step-count text-primary"><?php echo (int)($stages['Proposal Submitted'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Proposal Submitted</div>
+                        </div>
+                    </div>
+                    <!-- Stage 2 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">2</div>
+                            <div class="funnel-step-count text-success"><?php echo (int)($stages['Proposal Approved'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Proposal Approved</div>
+                        </div>
+                    </div>
+                    <!-- Stage 3 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">3</div>
+                            <div class="funnel-step-count" style="color: #8b5cf6;"><?php echo (int)($stages['Proposal Defence Presentation Completed'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Defense Cleared</div>
+                        </div>
+                    </div>
+                    <!-- Stage 4 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">4</div>
+                            <div class="funnel-step-count text-warning"><?php echo (int)($stages['FYP Progress Presentation Completed'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Progress Cleared</div>
+                        </div>
+                    </div>
+                    <!-- Stage 5 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">5</div>
+                            <div class="funnel-step-count" style="color: #ec4899;"><?php echo (int)($stages['Final Presentation Completed'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Final Presented</div>
+                        </div>
+                    </div>
+                    <!-- Stage 6 -->
+                    <div class="col-6 col-sm-4">
+                        <div class="funnel-step-card">
+                            <div class="funnel-step-num" style="background: rgba(6, 182, 212, 0.1); color: #06b6d4;">6</div>
+                            <div class="funnel-step-count text-info"><?php echo (int)($stages['Final Grading Completed'] ?? 0); ?></div>
+                            <div class="funnel-step-title">Grading Complete</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="hod-section-actions">
-            <span class="badge rounded-pill fw-bold" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); padding: 6px 12px; font-size: 0.78rem;">
-                <span class="fw-bolder"><?php echo $totalProjectsInFunnel; ?></span> Active Projects
-            </span>
-            <a href="<?php echo $basePath; ?>/hod/projects" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem;">
-                <span>All Projects</span>
-                <i class="bi bi-arrow-right-short" style="font-size: 1.15rem; line-height: 1;"></i>
-            </a>
         </div>
     </div>
 
-    <div class="hod-section-body">
-        <div class="row g-3">
-            <!-- Stage 1 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">1</div>
-                    <div class="funnel-step-count text-primary"><?php echo (int)($stages['Proposal Submitted'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Proposal Submitted</div>
+    <!-- Right: Department Notices (30% on large screens) -->
+    <div class="col-12 col-lg-4 d-flex">
+        <div class="hod-section-card w-100 d-flex flex-column mb-0">
+            <div class="hod-section-header">
+                <div class="hod-section-title-wrap">
+                    <div class="hod-section-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="hod-section-title">Department Notices</h6>
+                        <small class="hod-section-subtitle">Recent circulars and alerts</small>
+                    </div>
+                </div>
+                <div class="hod-section-actions">
+                    <span class="badge rounded-pill fw-bold" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 4px 9px; font-size: 0.72rem;">
+                        <?php echo count($recentNotices); ?>
+                    </span>
                 </div>
             </div>
-            <!-- Stage 2 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">2</div>
-                    <div class="funnel-step-count text-success"><?php echo (int)($stages['Proposal Approved'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Proposal Approved</div>
-                </div>
-            </div>
-            <!-- Stage 3 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">3</div>
-                    <div class="funnel-step-count" style="color: #8b5cf6;"><?php echo (int)($stages['Proposal Defence Presentation Completed'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Defense Cleared</div>
-                </div>
-            </div>
-            <!-- Stage 4 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">4</div>
-                    <div class="funnel-step-count text-warning"><?php echo (int)($stages['FYP Progress Presentation Completed'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Progress Cleared</div>
-                </div>
-            </div>
-            <!-- Stage 5 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">5</div>
-                    <div class="funnel-step-count" style="color: #ec4899;"><?php echo (int)($stages['Final Presentation Completed'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Final Presented</div>
-                </div>
-            </div>
-            <!-- Stage 6 -->
-            <div class="col-6 col-md-4 col-lg-2">
-                <div class="funnel-step-card">
-                    <div class="funnel-step-num" style="background: rgba(6, 182, 212, 0.1); color: #06b6d4;">6</div>
-                    <div class="funnel-step-count text-info"><?php echo (int)($stages['Final Grading Completed'] ?? 0); ?></div>
-                    <div class="funnel-step-title">Grading Complete</div>
+
+            <div class="hod-section-body flex-grow-1 p-3">
+                <div class="notice-list custom-scroll" style="max-height: 280px; overflow-y: auto;">
+                    <?php foreach($recentNotices as $n): ?>
+                    <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
+                        <div class="notice-accent-bar"></div>
+                        <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="notice-date-badge">
+                                    <i class="bi bi-calendar3" style="font-size: 0.6rem;"></i>
+                                    <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
+                                </span>
+                            </div>
+                            <div class="text-truncate" style="font-size: 0.82rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                        </div>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                            <span>View</span>
+                            <i class="bi bi-arrow-up-right" style="font-size: 0.65rem;"></i>
+                        </button>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php if(empty($recentNotices)): ?>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
+                        No notices found.
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ── 2. Supervisor Workload ── -->
-<div class="hod-section-card">
+<!-- ── Supervisor Workload Matrix (Full Width) ── -->
+<div class="hod-section-card mb-4">
     <div class="hod-section-header">
         <div class="hod-section-title-wrap">
             <div class="hod-section-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
@@ -583,57 +641,6 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                     <?php endif; ?>
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- ── 3. Department Notices ── -->
-<div class="hod-section-card">
-    <div class="hod-section-header">
-        <div class="hod-section-title-wrap">
-            <div class="hod-section-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">
-                <i class="bi bi-megaphone-fill"></i>
-            </div>
-            <div>
-                <h6 class="hod-section-title">Department Notices</h6>
-                <small class="hod-section-subtitle">Recent circulars and announcements</small>
-            </div>
-        </div>
-        <div class="hod-section-actions">
-            <span class="badge rounded-pill fw-bold" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 5px 12px; font-size: 0.75rem;">
-                <?php echo count($recentNotices); ?> Notices
-            </span>
-        </div>
-    </div>
-
-    <div class="hod-section-body">
-        <div class="notice-list custom-scroll" style="max-height: 280px; overflow-y: auto;">
-            <?php foreach($recentNotices as $n): ?>
-            <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
-                <div class="notice-accent-bar"></div>
-                <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <span class="notice-date-badge">
-                            <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
-                            <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                        </span>
-                    </div>
-                    <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>">
-                        <?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>
-                    </div>
-                </div>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
-                    <span>View</span>
-                    <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
-                </button>
-            </div>
-            <?php endforeach; ?>
-            <?php if(empty($recentNotices)): ?>
-            <div class="text-center text-muted py-4">
-                <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                No notices found.
-            </div>
-            <?php endif; ?>
         </div>
     </div>
 </div>
