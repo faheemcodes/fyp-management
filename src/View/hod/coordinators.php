@@ -123,7 +123,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-1.5">
+                        <div class="d-flex justify-content-end gap-2">
                             <!-- View Button -->
                             <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" title="View Details">
                                 <i class="bi bi-eye-fill"></i>

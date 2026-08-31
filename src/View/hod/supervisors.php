@@ -125,7 +125,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-1.5">
+                        <div class="d-flex justify-content-end gap-2">
                             <!-- View Button -->
                             <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" title="View Details">
                                 <i class="bi bi-eye-fill"></i>

@@ -38,7 +38,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </div>
             </div>
             <!-- Stage Filter Pills -->
-            <div class="col-md-7 pe-0 d-flex justify-content-md-end gap-1.5 flex-wrap">
+            <div class="col-md-7 pe-0 d-flex justify-content-md-end gap-2 flex-wrap">
                 <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold active" onclick="filterProjects('all', this)">All</button>
                 <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('proposal', this)">Proposal</button>
                 <button class="btn btn-sm btn-filter-pill rounded-pill px-3 fw-semibold" onclick="filterProjects('defense', this)">Defense</button>
@@ -104,7 +104,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
                             <?php foreach(($p['members'] ?? []) as $m): ?>
                             <?php $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                             <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
@@ -125,7 +125,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-1.5">
+                        <div class="d-flex justify-content-end gap-2">
                             <?php if (!empty($p['proposal_file'])): ?>
                             <?php 
                                 $propUrl = trim($p['proposal_file']);
