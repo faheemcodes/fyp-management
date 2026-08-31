@@ -70,7 +70,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <div>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Committee Allocation</h4>
+                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Project Groups Allocation</h4>
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
@@ -78,7 +78,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php echo htmlspecialchars($shift ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?> Shift
                     </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Distribute project groups sequentially across presentation lab committees</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Assign project groups to evaluation committees based on lab capacities</p>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -123,7 +123,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <div class="stat-card p-3 rounded-4 shadow-sm border" style="background: var(--card-bg); border-color: var(--border-color) !important;">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 0.72rem;">Committee <?php echo $i; ?></span>
+                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 0.72rem;">Committee <?php echo $i; ?> Groups</span>
                     <h3 class="fw-bold m-0 mt-1" style="color: #8b5cf6;"><?php echo (int)($committeeCounts[$i] ?? 0); ?></h3>
                 </div>
                 <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; width: 44px; height: 44px;">
@@ -131,7 +131,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </div>
             </div>
             <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-                <?php echo count($committeeMembers[$i] ?? []); ?> faculty evaluators
+                Evaluators (HOD Assigned): <?php echo count($committeeMembers[$i] ?? []); ?>
             </small>
         </div>
     </div>
@@ -141,7 +141,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <div class="stat-card p-3 rounded-4 shadow-sm border" style="background: var(--card-bg); border-color: var(--border-color) !important;">
             <div class="d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 0.72rem;">Unassigned</span>
+                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 0.72rem;">Unassigned Groups</span>
                     <h3 class="fw-bold m-0 mt-1 text-danger"><?php echo (int)$unassignedCount; ?></h3>
                 </div>
                 <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 44px; height: 44px;">
@@ -162,8 +162,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <i class="bi bi-sliders2-vertical"></i>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold">Lab Capacity &amp; Sequential Auto-Distribution</h6>
-                    <small class="text-muted">Enter group capacities per committee based on presentation lab sizes (Total: <?php echo (int)$totalGroups; ?> active groups)</small>
+                    <h6 class="mb-0 fw-bold">Lab Group Quotas &amp; Sequential Auto-Distribution</h6>
+                    <small class="text-muted">Set how many project groups each committee will evaluate based on lab capacities (Total: <?php echo (int)$totalGroups; ?> active groups). <em>Committee members are appointed by the HOD.</em></small>
                 </div>
             </div>
             <span class="badge rounded-pill px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color);">

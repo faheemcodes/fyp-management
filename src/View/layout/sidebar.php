@@ -379,7 +379,7 @@ if ($role === 'supervisor') {
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/committees" class="nav-link <?php echo isActive('/coordinator/committees', $currentUri); ?>">
-                        <i class="bi bi-diagram-3-fill"></i> <span>Committee Allocation</span>
+                        <i class="bi bi-diagram-3-fill"></i> <span>Project Groups Allocation</span>
                     </a>
                 </li>
                 <li class="nav-item">
