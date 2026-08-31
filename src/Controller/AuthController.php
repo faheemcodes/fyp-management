@@ -52,11 +52,41 @@ class AuthController extends BaseController {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
                 $_SESSION['last_activity'] = time();
+
+                // Detect all enrolled roles for this user
+                $availableRoles = [];
+                $chkSup = $db->prepare("SELECT user_id FROM supervisors WHERE user_id = ?");
+                $chkSup->execute([$user['id']]);
+                if ($chkSup->fetch()) $availableRoles[] = 'supervisor';
+
+                $chkComm = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
+                $chkComm->execute([$user['id']]);
+                if ($chkComm->fetch()) $availableRoles[] = 'committee';
+
+                $chkHod = $db->prepare("SELECT user_id FROM hods WHERE user_id = ?");
+                $chkHod->execute([$user['id']]);
+                if ($chkHod->fetch()) $availableRoles[] = 'hod';
+
+                $chkCoord = $db->prepare("SELECT user_id FROM coordinators WHERE user_id = ?");
+                $chkCoord->execute([$user['id']]);
+                if ($chkCoord->fetch()) $availableRoles[] = 'coordinator';
+
+                $chkStudent = $db->prepare("SELECT user_id FROM students WHERE user_id = ?");
+                $chkStudent->execute([$user['id']]);
+                if ($chkStudent->fetch()) $availableRoles[] = 'student';
+
+                if (empty($availableRoles)) {
+                    $availableRoles[] = $user['role'];
+                }
+                $_SESSION['available_roles'] = $availableRoles;
+                
+                // Primary role default
+                $primaryRole = in_array($user['role'], $availableRoles) ? $user['role'] : $availableRoles[0];
+                $_SESSION['role'] = $primaryRole;
                 
                 // Fetch profile specific name
-                if ($user['role'] === 'student') {
+                if ($primaryRole === 'student') {
                     $sStmt = $db->prepare("SELECT name, student_id, avatar, department FROM students WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $student = $sStmt->fetch();
@@ -64,25 +94,25 @@ class AuthController extends BaseController {
                     $_SESSION['student_id'] = $student['student_id'] ?? '';
                     $_SESSION['avatar'] = $student['avatar'] ?? '';
                     $_SESSION['department'] = $student['department'] ?? 'Software Engineering';
-                } else if ($user['role'] === 'supervisor') {
+                } else if ($primaryRole === 'supervisor') {
                     $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $supervisor = $sStmt->fetch();
                     $_SESSION['name'] = $supervisor['name'] ?? 'Supervisor';
                     $_SESSION['department'] = $supervisor['department'] ?? 'Software Engineering';
-                } else if ($user['role'] === 'committee') {
+                } else if ($primaryRole === 'committee') {
                     $sStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $committee = $sStmt->fetch();
                     $_SESSION['name'] = $committee['name'] ?? 'Committee Member';
                     $_SESSION['department'] = $committee['department'] ?? 'Software Engineering';
-                } else if ($user['role'] === 'hod') {
+                } else if ($primaryRole === 'hod') {
                     $sStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $hod = $sStmt->fetch();
                     $_SESSION['name'] = $hod['name'] ?? 'HOD';
                     $_SESSION['department'] = $hod['department'] ?? 'Software Engineering';
-                } else if ($user['role'] === 'coordinator') {
+                } else if ($primaryRole === 'coordinator') {
                     $sStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $coord = $sStmt->fetch();
@@ -93,7 +123,7 @@ class AuthController extends BaseController {
                     $_SESSION['department'] = 'All Departments';
                 }
                 
-                redirect('/' . $user['role'] . '/dashboard');
+                redirect('/' . $primaryRole . '/dashboard');
             } else {
                 $this->flash('error', 'Invalid login credentials or password.');
                 redirect('/login');
@@ -706,6 +736,55 @@ class AuthController extends BaseController {
             redirect('/' . $_SESSION['role'] . '/dashboard');
         } else {
             $this->render('auth/change-password');
+        }
+    }
+
+    public function switchRole() {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('/login');
+        }
+        $targetRole = $_GET['role'] ?? '';
+        $availableRoles = $_SESSION['available_roles'] ?? [$_SESSION['role'] ?? ''];
+        
+        if (in_array($targetRole, $availableRoles)) {
+            $_SESSION['role'] = $targetRole;
+            $db = \Database::getInstance()->getConnection();
+            if ($targetRole === 'supervisor') {
+                $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
+                $sStmt->execute([$_SESSION['user_id']]);
+                $s = $sStmt->fetch();
+                if ($s) {
+                    $_SESSION['name'] = $s['name'];
+                    $_SESSION['department'] = $s['department'];
+                }
+            } else if ($targetRole === 'committee') {
+                $cStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
+                $cStmt->execute([$_SESSION['user_id']]);
+                $c = $cStmt->fetch();
+                if ($c) {
+                    $_SESSION['name'] = $c['name'];
+                    $_SESSION['department'] = $c['department'];
+                }
+            } else if ($targetRole === 'coordinator') {
+                $cdStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
+                $cdStmt->execute([$_SESSION['user_id']]);
+                $cd = $cdStmt->fetch();
+                if ($cd) {
+                    $_SESSION['name'] = $cd['name'];
+                    $_SESSION['department'] = $cd['department'];
+                }
+            } else if ($targetRole === 'hod') {
+                $hStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
+                $hStmt->execute([$_SESSION['user_id']]);
+                $h = $hStmt->fetch();
+                if ($h) {
+                    $_SESSION['name'] = $h['name'];
+                    $_SESSION['department'] = $h['department'];
+                }
+            }
+            redirect('/' . $targetRole . '/dashboard');
+        } else {
+            redirect('/' . ($_SESSION['role'] ?? 'login') . '/dashboard');
         }
     }
 }

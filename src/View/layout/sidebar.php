@@ -420,6 +420,18 @@ if ($role === 'supervisor') {
                     </div>
                 </a>
             </li>
+            <?php if (isset($_SESSION['available_roles']) && count($_SESSION['available_roles']) > 1): ?>
+                <?php 
+                $otherRole = ($role === 'supervisor') ? 'committee' : 'supervisor';
+                $otherLabel = ($otherRole === 'committee') ? 'Committee Portal' : 'Supervisor Portal';
+                $otherIcon = ($otherRole === 'committee') ? 'bi-shield-check' : 'bi-person-badge';
+                ?>
+                <li class="nav-item my-2">
+                    <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $otherRole; ?>" class="nav-link fw-semibold" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px dashed rgba(139, 92, 246, 0.35); border-radius: 10px;">
+                        <i class="bi <?php echo $otherIcon; ?>" style="color: #8b5cf6;"></i> <span>Switch to <?php echo $otherLabel; ?></span>
+                    </a>
+                </li>
+            <?php endif; ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">
                     <i class="bi bi-shield-lock-fill"></i> <span>Change Password</span>

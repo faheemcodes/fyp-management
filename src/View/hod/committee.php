@@ -324,33 +324,66 @@ $numCommittees = $num_committees ?? 2;
             </div>
             <form action="<?php echo $basePath; ?>/hod/committee/create" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                <input type="hidden" name="supervisor_user_id" id="hiddenSupervisorId" value="0">
+                
                 <div class="modal-body p-4">
+                    <!-- Supervisor Auto-Select Dropdown -->
+                    <div class="mb-4 p-3 rounded-4" style="background: var(--form-bg); border: 1.5px solid var(--border-color);">
+                        <label class="form-label small fw-bold text-primary mb-1.5 d-flex align-items-center gap-1.5">
+                            <i class="bi bi-person-check-fill"></i> Select Registered Supervisor (Auto-Populate Data)
+                        </label>
+                        <select class="form-select shadow-sm" id="supervisorSelect" onchange="onSupervisorSelected(this)">
+                            <option value="">-- Choose registered supervisor or fill form manually --</option>
+                            <?php foreach(($available_supervisors ?? []) as $sup): ?>
+                                <?php
+                                    $cleanName = preg_replace('/^(Dr\.|Prof\.|Engr\.|Mr\.|Mrs\.|Ms\.)\s+/i', '', trim($sup['name']));
+                                    $parts = explode(' ', $cleanName, 2);
+                                    $fName = $parts[0] ?? '';
+                                    $lName = $parts[1] ?? '';
+                                ?>
+                                <option value="<?php echo (int)$sup['user_id']; ?>"
+                                        data-name="<?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-firstname="<?php echo htmlspecialchars($fName, ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-lastname="<?php echo htmlspecialchars($lName, ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-email="<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-cnic="<?php echo htmlspecialchars($sup['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-designation="<?php echo htmlspecialchars($sup['designation'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-contact="<?php echo htmlspecialchars($sup['mobile_no'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                    <?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($sup['designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?> &bull; <?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted d-block mt-1.5" style="font-size: 0.76rem;">
+                            <i class="bi bi-info-circle me-1 text-primary"></i>Selecting a supervisor auto-populates their personal info. You only need to assign a Committee and set a Password.
+                        </small>
+                    </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">First Name *</label>
-                            <input type="text" class="form-control" name="first_name" required placeholder="e.g. Ali">
+                            <input type="text" class="form-control" name="first_name" id="createFirstName" required placeholder="e.g. Ali">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Last Name *</label>
-                            <input type="text" class="form-control" name="last_name" required placeholder="e.g. Khan">
+                            <input type="text" class="form-control" name="last_name" id="createLastName" required placeholder="e.g. Khan">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Email Address *</label>
-                            <input type="email" class="form-control" name="email" required placeholder="name@university.edu">
+                            <input type="email" class="form-control" name="email" id="createEmail" required placeholder="name@university.edu">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">CNIC *</label>
-                            <input type="text" class="form-control" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
+                            <input type="text" class="form-control" name="cnic" id="createCnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Designation *</label>
-                            <input type="text" class="form-control" name="designation" required placeholder="e.g. Assistant Professor">
+                            <input type="text" class="form-control" name="designation" id="createDesignation" required placeholder="e.g. Assistant Professor">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Assigned Committee *</label>
@@ -365,7 +398,7 @@ $numCommittees = $num_committees ?? 2;
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Contact Number</label>
-                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
+                            <input type="text" class="form-control" name="contact_no" id="createContact" placeholder="03001234567">
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center mb-1">
@@ -392,6 +425,35 @@ $numCommittees = $num_committees ?? 2;
 </div>
 
 <script>
+function onSupervisorSelected(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    const hiddenId = document.getElementById('hiddenSupervisorId');
+    const fNameInput = document.getElementById('createFirstName');
+    const lNameInput = document.getElementById('createLastName');
+    const emailInput = document.getElementById('createEmail');
+    const cnicInput = document.getElementById('createCnic');
+    const desigInput = document.getElementById('createDesignation');
+    const contactInput = document.getElementById('createContact');
+
+    if (opt && opt.value) {
+        hiddenId.value = opt.value;
+        if (fNameInput) fNameInput.value = opt.getAttribute('data-firstname') || '';
+        if (lNameInput) lNameInput.value = opt.getAttribute('data-lastname') || '';
+        if (emailInput) emailInput.value = opt.getAttribute('data-email') || '';
+        if (cnicInput) cnicInput.value = opt.getAttribute('data-cnic') || '';
+        if (desigInput) desigInput.value = opt.getAttribute('data-designation') || '';
+        if (contactInput) contactInput.value = opt.getAttribute('data-contact') || '';
+    } else {
+        hiddenId.value = '0';
+        if (fNameInput) fNameInput.value = '';
+        if (lNameInput) lNameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (cnicInput) cnicInput.value = '';
+        if (desigInput) desigInput.value = '';
+        if (contactInput) contactInput.value = '';
+    }
+}
+
 function filterCommittee(commNum, btn) {
     document.querySelectorAll('.btn-filter-pill').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');

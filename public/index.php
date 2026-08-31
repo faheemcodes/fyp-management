@@ -214,6 +214,9 @@ $routes = [
     '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
+    // Role switching
+    '/switch-role' => ['Controller\AuthController', 'switchRole'],
+    
     // Notifications API
     '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
     '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
@@ -281,6 +284,8 @@ if (array_key_exists($uri, $routes)) {
         
         // Role based access check
         $role = $_SESSION['role'] ?? '';
+        $availableRoles = $_SESSION['available_roles'] ?? [$role];
+
         if (strpos($uri, '/admin') === 0 && $role !== 'admin') {
             die("Unauthorized access: Admin only.");
         }
@@ -290,11 +295,21 @@ if (array_key_exists($uri, $routes)) {
         if (strpos($uri, '/student') === 0 && $role !== 'student') {
             die("Unauthorized access: Student only.");
         }
-        if (strpos($uri, '/supervisor') === 0 && $role !== 'supervisor') {
-            die("Unauthorized access: Supervisor only.");
+        if (strpos($uri, '/supervisor') === 0) {
+            if (!in_array('supervisor', $availableRoles)) {
+                die("Unauthorized access: Supervisor only.");
+            }
+            if ($role !== 'supervisor') {
+                $_SESSION['role'] = 'supervisor';
+            }
         }
-        if (strpos($uri, '/committee') === 0 && $role !== 'committee') {
-            die("Unauthorized access: Committee only.");
+        if (strpos($uri, '/committee') === 0) {
+            if (!in_array('committee', $availableRoles)) {
+                die("Unauthorized access: Committee only.");
+            }
+            if ($role !== 'committee') {
+                $_SESSION['role'] = 'committee';
+            }
         }
         if (strpos($uri, '/coordinator') === 0 && $role !== 'coordinator') {
             die("Unauthorized access: Coordinator only.");

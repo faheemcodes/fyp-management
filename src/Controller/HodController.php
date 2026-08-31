@@ -379,10 +379,25 @@ class HodController extends BaseController {
         $stmtDept = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");
         $stmtDept->execute([$dept]);
         $numCommittees = (int)($stmtDept->fetchColumn() ?: 2);
+
+        // Fetch registered supervisors in this department not enrolled in committees
+        $stmtAvailableSups = $db->prepare("
+            SELECT s.user_id, s.name, s.designation, s.department, u.email, u.cnic,
+                   p.prefix, p.surname, p.mobile_no
+            FROM supervisors s
+            JOIN users u ON s.user_id = u.id
+            LEFT JOIN profiles p ON s.user_id = p.user_id
+            WHERE s.department = ?
+              AND s.user_id NOT IN (SELECT user_id FROM committees WHERE department = ?)
+            ORDER BY s.name ASC
+        ");
+        $stmtAvailableSups->execute([$dept, $dept]);
+        $availableSupervisors = $stmtAvailableSups->fetchAll();
         
         $this->render('hod/committee', [
             'committees' => $committees,
             'num_committees' => $numCommittees,
+            'available_supervisors' => $availableSupervisors,
             'department' => $dept
         ]);
     }
@@ -393,6 +408,7 @@ class HodController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
+            $supervisorUserId = (int)($_POST['supervisor_user_id'] ?? 0);
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -410,44 +426,126 @@ class HodController extends BaseController {
 
             $cnic = str_replace('-', '', $cnic);
 
-            // Check if email already exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            if ($stmt->fetch()) {
-                $this->flash('error', 'Email is already registered.');
-                redirect('/hod/committee');
-            }
+            // If an existing supervisor was selected
+            if ($supervisorUserId > 0) {
+                $stmtCheck = $db->prepare("SELECT s.*, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ? AND s.department = ?");
+                $stmtCheck->execute([$supervisorUserId, $dept]);
+                $sup = $stmtCheck->fetch();
+                if (!$sup) {
+                    $this->flash('error', 'Selected supervisor not found in your department.');
+                    redirect('/hod/committee');
+                }
 
-            // Check if CNIC already exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
-            $stmt->execute([$cnic]);
-            if ($stmt->fetch()) {
-                $this->flash('error', 'CNIC is already registered.');
-                redirect('/hod/committee');
-            }
+                // Check if already in committees
+                $stmtCommCheck = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
+                $stmtCommCheck->execute([$supervisorUserId]);
+                if ($stmtCommCheck->fetch()) {
+                    $this->flash('error', 'This supervisor is already enrolled as a committee member.');
+                    redirect('/hod/committee');
+                }
 
-            try {
-                $db->beginTransaction();
-                $hashed = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'committee', 'approved')");
-                $stmt->execute([$email, $cnic, $hashed]);
-                $userId = $db->lastInsertId();
+                try {
+                    $db->beginTransaction();
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmtUp->execute([$hashed, $supervisorUserId]);
 
-                $fullName = $firstName . ' ' . $lastName;
-                $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $department, $committeeNumber]);
+                    $fullName = trim($firstName . ' ' . $lastName);
+                    if (empty($fullName)) {
+                        $fullName = $sup['name'];
+                    }
 
-                // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
+                    $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$supervisorUserId, $fullName, $designation ?: $sup['designation'], $department, $committeeNumber]);
 
-                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
+                    $this->sendCredentialsMessage($db, $supervisorUserId, $firstName, $lastName, $sup['email'], $sup['cnic'], $password, 'Committee Member');
 
-                $db->commit();
-                $this->flash('success', "Committee Member $fullName added successfully to Committee $committeeNumber and credentials sent.");
-            } catch (\Exception $e) {
-                $db->rollBack();
-                $this->flash('error', 'Error adding committee member. Please try again.');
+                    $db->commit();
+                    $this->flash('success', "Supervisor {$fullName} has been successfully appointed to Committee {$committeeNumber}.");
+                    redirect('/hod/committee');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Error adding committee member. Please try again.');
+                    redirect('/hod/committee');
+                }
+            } else {
+                // Manual creation: Check if email already belongs to a supervisor in this department
+                $stmtSupEmail = $db->prepare("SELECT s.user_id, s.name, s.department FROM supervisors s JOIN users u ON s.user_id = u.id WHERE u.email = ?");
+                $stmtSupEmail->execute([$email]);
+                $matchedSup = $stmtSupEmail->fetch();
+
+                if ($matchedSup) {
+                    if ($matchedSup['department'] !== $dept) {
+                        $this->flash('error', 'Email belongs to a supervisor in another department.');
+                        redirect('/hod/committee');
+                    }
+                    $stmtCommCheck = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
+                    $stmtCommCheck->execute([$matchedSup['user_id']]);
+                    if ($stmtCommCheck->fetch()) {
+                        $this->flash('error', 'This supervisor is already enrolled as a committee member.');
+                        redirect('/hod/committee');
+                    }
+
+                    try {
+                        $db->beginTransaction();
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+                        $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                        $stmtUp->execute([$hashed, $matchedSup['user_id']]);
+
+                        $fullName = trim($firstName . ' ' . $lastName);
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$matchedSup['user_id'], $fullName, $designation, $department, $committeeNumber]);
+
+                        $this->sendCredentialsMessage($db, $matchedSup['user_id'], $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
+                        $db->commit();
+                        $this->flash('success', "Supervisor {$fullName} appointed to Committee {$committeeNumber}.");
+                        redirect('/hod/committee');
+                    } catch (\Exception $e) {
+                        $db->rollBack();
+                        $this->flash('error', 'Error adding committee member. Please try again.');
+                        redirect('/hod/committee');
+                    }
+                } else {
+                    // Check if email already exists
+                    $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+                    $stmt->execute([$email]);
+                    if ($stmt->fetch()) {
+                        $this->flash('error', 'Email is already registered.');
+                        redirect('/hod/committee');
+                    }
+
+                    // Check if CNIC already exists
+                    $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+                    $stmt->execute([$cnic]);
+                    if ($stmt->fetch()) {
+                        $this->flash('error', 'CNIC is already registered.');
+                        redirect('/hod/committee');
+                    }
+
+                    try {
+                        $db->beginTransaction();
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+                        $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'committee', 'approved')");
+                        $stmt->execute([$email, $cnic, $hashed]);
+                        $userId = $db->lastInsertId();
+
+                        $fullName = $firstName . ' ' . $lastName;
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $designation, $department, $committeeNumber]);
+
+                        // Sync profiles table
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                        $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
+
+                        $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
+
+                        $db->commit();
+                        $this->flash('success', "Committee Member $fullName added successfully to Committee $committeeNumber and credentials sent.");
+                    } catch (\Exception $e) {
+                        $db->rollBack();
+                        $this->flash('error', 'Error adding committee member. Please try again.');
+                    }
+                }
             }
         }
         redirect('/hod/committee');
@@ -507,10 +605,18 @@ class HodController extends BaseController {
             if ($stmtCheck->fetchColumn() === $dept) {
                 try {
                     $db->beginTransaction();
-                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                    $stmt->execute([$id]);
+                    // If user is also a supervisor, only remove committee record
+                    $stmtSup = $db->prepare("SELECT user_id FROM supervisors WHERE user_id = ?");
+                    $stmtSup->execute([$id]);
+                    if ($stmtSup->fetch()) {
+                        $stmt = $db->prepare("DELETE FROM committees WHERE user_id = ?");
+                        $stmt->execute([$id]);
+                    } else {
+                        $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                        $stmt->execute([$id]);
+                    }
                     $db->commit();
-                    $this->flash('success', "Committee member deleted successfully.");
+                    $this->flash('success', "Committee member removed successfully.");
                 } catch (\Exception $e) {
                     $db->rollBack();
                     $this->flash('error', 'Failed to delete committee member. Please try again.');
