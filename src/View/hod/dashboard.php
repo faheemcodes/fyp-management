@@ -27,8 +27,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 10px;
 }
 
 .hod-section-title-wrap {
@@ -36,6 +36,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     align-items: center;
     gap: 12px;
     min-width: 0;
+    flex-grow: 1;
 }
 
 .hod-section-icon {
@@ -70,7 +71,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .hod-section-body {
@@ -230,18 +231,22 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 
 @media (max-width: 767.98px) {
     .hod-section-header {
-        padding: 0.95rem 1.15rem;
+        padding: 0.9rem 1.1rem;
+        gap: 8px;
     }
     .hod-section-body {
-        padding: 1.15rem;
+        padding: 1.1rem;
     }
-    .hod-section-title-wrap {
-        width: 100%;
+    .hod-section-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
     }
-    .hod-section-actions {
-        width: 100%;
-        justify-content: flex-start;
-        margin-top: 2px;
+    .hod-section-title {
+        font-size: 0.88rem;
+    }
+    .hod-section-subtitle {
+        font-size: 0.7rem;
     }
 }
 </style>
