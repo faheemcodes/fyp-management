@@ -250,7 +250,7 @@ if ($role === 'supervisor') {
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/hod/supervisors" class="nav-link <?php echo isActive('/hod/supervisors', $currentUri); ?>">
-                        <i class="bi bi-person-badge-fill"></i> <span>Supervisors</span>
+                        <i class="bi bi-person-badge-fill"></i> <span>View Faculty</span>
                     </a>
                 </li>
                 <li class="nav-item">
