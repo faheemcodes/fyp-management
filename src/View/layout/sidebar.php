@@ -1,8 +1,41 @@
 <?php
 $role = $_SESSION['role'] ?? '';
-$name = $_SESSION['full_name'] ?? $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Ensure prefix is loaded in session if missing
+if (!isset($_SESSION['prefix']) && isset($_SESSION['user_id'])) {
+    try {
+        $dbSidebar = \Database::getInstance()->getConnection();
+        $stmtP = $dbSidebar->prepare("SELECT prefix, surname FROM profiles WHERE user_id = ?");
+        $stmtP->execute([$_SESSION['user_id']]);
+        $prof = $stmtP->fetch();
+        if ($prof) {
+            $_SESSION['prefix'] = $prof['prefix'] ?? '';
+            $_SESSION['surname'] = $prof['surname'] ?? '';
+        }
+    } catch (\Exception $e) {
+        // fallback
+    }
+}
+
+$userPrefix = trim($_SESSION['prefix'] ?? '');
+$userFirstName = trim($_SESSION['name'] ?? 'User');
+
+if ($role === 'admin' || $userFirstName === 'System Admin') {
+    $name = 'System Admin';
+} else {
+    if (empty($userPrefix) && $role === 'student') {
+        $userPrefix = 'Mr.';
+    }
+    
+    if (!empty($userPrefix)) {
+        $cleanFirst = preg_replace('/^(Dr\.|Prof\.|Engr\.|Mr\.|Ms\.|Mrs\.)\s*/i', '', $userFirstName);
+        $name = $userPrefix . ' ' . $cleanFirst;
+    } else {
+        $name = $userFirstName;
+    }
+}
 $scriptName = $_SERVER['SCRIPT_NAME'];
 $baseDir = dirname($scriptName);
 if ($baseDir !== '/' && $baseDir !== '\\' && strpos($currentUri, $baseDir) === 0) {
