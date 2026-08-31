@@ -421,16 +421,25 @@ if ($role === 'supervisor') {
                 </a>
             </li>
             <?php if (isset($_SESSION['available_roles']) && count($_SESSION['available_roles']) > 1): ?>
-                <?php 
-                $otherRole = ($role === 'supervisor') ? 'committee' : 'supervisor';
-                $otherLabel = ($otherRole === 'committee') ? 'Committee Portal' : 'Supervisor Portal';
-                $otherIcon = ($otherRole === 'committee') ? 'bi-shield-check' : 'bi-person-badge';
-                ?>
-                <li class="nav-item my-2">
-                    <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $otherRole; ?>" class="nav-link fw-semibold" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px dashed rgba(139, 92, 246, 0.35); border-radius: 10px;">
-                        <i class="bi <?php echo $otherIcon; ?>" style="color: #8b5cf6;"></i> <span>Switch to <?php echo $otherLabel; ?></span>
-                    </a>
-                </li>
+                <?php foreach($_SESSION['available_roles'] as $aRole): ?>
+                    <?php if ($aRole !== $role): ?>
+                        <?php 
+                        $labelMap = [
+                            'supervisor' => ['Supervisor Portal', 'bi-person-badge'],
+                            'committee' => ['Committee Portal', 'bi-shield-check'],
+                            'coordinator' => ['Coordinator Portal', 'bi-person-workspace'],
+                            'hod' => ['HOD Portal', 'bi-award-fill'],
+                            'student' => ['Student Portal', 'bi-mortarboard-fill']
+                        ];
+                        $roleInfo = $labelMap[$aRole] ?? [ucfirst($aRole) . ' Portal', 'bi-arrow-repeat'];
+                        ?>
+                        <li class="nav-item my-1">
+                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link fw-semibold" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px dashed rgba(139, 92, 246, 0.35); border-radius: 10px;">
+                                <i class="bi <?php echo $roleInfo[1]; ?>" style="color: #8b5cf6;"></i> <span>Switch to <?php echo $roleInfo[0]; ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
             <li class="nav-item">
                 <a href="<?php echo $urlPrefix; ?>/change-password" class="nav-link <?php echo isActive('/change-password', $currentUri); ?>">

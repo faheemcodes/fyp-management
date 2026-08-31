@@ -311,8 +311,13 @@ if (array_key_exists($uri, $routes)) {
                 $_SESSION['role'] = 'committee';
             }
         }
-        if (strpos($uri, '/coordinator') === 0 && $role !== 'coordinator') {
-            die("Unauthorized access: Coordinator only.");
+        if (strpos($uri, '/coordinator') === 0) {
+            if (!in_array('coordinator', $availableRoles)) {
+                die("Unauthorized access: Coordinator only.");
+            }
+            if ($role !== 'coordinator') {
+                $_SESSION['role'] = 'coordinator';
+            }
         }
     } else {
         // Only redirect logged in users to their dashboard if they visit the root '/' URL.

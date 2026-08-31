@@ -867,8 +867,23 @@ class HodController extends BaseController {
         $coordinators->execute([$dept]);
         $coordinators = $coordinators->fetchAll();
         
+        // Fetch registered supervisors in this department not enrolled in coordinators
+        $stmtAvailableSups = $db->prepare("
+            SELECT s.user_id, s.name, s.designation, s.department, u.email, u.cnic,
+                   p.prefix, p.surname, p.mobile_code, p.mobile_no
+            FROM supervisors s
+            JOIN users u ON s.user_id = u.id
+            LEFT JOIN profiles p ON s.user_id = p.user_id
+            WHERE s.department = ?
+              AND s.user_id NOT IN (SELECT user_id FROM coordinators WHERE department = ?)
+            ORDER BY s.name ASC
+        ");
+        $stmtAvailableSups->execute([$dept, $dept]);
+        $availableSupervisors = $stmtAvailableSups->fetchAll();
+
         $this->render('hod/coordinators', [
             'coordinators' => $coordinators,
+            'available_supervisors' => $availableSupervisors,
             'department' => $dept
         ]);
     }
@@ -876,6 +891,10 @@ class HodController extends BaseController {
     public function createCoordinator() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+            $supervisorUserId = (int)($_POST['supervisor_user_id'] ?? 0);
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -893,48 +912,107 @@ class HodController extends BaseController {
             
             $cnic = str_replace('-', '', $cnic);
             
-            $db = \Database::getInstance()->getConnection();
-            $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
-            
-            // Check if email already exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            if ($stmt->fetch()) {
-                $this->flash('error', 'Email is already registered.');
-                redirect('/hod/coordinators');
-            }
-            
-            // Check if CNIC already exists
-            $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
-            $stmt->execute([$cnic]);
-            if ($stmt->fetch()) {
-                $this->flash('error', 'CNIC is already registered.');
-                redirect('/hod/coordinators');
-            }
-            
-            try {
-                $db->beginTransaction();
-                $hashed = password_hash($password, PASSWORD_DEFAULT);
-                
-                $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'coordinator', 'approved')");
-                $stmt->execute([$email, $cnic, $hashed]);
-                $userId = $db->lastInsertId();
-                
-                $fullName = $firstName . ' ' . $lastName;
-                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
-                
-                // Keep profiles table in sync
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+            // If an existing supervisor was selected
+            if ($supervisorUserId > 0) {
+                $stmtCheck = $db->prepare("SELECT s.*, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ? AND s.department = ?");
+                $stmtCheck->execute([$supervisorUserId, $dept]);
+                $sup = $stmtCheck->fetch();
+                if (!$sup) {
+                    $this->flash('error', 'Selected supervisor not found in your department.');
+                    redirect('/hod/coordinators');
+                }
 
-                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
-                
-                $db->commit();
-                $this->flash('success', "Coordinator $fullName ($shift Shift) created successfully under department $dept and credentials sent.");
-            } catch (\Exception $e) {
-                $db->rollBack();
-                $this->flash('error', 'Error creating coordinator. Please try again.');
+                // Check if already in coordinators
+                $stmtCoordCheck = $db->prepare("SELECT user_id FROM coordinators WHERE user_id = ?");
+                $stmtCoordCheck->execute([$supervisorUserId]);
+                if ($stmtCoordCheck->fetch()) {
+                    $this->flash('error', 'This supervisor is already appointed as a coordinator.');
+                    redirect('/hod/coordinators');
+                }
+
+                try {
+                    $db->beginTransaction();
+                    $hashed = password_hash($password, PASSWORD_DEFAULT);
+                    $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmtUp->execute([$hashed, $supervisorUserId]);
+
+                    $fullName = $firstName . ' ' . $lastName;
+                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$supervisorUserId, $fullName, $designation, $dept, $shift]);
+
+                    // Sync profiles table
+                    $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                    $stmtP->execute([$supervisorUserId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+
+                    $this->sendCredentialsMessage($db, $supervisorUserId, $firstName, $lastName, $sup['email'], $sup['cnic'], $password, "Coordinator ($shift Shift)");
+
+                    $db->commit();
+                    $this->flash('success', "Supervisor $fullName appointed as Coordinator ($shift Shift) and credentials sent.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Error appointing coordinator. Please try again.');
+                }
+            } else {
+                // Check if user already exists as supervisor or other role
+                $stmtExisting = $db->prepare("SELECT id FROM users WHERE email = ? OR cnic = ?");
+                $stmtExisting->execute([$email, $cnic]);
+                $existingUser = $stmtExisting->fetch();
+
+                if ($existingUser) {
+                    $userId = $existingUser['id'];
+                    $stmtCoordCheck = $db->prepare("SELECT user_id FROM coordinators WHERE user_id = ?");
+                    $stmtCoordCheck->execute([$userId]);
+                    if ($stmtCoordCheck->fetch()) {
+                        $this->flash('error', 'A coordinator with this email or CNIC already exists.');
+                        redirect('/hod/coordinators');
+                    }
+
+                    try {
+                        $db->beginTransaction();
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+                        $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                        $stmtUp->execute([$hashed, $userId]);
+
+                        $fullName = $firstName . ' ' . $lastName;
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
+
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+
+                        $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
+
+                        $db->commit();
+                        $this->flash('success', "Coordinator $fullName ($shift Shift) added successfully and credentials sent.");
+                    } catch (\Exception $e) {
+                        $db->rollBack();
+                        $this->flash('error', 'Error adding coordinator. Please try again.');
+                    }
+                } else {
+                    try {
+                        $db->beginTransaction();
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+                        
+                        $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'coordinator', 'approved')");
+                        $stmt->execute([$email, $cnic, $hashed]);
+                        $userId = $db->lastInsertId();
+                        
+                        $fullName = $firstName . ' ' . $lastName;
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
+                        
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+
+                        $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
+                        
+                        $db->commit();
+                        $this->flash('success', "Coordinator $fullName ($shift Shift) created successfully under department $dept and credentials sent.");
+                    } catch (\Exception $e) {
+                        $db->rollBack();
+                        $this->flash('error', 'Error creating coordinator. Please try again.');
+                    }
+                }
             }
         }
         redirect('/hod/coordinators');
@@ -1016,8 +1094,28 @@ class HodController extends BaseController {
             if ($coordDept === $dept) {
                 try {
                     $db->beginTransaction();
-                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
-                    $stmt->execute([$id]);
+                    // Check if this user is also a supervisor or committee member
+                    $stmtSup = $db->prepare("SELECT user_id FROM supervisors WHERE user_id = ?");
+                    $stmtSup->execute([$id]);
+                    $isSupervisor = (bool)$stmtSup->fetch();
+
+                    $stmtComm = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
+                    $stmtComm->execute([$id]);
+                    $isCommittee = (bool)$stmtComm->fetch();
+
+                    $stmtDelCoord = $db->prepare("DELETE FROM coordinators WHERE user_id = ?");
+                    $stmtDelCoord->execute([$id]);
+
+                    if (!$isSupervisor && !$isCommittee) {
+                        $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                        $stmt->execute([$id]);
+                    } else {
+                        // Revert primary user role to supervisor or committee if it was coordinator
+                        $newRole = $isSupervisor ? 'supervisor' : 'committee';
+                        $stmtUpdateRole = $db->prepare("UPDATE users SET role = ? WHERE id = ?");
+                        $stmtUpdateRole->execute([$newRole, $id]);
+                    }
+
                     $db->commit();
                     $this->flash('success', "Coordinator deleted successfully.");
                 } catch (\Exception $e) {

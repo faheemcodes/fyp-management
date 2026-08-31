@@ -300,33 +300,62 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <form action="<?php echo $basePath; ?>/hod/coordinators/create" method="POST">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                <input type="hidden" name="supervisor_user_id" id="hiddenSupervisorId" value="0">
+                
                 <div class="modal-body p-4">
+                    <!-- Select Supervisor -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Select Supervisor (Optional)</label>
+                        <select class="form-select" id="supervisorSelect" onchange="onSupervisorSelected(this)">
+                            <option value="">-- Select Supervisor --</option>
+                            <?php foreach(($available_supervisors ?? []) as $sup): ?>
+                                <?php
+                                    $cleanName = preg_replace('/^(Dr\.|Prof\.|Engr\.|Mr\.|Mrs\.|Ms\.)\s+/i', '', trim($sup['name']));
+                                    $parts = explode(' ', $cleanName, 2);
+                                    $fName = $parts[0] ?? '';
+                                    $lName = $parts[1] ?? '';
+                                ?>
+                                <option value="<?php echo (int)$sup['user_id']; ?>"
+                                        data-name="<?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-firstname="<?php echo htmlspecialchars($fName, ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-lastname="<?php echo htmlspecialchars($lName, ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-email="<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-cnic="<?php echo htmlspecialchars($sup['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-designation="<?php echo htmlspecialchars($sup['designation'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-mobilecode="<?php echo htmlspecialchars($sup['mobile_code'] ?? '+92', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-contact="<?php echo htmlspecialchars($sup['mobile_no'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                    <?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">First Name *</label>
-                            <input type="text" class="form-control" name="first_name" required placeholder="e.g. Asad">
+                            <input type="text" class="form-control" name="first_name" id="createFirstName" required placeholder="e.g. Asad">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Last Name *</label>
-                            <input type="text" class="form-control" name="last_name" required placeholder="e.g. Shaikh">
+                            <input type="text" class="form-control" name="last_name" id="createLastName" required placeholder="e.g. Shaikh">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Email Address *</label>
-                            <input type="email" class="form-control" name="email" required placeholder="name@university.edu">
+                            <input type="email" class="form-control" name="email" id="createEmail" required placeholder="name@university.edu">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">CNIC *</label>
-                            <input type="text" class="form-control" name="cnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
+                            <input type="text" class="form-control" name="cnic" id="createCnic" required placeholder="e.g. 4130312345671" pattern="[0-9]{13}">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Designation *</label>
-                            <input type="text" class="form-control" name="designation" required value="FYP Coordinator" placeholder="e.g. Assistant Professor & Coordinator">
+                            <input type="text" class="form-control" name="designation" id="createDesignation" required value="FYP Coordinator" placeholder="e.g. Assistant Professor & Coordinator">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Assigned Shift *</label>
@@ -342,14 +371,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Contact Number</label>
                             <div class="input-group">
-                                <select class="form-select flex-shrink-0" name="mobile_code" style="max-width: 90px;">
+                                <select class="form-select flex-shrink-0" name="mobile_code" id="createMobileCode" style="max-width: 90px;">
                                     <option value="+92" selected>+92</option>
                                     <option value="+1">+1</option>
                                     <option value="+44">+44</option>
                                     <option value="+971">+971</option>
                                     <option value="+966">+966</option>
                                 </select>
-                                <input type="tel" class="form-control" name="contact_no" placeholder="3001234567">
+                                <input type="tel" class="form-control" name="contact_no" id="createContact" placeholder="3001234567">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -377,6 +406,38 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <script>
+function onSupervisorSelected(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    const hiddenId = document.getElementById('hiddenSupervisorId');
+    const fNameInput = document.getElementById('createFirstName');
+    const lNameInput = document.getElementById('createLastName');
+    const emailInput = document.getElementById('createEmail');
+    const cnicInput = document.getElementById('createCnic');
+    const desigInput = document.getElementById('createDesignation');
+    const mobileCodeInput = document.getElementById('createMobileCode');
+    const contactInput = document.getElementById('createContact');
+
+    if (opt && opt.value) {
+        hiddenId.value = opt.value;
+        if (fNameInput) fNameInput.value = opt.getAttribute('data-firstname') || '';
+        if (lNameInput) lNameInput.value = opt.getAttribute('data-lastname') || '';
+        if (emailInput) emailInput.value = opt.getAttribute('data-email') || '';
+        if (cnicInput) cnicInput.value = opt.getAttribute('data-cnic') || '';
+        if (desigInput) desigInput.value = (opt.getAttribute('data-designation') || 'Assistant Professor') + ' & Coordinator';
+        if (mobileCodeInput) mobileCodeInput.value = opt.getAttribute('data-mobilecode') || '+92';
+        if (contactInput) contactInput.value = opt.getAttribute('data-contact') || '';
+    } else {
+        hiddenId.value = '0';
+        if (fNameInput) fNameInput.value = '';
+        if (lNameInput) lNameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (cnicInput) cnicInput.value = '';
+        if (desigInput) desigInput.value = 'FYP Coordinator';
+        if (mobileCodeInput) mobileCodeInput.value = '+92';
+        if (contactInput) contactInput.value = '';
+    }
+}
+
 function generateRandomPassword(elementId) {
     const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%';
     let pass = '';
