@@ -433,9 +433,10 @@ if ($role === 'supervisor') {
                         ];
                         $roleInfo = $labelMap[$aRole] ?? [ucfirst($aRole) . ' Portal', 'bi-arrow-repeat'];
                         ?>
-                        <li class="nav-item my-1">
-                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link fw-semibold" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px dashed rgba(139, 92, 246, 0.35); border-radius: 10px;">
-                                <i class="bi <?php echo $roleInfo[1]; ?>" style="color: #8b5cf6;"></i> <span>Switch to <?php echo $roleInfo[0]; ?></span>
+                        <li class="nav-item my-1" style="padding: 0 10px;">
+                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="d-flex align-items-center gap-2 text-decoration-none fw-semibold" style="padding: 5px 9px; font-size: 0.75rem; background: rgba(139, 92, 246, 0.08); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.22); border-radius: 6px; line-height: 1.2;">
+                                <i class="bi <?php echo $roleInfo[1]; ?>" style="font-size: 0.82rem; color: #8b5cf6; flex-shrink: 0;"></i> 
+                                <span class="text-truncate">Switch to <?php echo $roleInfo[0]; ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
