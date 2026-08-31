@@ -425,23 +425,17 @@ if ($role === 'supervisor') {
                     <?php if ($aRole !== $role): ?>
                         <?php 
                         $labelMap = [
-                            'supervisor' => ['Supervisor Portal', 'bi-person-badge'],
-                            'committee' => ['Committee Portal', 'bi-shield-check'],
-                            'coordinator' => ['Coordinator Portal', 'bi-person-workspace'],
-                            'hod' => ['HOD Portal', 'bi-award-fill'],
-                            'student' => ['Student Portal', 'bi-mortarboard-fill']
+                            'supervisor' => ['Switch to Supervisor', 'bi-person-badge'],
+                            'committee' => ['Switch to Committee', 'bi-shield-check'],
+                            'coordinator' => ['Switch to Coordinator', 'bi-person-workspace'],
+                            'hod' => ['Switch to HOD', 'bi-award-fill'],
+                            'student' => ['Switch to Student', 'bi-mortarboard-fill']
                         ];
-                        $roleInfo = $labelMap[$aRole] ?? [ucfirst($aRole) . ' Portal', 'bi-arrow-repeat'];
+                        $roleInfo = $labelMap[$aRole] ?? ['Switch to ' . ucfirst($aRole), 'bi-arrow-repeat'];
                         ?>
                         <li class="nav-item">
-                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2 text-truncate">
-                                    <i class="bi <?php echo $roleInfo[1]; ?>" style="color: var(--primary-color);"></i>
-                                    <span><?php echo $roleInfo[0]; ?></span>
-                                </div>
-                                <span class="badge rounded-pill" style="background: rgba(4, 127, 176, 0.1); color: var(--primary-color); font-size: 0.68rem; padding: 3px 8px; font-weight: 600; border: 1px solid rgba(4, 127, 176, 0.2);">
-                                    <i class="bi bi-arrow-repeat me-0.5"></i> Switch
-                                </span>
+                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link">
+                                <i class="bi <?php echo $roleInfo[1]; ?>"></i> <span><?php echo $roleInfo[0]; ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
