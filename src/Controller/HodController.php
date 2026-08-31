@@ -201,19 +201,36 @@ class HodController extends BaseController {
     public function supervisors() {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
+
+        // Fetch department capacity settings
+        $stmtSettings = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
+        $stmtSettings->execute([$dept]);
+        $deptSettings = $stmtSettings->fetch();
+        $maxMorning = $deptSettings ? (int)($deptSettings['max_morning_slots'] ?? 5) : 5;
+        $maxEvening = $deptSettings ? (int)($deptSettings['max_evening_slots'] ?? 5) : 5;
         
-        $stmt = $db->prepare("SELECT s.*, u.email, u.cnic,
-            (SELECT COUNT(*) FROM projects p WHERE p.supervisor_id = s.user_id) as active_projects
+        $stmt = $db->prepare("
+            SELECT s.*, u.email, u.cnic,
+                COALESCE(SUM(CASE WHEN p.id IS NOT NULL AND (st.shift = 'Morning' OR st.shift IS NULL) THEN 1 ELSE 0 END), 0) as morning_projects,
+                COALESCE(SUM(CASE WHEN p.id IS NOT NULL AND st.shift = 'Evening' THEN 1 ELSE 0 END), 0) as evening_projects,
+                COUNT(p.id) as active_projects
             FROM supervisors s 
             JOIN users u ON s.user_id = u.id 
+            LEFT JOIN projects p ON s.user_id = p.supervisor_id
+            LEFT JOIN `groups` g ON p.group_id = g.id
+            LEFT JOIN students st ON g.created_by = st.user_id
             WHERE s.department = ? 
-            ORDER BY s.name ASC");
+            GROUP BY s.user_id, s.name, s.designation, s.department, u.email, u.cnic
+            ORDER BY s.name ASC
+        ");
         $stmt->execute([$dept]);
         $supervisors = $stmt->fetchAll();
         
         $this->render('hod/supervisors', [
             'supervisors' => $supervisors,
-            'department' => $dept
+            'department' => $dept,
+            'maxMorning' => $maxMorning,
+            'maxEvening' => $maxEvening
         ]);
     }
 

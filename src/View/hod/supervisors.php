@@ -96,8 +96,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <th class="ps-4">Supervisor</th>
                     <th>Designation</th>
-                    <th>CNIC</th>
-                    <th>Projects</th>
+                    <th>Morning Projects</th>
+                    <th>Evening Projects</th>
+                    <th>Total Projects</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
@@ -117,10 +118,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="font-monospace small px-2 py-1 border rounded" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($s['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-sun-fill me-1"></i><?php echo (int)($s['morning_projects'] ?? 0); ?> / <?php echo (int)($maxMorning ?? 5); ?> Groups
+                        </span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-3 py-1 font-monospace" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;">
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-moon-stars-fill me-1"></i><?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge border rounded-pill px-3 py-1 font-monospace fw-bold" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem;">
                             <?php echo (int)($s['active_projects'] ?? 0); ?> Groups
                         </span>
                     </td>
@@ -171,10 +179,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         </div>
                                         <div class="col-12">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
-                                            <span style="color: var(--text-primary);"><i class="bi bi-envelope me-1 text-primary"></i><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                            <span style="color: var(--text-primary);"><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Assigned Projects</span>
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Morning Projects</span>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-0.5"><?php echo (int)($s['morning_projects'] ?? 0); ?> / <?php echo (int)($maxMorning ?? 5); ?> Groups</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Evening Projects</span>
+                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-0.5"><?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Total Projects</span>
                                             <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-0.5"><?php echo (int)($s['active_projects'] ?? 0); ?> Groups</span>
                                         </div>
                                         <div class="col-6">
@@ -246,7 +262,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($supervisors)): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-5">
+                    <td colspan="6" class="text-center text-muted py-5">
                         <i class="bi bi-people fs-2 d-block mb-2 opacity-50"></i>
                         No supervisors registered yet.
                     </td>
