@@ -36,6 +36,29 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     border-color: rgba(4, 127, 176, 0.4);
     box-shadow: 0 4px 14px rgba(0,0,0,0.04);
 }
+
+.avatar-group {
+    display: inline-flex;
+    align-items: center;
+}
+.avatar-group .avatar-item {
+    position: relative;
+    margin-left: -8px;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s ease;
+    border: 2px solid var(--card-bg, #ffffff);
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.avatar-group .avatar-item:first-child {
+    margin-left: 0;
+}
+.avatar-group .avatar-item:hover {
+    transform: translateY(-2px) scale(1.15);
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -274,26 +297,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td>
                         <?php if (!empty($g['supervisor_name'])): ?>
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 30px; height: 30px; font-size: 0.8rem">
-                                <?php echo strtoupper(substr($g['supervisor_name'], 0, 1)); ?>
-                            </div>
-                            <div>
-                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.82rem;"><?php echo htmlspecialchars($g['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted" style="font-size: 0.7rem;"><?php echo htmlspecialchars($g['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
-                            </div>
+                        <div>
+                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.85rem;"><?php echo htmlspecialchars($g['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <small class="text-muted d-block" style="font-size: 0.72rem;"><?php echo htmlspecialchars($g['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
                         </div>
                         <?php else: ?>
                         <span class="text-muted small">Not Assigned</span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                        <div class="avatar-group">
                             <?php foreach(($g['members'] ?? []) as $m): ?>
                             <?php $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                             <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
-                                 class="rounded-circle border" 
-                                 style="width: 28px; height: 28px; object-fit: cover;" 
+                                 class="avatar-item" 
+                                 style="width: 28px; height: 28px; border-width: 1.5px;"
                                  alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>"
                                  title="<?php echo htmlspecialchars($m['student_name'] . ' (' . $m['roll_no'] . ')', ENT_QUOTES, 'UTF-8'); ?>">
                             <?php endforeach; ?>

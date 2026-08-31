@@ -3,6 +3,33 @@
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
+<style>
+.avatar-group {
+    display: inline-flex;
+    align-items: center;
+}
+.avatar-group .avatar-item {
+    position: relative;
+    margin-left: -10px;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s ease;
+    border: 2px solid var(--card-bg, #ffffff);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.avatar-group .avatar-item:first-child {
+    margin-left: 0;
+}
+.avatar-group .avatar-item:hover {
+    transform: translateY(-3px) scale(1.15);
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+</style>
+
 <!-- Top Hero Banner -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
@@ -92,26 +119,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td>
                         <?php if (!empty($p['supervisor_name'])): ?>
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem">
-                                <?php echo strtoupper(substr($p['supervisor_name'], 0, 1)); ?>
-                            </div>
-                            <div>
-                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.85rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted" style="font-size: 0.72rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
-                            </div>
+                        <div>
+                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.88rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <small class="text-muted d-block" style="font-size: 0.74rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
                         </div>
                         <?php else: ?>
                         <span class="badge border px-2 py-1 small" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;">Not Assigned</span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="avatar-group">
                             <?php foreach(($p['members'] ?? []) as $m): ?>
                             <?php $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
                             <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
-                                 class="rounded-circle border shadow-2xs" 
-                                 style="width: 32px; height: 32px; object-fit: cover; cursor: pointer;" 
+                                 class="avatar-item" 
                                  alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>"
                                  title="<?php echo htmlspecialchars($m['student_name'] . ' (' . $m['roll_no'] . ')', ENT_QUOTES, 'UTF-8'); ?>"
                                  onclick="showStudentPhotoModal('<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no']), ENT_QUOTES, 'UTF-8'); ?>')">
@@ -138,7 +159,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-2">
+                        <div class="d-inline-flex flex-column align-items-end gap-1.5">
                             <?php if (!empty($p['proposal_file'])): ?>
                             <?php 
                                 $propUrl = trim($p['proposal_file']);
@@ -150,7 +171,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.75rem;" title="View Proposal Document">
+                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-0.5 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; justify-content: center;" title="View Proposal Document">
                                 <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
                             </a>
                             <?php endif; ?>
@@ -165,12 +186,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.75rem;" title="Download Thesis Document">
+                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-0.5 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; justify-content: center;" title="Download Thesis Document">
                                 <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
                             </a>
                             <?php endif; ?>
                             <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
-                            <span class="text-muted small">—</span>
+                            <span class="text-muted small" style="font-size: 0.72rem;">—</span>
                             <?php endif; ?>
                         </div>
                     </td>
@@ -178,7 +199,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($projects)): ?>
                 <tr>
-                    <td colspan="5" class="text-center py-5 text-muted">
+                    <td colspan="6" class="text-center py-5 text-muted">
                         <i class="bi bi-folder2-open fs-2 d-block mb-2 opacity-50"></i>
                         No FYP projects registered yet.
                     </td>
