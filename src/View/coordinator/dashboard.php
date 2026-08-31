@@ -162,12 +162,14 @@ html.dark-theme .text-dark {
 $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
 $urlPrefix = $bp;
 $basePath = $bp;
-$fullName = trim($_SESSION['name'] ?? 'Coordinator');
-$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
-$firstName = explode(' ', $fullName)[0];
+$userPrefix = $_SESSION['prefix'] ?? '';
+$userFirstName = $_SESSION['name'] ?? 'Coordinator';
+$userSurname = $_SESSION['surname'] ?? '';
+$displayHeroName = formatPersonName($userPrefix, $userFirstName, $userSurname);
 
 $pendingProposals = $pendingProposals ?? [];
 $supervisors = $supervisors ?? [];
+$shiftVal = !empty($shift) ? $shift : 'Morning';
 ?>
 
 <!-- ── Top Hero Banner ── -->
@@ -182,11 +184,21 @@ $supervisors = $supervisors ?? [];
                     Department Coordinator
                 </p>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
-                    Welcome back, <?php echo htmlspecialchars($firstName); ?>
+                    <?php echo htmlspecialchars($displayHeroName); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
-                        <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
+                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.85);padding: 4px 12px;border-radius: 20px;font-weight: 600">
+                        <i class="bi bi-building me-1"></i><?php echo htmlspecialchars($department ?? 'Department', ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span style="font-size: 0.75rem;background: rgba(139, 92, 246, 0.2);color: #c4b5fd;border: 1px solid rgba(139, 92, 246, 0.4);padding: 4px 14px;border-radius: 20px;font-weight: 700;letter-spacing: 0.02em;display: inline-flex;align-items: center;gap: 5px;">
+                        <?php if ($shiftVal === 'Evening'): ?>
+                            <i class="bi bi-moon-stars-fill"></i>
+                        <?php elseif ($shiftVal === 'All'): ?>
+                            <i class="bi bi-clock-fill"></i>
+                        <?php else: ?>
+                            <i class="bi bi-sun-fill"></i>
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($shiftVal, ENT_QUOTES, 'UTF-8'); ?> Shift
                     </span>
                 </div>
             </div>

@@ -111,7 +111,8 @@ class CoordinatorController extends BaseController {
             'stats' => $stats,
             'pendingProposals' => $pendingProposals,
             'supervisors' => $supervisors,
-            'department' => $dept
+            'department' => $dept,
+            'shift' => $shift
         ]);
     }
 
