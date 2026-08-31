@@ -93,7 +93,7 @@ $numCommittees = $num_committees ?? 2;
             </div>
         </div>
         <div class="d-flex gap-2">
-            <a href="<?php echo $basePath; ?>/hod/settings" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-1.5" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
+            <a href="<?php echo $basePath; ?>/hod/settings" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
                 <i class="bi bi-sliders"></i> <span>Manage Limits</span>
             </a>
             <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
@@ -197,7 +197,7 @@ $numCommittees = $num_committees ?? 2;
                                     <i class="bi bi-shield-fill text-primary" style="font-size: 1.6rem"></i>
                                 </div>
                                 <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                                <div class="d-flex align-items-center gap-1.5 justify-content-center">
+                                <div class="d-flex align-items-center gap-2 justify-content-center">
                                     <span class="badge px-2.5 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
                                         <?php echo htmlspecialchars($c['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
