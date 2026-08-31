@@ -393,9 +393,62 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── Combined Row: FYP Stage Progress (70%) + Department Notices (30%) ── -->
+<!-- ── Combined Row: Department Notices (30% on large) + FYP Stage Progress (70% on large) ── -->
 <div class="row g-3 mb-4 align-items-stretch">
-    <!-- Left: FYP Stage Progress (70% on large screens) -->
+    <!-- Department Notices (Appears First on Mobile, 30% / col-lg-4 on Desktop) -->
+    <div class="col-12 col-lg-4 d-flex">
+        <div class="hod-section-card w-100 d-flex flex-column mb-0">
+            <div class="hod-section-header">
+                <div class="hod-section-title-wrap">
+                    <div class="hod-section-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="hod-section-title">Department Notices</h6>
+                        <small class="hod-section-subtitle">Recent circulars and alerts</small>
+                    </div>
+                </div>
+                <div class="hod-section-actions">
+                    <span class="badge rounded-pill fw-bold" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 4px 9px; font-size: 0.72rem;">
+                        <?php echo count($recentNotices); ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="hod-section-body flex-grow-1 p-3">
+                <div class="notice-list custom-scroll" style="max-height: 280px; overflow-y: auto;">
+                    <?php foreach($recentNotices as $n): ?>
+                    <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
+                        <div class="notice-accent-bar"></div>
+                        <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="notice-date-badge">
+                                    <i class="bi bi-calendar3" style="font-size: 0.6rem;"></i>
+                                    <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
+                                </span>
+                            </div>
+                            <div class="text-truncate" style="font-size: 0.82rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                        </div>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                            <span>View</span>
+                            <i class="bi bi-arrow-up-right" style="font-size: 0.65rem;"></i>
+                        </button>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php if(empty($recentNotices)): ?>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
+                        No notices found.
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FYP Stage Progress (Appears Second on Mobile, 70% / col-lg-8 on Desktop) -->
     <div class="col-12 col-lg-8 d-flex">
         <div class="hod-section-card w-100 d-flex flex-column mb-0">
             <div class="hod-section-header">
@@ -469,59 +522,6 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                             <div class="funnel-step-title">Grading Complete</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right: Department Notices (30% on large screens) -->
-    <div class="col-12 col-lg-4 d-flex">
-        <div class="hod-section-card w-100 d-flex flex-column mb-0">
-            <div class="hod-section-header">
-                <div class="hod-section-title-wrap">
-                    <div class="hod-section-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">
-                        <i class="bi bi-megaphone-fill"></i>
-                    </div>
-                    <div>
-                        <h6 class="hod-section-title">Department Notices</h6>
-                        <small class="hod-section-subtitle">Recent circulars and alerts</small>
-                    </div>
-                </div>
-                <div class="hod-section-actions">
-                    <span class="badge rounded-pill fw-bold" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); padding: 4px 9px; font-size: 0.72rem;">
-                        <?php echo count($recentNotices); ?>
-                    </span>
-                </div>
-            </div>
-
-            <div class="hod-section-body flex-grow-1 p-3">
-                <div class="notice-list custom-scroll" style="max-height: 280px; overflow-y: auto;">
-                    <?php foreach($recentNotices as $n): ?>
-                    <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
-                        <div class="notice-accent-bar"></div>
-                        <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="notice-date-badge">
-                                    <i class="bi bi-calendar3" style="font-size: 0.6rem;"></i>
-                                    <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                </span>
-                            </div>
-                            <div class="text-truncate" style="font-size: 0.82rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>">
-                                <?php echo htmlspecialchars($n['subject'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                        </div>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
-                            <span>View</span>
-                            <i class="bi bi-arrow-up-right" style="font-size: 0.65rem;"></i>
-                        </button>
-                    </div>
-                    <?php endforeach; ?>
-                    <?php if(empty($recentNotices)): ?>
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-inbox fs-3 d-block mb-2 text-opacity-50"></i>
-                        No notices found.
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
