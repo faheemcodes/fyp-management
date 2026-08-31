@@ -77,18 +77,30 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     padding: 1.35rem;
 }
 
-/* ── Funnel Step Cards ── */
+/* ── Funnel Step Cards & Grid ── */
+.funnel-grid {
+    --bs-gutter-x: 1.15rem;
+    --bs-gutter-y: 1.25rem;
+}
+@media (min-width: 1200px) {
+    .funnel-grid {
+        --bs-gutter-x: 1.35rem;
+        --bs-gutter-y: 1.35rem;
+    }
+}
+
 .funnel-step-card {
     background: var(--card-bg, #ffffff);
     border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
-    border-radius: 14px;
-    padding: 14px 10px;
+    border-radius: 16px;
+    padding: 18px 12px;
     text-align: center;
     position: relative;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-height: 115px;
     height: 100%;
     overflow: hidden;
 }
@@ -98,29 +110,29 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     border-color: rgba(59, 130, 246, 0.35);
 }
 .funnel-step-num {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(59, 130, 246, 0.1);
     color: #3b82f6;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 8px;
+    margin: 0 auto 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 .funnel-step-count {
-    font-size: 1.55rem;
+    font-size: 1.65rem;
     font-weight: 800;
     line-height: 1.1;
     color: var(--text-primary, #1e293b);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     letter-spacing: -0.02em;
 }
 .funnel-step-title {
-    font-size: 0.74rem;
+    font-size: 0.76rem;
     font-weight: 600;
     color: var(--text-secondary, #64748b);
     line-height: 1.25;
@@ -427,8 +439,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 </div>
             </div>
 
-            <div class="hod-section-body flex-grow-1 d-flex flex-column justify-content-center">
-                <div class="row g-2.5">
+            <div class="hod-section-body flex-grow-1 d-flex flex-column justify-content-center p-3 p-md-4">
+                <div class="row funnel-grid">
                     <!-- Stage 1 -->
                     <div class="col-6 col-sm-4">
                         <div class="funnel-step-card">
