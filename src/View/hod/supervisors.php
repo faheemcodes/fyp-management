@@ -128,8 +128,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-3 py-1 font-monospace fw-bold" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem;">
-                            <?php echo (int)($s['active_projects'] ?? 0); ?> Groups
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-collection-fill me-1"></i><?php echo (int)($s['active_projects'] ?? 0); ?> Groups
                         </span>
                     </td>
                     <td class="text-end pe-4">
