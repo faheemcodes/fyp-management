@@ -159,7 +159,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-inline-flex flex-column align-items-end gap-1.5">
+                        <div class="d-inline-flex flex-column align-items-end" style="gap: 5px;">
                             <?php if (!empty($p['proposal_file'])): ?>
                             <?php 
                                 $propUrl = trim($p['proposal_file']);
@@ -171,7 +171,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-0.5 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; justify-content: center;" title="View Proposal Document">
+                            <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="View Proposal Document">
                                 <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
                             </a>
                             <?php endif; ?>
@@ -186,7 +186,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
                             ?>
-                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-0.5 fw-semibold d-inline-flex align-items-center gap-1" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; justify-content: center;" title="Download Thesis Document">
+                            <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Download Thesis Document">
                                 <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
                             </a>
                             <?php endif; ?>
