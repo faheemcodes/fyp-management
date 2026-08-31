@@ -1,6 +1,7 @@
 <!-- HOD Committee Management View -->
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+$numCommittees = $num_committees ?? 2;
 ?>
 
 <style>
@@ -49,6 +50,26 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     background: rgba(239, 68, 68, 0.2);
     color: #dc2626;
 }
+
+/* Filter Pills */
+.btn-filter-pill {
+    background: var(--form-bg, #f8fafc);
+    color: var(--text-secondary, #64748b);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.08));
+    font-size: 0.78rem;
+    padding: 5px 14px;
+    transition: all 0.2s ease;
+}
+.btn-filter-pill:hover {
+    background: var(--card-bg, #ffffff);
+    color: var(--text-primary, #1e293b);
+}
+.btn-filter-pill.active {
+    background: #047fb0;
+    color: #ffffff;
+    border-color: #047fb0;
+    box-shadow: 0 2px 8px rgba(4, 127, 176, 0.25);
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -64,13 +85,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
+                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(139, 92, 246, 0.25); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem;">
+                        <?php echo $numCommittees; ?> Committees Active
+                    </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage faculty evaluation committee members</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage evaluation committee members across <?php echo $numCommittees; ?> committees</p>
             </div>
         </div>
-        <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
-            <i class="bi bi-person-plus-fill"></i> <span>Add Member</span>
-        </button>
+        <div class="d-flex gap-2">
+            <a href="<?php echo $basePath; ?>/hod/settings" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-1.5" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
+                <i class="bi bi-sliders"></i> <span>Manage Limits</span>
+            </a>
+            <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createCommitteeModal">
+                <i class="bi bi-person-plus-fill"></i> <span>Add Member</span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -78,14 +107,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="page-section-header">
         <div class="row g-3 align-items-center w-100 m-0">
             <!-- Search Input -->
-            <div class="col-md-6 ps-0">
+            <div class="col-md-5 ps-0">
                 <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
                     <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search committee members..." data-target="committees-table">
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search members by name, email..." data-target="committees-table">
                 </div>
             </div>
-            <div class="col-md-6 pe-0 text-md-end text-muted small">
-                Total: <strong><?php echo count($committees); ?></strong> member(s)
+            <!-- Filter Pills by Committee -->
+            <div class="col-md-7 pe-0 d-flex justify-content-md-end gap-2 flex-wrap align-items-center">
+                <button class="btn btn-sm btn-filter-pill rounded-pill active" onclick="filterCommittee('all', this)">All (<?php echo count($committees); ?>)</button>
+                <?php for($i = 1; $i <= $numCommittees; $i++): ?>
+                <?php 
+                    $countForThis = count(array_filter($committees, fn($c) => (int)($c['committee_number'] ?? 1) === $i));
+                ?>
+                <button class="btn btn-sm btn-filter-pill rounded-pill" onclick="filterCommittee('<?php echo $i; ?>', this)">
+                    Committee <?php echo $i; ?> <span class="opacity-75 ms-1">(<?php echo $countForThis; ?>)</span>
+                </button>
+                <?php endfor; ?>
             </div>
         </div>
     </div>
@@ -95,6 +133,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <thead>
                 <tr>
                     <th class="ps-4">Member</th>
+                    <th>Committee</th>
                     <th>Designation</th>
                     <th>CNIC</th>
                     <th>Department</th>
@@ -103,7 +142,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </thead>
             <tbody>
                 <?php foreach($committees as $c): ?>
-                <tr>
+                <?php $commNum = (int)($c['committee_number'] ?? 1); ?>
+                <tr data-committee="<?php echo $commNum; ?>">
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 1rem">
@@ -114,6 +154,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <small class="text-muted" style="font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-shield-check me-1"></i>Committee <?php echo $commNum; ?>
+                        </span>
                     </td>
                     <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
@@ -152,9 +197,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-shield-fill text-primary" style="font-size: 1.6rem"></i>
                                 </div>
                                 <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                                <span class="badge px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
-                                    <?php echo htmlspecialchars($c['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?>
-                                </span>
+                                <div class="d-flex align-items-center gap-1.5 justify-content-center">
+                                    <span class="badge px-2.5 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
+                                        <?php echo htmlspecialchars($c['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
+                                    <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.25); font-size: 0.78rem;">
+                                        Committee <?php echo $commNum; ?>
+                                    </span>
+                                </div>
                             </div>
                             <div class="modal-body p-4 pt-3">
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
@@ -164,16 +214,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                             <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($c['department'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
                                         <div class="col-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
-                                            <span class="font-monospace" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Assigned Committee</span>
+                                            <strong class="text-purple" style="color: #8b5cf6;">Committee <?php echo $commNum; ?></strong>
                                         </div>
                                         <div class="col-12">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
                                             <span style="color: var(--text-primary);"><i class="bi bi-envelope me-1 text-primary"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Role</span>
-                                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-0.5">Evaluation Committee</span>
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
+                                            <span class="font-monospace" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Status</span>
@@ -214,6 +264,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
                                     <div class="mb-3 text-start">
+                                        <label class="form-label small fw-bold text-muted">Assigned Committee</label>
+                                        <select class="form-select" name="committee_number" required>
+                                            <?php for($i = 1; $i <= $numCommittees; $i++): ?>
+                                            <option value="<?php echo $i; ?>" <?php echo ($commNum === $i) ? 'selected' : ''; ?>>Committee <?php echo $i; ?></option>
+                                            <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 text-start">
                                         <label class="form-label small fw-bold text-muted">Designation</label>
                                         <input type="text" class="form-control" name="designation" value="<?php echo htmlspecialchars($c['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
@@ -239,7 +297,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($committees)): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-5">
+                    <td colspan="6" class="text-center text-muted py-5">
                         <i class="bi bi-shield-check fs-2 d-block mb-2 opacity-50"></i>
                         No committee members registered yet.
                     </td>
@@ -295,20 +353,30 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <input type="text" class="form-control" name="designation" required placeholder="e.g. Assistant Professor">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Contact Number</label>
-                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
+                            <label class="form-label small fw-bold text-muted">Assigned Committee *</label>
+                            <select class="form-select" name="committee_number" required>
+                                <?php for($i = 1; $i <= $numCommittees; $i++): ?>
+                                <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="mb-0">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label class="form-label small fw-bold text-muted m-0">Password *</label>
-                            <button type="button" class="btn btn-link p-0 text-decoration-none small text-primary fw-semibold" onclick="generateRandomPassword('commPassword')">
-                                <i class="bi bi-magic me-1"></i>Generate
-                            </button>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Contact Number</label>
+                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
                         </div>
-                        <div class="position-relative">
-                            <input type="text" class="form-control font-monospace" id="commPassword" name="password" required placeholder="Enter or generate password">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-bold text-muted m-0">Password *</label>
+                                <button type="button" class="btn btn-link p-0 text-decoration-none small text-primary fw-semibold" onclick="generateRandomPassword('commPassword')">
+                                    <i class="bi bi-magic me-1"></i>Generate
+                                </button>
+                            </div>
+                            <div class="position-relative">
+                                <input type="text" class="form-control font-monospace" id="commPassword" name="password" required placeholder="Enter or generate password">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -324,6 +392,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 </div>
 
 <script>
+function filterCommittee(commNum, btn) {
+    document.querySelectorAll('.btn-filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    const rows = document.querySelectorAll('#committees-table tbody tr[data-committee]');
+    rows.forEach(r => {
+        if (commNum === 'all' || r.getAttribute('data-committee') === String(commNum)) {
+            r.style.display = '';
+        } else {
+            r.style.display = 'none';
+        }
+    });
+}
+
 function generateRandomPassword(elementId) {
     const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%';
     let pass = '';

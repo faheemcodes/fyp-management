@@ -133,6 +133,7 @@ class HodController extends BaseController {
             $maxMorningSlots = (int)($_POST['max_morning_slots'] ?? 5);
             $maxEveningSlots = (int)($_POST['max_evening_slots'] ?? 5);
             $maxGroupMembers = (int)($_POST['max_group_members'] ?? 3);
+            $numCommittees = max(1, min(10, (int)($_POST['num_committees'] ?? 2)));
 
             $stmtOld = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
             $stmtOld->execute([$dept]);
@@ -141,9 +142,10 @@ class HodController extends BaseController {
             $oldMorning = $oldSettings ? (int)$oldSettings['max_morning_slots'] : 5;
             $oldEvening = $oldSettings ? (int)$oldSettings['max_evening_slots'] : 5;
             $oldGroup = $oldSettings ? (int)$oldSettings['max_group_members'] : 3;
+            $oldNumCommittees = $oldSettings ? (int)($oldSettings['num_committees'] ?? 2) : 2;
 
-            $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots, max_group_members) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?, max_group_members = ?");
-            $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers]);
+            $stmt = $db->prepare("INSERT INTO department_settings (department, max_morning_slots, max_evening_slots, max_group_members, num_committees) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE max_morning_slots = ?, max_evening_slots = ?, max_group_members = ?, num_committees = ?");
+            $stmt->execute([$dept, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $numCommittees, $maxMorningSlots, $maxEveningSlots, $maxGroupMembers, $numCommittees]);
             
             $changedMorning = ($oldMorning !== $maxMorningSlots);
             $changedEvening = ($oldEvening !== $maxEveningSlots);
@@ -353,12 +355,17 @@ class HodController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
-        $stmt = $db->prepare("SELECT c.*, u.email, u.cnic FROM committees c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.name ASC");
+        $stmt = $db->prepare("SELECT c.*, u.email, u.cnic FROM committees c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.committee_number ASC, c.name ASC");
         $stmt->execute([$dept]);
         $committees = $stmt->fetchAll();
+
+        $stmtDept = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");
+        $stmtDept->execute([$dept]);
+        $numCommittees = (int)($stmtDept->fetchColumn() ?: 2);
         
         $this->render('hod/committee', [
             'committees' => $committees,
+            'num_committees' => $numCommittees,
             'department' => $dept
         ]);
     }
@@ -376,6 +383,7 @@ class HodController extends BaseController {
             $designation = trim($_POST['designation'] ?? '');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
+            $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
             $department = $dept; // Auto-lock to HOD department
 
             if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($designation) || empty($password)) {
@@ -409,8 +417,8 @@ class HodController extends BaseController {
                 $userId = $db->lastInsertId();
 
                 $fullName = $firstName . ' ' . $lastName;
-                $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $department]);
+                $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $fullName, $designation, $department, $committeeNumber]);
 
                 // Sync profiles table
                 $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
@@ -419,7 +427,7 @@ class HodController extends BaseController {
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
                 $db->commit();
-                $this->flash('success', "Committee Member $fullName added successfully to Department of $department and credentials sent.");
+                $this->flash('success', "Committee Member $fullName added successfully to Committee $committeeNumber and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding committee member. Please try again.');
@@ -439,6 +447,7 @@ class HodController extends BaseController {
             $designation = trim($_POST['designation'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
+            $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
 
             if ($userId && $name) {
                 $stmtCheck = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
@@ -448,8 +457,8 @@ class HodController extends BaseController {
                     redirect('/hod/committee');
                 }
 
-                $stmt = $db->prepare("UPDATE committees SET name = ?, designation = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $userId]);
+                $stmt = $db->prepare("UPDATE committees SET name = ?, designation = ?, committee_number = ? WHERE user_id = ?");
+                $stmt->execute([$name, $designation, $committeeNumber, $userId]);
 
                 if (!empty($email)) {
                     $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");

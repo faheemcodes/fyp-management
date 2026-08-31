@@ -68,7 +68,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <div>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Department Settings</h4>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem">Supervisor capacity and slot limits</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.7); font-size: 0.85rem">Supervisor capacity, group limits, and committee structure</p>
             </div>
         </div>
     </div>
@@ -86,16 +86,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <i class="bi bi-info-circle-fill"></i>
     </div>
     <div>
-        <h6>Slot Limits</h6>
-        <p>Limits are applied per supervisor for Morning and Evening shifts.</p>
+        <h6>Department Limits &amp; Structure</h6>
+        <p>Changes to slot limits, group member caps, and committee counts apply immediately across your department.</p>
     </div>
 </div>
 
 <form action="<?php echo $basePath; ?>/hod/settings/update" method="POST">
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
     <div class="row">
-        <!-- Supervisor Limits -->
-        <div class="col-lg-8 mb-4">
+        <!-- 1. Supervisor Limits -->
+        <div class="col-lg-6 mb-4">
             <div class="page-section h-100">
                 <div class="page-section-header">
                     <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
@@ -108,7 +108,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 </div>
                 
                 <div class="page-section-body">
-                    <div class="row g-4">
+                    <div class="row g-3">
                         <div class="col-md-6 pf-group">
                             <label class="form-label">Morning Slots <span class="text-danger">*</span></label>
                             <input type="number" name="max_morning_slots" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_morning_slots'] ?? 5)); ?>" min="1" max="50" required>
@@ -122,8 +122,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
         </div>
 
-        <!-- Student Group Limits -->
-        <div class="col-lg-4 mb-4">
+        <!-- 2. Student Group Limits -->
+        <div class="col-lg-3 col-md-6 mb-4">
             <div class="page-section h-100">
                 <div class="page-section-header">
                     <div class="page-section-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
@@ -131,7 +131,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </div>
                     <div>
                         <h6 class="mb-0 fw-bold">Group Limits</h6>
-                        <small class="text-muted">Max members per FYP group</small>
+                        <small class="text-muted">Max members per group</small>
                     </div>
                 </div>
                 
@@ -139,6 +139,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <div class="pf-group">
                         <label class="form-label">Max Members <span class="text-danger">*</span></label>
                         <input type="number" name="max_group_members" class="form-control" value="<?php echo htmlspecialchars((string)($settings['max_group_members'] ?? 3)); ?>" min="1" max="10" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Committees Count -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="page-section h-100">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                        <i class="bi bi-shield-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Committees</h6>
+                        <small class="text-muted">No. of committees</small>
+                    </div>
+                </div>
+                
+                <div class="page-section-body">
+                    <div class="pf-group">
+                        <label class="form-label">Total Committees <span class="text-danger">*</span></label>
+                        <input type="number" name="num_committees" class="form-control" value="<?php echo htmlspecialchars((string)($settings['num_committees'] ?? 2)); ?>" min="1" max="10" required>
                     </div>
                 </div>
             </div>
