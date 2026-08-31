@@ -138,7 +138,33 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     line-height: 1.25;
 }
 
-/* ── Workload Table Custom Styling ── */
+/* ── Workload Table Custom Styling & Scroll ── */
+.workload-table-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    position: relative;
+}
+.workload-table-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--form-bg, #f8fafc) !important;
+    box-shadow: 0 1px 0 var(--border-color, rgba(0, 0, 0, 0.08));
+}
+.workload-table-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+.workload-table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.workload-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.25);
+    border-radius: 10px;
+}
+.workload-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.45);
+}
+
 .workload-progress {
     height: 7px;
     border-radius: 10px;
@@ -561,18 +587,26 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
             </div>
         </div>
         <div class="hod-section-actions">
-            <a href="<?php echo $basePath; ?>/hod/settings" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem;">
-                <i class="bi bi-sliders"></i> <span>Capacity Settings</span>
+            <!-- Quick Search -->
+            <div class="input-group input-group-sm rounded-pill overflow-hidden border" style="max-width: 190px; background: var(--card-bg);">
+                <span class="input-group-text bg-transparent border-0 pe-1 text-muted"><i class="bi bi-search" style="font-size: 0.72rem;"></i></span>
+                <input type="text" id="workloadSearch" class="form-control form-control-sm border-0 ps-1 shadow-none" placeholder="Search faculty..." style="font-size: 0.76rem;">
+            </div>
+            <span class="badge rounded-pill fw-bold" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); padding: 5px 10px; font-size: 0.72rem;">
+                <?php echo count($supervisorsWorkload); ?> Faculty
+            </span>
+            <a href="<?php echo $basePath; ?>/hod/settings" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="font-size: 0.78rem;">
+                <i class="bi bi-sliders"></i> <span>Capacity</span>
             </a>
-            <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-sm btn-primary rounded-pill px-3.5 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 0.8rem;">
-                <i class="bi bi-person-badge-fill"></i> <span>Faculty Directory</span>
+            <a href="<?php echo $basePath; ?>/hod/supervisors" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" style="background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 0.78rem;">
+                <i class="bi bi-person-badge-fill"></i> <span>Directory</span>
             </a>
         </div>
     </div>
 
     <div class="hod-section-body p-0">
-        <div class="table-responsive">
-            <table class="table modern-table m-0">
+        <div class="table-responsive workload-table-scroll custom-scroll">
+            <table class="table modern-table m-0" id="workloadTable">
                 <thead>
                     <tr>
                         <th class="ps-4">Supervisor</th>
@@ -609,8 +643,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                                     <?php echo strtoupper(substr($sup['name'], 0, 1)); ?>
                                 </div>
                                 <div>
-                                    <div class="fw-semibold text-dark" style="font-size: 0.9rem"><?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                    <small class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                    <div class="fw-semibold text-dark sup-name" style="font-size: 0.9rem"><?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                    <small class="text-muted sup-email" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                                 </div>
                             </div>
                         </td>
@@ -654,6 +688,12 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 </tbody>
             </table>
         </div>
+        
+        <!-- Bottom Summary Bar -->
+        <div class="p-2.5 px-3.5 d-flex justify-content-between align-items-center text-muted small" style="background: var(--form-bg); border-top: 1px solid var(--border-color); font-size: 0.75rem;">
+            <span>Showing <strong id="workloadVisibleCount" style="color: var(--text-primary);"><?php echo count($supervisorsWorkload); ?></strong> of <?php echo count($supervisorsWorkload); ?> supervisor(s)</span>
+            <span>Capacity Limit: <strong><?php echo (int)$maxMorning; ?> Morning</strong> / <strong><?php echo (int)$maxEvening; ?> Evening</strong></span>
+        </div>
     </div>
 </div>
 
@@ -685,3 +725,34 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 <?php endforeach; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const workloadInput = document.getElementById('workloadSearch');
+    const workloadTable = document.getElementById('workloadTable');
+    const visibleCountEl = document.getElementById('workloadVisibleCount');
+    
+    if (workloadInput && workloadTable) {
+        workloadInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const rows = workloadTable.querySelectorAll('tbody tr');
+            let matchCount = 0;
+            
+            rows.forEach(function(row) {
+                const text = row.textContent.toLowerCase();
+                if (!query || text.indexOf(query) !== -1) {
+                    row.style.display = '';
+                    matchCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            if (visibleCountEl) {
+                visibleCountEl.textContent = matchCount;
+            }
+        });
+    }
+});
+</script>
+
