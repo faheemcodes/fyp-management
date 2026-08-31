@@ -113,7 +113,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
                             <div>
                                 <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-envelope me-1" style="font-size: 0.68rem;"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                <small class="text-muted d-block" style="font-size: 0.72rem;"><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
