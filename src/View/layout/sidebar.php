@@ -119,6 +119,23 @@ if ($role === 'supervisor') {
 }
 ?>
 
+<style>
+.role-switch-nav-link {
+    color: #8b5cf6 !important;
+    transition: all 0.2s ease !important;
+}
+.role-switch-nav-link i {
+    color: #8b5cf6 !important;
+}
+.role-switch-nav-link:hover {
+    background: rgba(139, 92, 246, 0.12) !important;
+    color: #7c3aed !important;
+}
+.role-switch-nav-link:hover i {
+    color: #7c3aed !important;
+}
+</style>
+
 <!-- Sidebar -->
 <nav id="sidebar" class="d-flex flex-column">
     <div class="sidebar-header d-flex align-items-center justify-content-between flex-shrink-0">
@@ -418,8 +435,8 @@ if ($role === 'supervisor') {
                         $roleInfo = $labelMap[$aRole] ?? ['Switch to ' . ucfirst($aRole), 'bi-arrow-repeat'];
                         ?>
                         <li class="nav-item">
-                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link" style="color: #8b5cf6;">
-                                <i class="bi <?php echo $roleInfo[1]; ?>" style="color: #8b5cf6;"></i> <span><?php echo $roleInfo[0]; ?></span>
+                            <a href="<?php echo $urlPrefix; ?>/switch-role?role=<?php echo $aRole; ?>" class="nav-link role-switch-nav-link">
+                                <i class="bi <?php echo $roleInfo[1]; ?>"></i> <span><?php echo $roleInfo[0]; ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
