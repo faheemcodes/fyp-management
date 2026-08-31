@@ -327,13 +327,11 @@ $numCommittees = $num_committees ?? 2;
                 <input type="hidden" name="supervisor_user_id" id="hiddenSupervisorId" value="0">
                 
                 <div class="modal-body p-4">
-                    <!-- Supervisor Auto-Select Dropdown -->
-                    <div class="mb-4 p-3 rounded-4" style="background: var(--form-bg); border: 1.5px solid var(--border-color);">
-                        <label class="form-label small fw-bold text-primary mb-1.5 d-flex align-items-center gap-1.5">
-                            <i class="bi bi-person-check-fill"></i> Select Registered Supervisor (Auto-Populate Data)
-                        </label>
-                        <select class="form-select shadow-sm" id="supervisorSelect" onchange="onSupervisorSelected(this)">
-                            <option value="">-- Choose registered supervisor or fill form manually --</option>
+                    <!-- Select Supervisor -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Select Supervisor (Optional)</label>
+                        <select class="form-select" id="supervisorSelect" onchange="onSupervisorSelected(this)">
+                            <option value="">-- Select Supervisor --</option>
                             <?php foreach(($available_supervisors ?? []) as $sup): ?>
                                 <?php
                                     $cleanName = preg_replace('/^(Dr\.|Prof\.|Engr\.|Mr\.|Mrs\.|Ms\.)\s+/i', '', trim($sup['name']));
@@ -349,13 +347,10 @@ $numCommittees = $num_committees ?? 2;
                                         data-cnic="<?php echo htmlspecialchars($sup['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-designation="<?php echo htmlspecialchars($sup['designation'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-contact="<?php echo htmlspecialchars($sup['mobile_no'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                    <?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($sup['designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?> &bull; <?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>)
+                                    <?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>)
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <small class="text-muted d-block mt-1.5" style="font-size: 0.76rem;">
-                            <i class="bi bi-info-circle me-1 text-primary"></i>Selecting a supervisor auto-populates their personal info. You only need to assign a Committee and set a Password.
-                        </small>
                     </div>
 
                     <div class="row g-3 mb-3">
