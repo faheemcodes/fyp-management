@@ -90,12 +90,14 @@
 <!-- Committee Dashboard View -->
 <?php 
 $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); 
-$fullName = trim($_SESSION['name'] ?? 'Committee Member');
-$fullName = preg_replace('/^(Dr\.|Mr\.|Ms\.|Mrs\.|Prof\.|Engr\.|Dr|Mr|Ms|Mrs|Prof|Engr)\s+/i', '', $fullName);
-$firstName = explode(' ', $fullName)[0];
+$userPrefix = $_SESSION['prefix'] ?? '';
+$userFirstName = $_SESSION['name'] ?? 'Committee Member';
+$userSurname = $_SESSION['surname'] ?? '';
+$displayHeroName = formatPersonName($userPrefix, $userFirstName, $userSurname);
+$commNum = (int)($committee['committee_number'] ?? 1);
 ?>
 
-<!-- -- Top Hero Banner -- -->
+<!-- ── Top Hero Banner ── -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
@@ -104,14 +106,17 @@ $firstName = explode(' ', $fullName)[0];
             </div>
             <div>
                 <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
-                    Welcome back
+                    Committee Member
                 </p>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
-                    <?php echo htmlspecialchars($fullName); ?>
+                    <?php echo htmlspecialchars($displayHeroName); ?>
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 justify-content-center justify-content-md-start flex-wrap">
-                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.8);padding: 4px 12px;border-radius: 20px;font-weight: 600">
-                        <?php echo htmlspecialchars($committee['department'] ?? 'Department'); ?>
+                    <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.85);padding: 4px 12px;border-radius: 20px;font-weight: 600">
+                        <i class="bi bi-building me-1"></i><?php echo htmlspecialchars($committee['department'] ?? 'Department'); ?>
+                    </span>
+                    <span style="font-size: 0.75rem;background: rgba(16, 185, 129, 0.2);color: #34d399;border: 1px solid rgba(16, 185, 129, 0.4);padding: 4px 14px;border-radius: 20px;font-weight: 700;letter-spacing: 0.02em;display: inline-flex;align-items: center;gap: 5px;">
+                        <i class="bi bi-shield-check"></i>Committee <?php echo $commNum; ?>
                     </span>
                 </div>
             </div>
@@ -120,7 +125,7 @@ $firstName = explode(' ', $fullName)[0];
         <div class="d-flex flex-wrap hero-stats-container">
             <div class="page-stat-pill d-none d-md-flex">
                 <div class="stat-num"><?php echo count($groups); ?></div>
-                <div class="stat-label">Total Groups</div>
+                <div class="stat-label">Assigned Groups</div>
             </div>
         </div>
     </div>
