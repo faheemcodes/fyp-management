@@ -255,7 +255,7 @@ class AdminController extends BaseController {
                     $stmt->execute([$userId, $student_id, $name, $department, $shift]);
                 } else {
                     // For all staff
-                    $prefix = ($role === 'supervisor') ? 'Dr.' : 'Mr.';
+                    $prefix = !empty($_POST['prefix']) ? trim($_POST['prefix']) : (($role === 'supervisor') ? 'Dr.' : 'Mr.');
                     $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, gender, home_address) VALUES (?, ?, ?, ?, '1980-01-01', 'Male', 'Not Provided Yet')");
                     $stmt->execute([$userId, $prefix, $surname, $cnic]);
                     

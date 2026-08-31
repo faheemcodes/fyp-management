@@ -302,7 +302,7 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
                         <div class="paper-mid"></div>
                         <div class="card-paper">
                             <div>
-                                <div class="paper-name"><?php echo htmlspecialchars($hod['name']); ?></div>
+                                <div class="paper-name"><?php echo htmlspecialchars(formatPersonName($hod['prefix'] ?? '', $hod['name'], $hod['surname'] ?? '')); ?></div>
                                 <div class="paper-role">Head of Department</div>
                             </div>
                             <div class="paper-list">
@@ -332,11 +332,11 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
                         <div class="paper-mid"></div>
                         <div class="card-paper">
                             <div>
-                                <div class="paper-name"><?php echo htmlspecialchars($coord['name']); ?></div>
+                                <div class="paper-name"><?php echo htmlspecialchars(formatPersonName($coord['prefix'] ?? '', $coord['name'], $coord['surname'] ?? '')); ?></div>
                                 <div class="paper-role">FYP Coordinator</div>
                             </div>
                             <div class="paper-list">
-                                <div class="paper-item"><span>Dept &mdash; </span>Coordinator</div>
+                                <div class="paper-item"><span>Dept &mdash; </span><?php echo htmlspecialchars(ucfirst($coord['department']) ?? 'Coordinator'); ?></div>
                                 <div class="paper-item"><span>Mail &mdash; </span><a href="mailto:<?php echo htmlspecialchars($coord['email']); ?>"><?php echo htmlspecialchars($coord['email']); ?></a></div>
                             </div>
                         </div>
@@ -366,7 +366,7 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
                         <div class="paper-mid"></div>
                         <div class="card-paper">
                             <div>
-                                <div class="paper-name"><?php echo htmlspecialchars($member['name']); ?></div>
+                                <div class="paper-name"><?php echo htmlspecialchars(formatPersonName($member['prefix'] ?? '', $member['name'], $member['surname'] ?? '')); ?></div>
                                 <div class="paper-role">Committee Member</div>
                             </div>
                             <div class="paper-list">
@@ -400,7 +400,7 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
                         <div class="paper-mid"></div>
                         <div class="card-paper">
                             <div>
-                                <div class="paper-name"><?php echo htmlspecialchars($supervisor['name']); ?></div>
+                                <div class="paper-name"><?php echo htmlspecialchars(formatPersonName($supervisor['prefix'] ?? '', $supervisor['name'], $supervisor['surname'] ?? '')); ?></div>
                                 <div class="paper-role"><?php echo htmlspecialchars($supervisor['designation'] ?? 'Supervisor'); ?></div>
                             </div>
                             <div class="paper-list">

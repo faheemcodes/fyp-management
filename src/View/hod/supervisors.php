@@ -104,14 +104,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </thead>
             <tbody>
                 <?php foreach($supervisors as $s): ?>
+                <?php 
+                    $supPrefix = $s['prefix'] ?? 'Mr.';
+                    $supFirstName = $s['name'] ?? '';
+                    $supSurname = $s['surname'] ?? '';
+                    $supFullName = formatPersonName($supPrefix, $supFirstName, $supSurname);
+                ?>
                 <tr>
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 1rem">
-                                <?php echo getNameInitial($s['name']); ?>
+                                <?php echo getNameInitial($supFirstName); ?>
                             </div>
                             <div>
-                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></div>
                                 <small class="text-muted d-block" style="font-size: 0.72rem;"><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
@@ -161,7 +167,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); width: 60px; height: 60px;">
                                     <i class="bi bi-person-badge-fill text-primary" style="font-size: 1.6rem"></i>
                                 </div>
-                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></h5>
                                 <span class="badge px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
                                     <?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
@@ -169,6 +175,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div class="modal-body p-4 pt-3">
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
                                     <div class="row g-3 small">
+                                        <div class="col-4">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Prefix</span>
+                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supPrefix, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">First Name</span>
+                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supFirstName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Surname</span>
+                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supSurname ?: 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Department</span>
                                             <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($department ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -180,6 +198,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <div class="col-12">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
                                             <span style="color: var(--text-primary);"><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                        <div class="col-12">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Contact Number</span>
+                                            <span style="color: var(--text-primary);"><?php echo htmlspecialchars(($s['mobile_code'] ?? '+92') . ' ' . ($s['mobile_no'] ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Morning Projects</span>
@@ -209,7 +231,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
                             <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                                 <div class="position-absolute top-0 end-0 p-3">
@@ -220,30 +242,51 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 </div>
                                 <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);">Edit Supervisor</h5>
                                 <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.35rem 0.75rem;">
-                                    <?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?>
+                                    <?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                             </div>
                             <form action="<?php echo $basePath; ?>/hod/supervisors/edit" method="POST">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <div class="modal-body p-4 pt-2">
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-muted">Full Name</label>
-                                        <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label small fw-bold text-muted">Prefix *</label>
+                                            <select class="form-select" name="prefix" required>
+                                                <option value="Mr." <?php echo $supPrefix === 'Mr.' ? 'selected' : ''; ?>>Mr.</option>
+                                                <option value="Ms." <?php echo $supPrefix === 'Ms.' ? 'selected' : ''; ?>>Ms.</option>
+                                                <option value="Mrs." <?php echo $supPrefix === 'Mrs.' ? 'selected' : ''; ?>>Mrs.</option>
+                                                <option value="Dr." <?php echo $supPrefix === 'Dr.' ? 'selected' : ''; ?>>Dr.</option>
+                                                <option value="Prof." <?php echo $supPrefix === 'Prof.' ? 'selected' : ''; ?>>Prof.</option>
+                                                <option value="Engr." <?php echo $supPrefix === 'Engr.' ? 'selected' : ''; ?>>Engr.</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="form-label small fw-bold text-muted">First Name *</label>
+                                            <input type="text" class="form-control" name="first_name" value="<?php echo htmlspecialchars($supFirstName, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold text-muted">Surname (Last Name) *</label>
+                                            <input type="text" class="form-control" name="last_name" value="<?php echo htmlspecialchars($supSurname, ENT_QUOTES, 'UTF-8'); ?>" required>
+                                        </div>
                                     </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-muted">Designation</label>
-                                        <select class="form-select" name="designation" required>
-                                            <option value="Lecturer" <?php echo $s['designation'] === 'Lecturer' ? 'selected' : ''; ?>>Lecturer</option>
-                                            <option value="Assistant Professor" <?php echo $s['designation'] === 'Assistant Professor' ? 'selected' : ''; ?>>Assistant Professor</option>
-                                            <option value="Associate Professor" <?php echo $s['designation'] === 'Associate Professor' ? 'selected' : ''; ?>>Associate Professor</option>
-                                            <option value="Professor" <?php echo $s['designation'] === 'Professor' ? 'selected' : ''; ?>>Professor</option>
-                                        </select>
+
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Designation *</label>
+                                            <select class="form-select" name="designation" required>
+                                                <option value="Lecturer" <?php echo $s['designation'] === 'Lecturer' ? 'selected' : ''; ?>>Lecturer</option>
+                                                <option value="Assistant Professor" <?php echo $s['designation'] === 'Assistant Professor' ? 'selected' : ''; ?>>Assistant Professor</option>
+                                                <option value="Associate Professor" <?php echo $s['designation'] === 'Associate Professor' ? 'selected' : ''; ?>>Associate Professor</option>
+                                                <option value="Professor" <?php echo $s['designation'] === 'Professor' ? 'selected' : ''; ?>>Professor</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Email Address *</label>
+                                            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?>" required>
+                                        </div>
                                     </div>
-                                    <div class="mb-3 text-start">
-                                        <label class="form-label small fw-bold text-muted">Email Address</label>
-                                        <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?>" required>
-                                    </div>
+
                                     <div class="mb-2 text-start">
                                         <label class="form-label small fw-bold text-muted">Reset Password (leave blank to keep)</label>
                                         <input type="password" class="form-control" name="password" placeholder="••••••••">
@@ -291,12 +334,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                 <div class="modal-body p-4">
                     <div class="row g-3 mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold text-muted">Prefix *</label>
+                            <select class="form-select" name="prefix" required>
+                                <option value="Dr." selected>Dr.</option>
+                                <option value="Prof.">Prof.</option>
+                                <option value="Engr.">Engr.</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
                             <label class="form-label small fw-bold text-muted">First Name *</label>
                             <input type="text" class="form-control" name="first_name" required placeholder="e.g. Faheem">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Last Name *</label>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-muted">Surname (Last Name) *</label>
                             <input type="text" class="form-control" name="last_name" required placeholder="e.g. Soomro">
                         </div>
                     </div>

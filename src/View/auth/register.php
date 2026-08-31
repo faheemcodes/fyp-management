@@ -102,7 +102,7 @@ include __DIR__ . '/../layout/auth_header.php';
                         </div>
                         <div class="row g-2">
                             <div class="col-md-4">
-                                <label for="name" class="form-label-sm">Full Name <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label-sm">First Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="e.g. Faheem" value="<?php echo htmlspecialchars($old['name'] ?? ''); ?>">
                             </div>
                             <div class="col-md-4">
@@ -110,7 +110,7 @@ include __DIR__ . '/../layout/auth_header.php';
                                 <input type="text" class="form-control form-control-sm" id="father_name" name="father_name" placeholder="As in Matric Certificate" value="<?php echo htmlspecialchars($old['father_name'] ?? ''); ?>">
                             </div>
                             <div class="col-md-4">
-                                <label for="surname" class="form-label-sm">Surname</label>
+                                <label for="surname" class="form-label-sm">Surname (Last Name)</label>
                                 <input type="text" class="form-control form-control-sm" id="surname" name="surname" placeholder="e.g. Soomro" value="<?php echo htmlspecialchars($old['surname'] ?? ''); ?>">
                             </div>
                         </div>

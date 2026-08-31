@@ -211,16 +211,18 @@ class HodController extends BaseController {
         
         $stmt = $db->prepare("
             SELECT s.*, u.email, u.cnic,
-                COALESCE(SUM(CASE WHEN p.id IS NOT NULL AND (st.shift = 'Morning' OR st.shift IS NULL) THEN 1 ELSE 0 END), 0) as morning_projects,
-                COALESCE(SUM(CASE WHEN p.id IS NOT NULL AND st.shift = 'Evening' THEN 1 ELSE 0 END), 0) as evening_projects,
-                COUNT(p.id) as active_projects
+                p.prefix, p.surname, p.mobile_code, p.mobile_no,
+                COALESCE(SUM(CASE WHEN p_proj.id IS NOT NULL AND (st.shift = 'Morning' OR st.shift IS NULL) THEN 1 ELSE 0 END), 0) as morning_projects,
+                COALESCE(SUM(CASE WHEN p_proj.id IS NOT NULL AND st.shift = 'Evening' THEN 1 ELSE 0 END), 0) as evening_projects,
+                COUNT(p_proj.id) as active_projects
             FROM supervisors s 
             JOIN users u ON s.user_id = u.id 
-            LEFT JOIN projects p ON s.user_id = p.supervisor_id
-            LEFT JOIN `groups` g ON p.group_id = g.id
+            LEFT JOIN profiles p ON s.user_id = p.user_id
+            LEFT JOIN projects p_proj ON s.user_id = p_proj.supervisor_id
+            LEFT JOIN `groups` g ON p_proj.group_id = g.id
             LEFT JOIN students st ON g.created_by = st.user_id
             WHERE s.department = ? 
-            GROUP BY s.user_id, s.name, s.designation, s.department, u.email, u.cnic
+            GROUP BY s.user_id, s.name, s.designation, s.department, u.email, u.cnic, p.prefix, p.surname, p.mobile_code, p.mobile_no
             ORDER BY s.name ASC
         ");
         $stmt->execute([$dept]);
@@ -240,6 +242,7 @@ class HodController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -280,18 +283,19 @@ class HodController extends BaseController {
                 $stmt->execute([$email, $cnic, $hashed]);
                 $userId = $db->lastInsertId();
 
-                $fullName = $firstName . ' ' . $lastName;
+                // Store First Name in supervisors.name
                 $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $department]);
+                $stmt->execute([$userId, $firstName, $designation, $department]);
 
-                // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+                // Sync profiles table with prefix and surname
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Supervisor');
 
                 $db->commit();
-                $this->flash('success', "Supervisor $fullName added successfully to Department of $department and credentials sent.");
+                $display = formatPersonName($prefix, $firstName, $lastName);
+                $this->flash('success', "Supervisor $display added successfully to Department of $department and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error adding supervisor. Please try again.');
@@ -307,12 +311,14 @@ class HodController extends BaseController {
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
             $userId = $_POST['user_id'] ?? null;
-            $name = trim($_POST['name'] ?? '');
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            if ($userId && $name && $designation) {
+            if ($userId && $firstName && $lastName && $designation) {
                 // Verify supervisor is in HOD's department
                 $stmtCheck = $db->prepare("SELECT department FROM supervisors WHERE user_id = ?");
                 $stmtCheck->execute([$userId]);
@@ -322,7 +328,10 @@ class HodController extends BaseController {
                 }
 
                 $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $userId]);
+                $stmt->execute([$firstName, $designation, $userId]);
+
+                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ? WHERE user_id = ?");
+                $stmtP->execute([$prefix, $lastName, $userId]);
 
                 if (!empty($email)) {
                     $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
@@ -373,7 +382,15 @@ class HodController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
-        $stmt = $db->prepare("SELECT c.*, u.email, u.cnic FROM committees c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.committee_number ASC, c.name ASC");
+        $stmt = $db->prepare("
+            SELECT c.*, u.email, u.cnic,
+                   p.prefix, p.surname, p.mobile_code, p.mobile_no
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            LEFT JOIN profiles p ON c.user_id = p.user_id
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
         $stmt->execute([$dept]);
         $committees = $stmt->fetchAll();
 
@@ -410,6 +427,7 @@ class HodController extends BaseController {
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
             $supervisorUserId = (int)($_POST['supervisor_user_id'] ?? 0);
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -452,18 +470,17 @@ class HodController extends BaseController {
                     $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
                     $stmtUp->execute([$hashed, $supervisorUserId]);
 
-                    $fullName = trim($firstName . ' ' . $lastName);
-                    if (empty($fullName)) {
-                        $fullName = $sup['name'];
-                    }
-
                     $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$supervisorUserId, $fullName, $designation ?: $sup['designation'], $department, $committeeNumber]);
+                    $stmt->execute([$supervisorUserId, $firstName, $designation ?: $sup['designation'], $department, $committeeNumber]);
+
+                    $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                    $stmtP->execute([$supervisorUserId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                     $this->sendCredentialsMessage($db, $supervisorUserId, $firstName, $lastName, $sup['email'], $sup['cnic'], $password, 'Committee Member');
 
                     $db->commit();
-                    $this->flash('success', "Supervisor {$fullName} has been successfully appointed to Committee {$committeeNumber}.");
+                    $display = formatPersonName($prefix, $firstName, $lastName);
+                    $this->flash('success', "Supervisor {$display} has been successfully appointed to Committee {$committeeNumber}.");
                     redirect('/hod/committee');
                 } catch (\Exception $e) {
                     $db->rollBack();
@@ -494,13 +511,16 @@ class HodController extends BaseController {
                         $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
                         $stmtUp->execute([$hashed, $matchedSup['user_id']]);
 
-                        $fullName = trim($firstName . ' ' . $lastName);
                         $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
-                        $stmt->execute([$matchedSup['user_id'], $fullName, $designation, $department, $committeeNumber]);
+                        $stmt->execute([$matchedSup['user_id'], $firstName, $designation, $department, $committeeNumber]);
+
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$matchedSup['user_id'], $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                         $this->sendCredentialsMessage($db, $matchedSup['user_id'], $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
                         $db->commit();
-                        $this->flash('success', "Supervisor {$fullName} appointed to Committee {$committeeNumber}.");
+                        $display = formatPersonName($prefix, $firstName, $lastName);
+                        $this->flash('success', "Supervisor {$display} appointed to Committee {$committeeNumber}.");
                         redirect('/hod/committee');
                     } catch (\Exception $e) {
                         $db->rollBack();
@@ -531,18 +551,18 @@ class HodController extends BaseController {
                         $stmt->execute([$email, $cnic, $hashed]);
                         $userId = $db->lastInsertId();
 
-                        $fullName = $firstName . ' ' . $lastName;
                         $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
-                        $stmt->execute([$userId, $fullName, $designation, $department, $committeeNumber]);
+                        $stmt->execute([$userId, $firstName, $designation, $department, $committeeNumber]);
 
                         // Sync profiles table
-                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                         $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
                         $db->commit();
-                        $this->flash('success', "Committee Member $fullName added successfully to Committee $committeeNumber and credentials sent.");
+                        $display = formatPersonName($prefix, $firstName, $lastName);
+                        $this->flash('success', "Committee Member $display added successfully to Committee $committeeNumber and credentials sent.");
                     } catch (\Exception $e) {
                         $db->rollBack();
                         $this->flash('error', 'Error adding committee member. Please try again.');
@@ -560,13 +580,15 @@ class HodController extends BaseController {
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
             $userId = $_POST['user_id'] ?? null;
-            $name = trim($_POST['name'] ?? '');
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
             $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
 
-            if ($userId && $name) {
+            if ($userId && $firstName && $lastName) {
                 $stmtCheck = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
                 $stmtCheck->execute([$userId]);
                 if ($stmtCheck->fetchColumn() !== $dept) {
@@ -575,7 +597,10 @@ class HodController extends BaseController {
                 }
 
                 $stmt = $db->prepare("UPDATE committees SET name = ?, designation = ?, committee_number = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $committeeNumber, $userId]);
+                $stmt->execute([$firstName, $designation, $committeeNumber, $userId]);
+
+                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ? WHERE user_id = ?");
+                $stmtP->execute([$prefix, $lastName, $userId]);
 
                 if (!empty($email)) {
                     $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
@@ -863,9 +888,17 @@ class HodController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
         
-        $coordinators = $db->prepare("SELECT c.*, u.email, u.cnic FROM coordinators c JOIN users u ON c.user_id = u.id WHERE c.department = ? ORDER BY c.name ASC");
-        $coordinators->execute([$dept]);
-        $coordinators = $coordinators->fetchAll();
+        $stmt = $db->prepare("
+            SELECT co.*, u.email, u.cnic,
+                   p.prefix, p.surname, p.mobile_code, p.mobile_no
+            FROM coordinators co 
+            JOIN users u ON co.user_id = u.id 
+            LEFT JOIN profiles p ON co.user_id = p.user_id
+            WHERE co.department = ? 
+            ORDER BY co.name ASC
+        ");
+        $stmt->execute([$dept]);
+        $coordinators = $stmt->fetchAll();
         
         // Fetch registered supervisors in this department not enrolled in coordinators
         $stmtAvailableSups = $db->prepare("
@@ -895,6 +928,7 @@ class HodController extends BaseController {
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
             $supervisorUserId = (int)($_POST['supervisor_user_id'] ?? 0);
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
@@ -936,18 +970,18 @@ class HodController extends BaseController {
                     $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
                     $stmtUp->execute([$hashed, $supervisorUserId]);
 
-                    $fullName = $firstName . ' ' . $lastName;
                     $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$supervisorUserId, $fullName, $designation, $dept, $shift]);
+                    $stmt->execute([$supervisorUserId, $firstName, $designation, $dept, $shift]);
 
                     // Sync profiles table
-                    $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                    $stmtP->execute([$supervisorUserId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+                    $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                    $stmtP->execute([$supervisorUserId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                     $this->sendCredentialsMessage($db, $supervisorUserId, $firstName, $lastName, $sup['email'], $sup['cnic'], $password, "Coordinator ($shift Shift)");
 
                     $db->commit();
-                    $this->flash('success', "Supervisor $fullName appointed as Coordinator ($shift Shift) and credentials sent.");
+                    $display = formatPersonName($prefix, $firstName, $lastName);
+                    $this->flash('success', "Supervisor $display appointed as Coordinator ($shift Shift) and credentials sent.");
                 } catch (\Exception $e) {
                     $db->rollBack();
                     $this->flash('error', 'Error appointing coordinator. Please try again.');
@@ -973,17 +1007,17 @@ class HodController extends BaseController {
                         $stmtUp = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
                         $stmtUp->execute([$hashed, $userId]);
 
-                        $fullName = $firstName . ' ' . $lastName;
                         $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
-                        $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
+                        $stmt->execute([$userId, $firstName, $designation, $dept, $shift]);
 
-                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                         $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
 
                         $db->commit();
-                        $this->flash('success', "Coordinator $fullName ($shift Shift) added successfully and credentials sent.");
+                        $display = formatPersonName($prefix, $firstName, $lastName);
+                        $this->flash('success', "Coordinator $display ($shift Shift) added successfully and credentials sent.");
                     } catch (\Exception $e) {
                         $db->rollBack();
                         $this->flash('error', 'Error adding coordinator. Please try again.');
@@ -997,17 +1031,17 @@ class HodController extends BaseController {
                         $stmt->execute([$email, $cnic, $hashed]);
                         $userId = $db->lastInsertId();
                         
-                        $fullName = $firstName . ' ' . $lastName;
                         $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
-                        $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
+                        $stmt->execute([$userId, $firstName, $designation, $dept, $shift]);
                         
-                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
-                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                         $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
                         
                         $db->commit();
-                        $this->flash('success', "Coordinator $fullName ($shift Shift) created successfully under department $dept and credentials sent.");
+                        $display = formatPersonName($prefix, $firstName, $lastName);
+                        $this->flash('success', "Coordinator $display ($shift Shift) created successfully under department $dept and credentials sent.");
                     } catch (\Exception $e) {
                         $db->rollBack();
                         $this->flash('error', 'Error creating coordinator. Please try again.');
@@ -1022,14 +1056,16 @@ class HodController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
             $userId = $_POST['user_id'] ?? null;
-            $name = trim($_POST['name'] ?? '');
+            $prefix = trim($_POST['prefix'] ?? 'Mr.');
+            $firstName = trim($_POST['first_name'] ?? '');
+            $lastName = trim($_POST['last_name'] ?? '');
             $designation = trim($_POST['designation'] ?? 'FYP Coordinator');
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
             $password = $_POST['password'] ?? '';
             $shift = in_array($_POST['shift'] ?? '', ['Morning', 'Evening', 'All']) ? $_POST['shift'] : 'Morning';
             
-            if (!$userId || empty($name) || empty($email) || empty($cnic)) {
+            if (!$userId || empty($firstName) || empty($lastName) || empty($email) || empty($cnic)) {
                 $this->flash('error', 'Required fields are missing.');
                 redirect('/hod/coordinators');
             }
@@ -1064,17 +1100,17 @@ class HodController extends BaseController {
                 
                 // Update coordinators
                 $stmt = $db->prepare("UPDATE coordinators SET name = ?, designation = ?, shift = ? WHERE user_id = ?");
-                $stmt->execute([$name, $designation, $shift, $userId]);
+                $stmt->execute([$firstName, $designation, $shift, $userId]);
                 
                 // Update profiles
-                $stmtP = $db->prepare("UPDATE profiles SET cnic = ?, surname = ? WHERE user_id = ?");
-                $stmtP->execute([$cnic, $name, $userId]);
+                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ?, cnic = ? WHERE user_id = ?");
+                $stmtP->execute([$prefix, $lastName, $cnic, $userId]);
                 
                 $db->commit();
                 $this->flash('success', "Coordinator details updated successfully.");
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error updating coordinator. Please try again.');
+                $this->flash('error', 'Error updating coordinator.');
             }
         }
         redirect('/hod/coordinators');

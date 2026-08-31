@@ -1,7 +1,6 @@
-
 <?php
 $role = $_SESSION['role'] ?? '';
-$name = $_SESSION['name'] ?? 'User';
+$name = $_SESSION['full_name'] ?? $_SESSION['name'] ?? 'User';
 $email = $_SESSION['email'] ?? '';
 $currentUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $scriptName = $_SERVER['SCRIPT_NAME'];

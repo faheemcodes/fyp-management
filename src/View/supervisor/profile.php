@@ -208,7 +208,7 @@ if ($basePath === '/') {
         <div class="flex-grow-1 text-center text-md-start">
             <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem;letter-spacing: -0.02em">
-                    <?php echo htmlspecialchars(($prefixVal ? $prefixVal . ' ' : '') . $supervisor['name']); ?>
+                    <?php echo htmlspecialchars(formatPersonName($prefixVal, $supervisor['name'] ?? '', $surnameVal)); ?>
                 </h4>
                 <span class="badge bg-success text-white border border-light border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Supervisor</span>
             </div>
@@ -292,15 +292,16 @@ if ($basePath === '/') {
                                 <option value="Mrs." <?php echo $prefixVal === 'Mrs.'  ? 'selected' : ''; ?>>Mrs.</option>
                                 <option value="Dr."  <?php echo $prefixVal === 'Dr.'   ? 'selected' : ''; ?>>Dr.</option>
                                 <option value="Prof."<?php echo $prefixVal === 'Prof.' ? 'selected' : ''; ?>>Prof.</option>
+                                <option value="Engr."<?php echo $prefixVal === 'Engr.' ? 'selected' : ''; ?>>Engr.</option>
                             </select>
                         </div>
                         <div class="col-8 pf-group">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label">First Name</label>
                             <input type="text" class="form-control" value="<?php echo htmlspecialchars($supervisor['name']); ?>" disabled readonly>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
                         </div>
                         <div class="col-6 pf-group">
-                            <label class="form-label">Surname</label>
+                            <label class="form-label">Surname (Last Name)</label>
                             <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo !empty($surnameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
                             <?php if(!empty($surnameVal)): ?>
                             <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>

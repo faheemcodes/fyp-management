@@ -80,6 +80,22 @@ if (!function_exists('getNameInitial')) {
     }
 }
 
+// Global helper to format a person's display name cleanly without duplication
+if (!function_exists('formatPersonName')) {
+    function formatPersonName($prefix, $firstName, $surname) {
+        $parts = [];
+        $cleanFirst = trim((string)$firstName);
+        $cleanSurname = trim((string)$surname);
+        $cleanPrefix = trim((string)$prefix);
+        
+        if (!empty($cleanPrefix)) $parts[] = $cleanPrefix;
+        if (!empty($cleanFirst)) $parts[] = $cleanFirst;
+        if (!empty($cleanSurname) && strcasecmp($cleanSurname, $cleanFirst) !== 0) $parts[] = $cleanSurname;
+        
+        return implode(' ', $parts);
+    }
+}
+
 // Simple router
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $scriptName = $_SERVER['SCRIPT_NAME'];

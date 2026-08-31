@@ -85,12 +85,21 @@ class AuthController extends BaseController {
                 $primaryRole = in_array($user['role'], $availableRoles) ? $user['role'] : $availableRoles[0];
                 $_SESSION['role'] = $primaryRole;
                 
-                // Fetch profile specific name
+                // Fetch profile specific name and prefix/surname
+                $pStmt = $db->prepare("SELECT prefix, surname FROM profiles WHERE user_id = ?");
+                $pStmt->execute([$user['id']]);
+                $prof = $pStmt->fetch();
+                $prefix = $prof['prefix'] ?? '';
+                $surname = $prof['surname'] ?? '';
+                $_SESSION['prefix'] = $prefix;
+                $_SESSION['surname'] = $surname;
+
                 if ($primaryRole === 'student') {
                     $sStmt = $db->prepare("SELECT name, student_id, avatar, department FROM students WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $student = $sStmt->fetch();
                     $_SESSION['name'] = $student['name'] ?? 'Student';
+                    $_SESSION['full_name'] = formatPersonName($prefix ?: 'Mr.', $student['name'] ?? 'Student', $surname);
                     $_SESSION['student_id'] = $student['student_id'] ?? '';
                     $_SESSION['avatar'] = $student['avatar'] ?? '';
                     $_SESSION['department'] = $student['department'] ?? 'Software Engineering';
@@ -99,27 +108,32 @@ class AuthController extends BaseController {
                     $sStmt->execute([$user['id']]);
                     $supervisor = $sStmt->fetch();
                     $_SESSION['name'] = $supervisor['name'] ?? 'Supervisor';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $supervisor['name'] ?? 'Supervisor', $surname);
                     $_SESSION['department'] = $supervisor['department'] ?? 'Software Engineering';
                 } else if ($primaryRole === 'committee') {
                     $sStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $committee = $sStmt->fetch();
                     $_SESSION['name'] = $committee['name'] ?? 'Committee Member';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $committee['name'] ?? 'Committee Member', $surname);
                     $_SESSION['department'] = $committee['department'] ?? 'Software Engineering';
                 } else if ($primaryRole === 'hod') {
                     $sStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $hod = $sStmt->fetch();
                     $_SESSION['name'] = $hod['name'] ?? 'HOD';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $hod['name'] ?? 'HOD', $surname);
                     $_SESSION['department'] = $hod['department'] ?? 'Software Engineering';
                 } else if ($primaryRole === 'coordinator') {
                     $sStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $coord = $sStmt->fetch();
                     $_SESSION['name'] = $coord['name'] ?? 'Coordinator';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $coord['name'] ?? 'Coordinator', $surname);
                     $_SESSION['department'] = $coord['department'] ?? 'Software Engineering';
                 } else {
                     $_SESSION['name'] = 'System Admin';
+                    $_SESSION['full_name'] = 'System Admin';
                     $_SESSION['department'] = 'All Departments';
                 }
                 
@@ -300,9 +314,10 @@ class AuthController extends BaseController {
                     $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, phone, department, shift, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)");
                     $stmt->execute([$userId, $student_id, $name, $phoneCombined, $department, $shift, $avatarName]);
                     
-                    // Seed profiles table
-                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, father_name, dob, mobile_code, mobile_no, country, province_state, district, home_address, gender) VALUES (?, 'Mr.', ?, ?, ?, '2000-01-01', ?, ?, ?, ?, ?, 'Not Provided Yet', ?)");
-                    $stmt->execute([$userId, $surname, $cnic, $father_name, $mobile_code, $mobile_no, $country, $province_state, $district, $gender]);
+                    // Seed profiles table with appropriate prefix based on gender
+                    $prefix = ($gender === 'Female') ? 'Ms.' : 'Mr.';
+                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, father_name, dob, mobile_code, mobile_no, country, province_state, district, home_address, gender) VALUES (?, ?, ?, ?, ?, '2000-01-01', ?, ?, ?, ?, ?, 'Not Provided Yet', ?)");
+                    $stmt->execute([$userId, $prefix, $surname, $cnic, $father_name, $mobile_code, $mobile_no, $country, $province_state, $district, $gender]);
                     
                     $db->commit();
                     
@@ -749,12 +764,22 @@ class AuthController extends BaseController {
         if (in_array($targetRole, $availableRoles)) {
             $_SESSION['role'] = $targetRole;
             $db = \Database::getInstance()->getConnection();
+            
+            $pStmt = $db->prepare("SELECT prefix, surname FROM profiles WHERE user_id = ?");
+            $pStmt->execute([$_SESSION['user_id']]);
+            $prof = $pStmt->fetch();
+            $prefix = $prof['prefix'] ?? '';
+            $surname = $prof['surname'] ?? '';
+            $_SESSION['prefix'] = $prefix;
+            $_SESSION['surname'] = $surname;
+
             if ($targetRole === 'supervisor') {
                 $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
                 $sStmt->execute([$_SESSION['user_id']]);
                 $s = $sStmt->fetch();
                 if ($s) {
                     $_SESSION['name'] = $s['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $s['name'], $surname);
                     $_SESSION['department'] = $s['department'];
                 }
             } else if ($targetRole === 'committee') {
@@ -763,6 +788,7 @@ class AuthController extends BaseController {
                 $c = $cStmt->fetch();
                 if ($c) {
                     $_SESSION['name'] = $c['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $c['name'], $surname);
                     $_SESSION['department'] = $c['department'];
                 }
             } else if ($targetRole === 'coordinator') {
@@ -771,6 +797,7 @@ class AuthController extends BaseController {
                 $cd = $cdStmt->fetch();
                 if ($cd) {
                     $_SESSION['name'] = $cd['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $cd['name'], $surname);
                     $_SESSION['department'] = $cd['department'];
                 }
             } else if ($targetRole === 'hod') {
@@ -779,6 +806,7 @@ class AuthController extends BaseController {
                 $h = $hStmt->fetch();
                 if ($h) {
                     $_SESSION['name'] = $h['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $h['name'], $surname);
                     $_SESSION['department'] = $h['department'];
                 }
             }

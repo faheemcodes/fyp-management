@@ -110,27 +110,40 @@ class PublicController extends BaseController {
     public function faculty() {
         try {
             $supervisors = $this->db->query("
-                SELECT s.name, s.department, s.designation, u.email 
+                SELECT s.name, s.department, s.designation, u.email, p.prefix, p.surname
                 FROM supervisors s 
                 JOIN users u ON s.user_id = u.id 
+                LEFT JOIN profiles p ON s.user_id = p.user_id
                 WHERE u.status = 'approved' 
                 ORDER BY FIELD(s.designation, 'Professor', 'Associate Professor', 'Assistant Professor', 'Lecturer', 'Lab Engineer'), s.name ASC
             ")->fetchAll();
             
             // Fetch HODs
             $hods = $this->db->query("
-                SELECT h.name, u.email, h.department
+                SELECT h.name, u.email, h.department, p.prefix, p.surname
                 FROM hods h 
                 JOIN users u ON h.user_id = u.id
+                LEFT JOIN profiles p ON h.user_id = p.user_id
                 WHERE u.status = 'approved'
                 ORDER BY h.department ASC
             ")->fetchAll();
 
+            // Fetch Coordinators
+            $coordinators = $this->db->query("
+                SELECT c.name, u.email, c.department, p.prefix, p.surname
+                FROM coordinators c 
+                JOIN users u ON c.user_id = u.id
+                LEFT JOIN profiles p ON c.user_id = p.user_id
+                WHERE u.status = 'approved'
+                ORDER BY c.department ASC
+            ")->fetchAll();
+
             // Fetch Committee members
             $committee = $this->db->query("
-                SELECT c.name, c.department, u.email
+                SELECT c.name, c.department, u.email, p.prefix, p.surname
                 FROM committees c
                 JOIN users u ON c.user_id = u.id
+                LEFT JOIN profiles p ON c.user_id = p.user_id
                 WHERE u.status = 'approved'
                 ORDER BY c.department ASC, c.name ASC
             ")->fetchAll();
@@ -139,6 +152,7 @@ class PublicController extends BaseController {
                 'pageTitle' => 'Faculty & Staff - FYP Management Portal',
                 'supervisors' => $supervisors,
                 'hods' => $hods,
+                'coordinators' => $coordinators,
                 'committee' => $committee
             ]);
         } catch (\PDOException $e) {
@@ -146,6 +160,7 @@ class PublicController extends BaseController {
                 'pageTitle' => 'Faculty & Staff - FYP Management Portal',
                 'supervisors' => [],
                 'hods' => [],
+                'coordinators' => [],
                 'committee' => [],
                 'error' => 'Faculty data temporarily unavailable.'
             ]);

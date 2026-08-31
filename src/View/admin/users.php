@@ -156,6 +156,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </thead>
             <tbody>
                 <?php foreach($users as $u): ?>
+                <?php
+                    $uPrefix = $u['prefix'] ?? '';
+                    $uFirstName = $u['name'] ?? '';
+                    $uSurname = $u['surname'] ?? '';
+                    $uFullName = formatPersonName($uPrefix, $uFirstName, $uSurname);
+                ?>
                 <tr data-role="<?php echo htmlspecialchars($u['role']); ?>" data-department="<?php echo htmlspecialchars($u['department']); ?>" data-status="<?php echo htmlspecialchars($u['status']); ?>">
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
@@ -164,11 +170,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px;height: 42px;object-fit: cover;border: 2px solid var(--card-bg)" alt="Avatar">
                             <?php else: ?>
                                 <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px;height: 42px;font-weight: bold;background: rgba(16,185,129,0.1);color: #10b981;border: 2px solid var(--card-bg)">
-                                    <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
+                                    <?php echo getNameInitial($uFirstName); ?>
                                 </div>
                             <?php endif; ?>
                             <div>
-                                <div class="fw-semibold" style="font-size: 0.9rem"><?php echo htmlspecialchars($u['name']); ?></div>
+                                <div class="fw-semibold" style="font-size: 0.9rem"><?php echo htmlspecialchars($uFullName); ?></div>
                                 <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
                                 <?php if($u['student_id']): ?>
                                     <div class="mt-1 fw-bold" style="color: var(--primary-color);font-size: 0.75rem"><?php echo htmlspecialchars($u['student_id']); ?></div>
@@ -201,7 +207,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <button type="button" class="action-btn btn-view-user" title="View Details"
                                 data-bs-toggle="modal" data-bs-target="#viewUserModal"
                                 data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
-                                data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
+                                data-name="<?php echo htmlspecialchars($uFullName); ?>"
                                 data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
                                 data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
                                 data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? 'N/A'); ?>"
