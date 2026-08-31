@@ -5,24 +5,29 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 ?>
 
 <style>
-/* Modern Curved & Fluid UI Styles */
+/* Portal Unified Curved Theme (Emerald & Forest Palette) */
 :root {
-    --curve-xl: 28px;
-    --curve-lg: 24px;
-    --curve-md: 18px;
-    --curve-sm: 12px;
+    --curve-xl: 26px;
+    --curve-lg: 22px;
+    --curve-md: 16px;
+    --curve-sm: 10px;
     --curve-pill: 999px;
+    
+    --portal-emerald: #10b981;
+    --portal-emerald-dark: #059669;
+    --portal-emerald-deep: #064e3b;
+    --portal-teal: #14b8a6;
 }
 
-/* Hero Banner with Smooth Curves */
+/* Hero Banner with Unified Portal Emerald Theme */
 .page-hero-curved {
-    background: linear-gradient(135deg, #053d5a 0%, #047fb0 50%, #0284c7 100%);
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #059669 100%);
     border-radius: var(--curve-xl);
     padding: 2.2rem 2.5rem;
     position: relative;
     overflow: hidden;
     color: #ffffff;
-    box-shadow: 0 16px 36px -12px rgba(4, 127, 176, 0.38);
+    box-shadow: 0 16px 36px -12px rgba(5, 150, 105, 0.35);
 }
 .page-hero-curved::before {
     content: '';
@@ -62,7 +67,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Stat Cards with Rich Curves */
+/* Stat Cards with Unified Curves */
 .alloc-stat-card-curved {
     background: var(--card-bg, #ffffff);
     border: 1.5px solid var(--border-color, rgba(0,0,0,0.07));
@@ -75,8 +80,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 .alloc-stat-card-curved:hover {
     transform: translateY(-4px);
-    box-shadow: 0 14px 30px -8px rgba(4, 127, 176, 0.14);
-    border-color: rgba(4, 127, 176, 0.35);
+    box-shadow: 0 14px 30px -8px rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.35);
 }
 .stat-icon-bubble {
     width: 48px;
@@ -118,12 +123,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 }
 .capacity-card-curved:hover {
     transform: translateY(-4px);
-    border-color: #047fb0;
-    box-shadow: 0 14px 32px -8px rgba(4, 127, 176, 0.14);
+    border-color: var(--portal-emerald);
+    box-shadow: 0 14px 32px -8px rgba(16, 185, 129, 0.16);
 }
 .capacity-card-curved:focus-within {
-    border-color: #047fb0;
-    box-shadow: 0 0 0 4px rgba(4, 127, 176, 0.15);
+    border-color: var(--portal-emerald);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
 }
 
 /* Stepper Capsule Control */
@@ -140,7 +145,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     transition: border-color 0.2s ease;
 }
 .stepper-capsule:focus-within {
-    border-color: #047fb0;
+    border-color: var(--portal-emerald);
 }
 .stepper-round-btn {
     width: 38px;
@@ -159,7 +164,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     flex-shrink: 0;
 }
 .stepper-round-btn:hover {
-    background: #047fb0;
+    background: var(--portal-emerald);
     color: #ffffff;
     transform: scale(1.1);
 }
@@ -179,8 +184,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 /* Bottom Action Capsule */
 .action-capsule-bar {
-    background: linear-gradient(135deg, rgba(4, 127, 176, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-    border: 1.5px dashed rgba(4, 127, 176, 0.3);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(20, 184, 166, 0.05) 100%);
+    border: 1.5px dashed rgba(16, 185, 129, 0.35);
     border-radius: var(--curve-lg);
     padding: 1.1rem 1.5rem;
 }
@@ -192,14 +197,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     border: 1px solid rgba(139, 92, 246, 0.25);
 }
 .comm-badge-2 {
-    background: rgba(2, 132, 199, 0.1);
-    color: #0284c7;
-    border: 1px solid rgba(2, 132, 199, 0.25);
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
 }
 .comm-badge-3 {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    background: rgba(20, 184, 166, 0.1);
+    color: #0d9488;
+    border: 1px solid rgba(20, 184, 166, 0.25);
 }
 .comm-badge-4 {
     background: rgba(245, 158, 11, 0.1);
@@ -239,10 +244,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     transform: translateY(-1px);
 }
 .btn-filter-pill-curved.active {
-    background: #047fb0;
+    background: var(--portal-emerald-dark);
     color: #ffffff;
-    border-color: #047fb0;
-    box-shadow: 0 4px 14px rgba(4, 127, 176, 0.28);
+    border-color: var(--portal-emerald-dark);
+    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
     transform: translateY(-1px);
 }
 
@@ -274,18 +279,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 .group-code-pill-curved {
     display: inline-flex;
     align-items: center;
-    background: rgba(4, 127, 176, 0.08);
-    color: #047fb0;
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
     font-family: monospace;
     font-size: 0.8rem;
     font-weight: 700;
     padding: 3px 10px;
     border-radius: var(--curve-pill);
-    border: 1px solid rgba(4, 127, 176, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.22);
 }
 </style>
 
-<!-- Top Hero Banner with Smooth Curves -->
+<!-- Top Hero Banner with Portal Emerald Gradient -->
 <div class="page-hero-curved mb-4">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
         <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
@@ -298,15 +303,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
-                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(16, 185, 129, 0.32); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem;">
+                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem;">
                         <i class="bi bi-clock-history me-1"></i><?php echo htmlspecialchars($shift ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?> Shift
                     </span>
                 </div>
-                <p class="mb-0" style="color: rgba(255,255,255,0.85); font-size: 0.9rem">Distribute project groups sequentially to presentation lab committees</p>
+                <p class="mb-0" style="color: rgba(255,255,255,0.88); font-size: 0.9rem">Distribute project groups sequentially to presentation lab committees</p>
             </div>
         </div>
         <div class="d-flex gap-2">
-            <a href="<?php echo $basePath; ?>/coordinator/assessment" class="btn btn-light rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #047fb0; font-size: 0.88rem;">
+            <a href="<?php echo $basePath; ?>/coordinator/assessment" class="btn btn-light rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #059669; font-size: 0.88rem;">
                 <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Evaluation Sheets</span>
             </a>
         </div>
@@ -327,7 +332,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 <?php endif; ?>
 
-<!-- Summary Stat Cards with Rich Curves -->
+<!-- Summary Stat Cards with Unified Curves -->
 <div class="row g-3 mb-4">
     <!-- Total Active Groups -->
     <div class="col-lg-3 col-sm-6">
@@ -337,7 +342,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <span class="text-muted fw-bold text-uppercase d-block" style="font-size: 0.72rem; letter-spacing: 0.03em;">Total Active Groups</span>
                     <h2 class="fw-bold m-0 mt-1" style="color: var(--text-primary); font-size: 1.9rem;"><?php echo (int)$totalGroups; ?></h2>
                 </div>
-                <div class="stat-icon-bubble" style="background: rgba(4, 127, 176, 0.1); color: #047fb0;">
+                <div class="stat-icon-bubble" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
                     <i class="bi bi-collection-fill"></i>
                 </div>
             </div>
@@ -406,7 +411,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="curved-section-header">
         <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3">
-                <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, rgba(4, 127, 176, 0.15), rgba(4, 127, 176, 0.05)); color: #047fb0; border: 1px solid rgba(4, 127, 176, 0.2);">
+                <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.12); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.25);">
                     <i class="bi bi-sliders2-vertical fs-5"></i>
                 </div>
                 <div>
@@ -414,7 +419,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <p class="text-muted small mb-0 mt-0.5">Enter presentation group limits for each committee lab (Total: <strong><?php echo (int)$totalGroups; ?></strong> groups)</p>
                 </div>
             </div>
-            <button type="button" class="btn rounded-pill px-3.5 py-1.5 fw-bold d-inline-flex align-items-center gap-2 shadow-sm" style="background: rgba(4, 127, 176, 0.08); color: #047fb0; border: 1.5px solid rgba(4, 127, 176, 0.25); font-size: 0.82rem;" onclick="balanceEqually()" title="Split total groups equally among committees">
+            <button type="button" class="btn rounded-pill px-3.5 py-1.5 fw-bold d-inline-flex align-items-center gap-2 shadow-sm" style="background: rgba(16, 185, 129, 0.08); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.25); font-size: 0.82rem;" onclick="balanceEqually()" title="Split total groups equally among committees">
                 <i class="bi bi-distribute-horizontal"></i> <span>Equal Split</span>
             </button>
         </div>
@@ -477,7 +482,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="d-flex flex-wrap gap-1.5">
                                     <?php foreach($memberNames as $mName): ?>
                                     <span class="evaluator-chip">
-                                        <i class="bi bi-person-check-fill text-primary" style="font-size: 0.72rem;"></i>
+                                        <i class="bi bi-person-check-fill" style="color: var(--portal-emerald); font-size: 0.72rem;"></i>
                                         <?php echo htmlspecialchars($mName, ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
                                     <?php endforeach; ?>
@@ -496,14 +501,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <!-- Curved Action & Live Info Capsule -->
             <div class="action-capsule-bar d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center bg-white shadow-sm" style="width: 40px; height: 40px; color: #047fb0;">
+                    <div class="rounded-circle p-2.5 d-flex align-items-center justify-content-center bg-white shadow-sm" style="width: 40px; height: 40px; color: var(--portal-emerald-dark);">
                         <i class="bi bi-info-circle-fill fs-5"></i>
                     </div>
                     <div id="capacitySummaryText" style="color: var(--text-primary); font-size: 0.9rem;">
                         Allocating: <strong><?php echo $totalGroups; ?></strong> of <strong><?php echo $totalGroups; ?></strong> total groups sequentially.
                     </div>
                 </div>
-                <button type="submit" class="btn rounded-pill px-4 py-2.5 fw-bold d-inline-flex align-items-center gap-2 shadow" style="background: linear-gradient(135deg, #047fb0, #0284c7); border: none; color: #ffffff; font-size: 0.92rem;">
+                <button type="submit" class="btn rounded-pill px-4 py-2.5 fw-bold d-inline-flex align-items-center gap-2 shadow" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #ffffff; font-size: 0.92rem;">
                     <i class="bi bi-magic"></i> <span>Distribute Groups Sequentially</span>
                 </button>
             </div>
@@ -572,7 +577,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <span class="group-code-pill-curved">
                                     <?php echo htmlspecialchars($g['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.7rem; font-weight: 600;">
+                                <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.7rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($g['student_shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </div>
