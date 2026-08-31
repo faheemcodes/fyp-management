@@ -3,6 +3,54 @@
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 ?>
 
+<style>
+/* Minimal Action Buttons */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px !important;
+    font-size: 0.82rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.action-btn-view {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+.action-btn-view:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #2563eb;
+}
+.action-btn-edit {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.25);
+}
+.action-btn-edit:hover {
+    background: rgba(16, 185, 129, 0.2);
+    color: #059669;
+}
+.action-btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+}
+.action-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+}
+</style>
+
 <!-- Top Hero Banner -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
@@ -75,16 +123,71 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.12); color: #047fb0; border: 1px solid rgba(4, 127, 176, 0.25); font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.2)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.12)';" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
-                                <i class="bi bi-pencil-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Edit</span>
+                        <div class="d-flex justify-content-end gap-1.5">
+                            <!-- View Button -->
+                            <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" title="View Details">
+                                <i class="bi bi-eye-fill"></i>
                             </button>
-                            <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.12); color: #a80a34; border: 1px solid rgba(168, 10, 52, 0.25); font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.2)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.12)';" onclick="confirmAction(event, 'Are you sure you want to delete this committee member?')">
-                                <i class="bi bi-trash3-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Delete</span>
+                            <!-- Edit Button -->
+                            <button type="button" class="action-btn action-btn-edit" data-bs-toggle="modal" data-bs-target="#editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" title="Edit">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <!-- Delete Button -->
+                            <a href="<?php echo $basePath; ?>/hod/committee/delete?id=<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="action-btn action-btn-delete" title="Delete" onclick="confirmAction(event, 'Are you sure you want to delete this committee member?')">
+                                <i class="bi bi-trash3-fill"></i>
                             </a>
                         </div>
                     </td>
                 </tr>
+
+                <!-- View Modal -->
+                <div class="modal fade" id="viewModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
+                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
+                                <div class="position-absolute top-0 end-0 p-3">
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); width: 60px; height: 60px;">
+                                    <i class="bi bi-shield-fill text-primary" style="font-size: 1.6rem"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></h5>
+                                <span class="badge px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
+                                    <?php echo htmlspecialchars($c['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?>
+                                </span>
+                            </div>
+                            <div class="modal-body p-4 pt-3">
+                                <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <div class="row g-3 small">
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Department</span>
+                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($c['department'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
+                                            <span class="font-monospace" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                        <div class="col-12">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
+                                            <span style="color: var(--text-primary);"><i class="bi bi-envelope me-1 text-primary"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Role</span>
+                                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2.5 py-0.5">Evaluation Committee</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Status</span>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-0.5">Active Member</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-4 pt-0">
+                                <button type="button" class="btn btn-light w-100 rounded-pill fw-semibold" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
