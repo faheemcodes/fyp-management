@@ -244,6 +244,7 @@ class HodController extends BaseController {
             $lastName = trim($_POST['last_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
+            $mobileCode = trim($_POST['mobile_code'] ?? '+92');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $designation = trim($_POST['designation'] ?? '');
@@ -284,8 +285,8 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $department]);
 
                 // Sync profiles table
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Supervisor');
 
@@ -383,7 +384,7 @@ class HodController extends BaseController {
         // Fetch registered supervisors in this department not enrolled in committees
         $stmtAvailableSups = $db->prepare("
             SELECT s.user_id, s.name, s.designation, s.department, u.email, u.cnic,
-                   p.prefix, p.surname, p.mobile_no
+                   p.prefix, p.surname, p.mobile_code, p.mobile_no
             FROM supervisors s
             JOIN users u ON s.user_id = u.id
             LEFT JOIN profiles p ON s.user_id = p.user_id
@@ -414,6 +415,7 @@ class HodController extends BaseController {
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
+            $mobileCode = trim($_POST['mobile_code'] ?? '+92');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
@@ -534,8 +536,8 @@ class HodController extends BaseController {
                         $stmt->execute([$userId, $fullName, $designation, $department, $committeeNumber]);
 
                         // Sync profiles table
-                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
-                        $stmtP->execute([$userId, $lastName, $cnic, !empty($contactNo) ? $contactNo : '03000000000']);
+                        $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                        $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                         $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Committee Member');
 
@@ -879,6 +881,7 @@ class HodController extends BaseController {
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
+            $mobileCode = trim($_POST['mobile_code'] ?? '+92');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
             $shift = in_array($_POST['shift'] ?? '', ['Morning', 'Evening', 'All']) ? $_POST['shift'] : 'Morning';
@@ -922,8 +925,8 @@ class HodController extends BaseController {
                 $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
                 
                 // Keep profiles table in sync
-                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
-                $stmtP->execute([$userId, $lastName, $cnic]);
+                $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                $stmtP->execute([$userId, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
                 $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
                 

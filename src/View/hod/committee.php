@@ -346,6 +346,7 @@ $numCommittees = $num_committees ?? 2;
                                         data-email="<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>"
                                         data-cnic="<?php echo htmlspecialchars($sup['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-designation="<?php echo htmlspecialchars($sup['designation'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-mobilecode="<?php echo htmlspecialchars($sup['mobile_code'] ?? '+92', ENT_QUOTES, 'UTF-8'); ?>"
                                         data-contact="<?php echo htmlspecialchars($sup['mobile_no'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($sup['name'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($sup['email'], ENT_QUOTES, 'UTF-8'); ?>)
                                 </option>
@@ -393,7 +394,16 @@ $numCommittees = $num_committees ?? 2;
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Contact Number</label>
-                            <input type="text" class="form-control" name="contact_no" id="createContact" placeholder="03001234567">
+                            <div class="input-group">
+                                <select class="form-select flex-shrink-0" name="mobile_code" id="createMobileCode" style="max-width: 90px;">
+                                    <option value="+92" selected>+92</option>
+                                    <option value="+1">+1</option>
+                                    <option value="+44">+44</option>
+                                    <option value="+971">+971</option>
+                                    <option value="+966">+966</option>
+                                </select>
+                                <input type="tel" class="form-control" name="contact_no" id="createContact" placeholder="3001234567">
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center mb-1">
@@ -428,6 +438,7 @@ function onSupervisorSelected(sel) {
     const emailInput = document.getElementById('createEmail');
     const cnicInput = document.getElementById('createCnic');
     const desigInput = document.getElementById('createDesignation');
+    const mobileCodeInput = document.getElementById('createMobileCode');
     const contactInput = document.getElementById('createContact');
 
     if (opt && opt.value) {
@@ -437,6 +448,7 @@ function onSupervisorSelected(sel) {
         if (emailInput) emailInput.value = opt.getAttribute('data-email') || '';
         if (cnicInput) cnicInput.value = opt.getAttribute('data-cnic') || '';
         if (desigInput) desigInput.value = opt.getAttribute('data-designation') || '';
+        if (mobileCodeInput) mobileCodeInput.value = opt.getAttribute('data-mobilecode') || '+92';
         if (contactInput) contactInput.value = opt.getAttribute('data-contact') || '';
     } else {
         hiddenId.value = '0';
@@ -445,6 +457,7 @@ function onSupervisorSelected(sel) {
         if (emailInput) emailInput.value = '';
         if (cnicInput) cnicInput.value = '';
         if (desigInput) desigInput.value = '';
+        if (mobileCodeInput) mobileCodeInput.value = '+92';
         if (contactInput) contactInput.value = '';
     }
 }

@@ -341,7 +341,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Contact Number</label>
-                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
+                            <div class="input-group">
+                                <select class="form-select flex-shrink-0" name="mobile_code" style="max-width: 90px;">
+                                    <option value="+92" selected>+92</option>
+                                    <option value="+1">+1</option>
+                                    <option value="+44">+44</option>
+                                    <option value="+971">+971</option>
+                                    <option value="+966">+966</option>
+                                </select>
+                                <input type="tel" class="form-control" name="contact_no" placeholder="3001234567">
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between align-items-center mb-1">
