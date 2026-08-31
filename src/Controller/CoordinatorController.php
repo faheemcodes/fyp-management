@@ -9,6 +9,12 @@ class CoordinatorController extends BaseController {
         return $stmt->fetchColumn();
     }
 
+    private function getCoordinatorShift($db, $userId) {
+        $stmt = $db->prepare("SELECT shift FROM coordinators WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn() ?: 'Morning';
+    }
+
     private function getCoordinatorName($db, $userId) {
         $stmt = $db->prepare("SELECT name FROM coordinators WHERE user_id = ?");
         $stmt->execute([$userId]);
@@ -26,15 +32,18 @@ class CoordinatorController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $userId = $_SESSION['user_id'] ?? 0;
         $dept = $this->getCoordinatorDept($db, $userId);
+        $shift = $this->getCoordinatorShift($db, $userId);
+        
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
         
         $stats = [];
-        // Pending student approvals in department
-        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?");
+        // Pending student approvals in department & shift
+        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?$shiftFilter");
         $stmt->execute([$dept]);
         $stats['pending_approvals'] = $stmt->fetchColumn();
         
-        // Active students in department
-        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'approved' AND s.department = ?");
+        // Active students in department & shift
+        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'approved' AND s.department = ?$shiftFilter");
         $stmt->execute([$dept]);
         $stats['total_students'] = $stmt->fetchColumn();
 
@@ -47,7 +56,7 @@ class CoordinatorController extends BaseController {
         $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings m
             JOIN `groups` g ON m.group_id = g.id
             JOIN students s ON g.created_by = s.user_id
-            WHERE s.department = ? AND m.status = 'Completed'");
+            WHERE s.department = ? AND m.status = 'Completed'$shiftFilter");
         $stmtMeetings->execute([$dept]);
         $stats['pending_meetings'] = $stmtMeetings->fetchColumn();
 
@@ -55,18 +64,18 @@ class CoordinatorController extends BaseController {
         $stmtPendingCount = $db->prepare("SELECT COUNT(*) FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN students s ON g.created_by = s.user_id
-            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')");
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')$shiftFilter");
         $stmtPendingCount->execute([$dept]);
         $stats['pending_proposals'] = $stmtPendingCount->fetchColumn();
 
-        // Fetch unverified proposals for the department
+        // Fetch unverified proposals for the department & shift
         $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
             JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
-            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')$shiftFilter
             ORDER BY 
                 CASE 
                     WHEN pr.status = 'Supervisor Approved' THEN 1 
@@ -109,13 +118,16 @@ class CoordinatorController extends BaseController {
     public function verifyStudents() {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        $shift = $this->getCoordinatorShift($db, $_SESSION['user_id'] ?? 0);
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
 
-        $stmt = $db->prepare("SELECT s.*, u.email, u.status FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ? ORDER BY u.created_at DESC");
+        $stmt = $db->prepare("SELECT s.*, u.email, u.status FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?$shiftFilter ORDER BY u.created_at DESC");
         $stmt->execute([$dept]);
         $students = $stmt->fetchAll();
 
         $this->render('coordinator/verify_students', [
-            'students' => $students
+            'students' => $students,
+            'shift' => $shift
         ]);
     }
 
@@ -421,15 +433,17 @@ class CoordinatorController extends BaseController {
     public function proposals() {
         $db = \Database::getInstance()->getConnection();
         $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        $shift = $this->getCoordinatorShift($db, $_SESSION['user_id'] ?? 0);
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
 
-        // Fetch proposals for groups where the group creator is a student in the coordinator's department
+        // Fetch proposals for groups where the group creator is a student in the coordinator's department & shift
         $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
             JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
-            WHERE s.department = ? 
+            WHERE s.department = ?$shiftFilter 
             ORDER BY pr.submitted_at DESC");
         $stmt->execute([$dept]);
         $proposals = $stmt->fetchAll();
@@ -455,7 +469,8 @@ class CoordinatorController extends BaseController {
 
         $this->render('coordinator/proposals', [
             'proposals' => $proposals,
-            'supervisors' => $supervisors
+            'supervisors' => $supervisors,
+            'shift' => $shift
         ]);
     }
 
@@ -773,4 +788,198 @@ class CoordinatorController extends BaseController {
         }
         redirect('/coordinator/meetings');
     }
+
+    public function committees() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $shift = $this->getCoordinatorShift($db, $userId);
+
+        // Fetch department settings for number of committees
+        $stmtDept = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");
+        $stmtDept->execute([$dept]);
+        $numCommittees = (int)($stmtDept->fetchColumn() ?: 2);
+
+        // Fetch active committee evaluators
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommitteeMembers = $stmtComm->fetchAll();
+
+        $committeeMembers = [];
+        for ($i = 1; $i <= $numCommittees; $i++) {
+            $committeeMembers[$i] = array_values(array_filter($allCommitteeMembers, fn($m) => (int)($m['committee_number'] ?? 1) === $i));
+        }
+
+        // Fetch active approved groups in coordinator's shift & department
+        $shiftSql = ($shift !== 'All') ? " AND s.shift = ?" : "";
+        $params = [$dept];
+        if ($shift !== 'All') {
+            $params[] = $shift;
+        }
+
+        $stmtGroups = $db->prepare("
+            SELECT g.id, g.group_code, g.committee_number, g.progress_stage, g.created_at,
+                   p.id as project_id, p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name, sup.designation as supervisor_designation,
+                   s.shift as student_shift
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 $shiftSql
+            ORDER BY g.group_code ASC, g.id ASC
+        ");
+        $stmtGroups->execute($params);
+        $groups = $stmtGroups->fetchAll();
+
+        // Fetch members for each group
+        foreach ($groups as &$grp) {
+            $stmtM = $db->prepare("
+                SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar 
+                FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                WHERE gm.group_id = ?
+            ");
+            $stmtM->execute([$grp['id']]);
+            $grp['members'] = $stmtM->fetchAll();
+        }
+
+        // Calculate distribution stats
+        $committeeCounts = [];
+        for ($i = 1; $i <= $numCommittees; $i++) {
+            $committeeCounts[$i] = 0;
+        }
+        $unassignedCount = 0;
+
+        foreach ($groups as $g) {
+            $cNum = $g['committee_number'];
+            if ($cNum && isset($committeeCounts[(int)$cNum])) {
+                $committeeCounts[(int)$cNum]++;
+            } else {
+                $unassignedCount++;
+            }
+        }
+
+        $this->render('coordinator/committee_allocation', [
+            'department' => $dept,
+            'shift' => $shift,
+            'numCommittees' => $numCommittees,
+            'committeeMembers' => $committeeMembers,
+            'groups' => $groups,
+            'committeeCounts' => $committeeCounts,
+            'unassignedCount' => $unassignedCount,
+            'totalGroups' => count($groups)
+        ]);
+    }
+
+    public function distributeCommittees() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId);
+            $shift = $this->getCoordinatorShift($db, $userId);
+
+            $capacities = $_POST['capacity'] ?? [];
+
+            // Fetch active approved groups in coordinator's department & shift ordered sequentially
+            $shiftSql = ($shift !== 'All') ? " AND s.shift = ?" : "";
+            $params = [$dept];
+            if ($shift !== 'All') {
+                $params[] = $shift;
+            }
+
+            $stmtGroups = $db->prepare("
+                SELECT g.id, g.group_code
+                FROM `groups` g
+                JOIN projects p ON g.id = p.group_id
+                JOIN students s ON g.created_by = s.user_id
+                JOIN academic_batches b ON g.batch_id = b.id
+                WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 $shiftSql
+                ORDER BY g.group_code ASC, g.id ASC
+            ");
+            $stmtGroups->execute($params);
+            $groups = $stmtGroups->fetchAll();
+
+            $totalGroups = count($groups);
+            if ($totalGroups === 0) {
+                $this->flash('error', 'No approved project groups found to allocate.');
+                redirect('/coordinator/committees');
+            }
+
+            try {
+                $db->beginTransaction();
+
+                $assignedIndex = 0;
+                $summaryParts = [];
+
+                foreach ($capacities as $commNum => $cap) {
+                    $commNum = (int)$commNum;
+                    $cap = max(0, (int)$cap);
+                    $assignedToThis = 0;
+
+                    for ($i = 0; $i < $cap && $assignedIndex < $totalGroups; $i++) {
+                        $grpId = $groups[$assignedIndex]['id'];
+                        $stmtUp = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                        $stmtUp->execute([$commNum, $grpId]);
+                        $assignedIndex++;
+                        $assignedToThis++;
+                    }
+
+                    if ($assignedToThis > 0) {
+                        $summaryParts[] = "$assignedToThis groups to Committee $commNum";
+                    }
+                }
+
+                // Any remaining overflow groups go to the last committee
+                if ($assignedIndex < $totalGroups) {
+                    $lastComm = count($capacities) > 0 ? max(array_keys($capacities)) : 1;
+                    $overflowCount = 0;
+                    while ($assignedIndex < $totalGroups) {
+                        $grpId = $groups[$assignedIndex]['id'];
+                        $stmtUp = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                        $stmtUp->execute([$lastComm, $grpId]);
+                        $assignedIndex++;
+                        $overflowCount++;
+                    }
+                    if ($overflowCount > 0) {
+                        $summaryParts[] = "$overflowCount extra groups to Committee $lastComm";
+                    }
+                }
+
+                $db->commit();
+                $this->flash('success', "Sequential distribution complete: " . implode(', ', $summaryParts) . " ($totalGroups total groups).");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error applying committee distribution. Please try again.');
+            }
+        }
+        redirect('/coordinator/committees');
+    }
+
+    public function reassignGroupCommittee() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $groupId = (int)($_POST['group_id'] ?? 0);
+            $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
+
+            if ($groupId > 0) {
+                $stmt = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                $stmt->execute([$committeeNumber, $groupId]);
+                $this->flash('success', "Group successfully reallocated to Committee $committeeNumber.");
+            } else {
+                $this->flash('error', 'Invalid group selection.');
+            }
+        }
+        redirect('/coordinator/committees');
+    }
 }
+

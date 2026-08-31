@@ -139,6 +139,7 @@ $routes = [
     '/hod/students/approve-all' => ['Controller\HodController', 'approveAllStudents'],
     '/hod/students/reject' => ['Controller\HodController', 'rejectStudent'],
     '/hod/projects' => ['Controller\HodController', 'projects'],
+    '/hod/projects/reassign-committee' => ['Controller\HodController', 'reassignGroupCommittee'],
     '/hod/profile' => ['Controller\HodController', 'profile'],
     
     // Student routes
@@ -195,6 +196,9 @@ $routes = [
     '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
     '/coordinator/assessment' => ['Controller\CoordinatorController', 'externalAssessment'],
     '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
+    '/coordinator/committees' => ['Controller\CoordinatorController', 'committees'],
+    '/coordinator/committees/distribute' => ['Controller\CoordinatorController', 'distributeCommittees'],
+    '/coordinator/committees/reassign' => ['Controller\CoordinatorController', 'reassignGroupCommittee'],
     '/coordinator/meetings' => ['Controller\CoordinatorController', 'meetings'],
     '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],

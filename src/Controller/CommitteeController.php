@@ -7,34 +7,48 @@ class CommitteeController extends BaseController {
         $evaluatorId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 
-        // Count assigned evaluations (groups who have approved projects)
-        $stmt = $db->query("SELECT COUNT(*) FROM `groups` g JOIN projects p ON g.id = p.group_id JOIN academic_batches b ON g.batch_id = b.id WHERE p.status = 'Approved' AND b.is_active = 1");
-        $totalGroups = $stmt->fetchColumn();
+        // Fetch committee details & assigned committee number
+        $stmt = $db->prepare("SELECT name, department, committee_number FROM committees WHERE user_id = ?");
+        $stmt->execute([$evaluatorId]);
+        $committee = $stmt->fetch();
+        $department = $committee['department'] ?? $_SESSION['department'] ?? 'Software Engineering';
+        $myCommNum = (int)($committee['committee_number'] ?? 1);
+
+        // Count assigned evaluations for this committee & department
+        $stmtCount = $db->prepare("
+            SELECT COUNT(*) 
+            FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id 
+            JOIN students s ON g.created_by = s.user_id
+            JOIN academic_batches b ON g.batch_id = b.id 
+            WHERE p.status = 'Approved' AND b.is_active = 1 AND s.department = ? AND (g.committee_number = ? OR g.committee_number IS NULL)
+        ");
+        $stmtCount->execute([$department, $myCommNum]);
+        $totalGroups = $stmtCount->fetchColumn();
 
         // Graded evaluations count
-        $stmt = $db->prepare("SELECT COUNT(*) FROM evaluations e JOIN `groups` g ON e.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE e.evaluator_id = ? AND b.is_active = 1 AND total_marks > 0");
-        $stmt->execute([$evaluatorId]);
-        $gradedCount = $stmt->fetchColumn();
+        $stmtGraded = $db->prepare("SELECT COUNT(*) FROM evaluations e JOIN `groups` g ON e.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE e.evaluator_id = ? AND b.is_active = 1 AND total_marks > 0");
+        $stmtGraded->execute([$evaluatorId]);
+        $gradedCount = $stmtGraded->fetchColumn();
 
         // Pending evaluations count (3 stages per group)
         $pendingCount = max(0, ($totalGroups * 3) - $gradedCount);
 
-        // Fetch groups list
-        $groups = $db->query("SELECT g.*, p.title as project_title, p.thesis_file, p.status as project_status, sup.name as supervisor_name
+        // Fetch groups list assigned to this committee
+        $stmtGroups = $db->prepare("
+            SELECT g.*, p.title as project_title, p.thesis_file, p.status as project_status, sup.name as supervisor_name
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN academic_batches b ON g.batch_id = b.id
-            WHERE p.status = 'Approved' AND b.is_active = 1
-            ORDER BY g.created_at DESC")->fetchAll();
-
-        // Fetch committee details
-        $stmt = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
-        $stmt->execute([$evaluatorId]);
-        $committee = $stmt->fetch();
+            WHERE p.status = 'Approved' AND b.is_active = 1 AND s.department = ? AND (g.committee_number = ? OR g.committee_number IS NULL)
+            ORDER BY g.created_at DESC
+        ");
+        $stmtGroups->execute([$department, $myCommNum]);
+        $groups = $stmtGroups->fetchAll();
 
         // Get system notices
-        $department = $committee['department'] ?? $_SESSION['department'] ?? 'Software Engineering';
         $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('committee', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
         $stmtNotices->execute([$department]);
         $recentNotices = $stmtNotices->fetchAll();
@@ -53,15 +67,27 @@ class CommitteeController extends BaseController {
         $evaluatorId = $_SESSION['user_id'];
         $db = \Database::getInstance()->getConnection();
 
+        // Fetch committee details & assigned committee number
+        $stmt = $db->prepare("SELECT name, department, committee_number FROM committees WHERE user_id = ?");
+        $stmt->execute([$evaluatorId]);
+        $committee = $stmt->fetch();
+        $department = $committee['department'] ?? 'Software Engineering';
+        $myCommNum = (int)($committee['committee_number'] ?? 1);
+
         // Fetch groups along with scheduled and graded evaluation records for this committee member, including abstract
-        $groups = $db->query("SELECT g.*, p.title as project_title, p.thesis_file, sup.name as supervisor_name, prop.abstract as proposal_abstract
+        $stmtGroups = $db->prepare("
+            SELECT g.*, p.title as project_title, p.thesis_file, sup.name as supervisor_name, prop.abstract as proposal_abstract
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN proposals prop ON g.id = prop.group_id
             JOIN academic_batches b ON g.batch_id = b.id
-            WHERE p.status = 'Approved' AND b.is_active = 1
-            ORDER BY g.created_at DESC")->fetchAll();
+            WHERE p.status = 'Approved' AND b.is_active = 1 AND s.department = ? AND (g.committee_number = ? OR g.committee_number IS NULL)
+            ORDER BY g.group_code ASC, g.created_at DESC
+        ");
+        $stmtGroups->execute([$department, $myCommNum]);
+        $groups = $stmtGroups->fetchAll();
 
         foreach ($groups as &$group) {
             $stmt = $db->prepare("SELECT * FROM evaluations WHERE group_id = ? AND evaluator_id = ?");
@@ -97,7 +123,8 @@ class CommitteeController extends BaseController {
         }
 
         $this->render('committee/evaluations', [
-            'groups' => $groups
+            'groups' => $groups,
+            'committee' => $committee
         ]);
     }
 
@@ -112,18 +139,25 @@ class CommitteeController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         // Fetch committee details
-        $stmtC = $db->prepare("SELECT c.name, c.department FROM committees c WHERE c.user_id = ?");
+        $stmtC = $db->prepare("SELECT c.name, c.department, c.committee_number FROM committees c WHERE c.user_id = ?");
         $stmtC->execute([$evaluatorId]);
         $committee = $stmtC->fetch();
+        $department = $committee['department'] ?? 'Software Engineering';
+        $myCommNum = (int)($committee['committee_number'] ?? 1);
 
         // Fetch groups assigned to this committee member
-        $groups = $db->query("SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
+        $stmtGroups = $db->prepare("
+            SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN academic_batches b ON g.batch_id = b.id
-            WHERE p.status = 'Approved' AND b.is_active = 1
-            ORDER BY g.group_code ASC")->fetchAll();
+            WHERE p.status = 'Approved' AND b.is_active = 1 AND s.department = ? AND (g.committee_number = ? OR g.committee_number IS NULL)
+            ORDER BY g.group_code ASC
+        ");
+        $stmtGroups->execute([$department, $myCommNum]);
+        $groups = $stmtGroups->fetchAll();
 
         $grouped = [];
 
@@ -182,13 +216,25 @@ class CommitteeController extends BaseController {
 
         $db = \Database::getInstance()->getConnection();
 
-        $groups = $db->query("SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
+        // Fetch committee details
+        $stmtC = $db->prepare("SELECT c.name, c.department, c.committee_number FROM committees c WHERE c.user_id = ?");
+        $stmtC->execute([$evaluatorId]);
+        $committee = $stmtC->fetch();
+        $department = $committee['department'] ?? 'Software Engineering';
+        $myCommNum = (int)($committee['committee_number'] ?? 1);
+
+        $stmtGroups = $db->prepare("
+            SELECT g.id as group_id, g.group_code, p.title as project_title, sup.name as supervisor_name
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN academic_batches b ON g.batch_id = b.id
-            WHERE p.status = 'Approved' AND b.is_active = 1
-            ORDER BY g.group_code ASC")->fetchAll();
+            WHERE p.status = 'Approved' AND b.is_active = 1 AND s.department = ? AND (g.committee_number = ? OR g.committee_number IS NULL)
+            ORDER BY g.group_code ASC
+        ");
+        $stmtGroups->execute([$department, $myCommNum]);
+        $groups = $stmtGroups->fetchAll();
 
         $grouped = [];
 

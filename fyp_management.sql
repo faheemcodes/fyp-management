@@ -74,7 +74,8 @@ CREATE TABLE `coordinators` (
   `user_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `designation` varchar(100) DEFAULT NULL,
-  `department` varchar(100) NOT NULL
+  `department` varchar(100) NOT NULL,
+  `shift` enum('Morning','Evening','All') NOT NULL DEFAULT 'Morning'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -182,7 +183,8 @@ CREATE TABLE `groups` (
   `created_by` int(11) NOT NULL,
   `progress_stage` enum('Account Created','Group Created','Proposal Submitted','Proposal Approved','Proposal Defence Presentation Completed','FYP Progress Presentation Completed','Final Presentation Completed','Final Grading Completed') DEFAULT 'Group Created',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `batch_id` int(11) NOT NULL
+  `batch_id` int(11) NOT NULL,
+  `committee_number` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

@@ -65,7 +65,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage departmental FYP coordinators</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage departmental Morning &amp; Evening FYP coordinators</p>
             </div>
         </div>
         <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createCoordinatorModal">
@@ -95,6 +95,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <thead>
                 <tr>
                     <th class="ps-4">Coordinator</th>
+                    <th>Shift</th>
                     <th>Designation</th>
                     <th>CNIC</th>
                     <th>Department</th>
@@ -103,6 +104,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </thead>
             <tbody>
                 <?php foreach($coordinators as $c): ?>
+                <?php $coordShift = $c['shift'] ?? 'Morning'; ?>
                 <tr>
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
@@ -114,6 +116,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <small class="text-muted" style="font-size: 0.8rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        <?php if ($coordShift === 'Evening'): ?>
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-moon-stars-fill me-1"></i>Evening Shift
+                        </span>
+                        <?php elseif ($coordShift === 'All'): ?>
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-sun-fill me-1"></i>All Shifts
+                        </span>
+                        <?php else: ?>
+                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.78rem;">
+                            <i class="bi bi-sun-fill me-1"></i>Morning Shift
+                        </span>
+                        <?php endif; ?>
                     </td>
                     <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
@@ -152,9 +169,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <i class="bi bi-person-workspace text-primary" style="font-size: 1.6rem"></i>
                                 </div>
                                 <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?></h5>
-                                <span class="badge px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
-                                    <?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?>
-                                </span>
+                                <div class="d-flex align-items-center gap-1.5 justify-content-center">
+                                    <span class="badge px-2.5 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.78rem;">
+                                        <?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
+                                    <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.78rem;">
+                                        <?php echo htmlspecialchars($coordShift, ENT_QUOTES, 'UTF-8'); ?> Shift
+                                    </span>
+                                </div>
                             </div>
                             <div class="modal-body p-4 pt-3">
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
@@ -164,16 +186,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                             <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($c['department'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
                                         <div class="col-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
-                                            <span class="font-monospace" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Assigned Shift</span>
+                                            <strong class="text-primary"><?php echo htmlspecialchars($coordShift, ENT_QUOTES, 'UTF-8'); ?> Shift</strong>
                                         </div>
                                         <div class="col-12">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
                                             <span style="color: var(--text-primary);"><i class="bi bi-envelope me-1 text-primary"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Role</span>
-                                            <span class="badge bg-purple-subtle text-purple border border-purple-subtle rounded-pill px-2.5 py-0.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.25);">FYP Coordinator</span>
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
+                                            <span class="font-monospace" style="color: var(--text-primary);"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Status</span>
@@ -214,6 +236,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
                                     <div class="mb-3 text-start">
+                                        <label class="form-label small fw-bold text-muted">Assigned Shift</label>
+                                        <select class="form-select" name="shift" required>
+                                            <option value="Morning" <?php echo ($coordShift === 'Morning') ? 'selected' : ''; ?>>Morning Shift</option>
+                                            <option value="Evening" <?php echo ($coordShift === 'Evening') ? 'selected' : ''; ?>>Evening Shift</option>
+                                            <option value="All" <?php echo ($coordShift === 'All') ? 'selected' : ''; ?>>All Shifts (Both)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 text-start">
+                                        <label class="form-label small fw-bold text-muted">Designation</label>
+                                        <input type="text" class="form-control" name="designation" value="<?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?>" required>
+                                    </div>
+                                    <div class="mb-3 text-start">
                                         <label class="form-label small fw-bold text-muted">Email Address</label>
                                         <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                     </div>
@@ -239,7 +273,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($coordinators)): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-5">
+                    <td colspan="6" class="text-center text-muted py-5">
                         <i class="bi bi-person-workspace fs-2 d-block mb-2 opacity-50"></i>
                         No coordinators appointed yet.
                     </td>
@@ -295,20 +329,30 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <input type="text" class="form-control" name="designation" required value="FYP Coordinator" placeholder="e.g. Assistant Professor & Coordinator">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Contact Number</label>
-                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
+                            <label class="form-label small fw-bold text-muted">Assigned Shift *</label>
+                            <select class="form-select" name="shift" required>
+                                <option value="Morning">Morning Shift</option>
+                                <option value="Evening">Evening Shift</option>
+                                <option value="All">All Shifts (Both)</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="mb-0">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label class="form-label small fw-bold text-muted m-0">Password *</label>
-                            <button type="button" class="btn btn-link p-0 text-decoration-none small text-primary fw-semibold" onclick="generateRandomPassword('coordPassword')">
-                                <i class="bi bi-magic me-1"></i>Generate
-                            </button>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Contact Number</label>
+                            <input type="text" class="form-control" name="contact_no" placeholder="03001234567">
                         </div>
-                        <div class="position-relative">
-                            <input type="text" class="form-control font-monospace" id="coordPassword" name="password" required placeholder="Enter or generate password">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-bold text-muted m-0">Password *</label>
+                                <button type="button" class="btn btn-link p-0 text-decoration-none small text-primary fw-semibold" onclick="generateRandomPassword('coordPassword')">
+                                    <i class="bi bi-magic me-1"></i>Generate
+                                </button>
+                            </div>
+                            <div class="position-relative">
+                                <input type="text" class="form-control font-monospace" id="coordPassword" name="password" required placeholder="Enter or generate password">
+                            </div>
                         </div>
                     </div>
                 </div>

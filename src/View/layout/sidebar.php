@@ -378,6 +378,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/committees" class="nav-link <?php echo isActive('/coordinator/committees', $currentUri); ?>">
+                        <i class="bi bi-diagram-3-fill"></i> <span>Committee Allocation</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
                         <i class="bi bi-megaphone-fill"></i> <span>Notice Generator</span>
                     </a>

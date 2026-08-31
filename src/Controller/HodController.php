@@ -677,7 +677,7 @@ class HodController extends BaseController {
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
         $stmt = $db->prepare("
-            SELECT g.id as group_id, g.group_code, g.progress_stage, g.created_at,
+            SELECT g.id as group_id, g.group_code, g.committee_number, g.progress_stage, g.created_at,
                    p.id as project_id, p.title as project_title, p.description as abstract, p.status as project_status, p.thesis_file,
                    pr.id as proposal_id, pr.file_path as proposal_file, pr.status as proposal_status,
                    sup.name as supervisor_name, sup.designation as supervisor_designation
@@ -705,10 +705,33 @@ class HodController extends BaseController {
             $proj['members'] = $stmtM->fetchAll();
         }
 
+        $stmtNumComm = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");
+        $stmtNumComm->execute([$dept]);
+        $numCommittees = (int)($stmtNumComm->fetchColumn() ?: 2);
+
         $this->render('hod/projects', [
             'projects' => $projects,
+            'num_committees' => $numCommittees,
             'department' => $dept
         ]);
+    }
+
+    public function reassignGroupCommittee() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $groupId = (int)($_POST['group_id'] ?? 0);
+            $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
+
+            if ($groupId > 0) {
+                $stmt = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                $stmt->execute([$committeeNumber, $groupId]);
+                $this->flash('success', "Group successfully reallocated to Committee $committeeNumber.");
+            } else {
+                $this->flash('error', 'Invalid group selection.');
+            }
+        }
+        redirect('/hod/projects');
     }
 
     public function coordinators() {
@@ -735,6 +758,7 @@ class HodController extends BaseController {
             $designation = trim($_POST['designation'] ?? '');
             $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
+            $shift = in_array($_POST['shift'] ?? '', ['Morning', 'Evening', 'All']) ? $_POST['shift'] : 'Morning';
             
             if (empty($firstName) || empty($lastName) || empty($email) || empty($cnic) || empty($password) || empty($designation)) {
                 $this->flash('error', 'All fields are required.');
@@ -771,17 +795,17 @@ class HodController extends BaseController {
                 $userId = $db->lastInsertId();
                 
                 $fullName = $firstName . ' ' . $lastName;
-                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$userId, $fullName, $designation, $dept]);
+                $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $fullName, $designation, $dept, $shift]);
                 
                 // Keep profiles table in sync
                 $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Mr.', ?, ?, '1985-01-01', '+92', '03000000000', 'Not Provided Yet', 'Male')");
                 $stmtP->execute([$userId, $lastName, $cnic]);
 
-                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, 'Coordinator');
+                $this->sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, "Coordinator ($shift Shift)");
                 
                 $db->commit();
-                $this->flash('success', "Coordinator $fullName created successfully under department $dept and credentials sent.");
+                $this->flash('success', "Coordinator $fullName ($shift Shift) created successfully under department $dept and credentials sent.");
             } catch (\Exception $e) {
                 $db->rollBack();
                 $this->flash('error', 'Error creating coordinator. Please try again.');
@@ -795,9 +819,11 @@ class HodController extends BaseController {
             $this->validateCsrf();
             $userId = $_POST['user_id'] ?? null;
             $name = trim($_POST['name'] ?? '');
+            $designation = trim($_POST['designation'] ?? 'FYP Coordinator');
             $email = trim($_POST['email'] ?? '');
             $cnic = trim($_POST['cnic'] ?? '');
             $password = $_POST['password'] ?? '';
+            $shift = in_array($_POST['shift'] ?? '', ['Morning', 'Evening', 'All']) ? $_POST['shift'] : 'Morning';
             
             if (!$userId || empty($name) || empty($email) || empty($cnic)) {
                 $this->flash('error', 'Required fields are missing.');
@@ -833,8 +859,8 @@ class HodController extends BaseController {
                 }
                 
                 // Update coordinators
-                $stmt = $db->prepare("UPDATE coordinators SET name = ? WHERE user_id = ?");
-                $stmt->execute([$name, $userId]);
+                $stmt = $db->prepare("UPDATE coordinators SET name = ?, designation = ?, shift = ? WHERE user_id = ?");
+                $stmt->execute([$name, $designation, $shift, $userId]);
                 
                 // Update profiles
                 $stmtP = $db->prepare("UPDATE profiles SET cnic = ?, surname = ? WHERE user_id = ?");

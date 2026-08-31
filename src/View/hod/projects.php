@@ -54,6 +54,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <th class="ps-4">Group &amp; Title</th>
                     <th>Supervisor</th>
                     <th>Team Members</th>
+                    <th>Committee</th>
                     <th>Milestone</th>
                     <th class="text-end pe-4">Documents</th>
                 </tr>
@@ -68,6 +69,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     } elseif (str_contains($stage, 'Final') || str_contains($stage, 'Grading')) {
                         $stageCategory = 'final';
                     }
+                    $cNum = (int)($p['committee_number'] ?? 0);
                 ?>
                 <tr data-stage-cat="<?php echo $stageCategory; ?>">
                     <td class="ps-4">
@@ -118,6 +120,17 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <span class="text-muted small">No members</span>
                             <?php endif; ?>
                         </div>
+                    </td>
+                    <td>
+                        <?php if ($cNum > 0): ?>
+                        <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.75rem;">
+                            <i class="bi bi-shield-check me-1"></i>Committee <?php echo $cNum; ?>
+                        </span>
+                        <?php else: ?>
+                        <span class="badge border rounded-pill px-2.5 py-1 text-muted border-light-subtle bg-light" style="font-size: 0.72rem;">
+                            Unassigned
+                        </span>
+                        <?php endif; ?>
                     </td>
                     <td>
                         <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.75rem;">
