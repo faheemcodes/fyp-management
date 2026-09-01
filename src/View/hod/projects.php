@@ -71,6 +71,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     background: rgba(59, 130, 246, 0.2);
     color: #2563eb;
 }
+.btn-details {
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.35rem 0.95rem;
+    border-radius: 50rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.btn-details:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #1d4ed8;
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -200,8 +222,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end align-items-center">
                             <!-- View Complete Details Button -->
-                            <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewProjectModal<?php echo (int)$p['group_id']; ?>" title="View Complete Project Details">
-                                <i class="bi bi-eye-fill"></i>
+                            <button type="button" class="btn-details" data-bs-toggle="modal" data-bs-target="#viewProjectModal<?php echo (int)$p['group_id']; ?>" title="View Complete Project Details">
+                                <i class="bi bi-eye-fill"></i> <span>Details</span>
                             </button>
                         </div>
                     </td>
