@@ -989,17 +989,22 @@ class CoordinatorController extends BaseController {
         $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
         $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
 
-        $selectedShift = $_GET['shift'] ?? 'All';
-        if (!in_array($selectedShift, ['Morning', 'Evening', 'All'])) {
-            $selectedShift = 'All';
-        }
-
-        if ($selectedShift === 'All') {
-            $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY deadline_date ASC");
-            $stmt->execute([$dept]);
-        } else {
+        if ($coordShift !== 'All') {
+            $selectedShift = $coordShift;
             $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
-            $stmt->execute([$dept, $selectedShift]);
+            $stmt->execute([$dept, $coordShift]);
+        } else {
+            $selectedShift = $_GET['shift'] ?? 'All';
+            if (!in_array($selectedShift, ['Morning', 'Evening', 'All'])) {
+                $selectedShift = 'All';
+            }
+            if ($selectedShift === 'All') {
+                $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY deadline_date ASC");
+                $stmt->execute([$dept]);
+            } else {
+                $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
+                $stmt->execute([$dept, $selectedShift]);
+            }
         }
         $deadlines = $stmt->fetchAll();
 
@@ -1022,10 +1027,21 @@ class CoordinatorController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $userId = $_SESSION['user_id'] ?? 0;
             $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
 
             $id = (int)($_POST['id'] ?? 0);
             $stage = trim($_POST['stage'] ?? '');
-            $shift = trim($_POST['shift'] ?? 'All');
+            
+            // If coordinator is assigned to Morning or Evening only, force to their shift
+            if ($coordShift !== 'All') {
+                $shift = $coordShift;
+            } else {
+                $shift = trim($_POST['shift'] ?? 'All');
+                if (!in_array($shift, ['Morning', 'Evening', 'All'])) {
+                    $shift = 'All';
+                }
+            }
+
             $deadlineDate = trim($_POST['deadline_date'] ?? '');
             $status = trim($_POST['status'] ?? 'Active');
 
@@ -1035,7 +1051,6 @@ class CoordinatorController extends BaseController {
                 'FYP Progress Presentation',
                 'Final Presentation'
             ];
-            $allowedShifts = ['Morning', 'Evening', 'All'];
             $allowedStatuses = ['Active', 'Inactive'];
 
             if (!in_array($stage, $allowedStages) || empty($deadlineDate)) {
@@ -1043,9 +1058,6 @@ class CoordinatorController extends BaseController {
                 redirect('/coordinator/deadlines');
             }
 
-            if (!in_array($shift, $allowedShifts)) {
-                $shift = 'All';
-            }
             if (!in_array($status, $allowedStatuses)) {
                 $status = 'Active';
             }
@@ -1081,11 +1093,17 @@ class CoordinatorController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $userId = $_SESSION['user_id'] ?? 0;
             $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
 
             $id = (int)($_POST['id'] ?? 0);
             if ($id > 0) {
-                $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ?");
-                $stmt->execute([$id, $dept]);
+                if ($coordShift !== 'All') {
+                    $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ? AND (shift = ? OR shift = 'All')");
+                    $stmt->execute([$id, $dept, $coordShift]);
+                } else {
+                    $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ?");
+                    $stmt->execute([$id, $dept]);
+                }
                 $this->flash('success', 'Deadline removed successfully.');
             } else {
                 $this->flash('error', 'Invalid deadline ID.');
