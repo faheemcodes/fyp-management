@@ -409,12 +409,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 ?>
                                 <tr style="border-bottom: 1px solid var(--border-color);">
                                     <td class="ps-2 py-2">
-                                        <div class="d-flex align-items-center gap-2.5">
+                                        <div class="d-flex align-items-center" style="gap: 14px;">
                                             <img src="<?php echo htmlspecialchars($mAvatarUrl, ENT_QUOTES, 'UTF-8'); ?>" 
                                                  alt="<?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>"
                                                  class="rounded-circle shadow-sm flex-shrink-0"
-                                                 style="width: 34px; height: 34px; object-fit: cover; border: 2px solid var(--border-color); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-                                                 title="Click to view full photo"
+                                                 style="width: 36px; height: 36px; object-fit: cover; border: 2px solid var(--border-color); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+                                                 title="Click to view photo"
                                                  onclick="showStudentPhotoModal('<?php echo htmlspecialchars($mAvatarUrl, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($mFullName), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no']), ENT_QUOTES, 'UTF-8'); ?>')"
                                                  onmouseover="this.style.transform='scale(1.15)'; this.style.boxShadow='0 3px 8px rgba(0,0,0,0.15)';"
                                                  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
@@ -589,11 +589,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <span class="badge border font-monospace mt-1 px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); font-size: 0.82rem;" id="modalStudentRoll"></span>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-3 pt-0 d-flex justify-content-center gap-2">
-                <a id="modalStudentPhotoFullLink" href="#" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 0.8rem;">
-                    <i class="bi bi-box-arrow-up-right me-1"></i> Full Resolution
-                </a>
-                <button type="button" class="btn btn-sm btn-light rounded-pill px-3.5 fw-semibold" style="font-size: 0.8rem;" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer border-0 p-3 pt-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-sm btn-light rounded-pill px-4 fw-semibold" style="font-size: 0.82rem;" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -639,8 +636,6 @@ function showStudentPhotoModal(src, name, roll) {
     document.getElementById('modalStudentPhoto').src = src;
     document.getElementById('modalStudentName').innerText = name;
     document.getElementById('modalStudentRoll').innerText = roll;
-    const fullLink = document.getElementById('modalStudentPhotoFullLink');
-    if (fullLink) fullLink.href = src;
     
     const photoModalEl = document.getElementById('studentPhotoModal');
     new bootstrap.Modal(photoModalEl).show();
