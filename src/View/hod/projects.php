@@ -404,10 +404,24 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php foreach($p['members'] as $m): ?>
                                 <?php 
                                     $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
+                                    $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg';
+                                    $mAvatarUrl = $basePath . '/uploads/avatars/' . $mAvatar;
                                 ?>
                                 <tr style="border-bottom: 1px solid var(--border-color);">
-                                    <td class="ps-2 py-2 fw-semibold" style="color: var(--text-primary);">
-                                        <?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>
+                                    <td class="ps-2 py-2">
+                                        <div class="d-flex align-items-center gap-2.5">
+                                            <img src="<?php echo htmlspecialchars($mAvatarUrl, ENT_QUOTES, 'UTF-8'); ?>" 
+                                                 alt="<?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>"
+                                                 class="rounded-circle shadow-sm flex-shrink-0"
+                                                 style="width: 34px; height: 34px; object-fit: cover; border: 2px solid var(--border-color); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+                                                 title="Click to view full photo"
+                                                 onclick="showStudentPhotoModal('<?php echo htmlspecialchars($mAvatarUrl, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($mFullName), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no']), ENT_QUOTES, 'UTF-8'); ?>')"
+                                                 onmouseover="this.style.transform='scale(1.15)'; this.style.boxShadow='0 3px 8px rgba(0,0,0,0.15)';"
+                                                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                                            <span class="fw-semibold" style="color: var(--text-primary); font-size: 0.88rem;">
+                                                <?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>
+                                            </span>
+                                        </div>
                                     </td>
                                     <td class="py-2 font-monospace text-muted">
                                         <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?>
@@ -563,17 +577,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
-<!-- Student Avatar Preview Modal -->
-<div class="modal fade" id="studentPhotoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content border-0 shadow-lg text-center" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
+<!-- Student Avatar Full View Modal -->
+<div class="modal fade" id="studentPhotoModal" tabindex="-1" aria-hidden="true" style="z-index: 1070;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+        <div class="modal-content border-0 shadow-lg text-center" style="border-radius: 24px; overflow: hidden; background: var(--card-bg);">
             <div class="modal-body p-4 position-relative">
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="d-flex flex-column align-items-center mt-2">
-                    <img id="modalStudentPhoto" src="" class="rounded-circle shadow mb-3" style="width: 130px; height: 130px; object-fit: cover; border: 4px solid var(--form-bg);" alt="Student Photo">
-                    <h6 class="fw-bold mb-0" style="color: var(--text-primary);" id="modalStudentName"></h6>
-                    <span class="badge border font-monospace mt-1 px-2.5 py-1" style="background: var(--form-bg); color: var(--text-secondary);" id="modalStudentRoll"></span>
+                    <img id="modalStudentPhoto" src="" class="rounded-circle shadow mb-3" style="width: 170px; height: 170px; object-fit: cover; border: 4px solid var(--form-bg);" alt="Student Photo">
+                    <h5 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 1.1rem;" id="modalStudentName"></h5>
+                    <span class="badge border font-monospace mt-1 px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); font-size: 0.82rem;" id="modalStudentRoll"></span>
                 </div>
+            </div>
+            <div class="modal-footer border-0 p-3 pt-0 d-flex justify-content-center gap-2">
+                <a id="modalStudentPhotoFullLink" href="#" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-semibold" style="font-size: 0.8rem;">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Full Resolution
+                </a>
+                <button type="button" class="btn btn-sm btn-light rounded-pill px-3.5 fw-semibold" style="font-size: 0.8rem;" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -619,7 +639,25 @@ function showStudentPhotoModal(src, name, roll) {
     document.getElementById('modalStudentPhoto').src = src;
     document.getElementById('modalStudentName').innerText = name;
     document.getElementById('modalStudentRoll').innerText = roll;
-    new bootstrap.Modal(document.getElementById('studentPhotoModal')).show();
+    const fullLink = document.getElementById('modalStudentPhotoFullLink');
+    if (fullLink) fullLink.href = src;
+    
+    const photoModalEl = document.getElementById('studentPhotoModal');
+    new bootstrap.Modal(photoModalEl).show();
+}
+
+// Ensure backdrop stacking when opening student photo over another modal
+const photoModalEl = document.getElementById('studentPhotoModal');
+if (photoModalEl) {
+    photoModalEl.addEventListener('show.bs.modal', function () {
+        photoModalEl.style.zIndex = '1070';
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            if (backdrops.length > 1) {
+                backdrops[backdrops.length - 1].style.zIndex = '1065';
+            }
+        }, 15);
+    });
 }
 
 function filterProjects(category, btn) {
