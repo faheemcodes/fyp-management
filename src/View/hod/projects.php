@@ -363,20 +363,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <i class="bi bi-person-workspace text-primary"></i> Project Supervisor
                     </h6>
                     <?php if ($supFullName): ?>
-                    <div class="row g-2 small align-items-center">
-                        <div class="col-md-5">
-                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Name</span>
-                            <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                    <div class="row g-2.5 small">
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Supervisor Name</span>
+                            <strong style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-6">
                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Designation</span>
                             <span class="badge border rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
                                 <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
                             </span>
                         </div>
-                        <div class="col-md-3">
-                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email</span>
-                            <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <div class="col-12 mt-2">
+                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Official Email</span>
+                            <span style="color: var(--text-primary); font-size: 0.86rem; word-break: break-word;">
+                                <i class="bi bi-envelope me-1.5 text-primary"></i><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
                         </div>
                     </div>
                     <?php else: ?>
