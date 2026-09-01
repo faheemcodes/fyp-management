@@ -62,9 +62,9 @@
                                 <div>
                                     <h6 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 1rem;"><?php echo htmlspecialchars($meeting['subject']); ?></h6>
                                     <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
-                                        <span class="badge" style="background: rgba(59,130,246,0.1); color: #3b82f6; font-size: 0.7rem;"><i class="bi bi-folder-fill me-1"></i> <?php echo htmlspecialchars($meeting['project_title']); ?></span>
-                                        <span class="badge" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.7rem;"><i class="bi bi-people-fill me-1"></i> <?php echo htmlspecialchars($meeting['group_code'] ?? 'ID PENDING'); ?></span>
-                                        <span class="badge" style="background: rgba(139,92,246,0.1); color: #8b5cf6; font-size: 0.7rem;"><i class="bi bi-person-badge-fill me-1"></i> Sup. <?php echo htmlspecialchars(explode(' ', trim($meeting['supervisor_name'] ?? ''))[0]); ?></span>
+                                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(59,130,246,0.1); color: #2563eb; font-size: 0.75rem;"><i class="bi bi-folder-fill me-1"></i> <?php echo htmlspecialchars($meeting['project_title']); ?></span>
+                                        <span class="badge rounded-pill font-monospace px-2.5 py-1" style="background: rgba(16,185,129,0.1); color: #059669; font-size: 0.75rem;"><i class="bi bi-people-fill me-1"></i> <?php echo htmlspecialchars($meeting['group_code'] ?? 'ID PENDING'); ?></span>
+                                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(139,92,246,0.1); color: #7c3aed; font-size: 0.75rem;"><i class="bi bi-person-badge-fill me-1"></i> Sup. <?php echo htmlspecialchars(explode(' ', trim($meeting['supervisor_name'] ?? ''))[0]); ?></span>
                                     </div>
                                 </div>
                                 <div class="text-end">
@@ -96,7 +96,7 @@
                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                     <input type="hidden" name="meeting_id" value="<?php echo $meeting['id']; ?>">
                                     <input type="hidden" name="status" value="Verified">
-                                    <button type="submit" class="btn btn-sm btn-success fw-bold px-4" style="font-size: 0.75rem;"><i class="bi bi-shield-check me-1"></i> Verify Meeting</button>
+                                    <button type="submit" class="btn btn-sm btn-success rounded-pill fw-bold px-3.5 py-1.5" style="font-size: 0.8rem;"><i class="bi bi-shield-check me-1"></i> Verify Meeting</button>
                                 </form>
                             </div>
                         </li>
@@ -136,7 +136,7 @@
                         <li class="meeting-item <?php echo !$isLast ? 'pb-3 mb-3 border-bottom' : ''; ?>">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="fw-bold" style="font-size: 0.8rem; color: var(--text-primary)"><?php echo date('M d, Y', strtotime($meeting['meeting_date'])); ?></span>
-                                <span class="badge" style="background: rgba(16,185,129,0.1); color: #10b981; font-size: 0.65rem;"><i class="bi bi-shield-check"></i> Verified</span>
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16,185,129,0.1); color: #059669; font-size: 0.72rem;"><i class="bi bi-shield-check me-1"></i>Verified</span>
                             </div>
                             <h6 class="mb-1 fw-bold" style="font-size: 0.85rem; color: var(--text-primary)"><?php echo htmlspecialchars($meeting['subject']); ?></h6>
                             <span class="text-muted d-block mb-2" style="font-size: 0.75rem;">

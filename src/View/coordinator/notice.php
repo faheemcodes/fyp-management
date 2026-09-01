@@ -81,7 +81,7 @@
 .action-btn {
     width: 34px;
     height: 34px;
-    border-radius: 10px;
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -102,11 +102,21 @@
     border-color: rgba(239,68,68,0.2);
 }
 
+.modern-table th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--text-secondary) !important;
+    padding: 14px 20px;
+}
+.modern-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    font-size: 0.88rem;
+}
+
 @media (max-width: 768px) {
-    
-    
-    
-    
     .modern-table .subject-col { min-width: 200px; }
     .modern-table .date-col { min-width: 130px; }
     .modern-table .target-col { min-width: 180px; }
@@ -259,7 +269,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         $aud = trim($aud);
                                         if (empty($aud)) continue;
                                     ?>
-                                        <span style="background: rgba(139,92,246,0.1);color: #8b5cf6;font-size: 0.6rem;font-weight: 700;padding: 4px 8px;border-radius: 6px;text-transform: uppercase">
+                                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(139,92,246,0.1);color: #7c3aed;font-size: 0.72rem;font-weight: 700;text-transform: uppercase">
                                             <?php echo htmlspecialchars($aud); ?>
                                         </span>
                                     <?php endforeach; ?>

@@ -116,6 +116,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
+
+.modern-table th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--text-secondary) !important;
+    padding: 14px 20px;
+}
+.modern-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    font-size: 0.88rem;
+}
 </style>
 
 <!-- Top Hero Banner (Standard Portal Design) -->
@@ -373,10 +387,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td>
                         <div class="d-flex flex-column" style="max-width: 320px;">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge font-monospace px-2 py-0.5" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem;">
+                                <span class="badge font-monospace rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.78rem; font-weight: 700;">
                                     <?php echo htmlspecialchars($g['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <span class="badge px-2 py-0.5 rounded-pill" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.7rem;">
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.75rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($g['student_shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </div>

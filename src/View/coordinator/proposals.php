@@ -30,10 +30,10 @@
     background: rgba(16,185,129,0.1);
     color: #10b981;
     font-family: monospace;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 8px;
+    padding: 6px 14px;
+    border-radius: 50rem;
     letter-spacing: 0.02em;
 }
 .project-title-cell {
@@ -66,9 +66,9 @@
 }
 
 .action-btn {
-    padding: 6px 14px;
+    padding: 6px 16px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: 50rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -76,8 +76,16 @@
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+.action-btn:hover {
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
+}
 .action-btn.review {
     color: #8b5cf6;
     background: rgba(139, 92, 246, 0.08);
@@ -89,9 +97,18 @@
     border-color: #8b5cf6;
 }
 
-@media (max-width: 768px) {
-    
-    
+.modern-table th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--text-secondary) !important;
+    padding: 14px 20px;
+}
+.modern-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    font-size: 0.88rem;
 }
 </style>
 <!-- Coordinator Project Proposals View -->
@@ -255,7 +272,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
                             $color = $statusMap[$st][1] ?? '#6b7280';
                             ?>
-                            <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 5px 12px;border-radius: 20px;display: inline-flex;align-items: center">
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.78rem;display: inline-flex;align-items: center">
                                 <?php echo htmlspecialchars($st); ?>
                             </span>
                         </td>
@@ -280,7 +297,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <?php foreach($proposals as $pr): ?>
                 <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
                     <div class="mb-2 d-flex justify-content-between align-items-center">
-                        <span class="group-code-badge" style="font-size: 0.75rem;">
+                        <span class="group-code-badge" style="font-size: 0.78rem;">
                             <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?>
                         </span>
                         <?php 
@@ -295,7 +312,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         $bg = $statusMap[$st][0] ?? 'rgba(107,114,128,0.1)';
                         $color = $statusMap[$st][1] ?? '#6b7280';
                         ?>
-                        <span style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.7rem;padding: 3px 8px;border-radius: 20px;">
+                        <span class="badge rounded-pill px-2.5 py-1" style="background: <?php echo $bg;?>;color: <?php echo $color;?>;font-weight: 600;font-size: 0.74rem;">
                             <?php echo htmlspecialchars($st); ?>
                         </span>
                     </div>

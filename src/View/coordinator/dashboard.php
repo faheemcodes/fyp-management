@@ -27,9 +27,9 @@ html.dark-theme .text-dark {
     background: rgba(16,185,129,0.1);
     color: #10b981;
     font-weight: 700;
-    font-size: 0.8rem;
-    padding: 6px 12px;
-    border-radius: 8px;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    border-radius: 50rem;
     letter-spacing: 0.02em;
 }
 
@@ -55,9 +55,9 @@ html.dark-theme .text-dark {
 }
 
 .action-btn {
-    padding: 6px 14px;
+    padding: 6px 16px;
     height: 34px;
-    border-radius: 8px;
+    border-radius: 50rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -94,22 +94,23 @@ html.dark-theme .text-dark {
     box-shadow: var(--card-shadow);
     overflow: hidden;
 }
-.modern-table-card th {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
+.modern-table-card th, .modern-table th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--text-secondary) !important;
     background: var(--form-bg);
     border-bottom: 1px solid var(--border-color);
     padding: 14px 20px;
 }
-.modern-table-card td {
+.modern-table-card td, .modern-table td {
     padding: 16px 20px;
     vertical-align: middle;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     border-bottom: 1px solid var(--border-color);
 }
-.modern-table-card tr:last-child td {
+.modern-table-card tr:last-child td, .modern-table tr:last-child td {
     border-bottom: none;
 }
 
@@ -435,7 +436,7 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
                                     </div>
                                 </td>
                                 <td>
-                                    <span style="background: <?php echo $bg;?>; color: <?php echo $color;?>; font-weight: 600; font-size: 0.72rem; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; white-space: nowrap;">
+                                    <span class="badge rounded-pill px-3 py-1.5" style="background: <?php echo $bg;?>; color: <?php echo $color;?>; font-weight: 600; font-size: 0.78rem; display: inline-flex; align-items: center; white-space: nowrap;">
                                         <?php echo htmlspecialchars($st); ?>
                                     </span>
                                 </td>
@@ -472,10 +473,10 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
                     ?>
                         <div class="card border rounded-3 p-3 mb-3 shadow-sm" style="background: var(--card-bg)">
                             <div class="mb-2 d-flex justify-content-between align-items-center">
-                                <span class="group-code-badge" style="font-size: 0.75rem;">
+                                <span class="group-code-badge" style="font-size: 0.78rem;">
                                     <?php echo htmlspecialchars($pr['group_code'] ?? 'Pending'); ?>
                                 </span>
-                                <span style="background: <?php echo $bg;?>; color: <?php echo $color;?>; font-weight: 600; font-size: 0.7rem; padding: 3px 8px; border-radius: 20px;">
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: <?php echo $bg;?>; color: <?php echo $color;?>; font-weight: 600; font-size: 0.74rem;">
                                     <?php echo htmlspecialchars($st); ?>
                                 </span>
                             </div>
