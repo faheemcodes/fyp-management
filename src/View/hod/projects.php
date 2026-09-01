@@ -123,8 +123,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <th class="ps-4">Group &amp; Title</th>
                     <th>Supervisor</th>
-                    <th>Team Members</th>
-                    <th>Committee</th>
                     <th>Milestone</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
@@ -167,7 +165,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 ?>
                 <tr data-stage-cat="<?php echo $stageCategory; ?>">
                     <td class="ps-4">
-                        <div class="d-flex flex-column" style="max-width: 320px;">
+                        <div class="d-flex flex-column" style="max-width: 380px;">
                             <div class="d-flex align-items-center gap-2 mb-1">
                                 <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($p['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
@@ -195,52 +193,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="avatar-group">
-                            <?php foreach(($p['members'] ?? []) as $m): ?>
-                            <?php $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; ?>
-                            <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
-                                 class="avatar-item" 
-                                 alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>"
-                                 title="<?php echo htmlspecialchars($m['student_name'] . ' (' . $m['roll_no'] . ')', ENT_QUOTES, 'UTF-8'); ?>"
-                                 onclick="showStudentPhotoModal('<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['student_name']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($m['roll_no']), ENT_QUOTES, 'UTF-8'); ?>')">
-                            <?php endforeach; ?>
-                            <?php if (empty($p['members'])): ?>
-                            <span class="text-muted small">No members</span>
-                            <?php endif; ?>
-                        </div>
-                    </td>
-                    <td>
-                        <?php if ($cNum > 0): ?>
-                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
-                            Committee <?php echo $cNum; ?>
-                        </span>
-                        <?php else: ?>
-                        <span class="badge border rounded-pill px-3 py-1.5 text-muted border-light-subtle bg-light" style="font-size: 0.84rem; font-weight: 500;">
-                            Unassigned
-                        </span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
                         <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-flex justify-content-end align-items-center gap-2">
+                        <div class="d-flex justify-content-end align-items-center">
                             <!-- View Complete Details Button -->
-                            <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewProjectModal<?php echo (int)$p['group_id']; ?>" title="View All Project Details">
+                            <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewProjectModal<?php echo (int)$p['group_id']; ?>" title="View Complete Project Details">
                                 <i class="bi bi-eye-fill"></i>
                             </button>
-                            <?php if (!empty($finalPropUrl)): ?>
-                            <button type="button" class="action-btn" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25);" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
-                                <i class="bi bi-file-earmark-pdf-fill"></i>
-                            </button>
-                            <?php endif; ?>
-                            <?php if (!empty($finalThUrl)): ?>
-                            <button type="button" class="action-btn" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25);" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
-                                <i class="bi bi-file-earmark-arrow-down-fill"></i>
-                            </button>
-                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>
@@ -488,7 +450,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($projects)): ?>
                 <tr>
-                    <td colspan="6" class="text-center py-5 text-muted">
+                    <td colspan="4" class="text-center py-5 text-muted">
                         <i class="bi bi-folder2-open fs-2 d-block mb-2 opacity-50"></i>
                         No FYP projects registered yet.
                     </td>
