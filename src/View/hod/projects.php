@@ -72,9 +72,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     color: #2563eb;
 }
 .btn-details {
-    background: rgba(124, 58, 237, 0.08);
-    color: #7c3aed;
-    border: 1px solid rgba(124, 58, 237, 0.25);
+    background: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.25);
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.35rem 0.95rem;
@@ -87,21 +87,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     cursor: pointer;
 }
 .btn-details:hover {
-    background: #7c3aed;
-    color: #ffffff;
-    border-color: #7c3aed;
+    background: rgba(59, 130, 246, 0.2);
+    color: #1d4ed8;
+    border-color: rgba(59, 130, 246, 0.4);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-}
-html.dark-theme .btn-details {
-    background: rgba(139, 92, 246, 0.15);
-    color: #a78bfa;
-    border-color: rgba(139, 92, 246, 0.3);
-}
-html.dark-theme .btn-details:hover {
-    background: #8b5cf6;
-    color: #ffffff;
-    border-color: #8b5cf6;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
 }
 </style>
 
@@ -164,13 +154,10 @@ html.dark-theme .btn-details:hover {
                 <?php 
                     $stage = $p['progress_stage'] ?? 'Group Created';
                     $stageCategory = 'proposal';
-                    $stageBadgeStyle = 'background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important;';
                     if (str_contains($stage, 'Defence') || str_contains($stage, 'Defense')) {
                         $stageCategory = 'defense';
-                        $stageBadgeStyle = 'background: rgba(6, 182, 212, 0.1); color: #0891b2; border-color: rgba(6, 182, 212, 0.25) !important;';
                     } elseif (str_contains($stage, 'Final') || str_contains($stage, 'Grading')) {
                         $stageCategory = 'final';
-                        $stageBadgeStyle = 'background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important;';
                     }
                     $cNum = (int)($p['committee_number'] ?? 0);
                     
@@ -228,7 +215,7 @@ html.dark-theme .btn-details:hover {
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-3 py-1.5" style="<?php echo $stageBadgeStyle; ?> font-size: 0.84rem; font-weight: 600;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </td>
@@ -316,20 +303,24 @@ html.dark-theme .btn-details:hover {
                                         <i class="bi bi-person-workspace text-primary"></i> Project Supervisor
                                     </h6>
                                     <?php if ($supFullName): ?>
-                                    <div class="row g-2 small align-items-center">
-                                        <div class="col-md-5">
+                                    <div class="row g-2 small">
+                                        <div class="col-md-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Supervisor Name</span>
                                             <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Designation</span>
                                             <span class="badge border rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
                                                 <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
                                             </span>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email</span>
                                             <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Contact Number</span>
+                                            <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars(($p['supervisor_mobile_code'] ?? '+92') . ' ' . ($p['supervisor_mobile_no'] ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                     </div>
                                     <?php else: ?>
@@ -339,46 +330,48 @@ html.dark-theme .btn-details:hover {
 
                                 <!-- Team Members Section -->
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
-                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
-                                        <i class="bi bi-people-fill text-primary"></i> Team Members (<?php echo count($p['members'] ?? []); ?>)
-                                    </h6>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold m-0 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                            <i class="bi bi-people-fill text-primary"></i> Team Members (<?php echo count($p['members'] ?? []); ?>)
+                                        </h6>
+                                    </div>
                                     <?php if (!empty($p['members'])): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm m-0" style="font-size: 0.84rem;">
-                                            <thead>
-                                                <tr class="text-muted text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-color);">
-                                                    <th class="ps-1 pb-1">Student Name</th>
-                                                    <th class="pb-1">Roll No</th>
-                                                    <th class="pb-1">Email</th>
-                                                    <th class="text-end pe-1 pb-1">Role</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach($p['members'] as $m): ?>
-                                                <?php 
-                                                    $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
-                                                ?>
-                                                <tr style="border-bottom: 1px solid var(--border-color);">
-                                                    <td class="ps-1 py-2 fw-semibold" style="color: var(--text-primary);">
-                                                        <?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>
-                                                    </td>
-                                                    <td class="py-2 font-monospace text-muted">
-                                                        <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?>
-                                                    </td>
-                                                    <td class="py-2 text-muted">
-                                                        <?php echo htmlspecialchars($m['email'], ENT_QUOTES, 'UTF-8'); ?>
-                                                    </td>
-                                                    <td class="text-end pe-1 py-2">
+                                    <div class="d-flex flex-column gap-2">
+                                        <?php foreach($p['members'] as $m): ?>
+                                        <?php 
+                                            $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; 
+                                            $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
+                                        ?>
+                                        <div class="p-2.5 rounded-3 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
+                                                     class="rounded-circle shadow-sm" 
+                                                     style="width: 40px; height: 40px; object-fit: cover; border: 2px solid var(--border-color);" 
+                                                     alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                <div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                                                         <?php if (!empty($m['is_leader'])): ?>
-                                                        <span class="badge border rounded-pill px-2.5 py-0.5" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.72rem; font-weight: 700;">Leader</span>
-                                                        <?php else: ?>
-                                                        <span class="badge border rounded-pill px-2.5 py-0.5 text-muted" style="background: var(--card-bg); border-color: var(--border-color) !important; font-size: 0.72rem;">Member</span>
+                                                        <span class="badge border rounded-pill px-2 py-0.5" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.72rem; font-weight: 700;">Leader</span>
                                                         <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-3 text-muted flex-wrap" style="font-size: 0.78rem;">
+                                                        <span><strong class="text-secondary">Roll No:</strong> <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <span><strong class="text-secondary">Shift:</strong> <?php echo htmlspecialchars($m['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <?php if (!empty($m['cnic'])): ?>
+                                                        <span><strong class="text-secondary">CNIC:</strong> <?php echo htmlspecialchars($m['cnic'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-sm-end text-muted small ps-5 ps-sm-0" style="font-size: 0.78rem;">
+                                                <div><?php echo htmlspecialchars($m['email'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                                <?php if (!empty($m['mobile_no'])): ?>
+                                                <div><?php echo htmlspecialchars(($m['mobile_code'] ?? '+92') . ' ' . $m['mobile_no'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
                                     </div>
                                     <?php else: ?>
                                     <p class="text-muted mb-0 small fst-italic">No students registered in this group yet.</p>

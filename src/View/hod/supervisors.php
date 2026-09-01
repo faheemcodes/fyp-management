@@ -185,17 +185,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div class="modal-body p-4 pt-3">
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
                                     <div class="row g-3 small">
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Prefix</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supPrefix, ENT_QUOTES, 'UTF-8'); ?></strong>
-                                        </div>
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">First Name</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supFirstName, ENT_QUOTES, 'UTF-8'); ?></strong>
-                                        </div>
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Surname</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($supSurname ?: 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <div class="col-12">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Full Name</span>
+                                            <strong style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Department</span>

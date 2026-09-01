@@ -193,17 +193,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div class="modal-body p-4 pt-3">
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
                                     <div class="row g-3 small">
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Prefix</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($coordPrefix, ENT_QUOTES, 'UTF-8'); ?></strong>
-                                        </div>
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">First Name</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($coordFirstName, ENT_QUOTES, 'UTF-8'); ?></strong>
-                                        </div>
-                                        <div class="col-4">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Surname</span>
-                                            <strong style="color: var(--text-primary);"><?php echo htmlspecialchars($coordSurname ?: 'N/A', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <div class="col-12">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Full Name</span>
+                                            <strong style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($coordFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Department</span>
@@ -216,10 +208,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <div class="col-12">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email Address</span>
                                             <span style="color: var(--text-primary);"><i class="bi bi-envelope me-1 text-primary"></i><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></span>
-                                        </div>
-                                        <div class="col-12">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Contact Number</span>
-                                            <span style="color: var(--text-primary);"><?php echo htmlspecialchars(($c['mobile_code'] ?? '+92') . ' ' . ($c['mobile_no'] ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                         <div class="col-6">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">CNIC</span>
