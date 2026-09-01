@@ -363,23 +363,31 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <i class="bi bi-person-workspace text-primary"></i> Project Supervisor
                     </h6>
                     <?php if ($supFullName): ?>
-                    <div class="row g-2.5 small">
-                        <div class="col-sm-6">
-                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Supervisor Name</span>
-                            <strong style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
-                        </div>
-                        <div class="col-sm-6">
-                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Designation</span>
-                            <span class="badge border rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
-                                <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
-                            </span>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Official Email</span>
-                            <span style="color: var(--text-primary); font-size: 0.86rem; word-break: break-word;">
-                                <i class="bi bi-envelope me-1.5 text-primary"></i><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?>
-                            </span>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm m-0 align-middle" style="font-size: 0.84rem;">
+                            <thead>
+                                <tr class="text-muted text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-color);">
+                                    <th class="ps-2 pb-1" style="width: 35%;">Supervisor Name</th>
+                                    <th class="pb-1" style="width: 25%;">Designation</th>
+                                    <th class="pe-2 pb-1" style="width: 40%;">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td class="ps-2 py-2 fw-semibold" style="color: var(--text-primary); font-size: 0.88rem;">
+                                        <?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
+                                    <td class="py-2">
+                                        <span class="badge border rounded-pill px-2.5 py-0.5" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.78rem; font-weight: 500;">
+                                            <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
+                                        </span>
+                                    </td>
+                                    <td class="pe-2 py-2 text-muted" style="word-break: break-word;">
+                                        <?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <?php else: ?>
                     <p class="text-muted mb-0 small fst-italic">No supervisor assigned to this project yet.</p>
