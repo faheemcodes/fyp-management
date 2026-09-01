@@ -79,8 +79,8 @@
 }
 
 .action-btn {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
@@ -88,6 +88,7 @@
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-secondary);
+    font-size: 0.8rem;
     transition: all 0.2s ease;
     text-decoration: none;
 }
@@ -103,23 +104,17 @@
 }
 
 .modern-table th {
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     color: var(--text-secondary) !important;
-    padding: 14px 20px;
+    padding: 10px 14px !important;
 }
 .modern-table td {
-    padding: 16px 20px;
+    padding: 10px 14px !important;
     vertical-align: middle;
-    font-size: 0.88rem;
-}
-
-@media (max-width: 768px) {
-    .modern-table .subject-col { min-width: 200px; }
-    .modern-table .date-col { min-width: 130px; }
-    .modern-table .target-col { min-width: 180px; }
+    font-size: 0.84rem;
 }
 </style>
 <!-- Coordinator Notice Generator View -->
@@ -236,47 +231,49 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <table class="table modern-table m-0">
                     <thead style="position: sticky;top: 0;z-index: 5">
                         <tr>
-                            <th class="ps-4">Ref No.</th>
-                            <th class="subject-col">Subject</th>
-                            <th class="date-col">Date</th>
-                            <th class="target-col">Target</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="ps-3" style="width: 80px;">Ref No.</th>
+                            <th>Subject</th>
+                            <th class="text-nowrap" style="width: 105px;">Date</th>
+                            <th class="text-nowrap" style="width: 130px;">Target</th>
+                            <th class="text-end pe-3" style="width: 110px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($notices as $n): ?>
+                        <?php foreach($notices as $n): 
+                            $rawAudiences = array_filter(array_map('trim', explode(',', $n['target_audience'] ?? '')));
+                            $isAll = count($rawAudiences) >= 4 || strtolower($n['target_audience'] ?? '') === 'all';
+                        ?>
                         <tr>
-                            <td class="ps-4">
-                                <span class="font-monospace fw-bold text-secondary" style="font-size: 0.85rem">
-                                    <?php echo htmlspecialchars($n['ref_no'] ?? 'N/A'); ?>
+                            <td class="ps-3">
+                                <span class="font-monospace text-muted" style="font-size: 0.78rem;">
+                                    <?php echo htmlspecialchars($n['ref_no'] ?? '-'); ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="fw-semibold text-dark text-truncate" style="max-width: 250px;font-size: 0.9rem" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                                <div class="fw-semibold text-truncate" style="max-width: 210px; font-size: 0.86rem; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
                                     <?php echo htmlspecialchars($n['subject']); ?>
                                 </div>
                             </td>
-                            <td>
-                                <span class="text-muted fw-medium" style="font-size: 0.85rem">
-                                    <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
-                                </span>
+                            <td class="text-nowrap text-muted" style="font-size: 0.82rem;">
+                                <?php echo date('M d, Y', strtotime($n['notice_date'])); ?>
                             </td>
                             <td>
-                                <div class="d-flex flex-wrap gap-1">
-                                    <?php 
-                                    $audiences = explode(',', $n['target_audience']);
-                                    foreach ($audiences as $aud): 
-                                        $aud = trim($aud);
-                                        if (empty($aud)) continue;
-                                    ?>
-                                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(139,92,246,0.1);color: #7c3aed;font-size: 0.72rem;font-weight: 700;text-transform: uppercase">
-                                            <?php echo htmlspecialchars($aud); ?>
-                                        </span>
-                                    <?php endforeach; ?>
-                                </div>
+                                <?php if ($isAll): ?>
+                                    <span class="badge rounded-pill px-2.5 py-1 text-nowrap" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.72rem; font-weight: 700;">
+                                        <i class="bi bi-people-fill me-1"></i>All Roles
+                                    </span>
+                                <?php else: ?>
+                                    <div class="d-flex flex-wrap gap-1 align-items-center">
+                                        <?php foreach ($rawAudiences as $aud): ?>
+                                            <span class="badge rounded-pill px-2 py-0.5 text-nowrap" style="background: rgba(139,92,246,0.1); color: #7c3aed; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;">
+                                                <?php echo htmlspecialchars($aud); ?>
+                                            </span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                             </td>
-                            <td class="text-end pe-4">
-                                <div class="d-flex justify-content-end gap-2">
+                            <td class="text-end pe-3">
+                                <div class="d-flex justify-content-end gap-1.5">
                                     <button type="button" class="action-btn" title="View Notice" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                                         <i class="bi bi-box-arrow-up-right"></i>
                                     </button>
