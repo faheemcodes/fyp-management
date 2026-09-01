@@ -70,6 +70,16 @@ $numCommittees = $num_committees ?? 2;
     border-color: #047fb0;
     box-shadow: 0 2px 8px rgba(4, 127, 176, 0.25);
 }
+.modern-table thead th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+}
+.modern-table tbody td {
+    font-size: 0.88rem !important;
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -151,22 +161,22 @@ $numCommittees = $num_committees ?? 2;
                 <tr data-committee="<?php echo $commNum; ?>">
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 1rem">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
                                 <?php echo getNameInitial($commFirstName); ?>
                             </div>
                             <div>
                                 <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($commFullName, ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted d-block" style="font-size: 0.72rem;"><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                <small class="text-muted d-block" style="font-size: 0.82rem;"><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td><span class="badge border px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500; border-radius: 6px;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="badge border px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 500; border-radius: 6px;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
-                            <i class="bi bi-shield-check me-1"></i>Committee <?php echo $commNum; ?>
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
+                            Committee <?php echo $commNum; ?>
                         </span>
                     </td>
                     <td class="text-end pe-4">

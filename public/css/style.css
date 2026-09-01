@@ -1210,17 +1210,18 @@ html.dark-theme .offcanvas .btn-close:hover {
 }
 .modern-table thead th {
     background: var(--form-bg);
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: var(--text-secondary);
     font-weight: 700;
-    padding: 16px 24px;
+    padding: 14px 24px;
     border-bottom: 1px solid var(--border-color);
 }
 .modern-table tbody td {
-    padding: 16px 24px;
+    padding: 14px 24px;
     vertical-align: middle;
+    font-size: 0.88rem;
     border-bottom: 1px solid var(--border-color);
     background: var(--card-bg);
     transition: background-color 0.2s ease;
@@ -1408,17 +1409,18 @@ html.dark-theme .offcanvas .btn-close:hover {
 }
 .modern-table thead th {
     background: var(--form-bg);
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: var(--text-secondary);
     font-weight: 700;
-    padding: 16px 24px;
+    padding: 14px 24px;
     border-bottom: 1px solid var(--border-color);
 }
 .modern-table tbody td {
-    padding: 16px 24px;
+    padding: 14px 24px;
     vertical-align: middle;
+    font-size: 0.88rem;
     border-bottom: 1px solid var(--border-color);
     background: var(--card-bg);
     transition: background-color 0.2s ease;

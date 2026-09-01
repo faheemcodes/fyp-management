@@ -49,6 +49,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     background: rgba(239, 68, 68, 0.2);
     color: #dc2626;
 }
+.modern-table thead th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+}
+.modern-table tbody td {
+    font-size: 0.88rem !important;
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -60,16 +70,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
             <div>
                 <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
-                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Supervisors</h4>
+                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Faculty Members</h4>
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage project supervisors and slot allocations</p>
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Manage departmental faculty profiles and project supervision allocations</p>
             </div>
         </div>
         <button class="btn rounded-pill px-4 align-self-stretch align-self-md-center shadow-sm border-0 fw-semibold d-inline-flex align-items-center justify-content-center gap-2" style="background: #ffffff; color: #047fb0; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#createSupervisorModal">
-            <i class="bi bi-person-plus-fill"></i> <span>Add Supervisor</span>
+            <i class="bi bi-person-plus-fill"></i> <span>Add Faculty Member</span>
         </button>
     </div>
 </div>
@@ -81,11 +91,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <div class="col-md-6 ps-0">
                 <div class="input-group shadow-sm rounded-pill overflow-hidden border border-light-subtle">
                     <span class="input-group-text bg-white border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search supervisors..." data-target="supervisors-table">
+                    <input type="text" class="form-control border-0 ps-0 table-search shadow-none" placeholder="Search faculty by name, email, or designation..." data-target="supervisors-table">
                 </div>
             </div>
             <div class="col-md-6 pe-0 text-md-end text-muted small">
-                Total: <strong><?php echo count($supervisors); ?></strong> supervisor(s)
+                Total: <strong><?php echo count($supervisors); ?></strong> faculty member(s)
             </div>
         </div>
     </div>
@@ -94,7 +104,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         <table class="table modern-table m-0" id="supervisors-table">
             <thead>
                 <tr>
-                    <th class="ps-4">Supervisor</th>
+                    <th class="ps-4">Faculty Member</th>
                     <th>Designation</th>
                     <th>Morning Projects</th>
                     <th>Evening Projects</th>
@@ -113,28 +123,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; font-size: 1rem">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
                                 <?php echo getNameInitial($supFirstName); ?>
                             </div>
                             <div>
                                 <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.95rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted d-block" style="font-size: 0.72rem;"><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                <small class="text-muted d-block" style="font-size: 0.82rem;"><?php echo htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td><span class="badge border px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500; border-radius: 6px;"><?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.78rem;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo (int)($s['morning_projects'] ?? 0); ?> / <?php echo (int)($maxMorning ?? 5); ?> Groups
                         </span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo (int)($s['evening_projects'] ?? 0); ?> / <?php echo (int)($maxEvening ?? 5); ?> Groups
                         </span>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo (int)($s['active_projects'] ?? 0); ?> Groups
                         </span>
                     </td>
@@ -328,7 +338,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <td colspan="6" class="text-center text-muted py-5">
                         <i class="bi bi-people fs-2 d-block mb-2 opacity-50"></i>
-                        No supervisors registered yet.
+                        No faculty members registered yet.
                     </td>
                 </tr>
                 <?php endif; ?>
@@ -348,7 +358,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg); border: 1px solid var(--border-color); width: 56px; height: 56px">
                     <i class="bi bi-person-plus-fill text-primary" style="font-size: 1.5rem"></i>
                 </div>
-                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);" id="createSupervisorModalLabel">Add Supervisor</h5>
+                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);" id="createSupervisorModalLabel">Add Faculty Member</h5>
                 <p class="text-muted small mb-0">Department: <strong class="text-primary"><?php echo htmlspecialchars($department ?? 'FET', ENT_QUOTES, 'UTF-8'); ?></strong></p>
             </div>
             <form action="<?php echo $basePath; ?>/hod/supervisors/create" method="POST">
@@ -427,7 +437,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="modal-footer border-0 p-4 pt-0">
                     <div class="d-flex w-100 gap-2">
                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Add Supervisor</button>
+                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Add Faculty Member</button>
                     </div>
                 </div>
             </form>
