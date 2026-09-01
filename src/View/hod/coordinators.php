@@ -97,7 +97,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <th class="ps-4">Coordinator</th>
                     <th>Shift</th>
                     <th>Designation</th>
-                    <th>CNIC</th>
                     <th>Department</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
@@ -139,9 +138,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php endif; ?>
                     </td>
                     <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?></span></td>
-                    <td>
-                        <span class="font-monospace small px-2 py-1 border rounded" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['cnic'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
-                    </td>
                     <td>
                         <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
@@ -319,7 +315,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php endforeach; ?>
                 <?php if (empty($coordinators)): ?>
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-5">
+                    <td colspan="5" class="text-center text-muted py-5">
                         <i class="bi bi-person-workspace fs-2 d-block mb-2 opacity-50"></i>
                         No coordinators appointed yet.
                     </td>
