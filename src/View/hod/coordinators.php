@@ -132,9 +132,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge border px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500; border-radius: 6px;"><?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td><span class="badge border rounded-pill px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500;"><?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="badge border px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 500; border-radius: 6px;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 500;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td>
                         <?php if ($coordShift === 'Evening'): ?>

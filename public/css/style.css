@@ -1232,6 +1232,9 @@ html.dark-theme .offcanvas .btn-close:hover {
 .modern-table tbody tr:last-child td {
     border-bottom: none;
 }
+.modern-table .badge {
+    border-radius: 50rem !important;
+}
 .status-pill {
     font-size: 0.65rem;
     font-weight: 700;
@@ -1430,6 +1433,9 @@ html.dark-theme .offcanvas .btn-close:hover {
 }
 .modern-table tbody tr:last-child td {
     border-bottom: none;
+}
+.modern-table .badge {
+    border-radius: 50rem !important;
 }
 .status-pill {
     font-size: 0.65rem;
