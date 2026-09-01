@@ -77,10 +77,17 @@ class StudentController extends BaseController {
             $grades = $stmt->fetch();
         }
 
-        // Get system deadlines
+        // Get system deadlines for student's department and shift
         $department = $_SESSION['department'] ?? 'Software Engineering';
-        $stmtDl = $db->prepare("SELECT * FROM deadlines WHERE status = 'Active' AND department = ? ORDER BY id ASC");
-        $stmtDl->execute([$department]);
+        $studentShift = $_SESSION['shift'] ?? '';
+        if (empty($studentShift)) {
+            $stmtSh = $db->prepare("SELECT shift FROM students WHERE user_id = ?");
+            $stmtSh->execute([$_SESSION['user_id'] ?? 0]);
+            $studentShift = $stmtSh->fetchColumn() ?: 'Morning';
+            $_SESSION['shift'] = $studentShift;
+        }
+        $stmtDl = $db->prepare("SELECT * FROM deadlines WHERE status = 'Active' AND department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
+        $stmtDl->execute([$department, $studentShift]);
         $deadlines = $stmtDl->fetchAll();
 
         // Get notices for student

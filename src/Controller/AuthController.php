@@ -95,7 +95,7 @@ class AuthController extends BaseController {
                 $_SESSION['surname'] = $surname;
 
                 if ($primaryRole === 'student') {
-                    $sStmt = $db->prepare("SELECT name, student_id, avatar, department FROM students WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, student_id, avatar, department, shift FROM students WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $student = $sStmt->fetch();
                     $_SESSION['name'] = $student['name'] ?? 'Student';
@@ -103,6 +103,7 @@ class AuthController extends BaseController {
                     $_SESSION['student_id'] = $student['student_id'] ?? '';
                     $_SESSION['avatar'] = $student['avatar'] ?? '';
                     $_SESSION['department'] = $student['department'] ?? 'Software Engineering';
+                    $_SESSION['shift'] = $student['shift'] ?? 'Morning';
                 } else if ($primaryRole === 'supervisor') {
                     $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
@@ -125,12 +126,13 @@ class AuthController extends BaseController {
                     $_SESSION['full_name'] = formatPersonName($prefix, $hod['name'] ?? 'HOD', $surname);
                     $_SESSION['department'] = $hod['department'] ?? 'Software Engineering';
                 } else if ($primaryRole === 'coordinator') {
-                    $sStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
+                    $sStmt = $db->prepare("SELECT name, department, shift FROM coordinators WHERE user_id = ?");
                     $sStmt->execute([$user['id']]);
                     $coord = $sStmt->fetch();
                     $_SESSION['name'] = $coord['name'] ?? 'Coordinator';
                     $_SESSION['full_name'] = formatPersonName($prefix, $coord['name'] ?? 'Coordinator', $surname);
                     $_SESSION['department'] = $coord['department'] ?? 'Software Engineering';
+                    $_SESSION['shift'] = $coord['shift'] ?? 'Morning';
                 } else {
                     $_SESSION['name'] = 'System Admin';
                     $_SESSION['full_name'] = 'System Admin';
@@ -792,13 +794,26 @@ class AuthController extends BaseController {
                     $_SESSION['department'] = $c['department'];
                 }
             } else if ($targetRole === 'coordinator') {
-                $cdStmt = $db->prepare("SELECT name, department FROM coordinators WHERE user_id = ?");
+                $cdStmt = $db->prepare("SELECT name, department, shift FROM coordinators WHERE user_id = ?");
                 $cdStmt->execute([$_SESSION['user_id']]);
                 $cd = $cdStmt->fetch();
                 if ($cd) {
                     $_SESSION['name'] = $cd['name'];
                     $_SESSION['full_name'] = formatPersonName($prefix, $cd['name'], $surname);
                     $_SESSION['department'] = $cd['department'];
+                    $_SESSION['shift'] = $cd['shift'] ?? 'Morning';
+                }
+            } else if ($targetRole === 'student') {
+                $stStmt = $db->prepare("SELECT name, department, shift, student_id, avatar FROM students WHERE user_id = ?");
+                $stStmt->execute([$_SESSION['user_id']]);
+                $st = $stStmt->fetch();
+                if ($st) {
+                    $_SESSION['name'] = $st['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix ?: 'Mr.', $st['name'], $surname);
+                    $_SESSION['department'] = $st['department'];
+                    $_SESSION['shift'] = $st['shift'] ?? 'Morning';
+                    $_SESSION['student_id'] = $st['student_id'] ?? '';
+                    $_SESSION['avatar'] = $st['avatar'] ?? '';
                 }
             } else if ($targetRole === 'hod') {
                 $hStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");

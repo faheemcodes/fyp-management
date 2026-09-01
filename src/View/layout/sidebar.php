@@ -437,6 +437,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/deadlines" class="nav-link <?php echo isActive('/coordinator/deadlines', $currentUri); ?>">
+                        <i class="bi bi-calendar-event-fill"></i> <span>Timeline &amp; Deadlines</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/meetings" class="nav-link <?php echo isActive('/coordinator/meetings', $currentUri); ?>">
                         <i class="bi bi-calendar2-check-fill"></i> <span>Meetings Audit</span>
                     </a>

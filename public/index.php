@@ -228,6 +228,9 @@ $routes = [
     '/coordinator/committees/reassign' => ['Controller\CoordinatorController', 'reassignGroupCommittee'],
     '/coordinator/meetings' => ['Controller\CoordinatorController', 'meetings'],
     '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
+    '/coordinator/deadlines' => ['Controller\CoordinatorController', 'deadlines'],
+    '/coordinator/deadlines/save' => ['Controller\CoordinatorController', 'saveDeadline'],
+    '/coordinator/deadlines/delete' => ['Controller\CoordinatorController', 'deleteDeadline'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Role switching

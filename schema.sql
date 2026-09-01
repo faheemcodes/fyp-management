@@ -233,10 +233,12 @@ CREATE TABLE notices (
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- System Deadlines Table (Helper table for Admin/HOD to manage scheduling)
+-- System Deadlines Table (Managed by Coordinators for their specific Department & Shift)
 CREATE TABLE deadlines (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    stage ENUM('Proposal Submission', 'Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation') NOT NULL UNIQUE,
+    stage ENUM('Proposal Submission', 'Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation') NOT NULL,
+    department VARCHAR(100) NOT NULL DEFAULT 'Software Engineering',
+    shift ENUM('Morning', 'Evening', 'All') NOT NULL DEFAULT 'All',
     deadline_date DATETIME NOT NULL,
     status ENUM('Active', 'Inactive') DEFAULT 'Inactive',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

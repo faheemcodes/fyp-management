@@ -982,5 +982,117 @@ class CoordinatorController extends BaseController {
         }
         redirect('/coordinator/committees');
     }
+
+    public function deadlines() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        $selectedShift = $_GET['shift'] ?? 'All';
+        if (!in_array($selectedShift, ['Morning', 'Evening', 'All'])) {
+            $selectedShift = 'All';
+        }
+
+        if ($selectedShift === 'All') {
+            $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY deadline_date ASC");
+            $stmt->execute([$dept]);
+        } else {
+            $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
+            $stmt->execute([$dept, $selectedShift]);
+        }
+        $deadlines = $stmt->fetchAll();
+
+        $stmtAll = $db->prepare("SELECT COUNT(*) FROM deadlines WHERE department = ? AND status = 'Active' AND deadline_date >= NOW()");
+        $stmtAll->execute([$dept]);
+        $upcomingCount = (int)$stmtAll->fetchColumn();
+
+        $this->render('coordinator/deadlines', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'selectedShift' => $selectedShift,
+            'deadlines' => $deadlines,
+            'upcomingCount' => $upcomingCount
+        ]);
+    }
+
+    public function saveDeadline() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+
+            $id = (int)($_POST['id'] ?? 0);
+            $stage = trim($_POST['stage'] ?? '');
+            $shift = trim($_POST['shift'] ?? 'All');
+            $deadlineDate = trim($_POST['deadline_date'] ?? '');
+            $status = trim($_POST['status'] ?? 'Active');
+
+            $allowedStages = [
+                'Proposal Submission',
+                'Proposal Defence Presentation',
+                'FYP Progress Presentation',
+                'Final Presentation'
+            ];
+            $allowedShifts = ['Morning', 'Evening', 'All'];
+            $allowedStatuses = ['Active', 'Inactive'];
+
+            if (!in_array($stage, $allowedStages) || empty($deadlineDate)) {
+                $this->flash('error', 'Please select a valid stage and provide a valid deadline date & time.');
+                redirect('/coordinator/deadlines');
+            }
+
+            if (!in_array($shift, $allowedShifts)) {
+                $shift = 'All';
+            }
+            if (!in_array($status, $allowedStatuses)) {
+                $status = 'Active';
+            }
+
+            $formattedDate = date('Y-m-d H:i:s', strtotime($deadlineDate));
+
+            if ($id > 0) {
+                $stmt = $db->prepare("UPDATE deadlines SET stage = ?, shift = ?, deadline_date = ?, status = ? WHERE id = ? AND department = ?");
+                $stmt->execute([$stage, $shift, $formattedDate, $status, $id, $dept]);
+                $this->flash('success', "Deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") updated successfully.");
+            } else {
+                $stmtCheck = $db->prepare("SELECT id FROM deadlines WHERE stage = ? AND department = ? AND shift = ?");
+                $stmtCheck->execute([$stage, $dept, $shift]);
+                $existingId = $stmtCheck->fetchColumn();
+
+                if ($existingId) {
+                    $stmtUpdate = $db->prepare("UPDATE deadlines SET deadline_date = ?, status = ? WHERE id = ?");
+                    $stmtUpdate->execute([$formattedDate, $status, $existingId]);
+                    $this->flash('success', "Existing deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") updated with new schedule.");
+                } else {
+                    $stmtInsert = $db->prepare("INSERT INTO deadlines (stage, department, shift, deadline_date, status) VALUES (?, ?, ?, ?, ?)");
+                    $stmtInsert->execute([$stage, $dept, $shift, $formattedDate, $status]);
+                    $this->flash('success', "New deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") published successfully.");
+                }
+            }
+        }
+        redirect('/coordinator/deadlines');
+    }
+
+    public function deleteDeadline() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+
+            $id = (int)($_POST['id'] ?? 0);
+            if ($id > 0) {
+                $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ?");
+                $stmt->execute([$id, $dept]);
+                $this->flash('success', 'Deadline removed successfully.');
+            } else {
+                $this->flash('error', 'Invalid deadline ID.');
+            }
+        }
+        redirect('/coordinator/deadlines');
+    }
 }
+
 
