@@ -310,15 +310,18 @@ class HodController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
-            $userId = $_POST['user_id'] ?? null;
+            $userId = (int)($_POST['user_id'] ?? 0);
             $prefix = trim($_POST['prefix'] ?? 'Mr.');
             $firstName = trim($_POST['first_name'] ?? '');
             $lastName = trim($_POST['last_name'] ?? '');
             $designation = trim($_POST['designation'] ?? '');
             $email = trim($_POST['email'] ?? '');
+            $cnic = trim($_POST['cnic'] ?? '');
+            $mobileCode = trim($_POST['mobile_code'] ?? '+92');
+            $contactNo = trim($_POST['contact_no'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            if ($userId && $firstName && $lastName && $designation) {
+            if ($userId && $firstName && $lastName && $designation && $email) {
                 // Verify supervisor is in HOD's department
                 $stmtCheck = $db->prepare("SELECT department FROM supervisors WHERE user_id = ?");
                 $stmtCheck->execute([$userId]);
@@ -327,24 +330,64 @@ class HodController extends BaseController {
                     redirect('/hod/supervisors');
                 }
 
-                $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ? WHERE user_id = ?");
-                $stmt->execute([$firstName, $designation, $userId]);
+                $cnic = str_replace('-', '', $cnic);
 
-                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ? WHERE user_id = ?");
-                $stmtP->execute([$prefix, $lastName, $userId]);
-
-                if (!empty($email)) {
-                    $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
-                    $stmtU->execute([$email, $userId]);
+                // Check email uniqueness
+                $stmtEmail = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+                $stmtEmail->execute([$email, $userId]);
+                if ($stmtEmail->fetch()) {
+                    $this->flash('error', 'The email is already registered to another user.');
+                    redirect('/hod/supervisors');
                 }
 
-                if (!empty($password)) {
-                    $hashed = password_hash($password, PASSWORD_DEFAULT);
-                    $stmtPass = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
-                    $stmtPass->execute([$hashed, $userId]);
+                // Check CNIC uniqueness
+                if (!empty($cnic)) {
+                    $stmtCnic = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                    $stmtCnic->execute([$cnic, $userId]);
+                    if ($stmtCnic->fetch()) {
+                        $this->flash('error', 'The CNIC is already registered to another user.');
+                        redirect('/hod/supervisors');
+                    }
                 }
-                
-                $this->flash('success', "Supervisor profile updated.");
+
+                try {
+                    $db->beginTransaction();
+
+                    $stmt = $db->prepare("UPDATE supervisors SET name = ?, designation = ? WHERE user_id = ?");
+                    $stmt->execute([$firstName, $designation, $userId]);
+
+                    $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) 
+                        VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') 
+                        ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), cnic = VALUES(cnic), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
+                    $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
+
+                    if (!empty($cnic)) {
+                        $stmtU = $db->prepare("UPDATE users SET email = ?, cnic = ? WHERE id = ?");
+                        $stmtU->execute([$email, $cnic, $userId]);
+                    } else {
+                        $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
+                        $stmtU->execute([$email, $userId]);
+                    }
+
+                    if (!empty($password)) {
+                        $hashed = password_hash($password, PASSWORD_DEFAULT);
+                        $stmtPass = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                        $stmtPass->execute([$hashed, $userId]);
+                    }
+
+                    // Sync name across committee and coordinator roles if assigned
+                    $stmtSyncComm = $db->prepare("UPDATE committees SET name = ? WHERE user_id = ?");
+                    $stmtSyncComm->execute([$firstName, $userId]);
+
+                    $stmtSyncCoord = $db->prepare("UPDATE coordinators SET name = ? WHERE user_id = ?");
+                    $stmtSyncCoord->execute([$firstName, $userId]);
+
+                    $db->commit();
+                    $this->flash('success', "Supervisor profile updated successfully.");
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Failed to update supervisor profile. Please try again.');
+                }
             } else {
                 $this->flash('error', "Failed to update supervisor profile. Fill all required fields.");
             }
@@ -554,6 +597,10 @@ class HodController extends BaseController {
                         $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
                         $stmt->execute([$userId, $firstName, $designation, $department, $committeeNumber]);
 
+                        // Ensure supervisor entry exists so faculty profile can be managed in View Faculty
+                        $stmtSup = $db->prepare("INSERT IGNORE INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                        $stmtSup->execute([$userId, $firstName, $designation ?: 'Evaluator', $department]);
+
                         // Sync profiles table
                         $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1980-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
                         $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
@@ -579,16 +626,11 @@ class HodController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
-            $userId = $_POST['user_id'] ?? null;
-            $prefix = trim($_POST['prefix'] ?? 'Mr.');
-            $firstName = trim($_POST['first_name'] ?? '');
-            $lastName = trim($_POST['last_name'] ?? '');
-            $designation = trim($_POST['designation'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
+            $userId = (int)($_POST['user_id'] ?? 0);
+            $designation = trim($_POST['designation'] ?? 'Evaluator');
             $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
 
-            if ($userId && $firstName && $lastName) {
+            if ($userId && $designation) {
                 $stmtCheck = $db->prepare("SELECT department FROM committees WHERE user_id = ?");
                 $stmtCheck->execute([$userId]);
                 if ($stmtCheck->fetchColumn() !== $dept) {
@@ -596,26 +638,12 @@ class HodController extends BaseController {
                     redirect('/hod/committee');
                 }
 
-                $stmt = $db->prepare("UPDATE committees SET name = ?, designation = ?, committee_number = ? WHERE user_id = ?");
-                $stmt->execute([$firstName, $designation, $committeeNumber, $userId]);
+                $stmt = $db->prepare("UPDATE committees SET designation = ?, committee_number = ? WHERE user_id = ?");
+                $stmt->execute([$designation, $committeeNumber, $userId]);
 
-                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ? WHERE user_id = ?");
-                $stmtP->execute([$prefix, $lastName, $userId]);
-
-                if (!empty($email)) {
-                    $stmtU = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
-                    $stmtU->execute([$email, $userId]);
-                }
-
-                if (!empty($password)) {
-                    $hashed = password_hash($password, PASSWORD_DEFAULT);
-                    $stmtPass = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
-                    $stmtPass->execute([$hashed, $userId]);
-                }
-                
-                $this->flash('success', "Committee member details updated.");
+                $this->flash('success', "Committee role assignment updated successfully.");
             } else {
-                $this->flash('error', "All fields are required.");
+                $this->flash('error', "All required role fields must be filled.");
             }
         }
         redirect('/hod/committee');
@@ -1034,6 +1062,10 @@ class HodController extends BaseController {
                         $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
                         $stmt->execute([$userId, $firstName, $designation, $dept, $shift]);
                         
+                        // Ensure supervisor entry exists so faculty profile can be managed in View Faculty
+                        $stmtSup = $db->prepare("INSERT IGNORE INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                        $stmtSup->execute([$userId, $firstName, 'Assistant Professor', $dept]);
+
                         $stmtP = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, ?, ?, ?, '1985-01-01', ?, ?, 'Not Provided Yet', 'Male') ON DUPLICATE KEY UPDATE prefix = VALUES(prefix), surname = VALUES(surname), mobile_code = VALUES(mobile_code), mobile_no = VALUES(mobile_no)");
                         $stmtP->execute([$userId, $prefix, $lastName, $cnic, $mobileCode, !empty($contactNo) ? $contactNo : '3000000000']);
 
@@ -1055,22 +1087,14 @@ class HodController extends BaseController {
     public function editCoordinator() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
-            $userId = $_POST['user_id'] ?? null;
-            $prefix = trim($_POST['prefix'] ?? 'Mr.');
-            $firstName = trim($_POST['first_name'] ?? '');
-            $lastName = trim($_POST['last_name'] ?? '');
+            $userId = (int)($_POST['user_id'] ?? 0);
             $designation = trim($_POST['designation'] ?? 'FYP Coordinator');
-            $email = trim($_POST['email'] ?? '');
-            $cnic = trim($_POST['cnic'] ?? '');
-            $password = $_POST['password'] ?? '';
             $shift = in_array($_POST['shift'] ?? '', ['Morning', 'Evening', 'All']) ? $_POST['shift'] : 'Morning';
             
-            if (!$userId || empty($firstName) || empty($lastName) || empty($email) || empty($cnic)) {
-                $this->flash('error', 'Required fields are missing.');
+            if (!$userId || empty($designation)) {
+                $this->flash('error', 'Required role fields are missing.');
                 redirect('/hod/coordinators');
             }
-            
-            $cnic = str_replace('-', '', $cnic);
             
             $db = \Database::getInstance()->getConnection();
             $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
@@ -1086,31 +1110,13 @@ class HodController extends BaseController {
             }
             
             try {
-                $db->beginTransaction();
+                // Update coordinator-specific role fields
+                $stmt = $db->prepare("UPDATE coordinators SET designation = ?, shift = ? WHERE user_id = ?");
+                $stmt->execute([$designation, $shift, $userId]);
                 
-                // Update users
-                if (!empty($password)) {
-                    $hashed = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ?, password = ? WHERE id = ?");
-                    $stmt->execute([$email, $cnic, $hashed, $userId]);
-                } else {
-                    $stmt = $db->prepare("UPDATE users SET email = ?, cnic = ? WHERE id = ?");
-                    $stmt->execute([$email, $cnic, $userId]);
-                }
-                
-                // Update coordinators
-                $stmt = $db->prepare("UPDATE coordinators SET name = ?, designation = ?, shift = ? WHERE user_id = ?");
-                $stmt->execute([$firstName, $designation, $shift, $userId]);
-                
-                // Update profiles
-                $stmtP = $db->prepare("UPDATE profiles SET prefix = ?, surname = ?, cnic = ? WHERE user_id = ?");
-                $stmtP->execute([$prefix, $lastName, $cnic, $userId]);
-                
-                $db->commit();
-                $this->flash('success', "Coordinator details updated successfully.");
+                $this->flash('success', "Coordinator role assignment updated successfully.");
             } catch (\Exception $e) {
-                $db->rollBack();
-                $this->flash('error', 'Error updating coordinator.');
+                $this->flash('error', 'Error updating coordinator role.');
             }
         }
         redirect('/hod/coordinators');

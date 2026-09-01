@@ -231,7 +231,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editModal<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
                             <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
                                 <div class="position-absolute top-0 end-0 p-3">
@@ -240,66 +240,33 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: var(--form-bg); border: 1px solid var(--border-color); width: 56px; height: 56px">
                                     <i class="bi bi-pencil-square text-primary" style="font-size: 1.5rem"></i>
                                 </div>
-                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);">Edit Coordinator</h5>
-                                <div class="badge rounded-pill text-primary mb-2" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.35rem 0.75rem;">
+                                <h5 class="fw-bold mb-1 text-center" style="color: var(--text-primary);">Edit Coordinator Role</h5>
+                                <div class="badge rounded-pill text-primary mb-1" style="background: rgba(16, 185, 129, 0.1); font-size: 0.85rem; padding: 0.35rem 0.75rem;">
                                     <?php echo htmlspecialchars($coordFullName, ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
+                                <small class="text-muted"><?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?></small>
                             </div>
                             <form action="<?php echo $basePath; ?>/hod/coordinators/edit" method="POST">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo htmlspecialchars((string)($c['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <div class="modal-body p-4 pt-2">
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-3">
-                                            <label class="form-label small fw-bold text-muted">Prefix *</label>
-                                            <select class="form-select" name="prefix" required>
-                                                <option value="Mr." <?php echo $coordPrefix === 'Mr.' ? 'selected' : ''; ?>>Mr.</option>
-                                                <option value="Ms." <?php echo $coordPrefix === 'Ms.' ? 'selected' : ''; ?>>Ms.</option>
-                                                <option value="Mrs." <?php echo $coordPrefix === 'Mrs.' ? 'selected' : ''; ?>>Mrs.</option>
-                                                <option value="Dr." <?php echo $coordPrefix === 'Dr.' ? 'selected' : ''; ?>>Dr.</option>
-                                                <option value="Prof." <?php echo $coordPrefix === 'Prof.' ? 'selected' : ''; ?>>Prof.</option>
-                                                <option value="Engr." <?php echo $coordPrefix === 'Engr.' ? 'selected' : ''; ?>>Engr.</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <label class="form-label small fw-bold text-muted">First Name *</label>
-                                            <input type="text" class="form-control" name="first_name" value="<?php echo htmlspecialchars($coordFirstName, ENT_QUOTES, 'UTF-8'); ?>" required>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label small fw-bold text-muted">Surname (Last Name) *</label>
-                                            <input type="text" class="form-control" name="last_name" value="<?php echo htmlspecialchars($coordSurname, ENT_QUOTES, 'UTF-8'); ?>" required>
-                                        </div>
+                                    <div class="alert alert-light border small text-muted py-2 px-3 mb-3 rounded-3 d-flex align-items-center gap-2">
+                                        <i class="bi bi-info-circle text-primary fs-6"></i>
+                                        <span>Personal profile details (CNIC, Email, Phone) are managed in <a href="<?php echo $basePath; ?>/hod/supervisors" class="fw-semibold text-decoration-none">View Faculty</a>.</span>
                                     </div>
 
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold text-muted">Assigned Shift *</label>
-                                            <select class="form-select" name="shift" required>
-                                                <option value="Morning" <?php echo ($coordShift === 'Morning') ? 'selected' : ''; ?>>Morning Shift</option>
-                                                <option value="Evening" <?php echo ($coordShift === 'Evening') ? 'selected' : ''; ?>>Evening Shift</option>
-                                                <option value="All" <?php echo ($coordShift === 'All') ? 'selected' : ''; ?>>All Shifts (Both)</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold text-muted">Designation *</label>
-                                            <input type="text" class="form-control" name="designation" value="<?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?>" required>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-muted">Assigned Shift *</label>
+                                        <select class="form-select" name="shift" required>
+                                            <option value="Morning" <?php echo ($coordShift === 'Morning') ? 'selected' : ''; ?>>Morning Shift</option>
+                                            <option value="Evening" <?php echo ($coordShift === 'Evening') ? 'selected' : ''; ?>>Evening Shift</option>
+                                            <option value="All" <?php echo ($coordShift === 'All') ? 'selected' : ''; ?>>All Shifts (Both)</option>
+                                        </select>
                                     </div>
 
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold text-muted">Email Address *</label>
-                                            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($c['email'], ENT_QUOTES, 'UTF-8'); ?>" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label small fw-bold text-muted">CNIC (no dashes) *</label>
-                                            <input type="text" class="form-control" name="cnic" value="<?php echo htmlspecialchars($c['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required pattern="[0-9]{13}">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-2 text-start">
-                                        <label class="form-label small fw-bold text-muted">Reset Password (leave blank to keep)</label>
-                                        <input type="password" class="form-control" name="password" placeholder="••••••••">
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-muted">Coordinator Designation / Role *</label>
+                                        <input type="text" class="form-control" name="designation" value="<?php echo htmlspecialchars($c['designation'] ?? 'FYP Coordinator', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. FYP Coordinator, Head Coordinator" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer border-0 p-4 pt-0">

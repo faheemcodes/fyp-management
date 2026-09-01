@@ -287,6 +287,27 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         </div>
                                     </div>
 
+                                    <div class="row g-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">CNIC (no dashes) *</label>
+                                            <input type="text" class="form-control" name="cnic" value="<?php echo htmlspecialchars($s['cnic'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required pattern="[0-9]{13}" placeholder="4130312345671">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold text-muted">Contact Number</label>
+                                            <div class="input-group">
+                                                <select class="form-select flex-shrink-0" name="mobile_code" style="max-width: 90px;">
+                                                    <?php $mCode = $s['mobile_code'] ?? '+92'; ?>
+                                                    <option value="+92" <?php echo ($mCode === '+92') ? 'selected' : ''; ?>>+92</option>
+                                                    <option value="+1" <?php echo ($mCode === '+1') ? 'selected' : ''; ?>>+1</option>
+                                                    <option value="+44" <?php echo ($mCode === '+44') ? 'selected' : ''; ?>>+44</option>
+                                                    <option value="+971" <?php echo ($mCode === '+971') ? 'selected' : ''; ?>>+971</option>
+                                                    <option value="+966" <?php echo ($mCode === '+966') ? 'selected' : ''; ?>>+966</option>
+                                                </select>
+                                                <input type="tel" class="form-control" name="contact_no" value="<?php echo htmlspecialchars($s['mobile_no'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="3001234567">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="mb-2 text-start">
                                         <label class="form-label small fw-bold text-muted">Reset Password (leave blank to keep)</label>
                                         <input type="password" class="form-control" name="password" placeholder="••••••••">
