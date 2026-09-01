@@ -3,13 +3,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 $isCoordinatorMultiShift = ($coordinatorShift === 'All');
 ?>
 <style>
-.deadline-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 1.25rem;
-    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
 
 .deadline-table th {
     font-size: 0.78rem !important;
@@ -157,15 +150,15 @@ $isCoordinatorMultiShift = ($coordinatorShift === 'All');
 <div class="row g-4">
     <!-- ═══════════════ Set / Update Deadline Form (col-lg-4) ═══════════════ -->
     <div class="col-lg-4">
-        <div class="deadline-card p-4 h-100">
-            <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom" style="border-color: var(--border-color) !important;">
-                <div class="d-flex align-items-center gap-2.5">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: rgba(16,185,129,0.1); color: #10b981;">
-                        <i class="bi bi-calendar-plus-fill fs-6"></i>
+        <div class="page-section h-100 mb-0">
+            <div class="page-section-header justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">
+                        <i class="bi bi-calendar-plus-fill"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold m-0" id="formHeaderTitle" style="color: var(--text-primary); font-size: 0.95rem;">Set Stage Deadline</h6>
-                        <small class="text-muted" style="font-size: 0.74rem;">
+                        <h6 id="formHeaderTitle">Set Stage Deadline</h6>
+                        <small>
                             <?php if ($isCoordinatorMultiShift): ?>
                                 Define deadlines &amp; choose shift
                             <?php else: ?>
@@ -179,96 +172,98 @@ $isCoordinatorMultiShift = ($coordinatorShift === 'All');
                 </button>
             </div>
 
-            <form action="<?php echo $basePath; ?>/coordinator/deadlines/save" method="POST" id="deadlineForm">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                <input type="hidden" name="id" id="deadline_id" value="0">
+            <div class="page-section-body">
+                <form action="<?php echo $basePath; ?>/coordinator/deadlines/save" method="POST" id="deadlineForm">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="id" id="deadline_id" value="0">
 
-                <!-- Target Department (Read-only locked badge) -->
-                <div class="mb-3">
-                    <label class="form-label small fw-bold text-secondary mb-1">Target Department</label>
-                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">
-                        <i class="bi bi-shield-lock-fill text-muted"></i>
-                        <span><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?></span>
-                        <span class="badge rounded-pill ms-auto px-2.5 py-1" style="background: rgba(59,130,246,0.1); color: #2563eb; font-size: 0.7rem;">Locked</span>
-                    </div>
-                </div>
-
-                <!-- Target Shift Audience -->
-                <?php if ($isCoordinatorMultiShift): ?>
-                    <!-- Dropdown for Multi-shift Coordinator -->
+                    <!-- Target Department (Read-only locked badge) -->
                     <div class="mb-3">
-                        <label for="shiftSelect" class="form-label small fw-bold text-secondary mb-1">Target Shift Audience <span class="text-danger">*</span></label>
-                        <select class="form-select deadline-form-control fw-semibold" id="shiftSelect" name="shift" required>
-                            <option value="All">All Shifts (Morning &amp; Evening)</option>
-                            <option value="Morning">Morning Shift Only</option>
-                            <option value="Evening">Evening Shift Only</option>
-                        </select>
-                    </div>
-                <?php else: ?>
-                    <!-- Hidden & Locked Display for Single-shift Coordinator -->
-                    <input type="hidden" name="shift" id="shiftSelect" value="<?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?>">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary mb-1">Target Shift Audience</label>
+                        <label class="form-label small fw-bold text-secondary mb-1">Target Department</label>
                         <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">
-                            <i class="bi bi-check2-circle text-success"></i>
-                            <span><?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift Only</span>
-                            <span class="badge rounded-pill ms-auto px-2.5 py-1" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.7rem;">Assigned</span>
+                            <i class="bi bi-shield-lock-fill text-muted"></i>
+                            <span><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?></span>
+                            <span class="badge rounded-pill ms-auto px-2.5 py-1" style="background: rgba(59,130,246,0.1); color: #2563eb; font-size: 0.7rem;">Locked</span>
                         </div>
                     </div>
-                <?php endif; ?>
 
-                <!-- Project Stage -->
-                <div class="mb-3">
-                    <label for="stageSelect" class="form-label small fw-bold text-secondary mb-1">Project Stage <span class="text-danger">*</span></label>
-                    <select class="form-select deadline-form-control fw-semibold" id="stageSelect" name="stage" required>
-                        <option value="Proposal Submission">Proposal Submission</option>
-                        <option value="Proposal Defence Presentation">Proposal Defence Presentation</option>
-                        <option value="FYP Progress Presentation">FYP Progress Presentation</option>
-                        <option value="Final Presentation">Final Presentation</option>
-                    </select>
-                </div>
+                    <!-- Target Shift Audience -->
+                    <?php if ($isCoordinatorMultiShift): ?>
+                        <!-- Dropdown for Multi-shift Coordinator -->
+                        <div class="mb-3">
+                            <label for="shiftSelect" class="form-label small fw-bold text-secondary mb-1">Target Shift Audience <span class="text-danger">*</span></label>
+                            <select class="form-select deadline-form-control fw-semibold" id="shiftSelect" name="shift" required>
+                                <option value="All">All Shifts (Morning &amp; Evening)</option>
+                                <option value="Morning">Morning Shift Only</option>
+                                <option value="Evening">Evening Shift Only</option>
+                            </select>
+                        </div>
+                    <?php else: ?>
+                        <!-- Hidden & Locked Display for Single-shift Coordinator -->
+                        <input type="hidden" name="shift" id="shiftSelect" value="<?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?>">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary mb-1">Target Shift Audience</label>
+                            <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-3" style="background: var(--form-bg); border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">
+                                <i class="bi bi-check2-circle text-success"></i>
+                                <span><?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift Only</span>
+                                <span class="badge rounded-pill ms-auto px-2.5 py-1" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.7rem;">Assigned</span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
-                <!-- Deadline Date & Time -->
-                <div class="mb-3">
-                    <label for="deadlineDateInput" class="form-label small fw-bold text-secondary mb-1">Deadline Date &amp; Time <span class="text-danger">*</span></label>
-                    <input type="datetime-local" class="form-control deadline-form-control fw-semibold" id="deadlineDateInput" name="deadline_date" required>
-                </div>
-
-                <!-- Status Selection -->
-                <div class="mb-4">
-                    <label class="form-label small fw-bold text-secondary mb-1.5 d-block">Milestone Status</label>
-                    <div class="d-flex align-items-center gap-3">
-                        <label class="d-flex align-items-center gap-2 m-0" style="cursor: pointer;">
-                            <input type="radio" name="status" id="statusActive" value="Active" checked class="form-check-input mt-0">
-                            <span class="badge rounded-pill px-3 py-1" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.74rem; font-weight: 700;">Active</span>
-                        </label>
-                        <label class="d-flex align-items-center gap-2 m-0" style="cursor: pointer;">
-                            <input type="radio" name="status" id="statusInactive" value="Inactive" class="form-check-input mt-0">
-                            <span class="badge rounded-pill px-3 py-1" style="background: rgba(107,114,128,0.12); color: #6b7280; font-size: 0.74rem; font-weight: 600;">Inactive</span>
-                        </label>
+                    <!-- Project Stage -->
+                    <div class="mb-3">
+                        <label for="stageSelect" class="form-label small fw-bold text-secondary mb-1">Project Stage <span class="text-danger">*</span></label>
+                        <select class="form-select deadline-form-control fw-semibold" id="stageSelect" name="stage" required>
+                            <option value="Proposal Submission">Proposal Submission</option>
+                            <option value="Proposal Defence Presentation">Proposal Defence Presentation</option>
+                            <option value="FYP Progress Presentation">FYP Progress Presentation</option>
+                            <option value="Final Presentation">Final Presentation</option>
+                        </select>
                     </div>
-                </div>
 
-                <!-- Submit Button -->
-                <button type="submit" id="submitBtn" class="btn rounded-pill fw-bold w-100 py-2.5 shadow-sm text-white transition-all d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.9rem;">
-                    <i class="bi bi-check2-circle me-2 fs-6"></i>
-                    <span id="submitBtnText">Publish Deadline</span>
-                </button>
-            </form>
+                    <!-- Deadline Date & Time -->
+                    <div class="mb-3">
+                        <label for="deadlineDateInput" class="form-label small fw-bold text-secondary mb-1">Deadline Date &amp; Time <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="form-control deadline-form-control fw-semibold" id="deadlineDateInput" name="deadline_date" required>
+                    </div>
+
+                    <!-- Status Selection -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-secondary mb-1.5 d-block">Milestone Status</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <label class="d-flex align-items-center gap-2 m-0" style="cursor: pointer;">
+                                <input type="radio" name="status" id="statusActive" value="Active" checked class="form-check-input mt-0">
+                                <span class="badge rounded-pill px-3 py-1" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.74rem; font-weight: 700;">Active</span>
+                            </label>
+                            <label class="d-flex align-items-center gap-2 m-0" style="cursor: pointer;">
+                                <input type="radio" name="status" id="statusInactive" value="Inactive" class="form-check-input mt-0">
+                                <span class="badge rounded-pill px-3 py-1" style="background: rgba(107,114,128,0.12); color: #6b7280; font-size: 0.74rem; font-weight: 600;">Inactive</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="btn rounded-pill fw-bold w-100 py-2.5 shadow-sm text-white transition-all d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.9rem;">
+                        <i class="bi bi-check2-circle me-2 fs-6"></i>
+                        <span id="submitBtnText">Publish Deadline</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- ═══════════════ Deadlines Table (col-lg-8) ═══════════════ -->
     <div class="col-lg-8">
-        <div class="deadline-card h-100 d-flex flex-column">
-            <div class="p-3.5 px-4 d-flex align-items-center justify-content-between border-bottom" style="border-color: var(--border-color) !important;">
-                <div class="d-flex align-items-center gap-2.5">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; background: rgba(59,130,246,0.1); color: #2563eb;">
-                        <i class="bi bi-clock-history fs-6"></i>
+        <div class="page-section h-100 mb-0 d-flex flex-column">
+            <div class="page-section-header justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1); color: #2563eb;">
+                        <i class="bi bi-clock-history"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold m-0" style="color: var(--text-primary); font-size: 0.95rem;">Scheduled Timeline</h6>
-                        <small class="text-muted" style="font-size: 0.74rem;">Active milestones and submission deadlines</small>
+                        <h6>Scheduled Timeline</h6>
+                        <small>Active milestones and submission deadlines</small>
                     </div>
                 </div>
                 <span class="badge rounded-pill px-3 py-1 font-monospace" style="background: rgba(16,185,129,0.1); color: #059669; font-size: 0.76rem; font-weight: 700;">
