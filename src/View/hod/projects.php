@@ -581,16 +581,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <div class="modal fade" id="studentPhotoModal" tabindex="-1" aria-hidden="true" style="z-index: 1070;">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
         <div class="modal-content border-0 shadow-lg text-center" style="border-radius: 24px; overflow: hidden; background: var(--card-bg);">
-            <div class="modal-body p-4 position-relative">
+            <div class="modal-body p-4 pb-4 position-relative">
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="d-flex flex-column align-items-center mt-2">
                     <img id="modalStudentPhoto" src="" class="rounded-circle shadow mb-3" style="width: 170px; height: 170px; object-fit: cover; border: 4px solid var(--form-bg);" alt="Student Photo">
                     <h5 class="fw-bold mb-1" style="color: var(--text-primary); font-size: 1.1rem;" id="modalStudentName"></h5>
                     <span class="badge border font-monospace mt-1 px-3 py-1 rounded-pill" style="background: var(--form-bg); color: var(--text-secondary); font-size: 0.82rem;" id="modalStudentRoll"></span>
                 </div>
-            </div>
-            <div class="modal-footer border-0 p-3 pt-0 d-flex justify-content-center">
-                <button type="button" class="btn btn-sm btn-light rounded-pill px-4 fw-semibold" style="font-size: 0.82rem;" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
