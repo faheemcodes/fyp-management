@@ -26,11 +26,13 @@ html.dark-theme .text-dark {
     align-items: center;
     background: rgba(16,185,129,0.1);
     color: #10b981;
+    font-family: monospace;
     font-weight: 700;
-    font-size: 0.82rem;
-    padding: 6px 14px;
+    font-size: 0.74rem;
+    padding: 4px 10px;
     border-radius: 50rem;
     letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .avatar-stack img, .avatar-stack .rounded-circle {

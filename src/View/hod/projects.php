@@ -188,11 +188,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr data-stage-cat="<?php echo $stageCategory; ?>">
                     <td class="ps-4">
                         <div class="d-flex flex-column" style="max-width: 380px;">
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem; font-weight: 600;">
+                            <div class="d-flex align-items-center gap-1.5 mb-1 flex-nowrap">
+                                <span class="badge border rounded-pill font-monospace text-nowrap" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.74rem; font-weight: 700; padding: 3px 8px;">
                                     <?php echo htmlspecialchars($p['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <small class="text-muted" style="font-size: 0.78rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
+                                <small class="text-muted text-nowrap" style="font-size: 0.74rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
                             </div>
                             <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title pending', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.95rem;">
                                 <?php echo htmlspecialchars($p['project_title'] ?? 'Project Title Pending Submission', ENT_QUOTES, 'UTF-8'); ?>
