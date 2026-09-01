@@ -855,32 +855,71 @@ class HodController extends BaseController {
         $dept = $this->getHodDepartment($db, $_SESSION['user_id'] ?? 0);
 
         $stmt = $db->prepare("
-            SELECT g.id as group_id, g.group_code, g.committee_number, g.progress_stage, g.created_at,
+            SELECT g.id as group_id, g.group_code, g.created_by, g.committee_number, g.progress_stage, g.created_at, g.batch_id,
+                   b.name as batch_name,
                    p.id as project_id, p.title as project_title, p.description as abstract, p.status as project_status, p.thesis_file,
-                   pr.id as proposal_id, pr.file_path as proposal_file, pr.status as proposal_status,
-                   sup.name as supervisor_name, sup.designation as supervisor_designation
+                   pr.id as proposal_id, pr.file_path as proposal_file, pr.status as proposal_status, pr.feedback as proposal_feedback, pr.submitted_at as proposal_submitted_at,
+                   sup.user_id as supervisor_user_id, sup.name as supervisor_name, sup.designation as supervisor_designation, sup.department as supervisor_department,
+                   u_sup.email as supervisor_email,
+                   p_sup.prefix as supervisor_prefix, p_sup.surname as supervisor_surname, p_sup.mobile_code as supervisor_mobile_code, p_sup.mobile_no as supervisor_mobile_no
             FROM `groups` g
             JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN academic_batches b ON g.batch_id = b.id
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN proposals pr ON g.id = pr.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN users u_sup ON sup.user_id = u_sup.id
+            LEFT JOIN profiles p_sup ON sup.user_id = p_sup.user_id
             WHERE s.department = ?
             ORDER BY g.created_at DESC
         ");
         $stmt->execute([$dept]);
         $projects = $stmt->fetchAll();
 
-        // Fetch team members for each group
+        // Fetch team members and evaluators for each group
         foreach ($projects as &$proj) {
             $stmtM = $db->prepare("
-                SELECT s.user_id, s.student_id as roll_no, s.name as student_name, s.avatar, s.shift, u.email
+                SELECT s.user_id, s.student_id as roll_no, s.name as student_name, s.avatar, s.shift, s.department,
+                       u.email, u.cnic,
+                       prof.prefix, prof.surname, prof.mobile_code, prof.mobile_no,
+                       (CASE WHEN s.user_id = ? THEN 1 ELSE 0 END) as is_leader
                 FROM group_members gm
                 JOIN students s ON gm.student_id = s.user_id
                 JOIN users u ON s.user_id = u.id
+                LEFT JOIN profiles prof ON s.user_id = prof.user_id
                 WHERE gm.group_id = ?
+                ORDER BY is_leader DESC, s.name ASC
             ");
-            $stmtM->execute([$proj['group_id']]);
+            $stmtM->execute([$proj['created_by'], $proj['group_id']]);
             $proj['members'] = $stmtM->fetchAll();
+
+            // Fetch evaluators for this committee if assigned
+            $cNum = (int)($proj['committee_number'] ?? 0);
+            if ($cNum > 0) {
+                $stmtC = $db->prepare("
+                    SELECT c.name, c.designation, u.email, prof.prefix, prof.surname
+                    FROM committees c
+                    JOIN users u ON c.user_id = u.id
+                    LEFT JOIN profiles prof ON c.user_id = prof.user_id
+                    WHERE c.department = ? AND c.committee_number = ?
+                    ORDER BY c.designation ASC
+                ");
+                $stmtC->execute([$dept, $cNum]);
+                $proj['committee_evaluators'] = $stmtC->fetchAll();
+            } else {
+                $proj['committee_evaluators'] = [];
+            }
+
+            // Fetch evaluations if any
+            $stmtEval = $db->prepare("
+                SELECT e.stage, e.total_marks, e.remarks, e.scheduled_date, c.name as evaluator_name, c.designation as evaluator_designation
+                FROM evaluations e
+                JOIN committees c ON e.evaluator_id = c.user_id
+                WHERE e.group_id = ?
+                ORDER BY e.created_at ASC
+            ");
+            $stmtEval->execute([$proj['group_id']]);
+            $proj['evaluations'] = $stmtEval->fetchAll();
         }
 
         $stmtNumComm = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");

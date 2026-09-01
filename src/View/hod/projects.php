@@ -42,6 +42,35 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     font-size: 0.82rem;
     padding: 5px 14px;
 }
+.action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0;
+}
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+.action-btn-view {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+.action-btn-view:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #2563eb;
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -97,7 +126,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <th>Team Members</th>
                     <th>Committee</th>
                     <th>Milestone</th>
-                    <th class="text-end pe-4">Documents</th>
+                    <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +140,30 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         $stageCategory = 'final';
                     }
                     $cNum = (int)($p['committee_number'] ?? 0);
+                    
+                    $propUrl = !empty($p['proposal_file']) ? trim($p['proposal_file']) : '';
+                    if ($propUrl) {
+                        if (!str_contains($propUrl, 'uploads/')) {
+                            $propUrl = '/uploads/proposals/' . ltrim($propUrl, '/');
+                        }
+                        if (!str_starts_with($propUrl, '/')) {
+                            $propUrl = '/' . $propUrl;
+                        }
+                    }
+                    $finalPropUrl = $propUrl ? (($basePath ? rtrim($basePath, '/') : '') . $propUrl) : '';
+
+                    $thUrl = !empty($p['thesis_file']) ? trim($p['thesis_file']) : '';
+                    if ($thUrl) {
+                        if (!str_contains($thUrl, 'uploads/')) {
+                            $thUrl = '/uploads/thesis/' . ltrim($thUrl, '/');
+                        }
+                        if (!str_starts_with($thUrl, '/')) {
+                            $thUrl = '/' . $thUrl;
+                        }
+                    }
+                    $finalThUrl = $thUrl ? (($basePath ? rtrim($basePath, '/') : '') . $thUrl) : '';
+
+                    $supFullName = !empty($p['supervisor_name']) ? formatPersonName($p['supervisor_prefix'] ?? 'Mr.', $p['supervisor_name'], $p['supervisor_surname'] ?? '') : null;
                 ?>
                 <tr data-stage-cat="<?php echo $stageCategory; ?>">
                     <td class="ps-4">
@@ -134,7 +187,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td>
                         <?php if (!empty($p['supervisor_name'])): ?>
                         <div>
-                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($supFullName ?: $p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
                             <small class="text-muted d-block" style="font-size: 0.82rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
                         </div>
                         <?php else: ?>
@@ -173,43 +226,265 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-inline-flex flex-column align-items-end" style="gap: 6px;">
-                            <?php if (!empty($p['proposal_file'])): ?>
-                            <?php 
-                                $propUrl = trim($p['proposal_file']);
-                                if (!str_contains($propUrl, 'uploads/')) {
-                                    $propUrl = '/uploads/proposals/' . ltrim($propUrl, '/');
-                                }
-                                if (!str_starts_with($propUrl, '/')) {
-                                    $propUrl = '/' . $propUrl;
-                                }
-                                $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
-                            ?>
-                            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.78rem; min-width: 96px; gap: 5px;" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
-                                <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
+                        <div class="d-flex justify-content-end align-items-center gap-2">
+                            <!-- View Complete Details Button -->
+                            <button type="button" class="action-btn action-btn-view" data-bs-toggle="modal" data-bs-target="#viewProjectModal<?php echo (int)$p['group_id']; ?>" title="View All Project Details">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <?php if (!empty($finalPropUrl)): ?>
+                            <button type="button" class="action-btn" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25);" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
                             </button>
                             <?php endif; ?>
-                            <?php if (!empty($p['thesis_file'])): ?>
-                            <?php 
-                                $thUrl = trim($p['thesis_file']);
-                                if (!str_contains($thUrl, 'uploads/')) {
-                                    $thUrl = '/uploads/thesis/' . ltrim($thUrl, '/');
-                                }
-                                if (!str_starts_with($thUrl, '/')) {
-                                    $thUrl = '/' . $thUrl;
-                                }
-                                $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
-                            ?>
-                            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.78rem; min-width: 96px; gap: 5px;" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
-                                <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
+                            <?php if (!empty($finalThUrl)): ?>
+                            <button type="button" class="action-btn" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25);" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                                <i class="bi bi-file-earmark-arrow-down-fill"></i>
                             </button>
-                            <?php endif; ?>
-                            <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
-                            <span class="text-muted small" style="font-size: 0.82rem;">—</span>
                             <?php endif; ?>
                         </div>
                     </td>
                 </tr>
+
+                <!-- View Complete Project Details Modal -->
+                <div class="modal fade" id="viewProjectModal<?php echo (int)$p['group_id']; ?>" tabindex="-1" aria-labelledby="viewProjectModalLabel<?php echo (int)$p['group_id']; ?>" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: var(--card-bg);">
+                            <div class="modal-header border-0 pb-0 position-relative d-flex flex-column align-items-center" style="padding: 2rem 1.5rem 1rem;">
+                                <div class="position-absolute top-0 end-0 p-3">
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="rounded-circle p-3 mb-2 d-flex align-items-center justify-content-center shadow-sm" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); width: 60px; height: 60px;">
+                                    <i class="bi bi-kanban-fill text-primary" style="font-size: 1.6rem"></i>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap justify-content-center">
+                                    <span class="badge border rounded-pill px-3 py-1 font-monospace" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.82rem; font-weight: 700;">
+                                        <?php echo htmlspecialchars($p['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
+                                    <span class="badge border rounded-pill px-3 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.82rem; font-weight: 600;">
+                                        <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
+                                    <?php if (!empty($p['batch_name'])): ?>
+                                    <span class="badge border rounded-pill px-3 py-1" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
+                                        Batch: <?php echo htmlspecialchars($p['batch_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+                                <h5 class="fw-bold mb-1 text-center px-3" style="color: var(--text-primary); font-size: 1.15rem; line-height: 1.4;">
+                                    <?php echo htmlspecialchars($p['project_title'] ?? 'Project Title Pending Submission', ENT_QUOTES, 'UTF-8'); ?>
+                                </h5>
+                            </div>
+                            
+                            <div class="modal-body p-4 pt-3">
+                                <!-- Overview Stats Grid -->
+                                <div class="row g-2 mb-3">
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-3 text-center h-100" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                            <span class="text-muted d-block small fw-bold text-uppercase" style="font-size: 0.72rem;">Department</span>
+                                            <strong style="color: var(--text-primary); font-size: 0.88rem;"><?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-3 text-center h-100" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                            <span class="text-muted d-block small fw-bold text-uppercase" style="font-size: 0.72rem;">Assigned Committee</span>
+                                            <?php if ($cNum > 0): ?>
+                                            <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.82rem; font-weight: 600;">
+                                                Committee <?php echo $cNum; ?>
+                                            </span>
+                                            <?php else: ?>
+                                            <span class="badge border rounded-pill px-2.5 py-1 text-muted border-light-subtle bg-light" style="font-size: 0.82rem;">Unassigned</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-3 text-center h-100" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                            <span class="text-muted d-block small fw-bold text-uppercase" style="font-size: 0.72rem;">Registration Date</span>
+                                            <strong style="color: var(--text-primary); font-size: 0.88rem;"><?php echo date('M d, Y', strtotime($p['created_at'])); ?></strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Abstract / Description -->
+                                <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                        <i class="bi bi-card-text text-primary"></i> Abstract &amp; Scope
+                                    </h6>
+                                    <p class="mb-0 text-secondary small" style="line-height: 1.6; white-space: pre-line; font-size: 0.85rem;">
+                                        <?php echo !empty($p['abstract']) ? htmlspecialchars($p['abstract'], ENT_QUOTES, 'UTF-8') : '<em class="text-muted">No abstract or project description submitted yet.</em>'; ?>
+                                    </p>
+                                </div>
+
+                                <!-- Supervisor Information -->
+                                <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                        <i class="bi bi-person-workspace text-primary"></i> Project Supervisor
+                                    </h6>
+                                    <?php if ($supFullName): ?>
+                                    <div class="row g-2 small">
+                                        <div class="col-md-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Supervisor Name</span>
+                                            <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Designation</span>
+                                            <span class="badge border rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
+                                                <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email</span>
+                                            <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Contact Number</span>
+                                            <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars(($p['supervisor_mobile_code'] ?? '+92') . ' ' . ($p['supervisor_mobile_no'] ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></span>
+                                        </div>
+                                    </div>
+                                    <?php else: ?>
+                                    <p class="text-muted mb-0 small fst-italic">No supervisor assigned to this project yet.</p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Team Members Section -->
+                                <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold m-0 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                            <i class="bi bi-people-fill text-primary"></i> Team Members (<?php echo count($p['members'] ?? []); ?>)
+                                        </h6>
+                                    </div>
+                                    <?php if (!empty($p['members'])): ?>
+                                    <div class="d-flex flex-column gap-2">
+                                        <?php foreach($p['members'] as $m): ?>
+                                        <?php 
+                                            $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; 
+                                            $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
+                                        ?>
+                                        <div class="p-2.5 rounded-3 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
+                                                     class="rounded-circle shadow-sm" 
+                                                     style="width: 40px; height: 40px; object-fit: cover; border: 2px solid var(--border-color);" 
+                                                     alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                <div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                                        <?php if (!empty($m['is_leader'])): ?>
+                                                        <span class="badge border rounded-pill px-2 py-0.5" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.72rem; font-weight: 700;">Leader</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-3 text-muted flex-wrap" style="font-size: 0.78rem;">
+                                                        <span><strong class="text-secondary">Roll No:</strong> <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <span><strong class="text-secondary">Shift:</strong> <?php echo htmlspecialchars($m['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <?php if (!empty($m['cnic'])): ?>
+                                                        <span><strong class="text-secondary">CNIC:</strong> <?php echo htmlspecialchars($m['cnic'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-sm-end text-muted small ps-5 ps-sm-0" style="font-size: 0.78rem;">
+                                                <div><?php echo htmlspecialchars($m['email'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                                <?php if (!empty($m['mobile_no'])): ?>
+                                                <div><?php echo htmlspecialchars(($m['mobile_code'] ?? '+92') . ' ' . $m['mobile_no'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php else: ?>
+                                    <p class="text-muted mb-0 small fst-italic">No students registered in this group yet.</p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Committee Evaluators Section -->
+                                <?php if ($cNum > 0 && !empty($p['committee_evaluators'])): ?>
+                                <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                        <i class="bi bi-award-fill text-primary"></i> Committee <?php echo $cNum; ?> Evaluators
+                                    </h6>
+                                    <div class="row g-2">
+                                        <?php foreach($p['committee_evaluators'] as $eval): ?>
+                                        <div class="col-md-6">
+                                            <div class="p-2.5 rounded-3 h-100" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                                                <strong class="d-block" style="color: var(--text-primary); font-size: 0.88rem;"><?php echo htmlspecialchars($eval['name'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                                <span class="badge border rounded-pill px-2 py-0.5 mt-1" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.75rem;"><?php echo htmlspecialchars($eval['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?></span>
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.78rem;"><?php echo htmlspecialchars($eval['email'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+
+                                <!-- Submitted Documents -->
+                                <div class="p-3 rounded-3 mb-1" style="background: var(--form-bg); border: 1px solid var(--border-color);">
+                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                        <i class="bi bi-file-earmark-check-fill text-primary"></i> Project Submissions &amp; Documents
+                                    </h6>
+                                    <div class="row g-2">
+                                        <!-- Proposal File -->
+                                        <div class="col-sm-6">
+                                            <div class="p-3 rounded-3 h-100 d-flex flex-column justify-content-between" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                                                <div>
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <strong style="color: var(--text-primary); font-size: 0.88rem;">Project Proposal</strong>
+                                                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.75rem; font-weight: 600;">
+                                                            <?php echo htmlspecialchars($p['proposal_status'] ?? 'Draft', ENT_QUOTES, 'UTF-8'); ?>
+                                                        </span>
+                                                    </div>
+                                                    <small class="text-muted d-block mb-2" style="font-size: 0.78rem;">
+                                                        <?php echo !empty($p['proposal_submitted_at']) ? 'Submitted on ' . date('M d, Y', strtotime($p['proposal_submitted_at'])) : 'No submission date'; ?>
+                                                    </small>
+                                                </div>
+                                                <?php if (!empty($finalPropUrl)): ?>
+                                                <div class="d-flex gap-2 mt-2">
+                                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold flex-grow-1" style="font-size: 0.78rem;" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                                                        <i class="bi bi-eye me-1"></i> Preview
+                                                    </button>
+                                                    <a href="<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" download class="btn btn-sm btn-outline-secondary rounded-pill px-2.5" style="font-size: 0.78rem;" title="Download Proposal">
+                                                        <i class="bi bi-download"></i>
+                                                    </a>
+                                                </div>
+                                                <?php else: ?>
+                                                <span class="text-muted small fst-italic">No proposal uploaded</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                        <!-- Thesis File -->
+                                        <div class="col-sm-6">
+                                            <div class="p-3 rounded-3 h-100 d-flex flex-column justify-content-between" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                                                <div>
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <strong style="color: var(--text-primary); font-size: 0.88rem;">Final Thesis / Report</strong>
+                                                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.75rem; font-weight: 600;">
+                                                            <?php echo !empty($p['thesis_file']) ? 'Available' : 'Pending'; ?>
+                                                        </span>
+                                                    </div>
+                                                    <small class="text-muted d-block mb-2" style="font-size: 0.78rem;">Final documentation file</small>
+                                                </div>
+                                                <?php if (!empty($finalThUrl)): ?>
+                                                <div class="d-flex gap-2 mt-2">
+                                                    <button type="button" class="btn btn-sm btn-success rounded-pill px-3 fw-semibold flex-grow-1" style="font-size: 0.78rem;" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                                                        <i class="bi bi-eye me-1"></i> Preview
+                                                    </button>
+                                                    <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" download class="btn btn-sm btn-outline-secondary rounded-pill px-2.5" style="font-size: 0.78rem;" title="Download Thesis">
+                                                        <i class="bi bi-download"></i>
+                                                    </a>
+                                                </div>
+                                                <?php else: ?>
+                                                <span class="text-muted small fst-italic">No thesis uploaded yet</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="modal-footer border-0 p-3 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold ms-auto" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php endforeach; ?>
                 <?php if (empty($projects)): ?>
                 <tr>
