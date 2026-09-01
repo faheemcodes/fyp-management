@@ -133,9 +133,9 @@ $numCommittees = $num_committees ?? 2;
             <thead>
                 <tr>
                     <th class="ps-4">Member</th>
-                    <th>Committee</th>
                     <th>Designation</th>
                     <th>Department</th>
+                    <th>Committee</th>
                     <th class="text-end pe-4">Actions</th>
                 </tr>
             </thead>
@@ -160,14 +160,14 @@ $numCommittees = $num_committees ?? 2;
                             </div>
                         </div>
                     </td>
+                    <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
+                    <td>
+                        <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    </td>
                     <td>
                         <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.78rem;">
                             <i class="bi bi-shield-check me-1"></i>Committee <?php echo $commNum; ?>
                         </span>
-                    </td>
-                    <td><span class="badge border px-2.5 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;"><?php echo htmlspecialchars($c['designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?></span></td>
-                    <td>
-                        <span class="badge border px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important;"><?php echo htmlspecialchars($c['department'], ENT_QUOTES, 'UTF-8'); ?></span>
                     </td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
