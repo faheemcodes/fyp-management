@@ -28,6 +28,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
+.modern-table thead th {
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+}
+.modern-table tbody td {
+    font-size: 0.88rem !important;
+}
+.btn-filter-pill {
+    font-size: 0.82rem;
+    padding: 5px 14px;
+}
 </style>
 
 <!-- Top Hero Banner -->
@@ -102,16 +116,16 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td class="ps-4">
                         <div class="d-flex flex-column" style="max-width: 320px;">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge font-monospace px-2 py-0.5" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem;">
+                                <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.78rem; font-weight: 600;">
                                     <?php echo htmlspecialchars($p['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <small class="text-muted" style="font-size: 0.7rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
+                                <small class="text-muted" style="font-size: 0.78rem;"><?php echo date('M Y', strtotime($p['created_at'])); ?></small>
                             </div>
-                            <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title pending', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.92rem;">
+                            <div class="fw-bold text-truncate" title="<?php echo htmlspecialchars($p['project_title'] ?? 'Title pending', ENT_QUOTES, 'UTF-8'); ?>" style="color: var(--text-primary); font-size: 0.95rem;">
                                 <?php echo htmlspecialchars($p['project_title'] ?? 'Project Title Pending Submission', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
                             <?php if (!empty($p['abstract'])): ?>
-                            <small class="text-muted text-truncate" style="font-size: 0.78rem;" title="<?php echo htmlspecialchars($p['abstract'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <small class="text-muted text-truncate d-block" style="font-size: 0.82rem;" title="<?php echo htmlspecialchars($p['abstract'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <?php echo htmlspecialchars($p['abstract'], ENT_QUOTES, 'UTF-8'); ?>
                             </small>
                             <?php endif; ?>
@@ -120,11 +134,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <td>
                         <?php if (!empty($p['supervisor_name'])): ?>
                         <div>
-                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.88rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
-                            <small class="text-muted d-block" style="font-size: 0.74rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
+                            <div class="fw-semibold" style="color: var(--text-primary); font-size: 0.92rem;"><?php echo htmlspecialchars($p['supervisor_name'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <small class="text-muted d-block" style="font-size: 0.82rem;"><?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty', ENT_QUOTES, 'UTF-8'); ?></small>
                         </div>
                         <?php else: ?>
-                        <span class="badge border px-2 py-1 small" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important;">Not Assigned</span>
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500;">Not Assigned</span>
                         <?php endif; ?>
                     </td>
                     <td>
@@ -144,22 +158,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td>
                         <?php if ($cNum > 0): ?>
-                        <span class="badge border rounded-pill px-2.5 py-1 font-monospace" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.75rem;">
-                            <i class="bi bi-shield-check me-1"></i>Committee <?php echo $cNum; ?>
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
+                            Committee <?php echo $cNum; ?>
                         </span>
                         <?php else: ?>
-                        <span class="badge border rounded-pill px-2.5 py-1 text-muted border-light-subtle bg-light" style="font-size: 0.72rem;">
+                        <span class="badge border rounded-pill px-3 py-1.5 text-muted border-light-subtle bg-light" style="font-size: 0.84rem; font-weight: 500;">
                             Unassigned
                         </span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.75rem;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <div class="d-inline-flex flex-column align-items-end" style="gap: 5px;">
+                        <div class="d-inline-flex flex-column align-items-end" style="gap: 6px;">
                             <?php if (!empty($p['proposal_file'])): ?>
                             <?php 
                                 $propUrl = trim($p['proposal_file']);
@@ -171,7 +185,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalPropUrl = ($basePath ? rtrim($basePath, '/') : '') . $propUrl;
                             ?>
-                            <button type="button" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.78rem; min-width: 96px; gap: 5px;" title="Preview Proposal Document" onclick="previewDocument('<?php echo htmlspecialchars($finalPropUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Proposal', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
                                 <i class="bi bi-file-earmark-pdf-fill"></i> <span>Proposal</span>
                             </button>
                             <?php endif; ?>
@@ -186,12 +200,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 }
                                 $finalThUrl = ($basePath ? rtrim($basePath, '/') : '') . $thUrl;
                             ?>
-                            <button type="button" class="btn btn-sm rounded-pill px-2.5 py-1 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.72rem; width: 92px; gap: 5px;" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.78rem; min-width: 96px; gap: 5px;" title="Preview Thesis Document" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
                                 <i class="bi bi-file-earmark-arrow-down-fill"></i> <span>Thesis</span>
                             </button>
                             <?php endif; ?>
                             <?php if (empty($p['proposal_file']) && empty($p['thesis_file'])): ?>
-                            <span class="text-muted small" style="font-size: 0.72rem;">—</span>
+                            <span class="text-muted small" style="font-size: 0.82rem;">—</span>
                             <?php endif; ?>
                         </div>
                     </td>
