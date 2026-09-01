@@ -273,7 +273,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php endif; ?>
                             </td>
                             <td class="text-end pe-3">
-                                <div class="d-flex justify-content-end gap-1.5">
+                                <div class="d-flex justify-content-end align-items-center" style="gap: 6px;">
                                     <button type="button" class="action-btn" title="View Notice" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                                         <i class="bi bi-box-arrow-up-right"></i>
                                     </button>
