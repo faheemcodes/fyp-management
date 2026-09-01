@@ -72,9 +72,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     color: #2563eb;
 }
 .btn-details {
-    background: rgba(59, 130, 246, 0.1);
-    color: #2563eb;
-    border: 1px solid rgba(59, 130, 246, 0.25);
+    background: rgba(124, 58, 237, 0.08);
+    color: #7c3aed;
+    border: 1px solid rgba(124, 58, 237, 0.25);
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.35rem 0.95rem;
@@ -87,11 +87,21 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     cursor: pointer;
 }
 .btn-details:hover {
-    background: rgba(59, 130, 246, 0.2);
-    color: #1d4ed8;
-    border-color: rgba(59, 130, 246, 0.4);
+    background: #7c3aed;
+    color: #ffffff;
+    border-color: #7c3aed;
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+html.dark-theme .btn-details {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+    border-color: rgba(139, 92, 246, 0.3);
+}
+html.dark-theme .btn-details:hover {
+    background: #8b5cf6;
+    color: #ffffff;
+    border-color: #8b5cf6;
 }
 </style>
 
@@ -154,10 +164,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <?php 
                     $stage = $p['progress_stage'] ?? 'Group Created';
                     $stageCategory = 'proposal';
+                    $stageBadgeStyle = 'background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important;';
                     if (str_contains($stage, 'Defence') || str_contains($stage, 'Defense')) {
                         $stageCategory = 'defense';
+                        $stageBadgeStyle = 'background: rgba(6, 182, 212, 0.1); color: #0891b2; border-color: rgba(6, 182, 212, 0.25) !important;';
                     } elseif (str_contains($stage, 'Final') || str_contains($stage, 'Grading')) {
                         $stageCategory = 'final';
+                        $stageBadgeStyle = 'background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important;';
                     }
                     $cNum = (int)($p['committee_number'] ?? 0);
                     
@@ -215,7 +228,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(59, 130, 246, 0.1); color: #2563eb; border-color: rgba(59, 130, 246, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="<?php echo $stageBadgeStyle; ?> font-size: 0.84rem; font-weight: 600;">
                             <?php echo htmlspecialchars($p['progress_stage'] ?? 'Proposal Stage', ENT_QUOTES, 'UTF-8'); ?>
                         </span>
                     </td>
