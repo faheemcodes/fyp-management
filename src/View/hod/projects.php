@@ -297,30 +297,26 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     </p>
                                 </div>
 
-                                <!-- Supervisor Information -->
+                                <!-- Supervisor Information (Specific Data Only) -->
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
                                     <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
                                         <i class="bi bi-person-workspace text-primary"></i> Project Supervisor
                                     </h6>
                                     <?php if ($supFullName): ?>
-                                    <div class="row g-2 small">
-                                        <div class="col-md-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Supervisor Name</span>
+                                    <div class="row g-2 small align-items-center">
+                                        <div class="col-md-5">
+                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Name</span>
                                             <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($supFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Designation</span>
                                             <span class="badge border rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.82rem; font-weight: 500;">
                                                 <?php echo htmlspecialchars($p['supervisor_designation'] ?? 'Faculty Member', ENT_QUOTES, 'UTF-8'); ?>
                                             </span>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Email</span>
                                             <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars($p['supervisor_email'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?></span>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span class="text-muted d-block" style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Contact Number</span>
-                                            <span style="color: var(--text-primary); font-size: 0.84rem;"><?php echo htmlspecialchars(($p['supervisor_mobile_code'] ?? '+92') . ' ' . ($p['supervisor_mobile_no'] ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                     </div>
                                     <?php else: ?>
@@ -328,72 +324,76 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Team Members Section -->
+                                <!-- Group Members Section (Specific Data Only) -->
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="fw-bold m-0 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
-                                            <i class="bi bi-people-fill text-primary"></i> Team Members (<?php echo count($p['members'] ?? []); ?>)
-                                        </h6>
-                                    </div>
+                                    <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
+                                        <i class="bi bi-people-fill text-primary"></i> Group Members (<?php echo count($p['members'] ?? []); ?>)
+                                    </h6>
                                     <?php if (!empty($p['members'])): ?>
-                                    <div class="d-flex flex-column gap-2">
-                                        <?php foreach($p['members'] as $m): ?>
-                                        <?php 
-                                            $mAvatar = !empty($m['avatar']) ? $m['avatar'] : 'default_avatar.svg'; 
-                                            $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
-                                        ?>
-                                        <div class="p-2.5 rounded-3 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2" style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                            <div class="d-flex align-items-center gap-3">
-                                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($mAvatar, ENT_QUOTES, 'UTF-8'); ?>" 
-                                                     class="rounded-circle shadow-sm" 
-                                                     style="width: 40px; height: 40px; object-fit: cover; border: 2px solid var(--border-color);" 
-                                                     alt="<?php echo htmlspecialchars($m['student_name'], ENT_QUOTES, 'UTF-8'); ?>">
-                                                <div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <strong style="color: var(--text-primary); font-size: 0.9rem;"><?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm m-0 align-middle" style="font-size: 0.84rem;">
+                                            <thead>
+                                                <tr class="text-muted text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-color);">
+                                                    <th class="ps-2 pb-1">Student Name</th>
+                                                    <th class="pb-1">Roll No</th>
+                                                    <th class="pb-1">Email</th>
+                                                    <th class="text-end pe-2 pb-1">Role</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach($p['members'] as $m): ?>
+                                                <?php 
+                                                    $mFullName = formatPersonName($m['prefix'] ?? '', $m['student_name'] ?? '', $m['surname'] ?? '');
+                                                ?>
+                                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                                    <td class="ps-2 py-2 fw-semibold" style="color: var(--text-primary);">
+                                                        <?php echo htmlspecialchars($mFullName, ENT_QUOTES, 'UTF-8'); ?>
+                                                    </td>
+                                                    <td class="py-2 font-monospace text-muted">
+                                                        <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?>
+                                                    </td>
+                                                    <td class="py-2 text-muted">
+                                                        <?php echo htmlspecialchars($m['email'], ENT_QUOTES, 'UTF-8'); ?>
+                                                    </td>
+                                                    <td class="text-end pe-2 py-2">
                                                         <?php if (!empty($m['is_leader'])): ?>
-                                                        <span class="badge border rounded-pill px-2 py-0.5" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.72rem; font-weight: 700;">Leader</span>
+                                                        <span class="badge border rounded-pill px-2.5 py-0.5" style="background: rgba(245, 158, 11, 0.1); color: #d97706; border-color: rgba(245, 158, 11, 0.25) !important; font-size: 0.72rem; font-weight: 700;">Leader</span>
+                                                        <?php else: ?>
+                                                        <span class="badge border rounded-pill px-2.5 py-0.5 text-muted" style="background: var(--card-bg); border-color: var(--border-color) !important; font-size: 0.72rem;">Member</span>
                                                         <?php endif; ?>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-3 text-muted flex-wrap" style="font-size: 0.78rem;">
-                                                        <span><strong class="text-secondary">Roll No:</strong> <?php echo htmlspecialchars($m['roll_no'], ENT_QUOTES, 'UTF-8'); ?></span>
-                                                        <span><strong class="text-secondary">Shift:</strong> <?php echo htmlspecialchars($m['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?></span>
-                                                        <?php if (!empty($m['cnic'])): ?>
-                                                        <span><strong class="text-secondary">CNIC:</strong> <?php echo htmlspecialchars($m['cnic'], ENT_QUOTES, 'UTF-8'); ?></span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="text-sm-end text-muted small ps-5 ps-sm-0" style="font-size: 0.78rem;">
-                                                <div><?php echo htmlspecialchars($m['email'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                                <?php if (!empty($m['mobile_no'])): ?>
-                                                <div><?php echo htmlspecialchars(($m['mobile_code'] ?? '+92') . ' ' . $m['mobile_no'], ENT_QUOTES, 'UTF-8'); ?></div>
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                        <?php endforeach; ?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <?php else: ?>
                                     <p class="text-muted mb-0 small fst-italic">No students registered in this group yet.</p>
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Committee Evaluators Section -->
-                                <?php if ($cNum > 0 && !empty($p['committee_evaluators'])): ?>
+                                <!-- Committee (Specific Data Only) -->
+                                <?php if ($cNum > 0): ?>
                                 <div class="p-3 rounded-3 mb-3" style="background: var(--form-bg); border: 1px solid var(--border-color);">
                                     <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: var(--text-primary); font-size: 0.9rem;">
-                                        <i class="bi bi-award-fill text-primary"></i> Committee <?php echo $cNum; ?> Evaluators
+                                        <i class="bi bi-shield-check text-primary"></i> Assigned Committee
                                     </h6>
-                                    <div class="row g-2">
-                                        <?php foreach($p['committee_evaluators'] as $eval): ?>
-                                        <div class="col-md-6">
-                                            <div class="p-2.5 rounded-3 h-100" style="background: var(--card-bg); border: 1px solid var(--border-color);">
-                                                <strong class="d-block" style="color: var(--text-primary); font-size: 0.88rem;"><?php echo htmlspecialchars($eval['name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                                <span class="badge border rounded-pill px-2 py-0.5 mt-1" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.75rem;"><?php echo htmlspecialchars($eval['designation'] ?? 'Evaluator', ENT_QUOTES, 'UTF-8'); ?></span>
-                                                <small class="text-muted d-block mt-1" style="font-size: 0.78rem;"><?php echo htmlspecialchars($eval['email'], ENT_QUOTES, 'UTF-8'); ?></small>
-                                            </div>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                        <div>
+                                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.25); font-size: 0.85rem; font-weight: 600;">
+                                                Committee <?php echo $cNum; ?>
+                                            </span>
                                         </div>
-                                        <?php endforeach; ?>
+                                        <?php if (!empty($p['committee_evaluators'])): ?>
+                                        <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                                            <span class="text-muted small fw-bold text-uppercase me-1" style="font-size: 0.7rem;">Evaluators:</span>
+                                            <?php foreach($p['committee_evaluators'] as $eval): ?>
+                                            <span class="badge rounded-pill px-2.5 py-1" style="background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color); font-size: 0.78rem;">
+                                                <?php echo htmlspecialchars($eval['name'], ENT_QUOTES, 'UTF-8'); ?>
+                                            </span>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <?php endif; ?>
