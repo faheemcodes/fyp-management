@@ -110,9 +110,10 @@ if ($role === 'student') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
         $stmtG = $dbSidebar->prepare("
-            SELECT g.id, g.created_by, p.status AS proj_status 
+            SELECT g.id, g.created_by, p.status AS proj_status, COALESCE(b.is_active, 1) as batch_active 
             FROM `groups` g 
             LEFT JOIN projects p ON p.group_id = g.id
+            LEFT JOIN academic_batches b ON g.batch_id = b.id
             WHERE g.created_by = ? OR g.id IN (SELECT group_id FROM group_members WHERE student_id = ?) 
             LIMIT 1
         ");
@@ -121,12 +122,15 @@ if ($role === 'student') {
         $grp = $stmtG->fetch(PDO::FETCH_ASSOC);
         
         if ($grp) {
+            $isBatchActive = !empty($grp['batch_active']);
             $hasApprovedStudentProject = ($grp['proj_status'] === 'Approved');
-            $isGroupLeaderWithApprovedProject = ($hasApprovedStudentProject && (int)$grp['created_by'] === (int)$userId);
+            $isGroupLeaderWithApprovedProject = ($isBatchActive && $hasApprovedStudentProject && (int)$grp['created_by'] === (int)$userId);
             
-            $stmtSM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE group_id = ? AND status = 'Scheduled' AND meeting_date >= NOW()");
-            $stmtSM->execute([$grp['id']]);
-            $pendingStudentMeetings = $stmtSM->fetchColumn();
+            if ($isBatchActive) {
+                $stmtSM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE group_id = ? AND status = 'Scheduled' AND meeting_date >= NOW()");
+                $stmtSM->execute([$grp['id']]);
+                $pendingStudentMeetings = $stmtSM->fetchColumn();
+            }
         }
         
         // Chat count only for group leader
@@ -217,11 +221,6 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/batches" class="nav-link <?php echo isActive('/admin/batches', $currentUri); ?>">
-                        <i class="bi bi-box-seam-fill"></i> <span>Batches</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/admin/slots" class="nav-link <?php echo isActive('/admin/slots', $currentUri); ?>">
                         <i class="bi bi-person-badge-fill"></i> <span>Supervisor Slots</span>
                     </a>
@@ -279,6 +278,11 @@ if ($role === 'supervisor') {
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/hod/settings" class="nav-link <?php echo isActive('/hod/settings', $currentUri); ?>">
                         <i class="bi bi-sliders"></i> <span>Department Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/hod/previous-projects" class="nav-link <?php echo isActive('/hod/previous-projects', $currentUri); ?>">
+                        <i class="bi bi-archive-fill"></i> <span>Previous Projects</span>
                     </a>
                 </li>
 
@@ -449,6 +453,11 @@ if ($role === 'supervisor') {
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/meetings" class="nav-link <?php echo isActive('/coordinator/meetings', $currentUri); ?>">
                         <i class="bi bi-calendar2-check-fill"></i> <span>Meetings Audit</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/batches" class="nav-link <?php echo isActive('/coordinator/batches', $currentUri); ?>">
+                        <i class="bi bi-box-seam-fill"></i> <span>Academic Batches</span>
                     </a>
                 </li>
                 <li class="nav-item">

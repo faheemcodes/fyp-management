@@ -14,15 +14,16 @@ class SupervisorController extends BaseController {
                ->execute([$supervisorId, '%user=' . $targetUser, '%user_id=' . $targetUser]);
         }
         
-        // Fetch all group leaders for approved projects assigned to this supervisor with unread notifications count
+        // Fetch all group leaders for approved projects assigned to this supervisor with unread notifications count (active batch only)
         $stmt = $db->prepare("
             SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar,
                    (SELECT COUNT(*) FROM notifications n WHERE n.user_id = ? AND n.is_read = 0 AND (n.redirect_url LIKE CONCAT('%user=', g.created_by) OR n.redirect_url LIKE CONCAT('%user_id=', g.created_by))) as unread_count
             FROM projects p
             JOIN `groups` g ON p.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN students s ON g.created_by = s.user_id
             JOIN users u ON s.user_id = u.id
-            WHERE p.supervisor_id = ? AND p.status = 'Approved'
+            WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1
         ");
         $stmt->execute([$supervisorId, $supervisorId]);
         $leaders = $stmt->fetchAll();
@@ -42,19 +43,22 @@ class SupervisorController extends BaseController {
         $stmt->execute([$supervisorId]);
         $groupCount = $stmt->fetchColumn();
 
-        // Get count of pending proposals under review
+        // Get count of pending proposals under review (active batch only)
         $stmt = $db->prepare("SELECT COUNT(*) FROM proposals pr
             JOIN projects p ON pr.group_id = p.group_id
-            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested')");
+            JOIN `groups` g ON p.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested') AND b.is_active = 1");
         $stmt->execute([$supervisorId]);
         $pendingProposals = $stmt->fetchColumn();
 
-        // Fetch only pending proposals for assigned projects
+        // Fetch only pending proposals for assigned projects (active batch only)
         $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
             JOIN projects p ON g.id = p.group_id
-            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested')
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested') AND b.is_active = 1
             ORDER BY 
                 CASE 
                     WHEN pr.status = 'Submitted' THEN 1 
@@ -539,8 +543,9 @@ class SupervisorController extends BaseController {
             FROM meetings m
             JOIN `groups` g ON m.group_id = g.id
             JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN students s ON g.created_by = s.user_id
-            WHERE m.supervisor_id = ?
+            WHERE m.supervisor_id = ? AND b.is_active = 1
             ORDER BY m.meeting_date ASC
         ");
         $stmt->execute([$userId]);

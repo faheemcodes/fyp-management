@@ -6,15 +6,39 @@ class StudentController extends BaseController {
     private function getStudentGroup($userId) {
         $db = \Database::getInstance()->getConnection();
         $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.supervisor_id, sup.name as supervisor_name,
-            creator_std.name as creator_name, creator_std.student_id as creator_student_id
+            creator_std.name as creator_name, creator_std.student_id as creator_student_id,
+            b.is_active as batch_active, b.name as batch_name
             FROM group_members gm
             JOIN `groups` g ON gm.group_id = g.id
+            LEFT JOIN academic_batches b ON g.batch_id = b.id
             LEFT JOIN students creator_std ON g.created_by = creator_std.user_id
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             WHERE gm.student_id = ?");
         $stmt->execute([$userId]);
         return $stmt->fetch();
+    }
+
+    private function isStudentBatchActive($userId) {
+        $db = \Database::getInstance()->getConnection();
+        // First check group's batch status
+        $stmt = $db->prepare("SELECT b.is_active FROM group_members gm JOIN `groups` g ON gm.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE gm.student_id = ? LIMIT 1");
+        $stmt->execute([$userId]);
+        $active = $stmt->fetchColumn();
+        if ($active !== false && $active !== null) {
+            return (bool)$active;
+        }
+        // If not in a group, check student's registered batch
+        $stmt = $db->prepare("SELECT b.is_active FROM students s JOIN academic_batches b ON s.batch_id = b.id WHERE s.user_id = ? LIMIT 1");
+        $stmt->execute([$userId]);
+        $active = $stmt->fetchColumn();
+        if ($active !== false && $active !== null) {
+            return (bool)$active;
+        }
+        // Fallback: check active registration batch for their department & shift
+        $stmt = $db->prepare("SELECT b.is_active FROM academic_batches b JOIN students s ON s.department = b.department AND (s.shift = b.shift OR b.shift = 'All') WHERE s.user_id = ? AND b.is_active = 1 LIMIT 1");
+        $stmt->execute([$userId]);
+        return (bool)$stmt->fetchColumn();
     }
 
     public function chat() {
@@ -25,11 +49,12 @@ class StudentController extends BaseController {
         
         // Find if student is the creator (leader) of an approved project
         $stmt = $db->prepare("
-            SELECT g.id as group_id, p.supervisor_id, sup.name as supervisor_name, u.email as supervisor_email
+            SELECT g.id as group_id, p.supervisor_id, sup.name as supervisor_name, u.email as supervisor_email, b.is_active as batch_active
             FROM `groups` g
             JOIN projects p ON g.id = p.group_id
             JOIN supervisors sup ON p.supervisor_id = sup.user_id
             JOIN users u ON sup.user_id = u.id
+            JOIN academic_batches b ON g.batch_id = b.id
             WHERE g.created_by = ? AND p.status = 'Approved'
         ");
         $stmt->execute([$userId]);
@@ -37,6 +62,11 @@ class StudentController extends BaseController {
 
         if (!$project) {
             $this->flash('error', 'Supervisor chat is exclusively available to Group Leaders of approved projects.');
+            redirect('/student/dashboard');
+        }
+
+        if (empty($project['batch_active'])) {
+            $this->flash('error', 'Supervisor chat is closed for completed/archived batches. All historical records remain saved in your portal.');
             redirect('/student/dashboard');
         }
 
@@ -105,7 +135,8 @@ class StudentController extends BaseController {
             'proposal' => $proposal,
             'grades' => $grades,
             'deadlines' => $deadlines,
-            'recentNotices' => $recentNotices
+            'recentNotices' => $recentNotices,
+            'isBatchActive' => $this->isStudentBatchActive($userId)
         ]);
     }
 
@@ -148,7 +179,8 @@ class StudentController extends BaseController {
             'group' => $group,
             'members' => $members,
             'groupMembers' => $groupMembers,
-            'maxGroupMembers' => $maxGroupMembers
+            'maxGroupMembers' => $maxGroupMembers,
+            'isBatchActive' => $this->isStudentBatchActive($userId)
         ]);
     }
 
@@ -167,6 +199,11 @@ class StudentController extends BaseController {
             // Check if current user is the group leader
             if ($group['created_by'] != $userId) {
                 $this->flash('error', 'Only the group leader can edit team members.');
+                redirect('/student/group');
+            }
+
+            if (!$this->isStudentBatchActive($userId)) {
+                $this->flash('error', 'Group modifications are disabled for completed/archived batches.');
                 redirect('/student/group');
             }
 
@@ -258,6 +295,11 @@ class StudentController extends BaseController {
             $userId = $_SESSION['user_id'];
             $db = \Database::getInstance()->getConnection();
 
+            if (!$this->isStudentBatchActive($userId)) {
+                $this->flash('error', 'Group creation is disabled for archived batches.');
+                redirect('/student/group');
+            }
+
             // Verify if student is already in a group
             $stmt = $db->prepare("SELECT id FROM group_members WHERE student_id = ?");
             $stmt->execute([$userId]);
@@ -277,11 +319,19 @@ class StudentController extends BaseController {
             try {
                 $db->beginTransaction();
 
-                // Get active registration batch
-                $batchStmt = $db->query("SELECT id FROM academic_batches WHERE is_registration_open = 1 LIMIT 1");
+                // Get student's department and shift
+                $stuStmt = $db->prepare("SELECT department, shift FROM students WHERE user_id = ?");
+                $stuStmt->execute([$userId]);
+                $stu = $stuStmt->fetch();
+                $stuDept = $stu['department'] ?? 'Software Engineering';
+                $stuShift = $stu['shift'] ?? 'Morning';
+
+                // Get active registration batch for student's department & shift
+                $batchStmt = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_registration_open = 1 AND is_active = 1 ORDER BY id DESC LIMIT 1");
+                $batchStmt->execute([$stuDept, $stuShift]);
                 $batch = $batchStmt->fetch();
                 if (!$batch) {
-                    throw new \Exception("No active registration batch found. Please contact administration.");
+                    throw new \Exception("No active registration batch found for {$stuDept} ({$stuShift}). Please contact your Department Coordinator.");
                 }
 
                 // Insert into groups
@@ -462,7 +512,8 @@ class StudentController extends BaseController {
             'groupMembers' => $groupMembers,
             'isLeader' => $isLeader,
             'supervisors' => $supervisors,
-            'maxGroupMembers' => $maxGroupMembers
+            'maxGroupMembers' => $maxGroupMembers,
+            'isBatchActive' => $this->isStudentBatchActive($userId)
         ]);
     }
 
@@ -470,6 +521,11 @@ class StudentController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $_SESSION['user_id'];
             $db = \Database::getInstance()->getConnection();
+
+            if (!$this->isStudentBatchActive($userId)) {
+                $this->flash('error', 'Proposal submission and editing are disabled for completed/archived batches.');
+                redirect('/student/proposal');
+            }
 
             $group = $this->getStudentGroup($userId);
             
@@ -618,11 +674,19 @@ class StudentController extends BaseController {
 
                 $groupId = null;
                 if (!$group) {
+                    // Get student's department and shift
+                    $stuStmt = $db->prepare("SELECT department, shift FROM students WHERE user_id = ?");
+                    $stuStmt->execute([$userId]);
+                    $stu = $stuStmt->fetch();
+                    $stuDept = $stu['department'] ?? 'Software Engineering';
+                    $stuShift = $stu['shift'] ?? 'Morning';
+
                     // Get active registration batch
-                    $batchStmt = $db->query("SELECT id FROM academic_batches WHERE is_registration_open = 1 LIMIT 1");
+                    $batchStmt = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_registration_open = 1 AND is_active = 1 ORDER BY id DESC LIMIT 1");
+                    $batchStmt->execute([$stuDept, $stuShift]);
                     $batch = $batchStmt->fetch();
                     if (!$batch) {
-                        throw new \Exception("No active registration batch found. Please contact administration.");
+                        throw new \Exception("No active registration batch found for {$stuDept} ({$stuShift}). Please contact your Department Coordinator.");
                     }
 
                     $stmt = $db->prepare("INSERT INTO `groups` (group_code, created_by, progress_stage, batch_id) VALUES (NULL, ?, 'Proposal Submitted', ?)");
@@ -701,6 +765,11 @@ class StudentController extends BaseController {
             }
             if ($group['created_by'] != $userId) {
                 $this->flash('error', 'Only the group leader can upload the thesis.');
+                redirect('/student/proposal');
+            }
+
+            if (!$this->isStudentBatchActive($userId)) {
+                $this->flash('error', 'Thesis upload is locked for completed/archived batches.');
                 redirect('/student/proposal');
             }
 
@@ -947,7 +1016,8 @@ class StudentController extends BaseController {
         $this->render('student/meetings', [
             'group' => $group,
             'meetings' => $meetings,
-            'supervisor' => $supervisor
+            'supervisor' => $supervisor,
+            'isBatchActive' => $this->isStudentBatchActive($userId)
         ]);
     }
 
@@ -955,6 +1025,11 @@ class StudentController extends BaseController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db = \Database::getInstance()->getConnection();
             $userId = $_SESSION['user_id'];
+            
+            if (!$this->isStudentBatchActive($userId)) {
+                $this->flash('error', 'Meeting requests are disabled for completed/archived batches.');
+                redirect('/student/meetings');
+            }
             
             $group = $this->getStudentGroup($userId);
             if (!$group || empty($group['supervisor_id'])) {

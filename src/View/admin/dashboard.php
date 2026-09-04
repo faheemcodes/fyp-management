@@ -94,26 +94,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </a>
     </div>
 
-    <!-- Batches Card -->
-    <div class="col-xl-4 col-sm-6">
-        <a href="<?php echo $basePath; ?>/admin/batches" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-purple">
-                <div class="premium-card-accent"></div>
-                <div class="d-flex align-items-center gap-3 position-relative z-1">
-                    <div class="premium-card-icon premium-icon-purple" style="width: 54px; height: 54px; font-size: 1.4rem;">
-                        <i class="bi bi-box-seam-fill"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Manage Batches</div>
-                        <div class="text-secondary mt-1" style="font-size: 0.78rem;">Configure academic years</div>
-                    </div>
-                    <div class="premium-card-arrow">
-                        <i class="bi bi-arrow-right-short"></i>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+
 
     <!-- Supervisor Slots Card -->
     <div class="col-xl-4 col-sm-6">

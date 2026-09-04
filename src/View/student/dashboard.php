@@ -227,6 +227,16 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
 
 
 
+<?php if (isset($isBatchActive) && !$isBatchActive): ?>
+<div class="alert alert-warning border-0 rounded-4 shadow-sm mb-4 p-3 d-flex align-items-center gap-3" style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b !important; color: #92400e;">
+    <i class="bi bi-archive-fill fs-3 text-warning"></i>
+    <div>
+        <strong class="d-block text-dark" style="font-size: 0.95rem;">Completed Academic Batch (<?php echo htmlspecialchars($group['batch_name'] ?? 'Past Batch'); ?>)</strong>
+        <span style="font-size: 0.85rem;">Your academic batch has completed its cycle. Your project record, abstract, thesis file, and grades are permanently archived and preserved.</span>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- ── Top Hero Banner ── -->
 <div class="page-hero">
     <div class="d-flex flex-column flex-xl-row align-items-center justify-content-between gap-4">

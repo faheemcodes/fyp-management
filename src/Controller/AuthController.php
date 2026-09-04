@@ -312,9 +312,14 @@ class AuthController extends BaseController {
                     
                     $phoneCombined = $mobile_code . $mobile_no;
                     
+                    // Determine active registration batch for this student's department and shift
+                    $batchStmt = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_registration_open = 1 AND is_active = 1 ORDER BY id DESC LIMIT 1");
+                    $batchStmt->execute([$department, $shift]);
+                    $activeBatchId = $batchStmt->fetchColumn() ?: null;
+
                     // Insert into students table
-                    $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, phone, department, shift, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$userId, $student_id, $name, $phoneCombined, $department, $shift, $avatarName]);
+                    $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, phone, department, shift, avatar, batch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$userId, $student_id, $name, $phoneCombined, $department, $shift, $avatarName, $activeBatchId]);
                     
                     // Seed profiles table with appropriate prefix based on gender
                     $prefix = ($gender === 'Female') ? 'Ms.' : 'Mr.';

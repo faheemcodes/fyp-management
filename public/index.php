@@ -141,9 +141,6 @@ $routes = [
     '/admin/deadlines/delete' => ['Controller\AdminController', 'deleteDeadline'],
     '/admin/reports' => ['Controller\AdminController', 'reports'],
     '/admin/reports/print' => ['Controller\AdminController', 'printReports'],
-    '/admin/batches' => ['Controller\AdminController', 'batches'],
-    '/admin/batches/create' => ['Controller\AdminController', 'createBatch'],
-    '/admin/batches/toggle' => ['Controller\AdminController', 'toggleBatch'],
 
     // HOD routes
     '/hod/dashboard' => ['Controller\HodController', 'dashboard'],
@@ -168,6 +165,7 @@ $routes = [
     '/hod/projects' => ['Controller\HodController', 'projects'],
     '/hod/projects/reassign-committee' => ['Controller\HodController', 'reassignGroupCommittee'],
     '/hod/profile' => ['Controller\HodController', 'profile'],
+    '/hod/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Student routes
     '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
@@ -231,6 +229,9 @@ $routes = [
     '/coordinator/deadlines' => ['Controller\CoordinatorController', 'deadlines'],
     '/coordinator/deadlines/save' => ['Controller\CoordinatorController', 'saveDeadline'],
     '/coordinator/deadlines/delete' => ['Controller\CoordinatorController', 'deleteDeadline'],
+    '/coordinator/batches' => ['Controller\CoordinatorController', 'batches'],
+    '/coordinator/batches/create' => ['Controller\CoordinatorController', 'createBatch'],
+    '/coordinator/batches/toggle' => ['Controller\CoordinatorController', 'toggleBatch'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Role switching

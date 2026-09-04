@@ -21,7 +21,7 @@ class HodController extends BaseController {
         $stmtPending->execute([$dept]);
         $stats['pending_approvals'] = $stmtPending->fetchColumn();
         
-        $stmtGroupsCount = $db->prepare("SELECT COUNT(*) FROM `groups` g JOIN students s ON g.created_by = s.user_id WHERE s.department = ?");
+        $stmtGroupsCount = $db->prepare("SELECT COUNT(*) FROM `groups` g JOIN students s ON g.created_by = s.user_id JOIN academic_batches b ON g.batch_id = b.id WHERE s.department = ? AND b.is_active = 1");
         $stmtGroupsCount->execute([$dept]);
         $stats['total_groups'] = $stmtGroupsCount->fetchColumn();
         
@@ -29,7 +29,7 @@ class HodController extends BaseController {
         $stmtCoordCount->execute([$dept]);
         $stats['coordinators'] = $stmtCoordCount->fetchColumn();
 
-        // FYP Progress Stages Funnel
+        // FYP Progress Stages Funnel (Active batches only)
         $stages = [
             'Proposal Submitted' => 0,
             'Proposal Approved' => 0,
@@ -42,7 +42,8 @@ class HodController extends BaseController {
         $stmtStages = $db->prepare("SELECT g.progress_stage, COUNT(*) as count 
             FROM `groups` g 
             JOIN students s ON g.created_by = s.user_id 
-            WHERE s.department = ? 
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE s.department = ? AND b.is_active = 1
             GROUP BY g.progress_stage");
         $stmtStages->execute([$dept]);
         $stageResults = $stmtStages->fetchAll();
@@ -57,7 +58,7 @@ class HodController extends BaseController {
             }
         }
 
-        // Supervisor Workload & Capacity Matrix
+        // Supervisor Workload & Capacity Matrix (Active batches only)
         $stmtSettings = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
         $stmtSettings->execute([$dept]);
         $deptSettings = $stmtSettings->fetch();
@@ -66,13 +67,14 @@ class HodController extends BaseController {
 
         $stmtWorkload = $db->prepare("
             SELECT s.user_id, s.name, s.designation, u.email,
-                COALESCE(SUM(CASE WHEN st.shift = 'Morning' OR st.shift IS NULL THEN 1 ELSE 0 END), 0) as morning_projects,
-                COALESCE(SUM(CASE WHEN st.shift = 'Evening' THEN 1 ELSE 0 END), 0) as evening_projects,
-                COUNT(p.id) as total_projects
+                COALESCE(SUM(CASE WHEN (st.shift = 'Morning' OR st.shift IS NULL) AND b.is_active = 1 THEN 1 ELSE 0 END), 0) as morning_projects,
+                COALESCE(SUM(CASE WHEN st.shift = 'Evening' AND b.is_active = 1 THEN 1 ELSE 0 END), 0) as evening_projects,
+                COALESCE(SUM(CASE WHEN b.is_active = 1 THEN 1 ELSE 0 END), 0) as total_projects
             FROM supervisors s
             JOIN users u ON s.user_id = u.id
             LEFT JOIN projects p ON s.user_id = p.supervisor_id
             LEFT JOIN `groups` g ON p.group_id = g.id
+            LEFT JOIN academic_batches b ON g.batch_id = b.id
             LEFT JOIN students st ON g.created_by = st.user_id
             WHERE s.department = ?
             GROUP BY s.user_id, s.name, s.designation, u.email
@@ -864,13 +866,13 @@ class HodController extends BaseController {
                    p_sup.prefix as supervisor_prefix, p_sup.surname as supervisor_surname, p_sup.mobile_code as supervisor_mobile_code, p_sup.mobile_no as supervisor_mobile_no
             FROM `groups` g
             JOIN students s ON g.created_by = s.user_id
-            LEFT JOIN academic_batches b ON g.batch_id = b.id
+            JOIN academic_batches b ON g.batch_id = b.id
             LEFT JOIN projects p ON g.id = p.group_id
             LEFT JOIN proposals pr ON g.id = pr.group_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
             LEFT JOIN users u_sup ON sup.user_id = u_sup.id
             LEFT JOIN profiles p_sup ON sup.user_id = p_sup.user_id
-            WHERE s.department = ?
+            WHERE s.department = ? AND b.is_active = 1
             ORDER BY g.created_at DESC
         ");
         $stmt->execute([$dept]);

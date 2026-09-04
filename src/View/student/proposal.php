@@ -157,8 +157,8 @@ foreach (($supervisors ?? []) as $s) {
 
 
 
-<?php if ($group && !$isLeader): ?>
-<!-- ─── GROUP MEMBER READ-ONLY VIEW ─── -->
+<?php if ($group && (!$isLeader || (isset($isBatchActive) && !$isBatchActive))): ?>
+<!-- ─── GROUP MEMBER OR ARCHIVED BATCH READ-ONLY VIEW ─── -->
 
     <!-- Hero Banner -->
     <div class="page-hero">
@@ -193,12 +193,21 @@ foreach (($supervisors ?? []) as $s) {
     </div>
 
     <!-- Info Alert -->
+    <?php if (isset($isBatchActive) && !$isBatchActive): ?>
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(245,158,11,0.08);border: 1px solid rgba(245,158,11,0.25)">
+        <div style="width: 32px;height: 32px;background: rgba(245,158,11,0.15);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #d97706;font-size: 0.9rem">
+            <i class="bi bi-archive-fill"></i>
+        </div>
+        <span style="font-size: 0.85rem;color: #92400e;line-height: 1.5">Your academic batch has been completed and archived. Your proposal, abstract, supervisor details, and final thesis are preserved in <strong>read-only mode</strong>.</span>
+    </div>
+    <?php else: ?>
     <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06);border: 1px solid rgba(16,185,129,0.15)">
         <div style="width: 32px;height: 32px;background: rgba(16,185,129,0.1);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #10b981;font-size: 0.9rem">
             <i class="bi bi-info-circle-fill"></i>
         </div>
         <span style="font-size: 0.85rem;color: #059669;line-height: 1.5">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
     </div>
+    <?php endif; ?>
 
     <div class="row g-4">
         <div class="col-lg-7">

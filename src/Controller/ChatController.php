@@ -91,6 +91,46 @@ class ChatController extends BaseController {
             
             $fileUrl = $baseDir . '/uploads/chat_files/' . $filename;
             
+            // Track attachment in database for lifecycle cleanup
+            try {
+                $db = \Database::getInstance()->getConnection();
+                $userId = (int)$_SESSION['user_id'];
+                $groupId = null;
+                $batchId = null;
+
+                if ($_SESSION['role'] === 'student') {
+                    $stmt = $db->prepare("SELECT g.id as group_id, g.batch_id FROM group_members gm JOIN `groups` g ON gm.group_id = g.id WHERE gm.student_id = ? LIMIT 1");
+                    $stmt->execute([$userId]);
+                    $grp = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    if ($grp) {
+                        $groupId = $grp['group_id'];
+                        $batchId = $grp['batch_id'];
+                    } else {
+                        // Check if student has batch_id in students table
+                        $stmt = $db->prepare("SELECT batch_id FROM students WHERE user_id = ?");
+                        $stmt->execute([$userId]);
+                        $batchId = $stmt->fetchColumn() ?: null;
+                    }
+                } else {
+                    $targetLeaderId = $_POST['leader_id'] ?? ($_POST['recipient_id'] ?? null);
+                    if ($targetLeaderId) {
+                        $stmt = $db->prepare("SELECT g.id as group_id, g.batch_id FROM `groups` g WHERE g.created_by = ? LIMIT 1");
+                        $stmt->execute([(int)$targetLeaderId]);
+                        $grp = $stmt->fetch(\PDO::FETCH_ASSOC);
+                        if ($grp) {
+                            $groupId = $grp['group_id'];
+                            $batchId = $grp['batch_id'];
+                        }
+                    }
+                }
+
+                $stmt = $db->prepare("INSERT INTO chat_attachments (user_id, group_id, batch_id, file_name, file_path, file_size, file_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $groupId, $batchId, $file['name'], $filename, $file['size'], $mimeType]);
+            } catch (\Exception $e) {
+                // Log and continue without breaking the upload response
+                error_log("Failed to track chat attachment: " . $e->getMessage());
+            }
+
             echo json_encode([
                 'success' => true,
                 'fileUrl' => $fileUrl,

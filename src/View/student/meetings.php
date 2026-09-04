@@ -18,9 +18,15 @@
         </div>
         
         <?php if ($supervisor && isset($group['project_status']) && $group['project_status'] === 'Approved'): ?>
-            <button type="button" class="btn text-white fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#requestMeetingModal" style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3)">
-                <i class="bi bi-plus-lg"></i> Request Meeting
-            </button>
+            <?php if (!empty($isBatchActive)): ?>
+                <button type="button" class="btn text-white fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#requestMeetingModal" style="background: rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.3)">
+                    <i class="bi bi-plus-lg"></i> Request Meeting
+                </button>
+            <?php else: ?>
+                <button type="button" class="btn text-white-50 d-flex align-items-center gap-2" disabled style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.15)" title="Meeting requests are closed for completed/archived batches">
+                    <i class="bi bi-lock-fill"></i> Batch Archived
+                </button>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>

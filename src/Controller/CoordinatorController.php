@@ -52,30 +52,33 @@ class CoordinatorController extends BaseController {
         $stmt->execute([$userId]);
         $stats['total_notices'] = $stmt->fetchColumn();
 
-        // Department meetings awaiting verification (Completed status)
+        // Department meetings awaiting verification (Completed status, active batch only)
         $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings m
             JOIN `groups` g ON m.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN students s ON g.created_by = s.user_id
-            WHERE s.department = ? AND m.status = 'Completed'$shiftFilter");
+            WHERE s.department = ? AND m.status = 'Completed' AND b.is_active = 1$shiftFilter");
         $stmtMeetings->execute([$dept]);
         $stats['pending_meetings'] = $stmtMeetings->fetchColumn();
 
-        // Unverified / Pending Proposals count (Supervisor Approved, Submitted, Under Review, Revision Requested)
+        // Unverified / Pending Proposals count (Active batch only)
         $stmtPendingCount = $db->prepare("SELECT COUNT(*) FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN students s ON g.created_by = s.user_id
-            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')$shiftFilter");
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested') AND b.is_active = 1$shiftFilter");
         $stmtPendingCount->execute([$dept]);
         $stats['pending_proposals'] = $stmtPendingCount->fetchColumn();
 
-        // Fetch unverified proposals for the department & shift
+        // Fetch unverified proposals for the department & shift (active batch only)
         $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN projects p ON g.id = p.group_id
             JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
-            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested')$shiftFilter
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested') AND b.is_active = 1$shiftFilter
             ORDER BY 
                 CASE 
                     WHEN pr.status = 'Supervisor Approved' THEN 1 
@@ -437,14 +440,15 @@ class CoordinatorController extends BaseController {
         $shift = $this->getCoordinatorShift($db, $_SESSION['user_id'] ?? 0);
         $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
 
-        // Fetch proposals for groups where the group creator is a student in the coordinator's department & shift
+        // Fetch proposals for groups where the group creator is a student in the coordinator's department & shift (active batch only)
         $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr
             JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN projects p ON g.id = p.group_id
             JOIN students s ON g.created_by = s.user_id
             LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
-            WHERE s.department = ?$shiftFilter 
+            WHERE s.department = ? AND b.is_active = 1$shiftFilter 
             ORDER BY pr.submitted_at DESC");
         $stmt->execute([$dept]);
         $proposals = $stmt->fetchAll();
@@ -742,10 +746,11 @@ class CoordinatorController extends BaseController {
             SELECT m.*, p.title as project_title, g.group_code, s.name as group_leader_name, sup.name as supervisor_name
             FROM meetings m
             JOIN `groups` g ON m.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
             JOIN projects p ON g.id = p.group_id
             JOIN students s ON g.created_by = s.user_id
             JOIN supervisors sup ON m.supervisor_id = sup.user_id
-            WHERE s.department = ? AND m.status IN ('Completed', 'Verified')
+            WHERE s.department = ? AND m.status IN ('Completed', 'Verified') AND b.is_active = 1
             ORDER BY m.meeting_date DESC
         ");
         $stmt->execute([$dept]);
@@ -1110,6 +1115,247 @@ class CoordinatorController extends BaseController {
             }
         }
         redirect('/coordinator/deadlines');
+    }
+
+    public function batches() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        if ($shift === 'All') {
+            $stmt = $db->prepare("
+                SELECT b.*, 
+                       COUNT(DISTINCT g.id) as group_count,
+                       COUNT(DISTINCT CASE WHEN p.status = 'Approved' THEN p.id END) as approved_projects_count
+                FROM academic_batches b
+                LEFT JOIN `groups` g ON b.id = g.batch_id
+                LEFT JOIN projects p ON g.id = p.group_id
+                WHERE b.department = ?
+                GROUP BY b.id
+                ORDER BY b.created_at DESC
+            ");
+            $stmt->execute([$dept]);
+        } else {
+            $stmt = $db->prepare("
+                SELECT b.*, 
+                       COUNT(DISTINCT g.id) as group_count,
+                       COUNT(DISTINCT CASE WHEN p.status = 'Approved' THEN p.id END) as approved_projects_count
+                FROM academic_batches b
+                LEFT JOIN `groups` g ON b.id = g.batch_id
+                LEFT JOIN projects p ON g.id = p.group_id
+                WHERE b.department = ? AND (b.shift = ? OR b.shift = 'All')
+                GROUP BY b.id
+                ORDER BY b.created_at DESC
+            ");
+            $stmt->execute([$dept, $shift]);
+        }
+        $batches = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $this->render('coordinator/batches', [
+            'batches' => $batches,
+            'department' => $dept,
+            'shift' => $shift
+        ]);
+    }
+
+    public function createBatch() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $name = trim($_POST['name'] ?? '');
+            $shift = ($coordShift === 'All') ? ($_POST['shift'] ?? 'Morning') : $coordShift;
+            $activateNow = !empty($_POST['activate_now']);
+
+            if (empty($name)) {
+                $this->flash('error', 'Batch name is required.');
+                redirect('/coordinator/batches');
+            }
+
+            try {
+                $db->beginTransaction();
+
+                if ($activateNow) {
+                    // Find currently active batch for this department & shift
+                    $stmtActive = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1");
+                    $stmtActive->execute([$dept, $shift]);
+                    $oldBatchIds = $stmtActive->fetchAll(\PDO::FETCH_COLUMN);
+
+                    // Deactivate and close registration for prior active batch
+                    $stmtDeact = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All')");
+                    $stmtDeact->execute([$dept, $shift]);
+
+                    // Insert new active batch
+                    $stmt = $db->prepare("INSERT INTO academic_batches (name, department, shift, is_active, is_registration_open) VALUES (?, ?, ?, 1, 1)");
+                    $stmt->execute([$name, $dept, $shift]);
+                    $newBatchId = $db->lastInsertId();
+
+                    $db->commit();
+
+                    // Cleanup chat attachments and notifications for archived batch(es)
+                    foreach ($oldBatchIds as $oldId) {
+                        $this->cleanupArchivedBatchChat($db, $oldId);
+                    }
+
+                    $this->flash('success', "Batch '$name' created and activated! Prior batch projects moved to Previous Projects and chat storage cleaned.");
+                } else {
+                    $stmt = $db->prepare("INSERT INTO academic_batches (name, department, shift, is_active, is_registration_open) VALUES (?, ?, ?, 0, 0)");
+                    $stmt->execute([$name, $dept, $shift]);
+                    $db->commit();
+                    $this->flash('success', "Batch '$name' created successfully (draft/inactive).");
+                }
+            } catch (\Exception $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                $this->flash('error', 'Failed to create batch: ' . $e->getMessage());
+            }
+        }
+        redirect('/coordinator/batches');
+    }
+
+    public function toggleBatch() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $id = (int)($_POST['batch_id'] ?? 0);
+            $action = $_POST['action'] ?? '';
+
+            // Verify this batch belongs to coordinator's department & shift
+            if ($coordShift === 'All') {
+                $stmtCheck = $db->prepare("SELECT * FROM academic_batches WHERE id = ? AND department = ?");
+                $stmtCheck->execute([$id, $dept]);
+            } else {
+                $stmtCheck = $db->prepare("SELECT * FROM academic_batches WHERE id = ? AND department = ? AND (shift = ? OR shift = 'All')");
+                $stmtCheck->execute([$id, $dept, $coordShift]);
+            }
+            $targetBatch = $stmtCheck->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$targetBatch) {
+                $this->flash('error', 'Batch not found or access denied.');
+                redirect('/coordinator/batches');
+            }
+
+            $shift = $targetBatch['shift'];
+
+            try {
+                if ($action === 'set_registration') {
+                    // Only one batch can have registration open for this (department, shift)
+                    $db->beginTransaction();
+
+                    $stmtDeact = $db->prepare("UPDATE academic_batches SET is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All')");
+                    $stmtDeact->execute([$dept, $shift]);
+
+                    $stmt = $db->prepare("UPDATE academic_batches SET is_registration_open = 1, is_active = 1 WHERE id = ?");
+                    $stmt->execute([$id]);
+
+                    $db->commit();
+                    $this->flash('success', "Batch '{$targetBatch['name']}' is now open for new student registrations.");
+                } elseif ($action === 'toggle_active') {
+                    $newActive = $targetBatch['is_active'] ? 0 : 1;
+
+                    if ($newActive === 1) {
+                        // Activating this batch -> archive other batches for this department & shift
+                        $db->beginTransaction();
+
+                        $stmtActive = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1 AND id != ?");
+                        $stmtActive->execute([$dept, $shift, $id]);
+                        $oldBatchIds = $stmtActive->fetchAll(\PDO::FETCH_COLUMN);
+
+                        $stmtDeact = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All') AND id != ?");
+                        $stmtDeact->execute([$dept, $shift, $id]);
+
+                        $stmt = $db->prepare("UPDATE academic_batches SET is_active = 1, is_registration_open = 1 WHERE id = ?");
+                        $stmt->execute([$id]);
+
+                        $db->commit();
+
+                        foreach ($oldBatchIds as $oldId) {
+                            $this->cleanupArchivedBatchChat($db, $oldId);
+                        }
+
+                        $this->flash('success', "Batch '{$targetBatch['name']}' activated. Prior batch moved to Previous Projects and chat storage cleaned.");
+                    } else {
+                        // Deactivating / Archiving this batch
+                        $db->beginTransaction();
+                        $stmt = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE id = ?");
+                        $stmt->execute([$id]);
+                        $db->commit();
+
+                        $this->cleanupArchivedBatchChat($db, $id);
+
+                        $this->flash('success', "Batch '{$targetBatch['name']}' archived. Projects moved to Previous Projects and chat storage cleaned.");
+                    }
+                }
+            } catch (\Exception $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                $this->flash('error', 'Operation failed: ' . $e->getMessage());
+            }
+        }
+        redirect('/coordinator/batches');
+    }
+
+    private function cleanupArchivedBatchChat($db, $batchId) {
+        $batchId = (int)$batchId;
+        if ($batchId <= 0) return;
+
+        try {
+            // Find all groups in this archived batch
+            $stmt = $db->prepare("SELECT id, created_by FROM `groups` WHERE batch_id = ?");
+            $stmt->execute([$batchId]);
+            $groups = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            if (!empty($groups)) {
+                $groupIds = array_column($groups, 'id');
+                $leaderIds = array_filter(array_column($groups, 'created_by'));
+
+                // Find all student members
+                $inGroupIds = implode(',', array_map('intval', $groupIds));
+                $stmtM = $db->query("SELECT DISTINCT student_id FROM group_members WHERE group_id IN ($inGroupIds)");
+                $memberIds = $stmtM ? $stmtM->fetchAll(\PDO::FETCH_COLUMN) : [];
+
+                $allStudentUserIds = array_unique(array_merge($leaderIds, $memberIds));
+
+                // 1. Delete chat notifications for these groups/users
+                if (!empty($allStudentUserIds)) {
+                    $inUsers = implode(',', array_map('intval', $allStudentUserIds));
+                    $db->exec("DELETE FROM notifications WHERE redirect_url LIKE '%/chat%' AND user_id IN ($inUsers)");
+                    foreach ($allStudentUserIds as $sUid) {
+                        $db->prepare("DELETE FROM notifications WHERE redirect_url LIKE ? OR redirect_url LIKE ?")
+                           ->execute(["%/supervisor/chat?user=$sUid", "%/supervisor/chat?user_id=$sUid"]);
+                    }
+                }
+
+                // 2. Delete tracked files in chat_attachments for this batch or groups
+                $stmtFiles = $db->prepare("SELECT file_path FROM chat_attachments WHERE batch_id = ? OR group_id IN ($inGroupIds)");
+                $stmtFiles->execute([$batchId]);
+                $files = $stmtFiles->fetchAll(\PDO::FETCH_COLUMN);
+
+                $uploadDir = __DIR__ . '/../../public/uploads/chat_files/';
+                foreach ($files as $fPath) {
+                    $cleanName = basename($fPath);
+                    $fullPath = $uploadDir . $cleanName;
+                    if (file_exists($fullPath) && is_file($fullPath)) {
+                        @unlink($fullPath);
+                    }
+                }
+
+                // Delete records from chat_attachments
+                $db->prepare("DELETE FROM chat_attachments WHERE batch_id = ? OR group_id IN ($inGroupIds)")->execute([$batchId]);
+            }
+        } catch (\Exception $e) {
+            error_log("cleanupArchivedBatchChat error: " . $e->getMessage());
+        }
     }
 }
 
