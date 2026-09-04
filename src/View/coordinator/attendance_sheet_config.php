@@ -80,12 +80,27 @@ $totalCommittees = count($committeesGrouped);
                         </span>
                     <?php endif; ?>
                 </div>
+                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.78); font-size: 0.85rem">
+                    Generate and print presentation attendance sheets organized by evaluation committees
+                </p>
             </div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
             <a href="<?php echo $basePath; ?>/coordinator/committees" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
                 <i class="bi bi-diagram-3-fill"></i> <span>Group Allocation</span>
             </a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ Info Alert ═══════════════ -->
+<div class="card border-0 rounded-4 shadow-sm mb-4 p-3" style="background: rgba(59, 130, 246, 0.05); border-left: 4px solid #3b82f6 !important;">
+    <div class="d-flex gap-3 align-items-center">
+        <div class="p-2 rounded-circle text-primary" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.15); flex-shrink: 0;">
+            <i class="bi bi-info-circle-fill fs-5"></i>
+        </div>
+        <div class="small" style="font-size: 0.84rem; color: var(--text-secondary, #475569);">
+            <strong style="color: var(--text-primary, #1e293b);">Printing Tip:</strong> Attendance sheets automatically group student projects by their allocated committee with page breaks for evaluator signatures.
         </div>
     </div>
 </div>
@@ -99,8 +114,14 @@ $totalCommittees = count($committeesGrouped);
                     <div class="p-2 rounded-circle" style="background: rgba(4, 127, 176, 0.1); color: #047fb0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-sliders fs-5"></i>
                     </div>
-                    <h6 class="fw-bold mb-0" style="color: var(--text-primary, #0f172a); font-size: 1rem;">Generate Attendance Sheet</h6>
+                    <div>
+                        <h6 class="fw-bold mb-0" style="color: var(--text-primary, #0f172a); font-size: 1rem;">Generate Attendance Sheet</h6>
+                        <small class="text-muted">Configure presentation title and cohort to generate printable sheets</small>
+                    </div>
                 </div>
+                <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(16, 185, 129, 0.12); color: #059669; font-weight: 700; font-size: 0.78rem;">
+                    <i class="bi bi-printer me-1"></i> Print / PDF Ready
+                </span>
             </div>
 
             <div class="card-body p-4 p-md-5">
@@ -142,6 +163,9 @@ $totalCommittees = count($committeesGrouped);
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <small class="text-muted d-block mt-1 ps-1" style="font-size: 0.76rem;">
+                                <i class="bi bi-info-circle me-1"></i>"All" splits each committee onto a separate A4 page.
+                            </small>
                         </div>
 
                         <!-- Academic Batch -->
@@ -160,6 +184,9 @@ $totalCommittees = count($committeesGrouped);
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
+                            <small class="text-muted d-block mt-1 ps-1" style="font-size: 0.76rem;">
+                                <i class="bi bi-box-seam me-1"></i>Filter by batch or select all cohorts.
+                            </small>
                         </div>
                     </div>
 
