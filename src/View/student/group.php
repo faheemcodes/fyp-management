@@ -313,7 +313,7 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
             </div>
 
             <!-- Manage Members (Leader only) -->
-            <?php if ($isLeader): ?>
+            <?php if ($isLeader && (!isset($isBatchActive) || $isBatchActive)): ?>
             <div class="page-section">
                 <div class="page-section-header">
                     <div class="page-section-icon" style="background: rgba(139,92,246,0.1);color: #8b5cf6">
@@ -351,6 +351,23 @@ $isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_
                     
     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 </form>
+                </div>
+            </div>
+            <?php elseif (isset($isBatchActive) && !$isBatchActive): ?>
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #2563eb">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Team Composition Locked</h6>
+                        <small>Session has concluded &bull; View-only access</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <p class="text-muted mb-0" style="font-size: 0.85rem; line-height: 1.6;">
+                        Your final year project session has concluded. Group membership and leader assignments are locked in view-only mode.
+                    </p>
                 </div>
             </div>
             <?php endif; ?>

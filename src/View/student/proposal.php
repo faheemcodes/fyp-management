@@ -194,11 +194,11 @@ foreach (($supervisors ?? []) as $s) {
 
     <!-- Info Alert -->
     <?php if (isset($isBatchActive) && !$isBatchActive): ?>
-    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(245,158,11,0.08);border: 1px solid rgba(245,158,11,0.25)">
-        <div style="width: 32px;height: 32px;background: rgba(245,158,11,0.15);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #d97706;font-size: 0.9rem">
-            <i class="bi bi-archive-fill"></i>
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(59,130,246,0.08);border: 1px solid rgba(59,130,246,0.25)">
+        <div style="width: 32px;height: 32px;background: rgba(59,130,246,0.15);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #2563eb;font-size: 0.9rem">
+            <i class="bi bi-eye-fill"></i>
         </div>
-        <span style="font-size: 0.85rem;color: #92400e;line-height: 1.5">Your academic batch has been completed and archived. Your proposal, abstract, supervisor details, and final thesis are preserved in <strong>read-only mode</strong>.</span>
+        <span style="font-size: 0.85rem;color: #1e40af;line-height: 1.5">Your final year project term has concluded. You have <strong>view-only access</strong> to review your project details, abstract, supervisor information, and thesis. Further edits and submissions are closed.</span>
     </div>
     <?php else: ?>
     <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06);border: 1px solid rgba(16,185,129,0.15)">
@@ -531,7 +531,7 @@ foreach (($supervisors ?? []) as $s) {
                         </div>
                     <?php endif; ?>
                     
-                    <?php if ($isLeader): ?>
+                    <?php if ($isLeader && (!isset($isBatchActive) || $isBatchActive)): ?>
                     <form action="<?php echo $basePath; ?>/student/thesis/upload" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                         
@@ -547,6 +547,11 @@ foreach (($supervisors ?? []) as $s) {
                             <?php echo $project['thesis_file'] ? 'Submit Replacement' : 'Submit Thesis'; ?>
                         </button>
                     </form>
+                    <?php elseif (isset($isBatchActive) && !$isBatchActive): ?>
+                        <div class="text-center p-3 rounded-4 mt-2" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-4 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.82rem;">Thesis submissions are closed because your project term has concluded. You can review and download your document above.</p>
+                        </div>
                     <?php else: ?>
                         <?php if (!$project['thesis_file']): ?>
                         <div class="text-center p-4 rounded-4 mt-3" style="background: var(--body-bg); border: 1px dashed var(--border-color);">

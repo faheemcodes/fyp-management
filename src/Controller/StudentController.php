@@ -66,7 +66,7 @@ class StudentController extends BaseController {
         }
 
         if (empty($project['batch_active'])) {
-            $this->flash('error', 'Supervisor chat is closed for completed/archived batches. All historical records remain saved in your portal.');
+            $this->flash('error', 'Supervisor chat is closed because your project term has concluded. You still have full access to view your project details, thesis, and final grades.');
             redirect('/student/dashboard');
         }
 
@@ -203,7 +203,7 @@ class StudentController extends BaseController {
             }
 
             if (!$this->isStudentBatchActive($userId)) {
-                $this->flash('error', 'Group modifications are disabled for completed/archived batches.');
+                $this->flash('error', 'Group modifications are closed because your project term has concluded.');
                 redirect('/student/group');
             }
 
@@ -296,7 +296,7 @@ class StudentController extends BaseController {
             $db = \Database::getInstance()->getConnection();
 
             if (!$this->isStudentBatchActive($userId)) {
-                $this->flash('error', 'Group creation is disabled for archived batches.');
+                $this->flash('error', 'Group registration is closed for previous sessions.');
                 redirect('/student/group');
             }
 
@@ -523,7 +523,7 @@ class StudentController extends BaseController {
             $db = \Database::getInstance()->getConnection();
 
             if (!$this->isStudentBatchActive($userId)) {
-                $this->flash('error', 'Proposal submission and editing are disabled for completed/archived batches.');
+                $this->flash('error', 'Proposal editing and submissions are closed because your project term has concluded.');
                 redirect('/student/proposal');
             }
 
@@ -769,7 +769,7 @@ class StudentController extends BaseController {
             }
 
             if (!$this->isStudentBatchActive($userId)) {
-                $this->flash('error', 'Thesis upload is locked for completed/archived batches.');
+                $this->flash('error', 'Thesis upload is closed because your project term has concluded.');
                 redirect('/student/proposal');
             }
 
@@ -1027,7 +1027,7 @@ class StudentController extends BaseController {
             $userId = $_SESSION['user_id'];
             
             if (!$this->isStudentBatchActive($userId)) {
-                $this->flash('error', 'Meeting requests are disabled for completed/archived batches.');
+                $this->flash('error', 'Meeting scheduling is closed because your project term has concluded.');
                 redirect('/student/meetings');
             }
             

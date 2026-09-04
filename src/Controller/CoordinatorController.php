@@ -1292,7 +1292,7 @@ class CoordinatorController extends BaseController {
 
                         $this->cleanupArchivedBatchChat($db, $id);
 
-                        $this->flash('success', "Batch '{$targetBatch['name']}' archived. Projects moved to Previous Projects and chat storage cleaned.");
+                        $this->flash('success', "Batch '{$targetBatch['name']}' concluded. Its projects moved to Previous Projects and chat storage cleaned.");
                     }
                 }
             } catch (\Exception $e) {

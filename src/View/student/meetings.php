@@ -23,8 +23,8 @@
                     <i class="bi bi-plus-lg"></i> Request Meeting
                 </button>
             <?php else: ?>
-                <button type="button" class="btn text-white-50 d-flex align-items-center gap-2" disabled style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.15)" title="Meeting requests are closed for completed/archived batches">
-                    <i class="bi bi-lock-fill"></i> Batch Archived
+                <button type="button" class="btn text-white-50 d-flex align-items-center gap-2" disabled style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.15)" title="Meeting scheduling is closed as your project term has concluded">
+                    <i class="bi bi-lock-fill"></i> Meetings Closed
                 </button>
             <?php endif; ?>
         <?php endif; ?>
@@ -40,6 +40,12 @@
         <i class="bi bi-info-circle-fill me-2"></i> You don't have an assigned supervisor yet. Meetings can be requested after your proposal is approved.
     </div>
 <?php else: ?>
+
+    <?php if (isset($isBatchActive) && !$isBatchActive): ?>
+        <div class="alert border-0 shadow-sm mb-4" style="border-radius: 14px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3b82f6 !important; color: #1e40af;">
+            <i class="bi bi-info-circle-fill me-2"></i> <strong>Session Concluded:</strong> Meeting scheduling with your supervisor is closed. You can view your previous meeting history below.
+        </div>
+    <?php endif; ?>
 
     <div class="row g-4">
         <!-- Upcoming & Pending -->

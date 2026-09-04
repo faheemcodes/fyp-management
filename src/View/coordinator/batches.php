@@ -42,8 +42,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <p class="mb-0"><strong>&bull; Supervisor Dashboards:</strong> Faculty view current active batch projects. Prior batches shift to <em>Previous Projects</em>.</p>
                 </div>
                 <div class="col-md-6">
-                    <p class="mb-1"><strong>&bull; Previous Students:</strong> Historical access preserved (profile, final grade, proposal/thesis). Chat &amp; interactions closed.</p>
-                    <p class="mb-0"><strong>&bull; Storage Optimization:</strong> Chat attachments &amp; chat records are cleaned up for archived batches. Proposals &amp; theses are strictly preserved.</p>
+                    <p class="mb-1"><strong>&bull; Previous Students:</strong> Retain continuous view and download access to their project details, thesis, and grades. Chat &amp; scheduling are closed.</p>
+                    <p class="mb-0"><strong>&bull; Storage Optimization:</strong> Chat attachments &amp; chat records are cleaned up when a batch concludes. Project proposals, abstracts, and theses remain available in the repository.</p>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                                     </span>
                                 <?php else: ?>
                                     <span class="badge rounded-pill px-3 py-2" style="background: rgba(100, 116, 139, 0.12); color: #475569; font-weight: 500; border: 1px solid rgba(100, 116, 139, 0.25);">
-                                        <i class="bi bi-archive-fill me-1"></i> Archived
+                                        <i class="bi bi-clock-history me-1"></i> Concluded
                                     </span>
                                 <?php endif; ?>
                             </td>
@@ -127,13 +127,13 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <td class="pe-4 py-3 text-end">
                                 <div class="d-flex justify-content-end gap-2 align-items-center">
                                     <!-- Toggle Active / Archive -->
-                                    <form action="<?php echo $bp; ?>/coordinator/batches/toggle" method="POST" class="m-0" onsubmit="return confirm('<?php echo $b['is_active'] ? 'Archiving this batch will move its projects to Previous Projects, close chat for its students, and purge chat storage. Continue?' : 'Activating this batch will make it active for your department & shift and move the prior batch to Previous Projects. Continue?'; ?>');">
+                                    <form action="<?php echo $bp; ?>/coordinator/batches/toggle" method="POST" class="m-0" onsubmit="return confirm('<?php echo $b['is_active'] ? 'Concluding this batch will move its projects to Previous Projects, close chat for its students, and clean up chat storage. Continue?' : 'Activating this batch will make it active for your department & shift and move the prior batch to Previous Projects. Continue?'; ?>');">
                                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                         <input type="hidden" name="batch_id" value="<?php echo htmlspecialchars((string)$b['id'], ENT_QUOTES, 'UTF-8'); ?>">
                                         <input type="hidden" name="action" value="toggle_active">
                                         <?php if ($b['is_active']): ?>
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" title="Archive Batch & Shift to Previous Projects">
-                                                <i class="bi bi-archive me-1"></i> Archive
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" title="Conclude Batch & Shift to Previous Projects">
+                                                <i class="bi bi-check2-circle me-1"></i> Conclude
                                             </button>
                                         <?php else: ?>
                                             <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" title="Restore & Activate Batch">
