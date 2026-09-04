@@ -67,7 +67,10 @@ $totalCommittees = count($committeesGrouped);
             </div>
             <div>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Presentation Attendance Sheets</h4>
-                <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap mt-2">
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.78); font-size: 0.85rem">
+                    Generate and print presentation attendance sheets organized by evaluation committees
+                </p>
+                <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap mt-2.5">
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.22); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); font-size: 0.82rem; letter-spacing: 0.02em;">
                         <i class="bi bi-mortarboard-fill me-1"></i> <?php echo htmlspecialchars($department ?? 'Software Engineering', ENT_QUOTES, 'UTF-8'); ?>
                     </span>
@@ -80,9 +83,6 @@ $totalCommittees = count($committeesGrouped);
                         </span>
                     <?php endif; ?>
                 </div>
-                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.78); font-size: 0.85rem">
-                    Generate and print presentation attendance sheets organized by evaluation committees
-                </p>
             </div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
