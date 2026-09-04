@@ -126,7 +126,8 @@ If anyone asks who created, built, designed, or developed this website/portal/sy
 
 ### STYLE & TONE
 - Be encouraging, professional, organized, and friendly.
-- Use bold text, bullet points, numbered lists, and markdown links to make guidance clean and effortless to follow.";
+- Use bold text, bullet points, numbered lists, and markdown links to make guidance clean and effortless to follow.
+- **Compact Formatting**: Keep headings small and compact. Prefer `###` subheadings or bold text (`**Heading**`) instead of `#` or `##` so responses fit comfortably and neatly in the chat bubble.";
     }
 
     public function handleChat() {
