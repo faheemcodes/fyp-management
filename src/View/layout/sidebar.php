@@ -105,11 +105,12 @@ if ($role === 'supervisor') {
 $pendingStudentMeetings = 0;
 $unreadStudentChat = 0;
 $hasApprovedStudentProject = false;
+$isGroupLeaderWithApprovedProject = false;
 if ($role === 'student') {
     try {
         $dbSidebar = \Database::getInstance()->getConnection();
         $stmtG = $dbSidebar->prepare("
-            SELECT g.id, p.status AS proj_status 
+            SELECT g.id, g.created_by, p.status AS proj_status 
             FROM `groups` g 
             LEFT JOIN projects p ON p.group_id = g.id
             WHERE g.created_by = ? OR g.id IN (SELECT group_id FROM group_members WHERE student_id = ?) 
@@ -121,15 +122,19 @@ if ($role === 'student') {
         
         if ($grp) {
             $hasApprovedStudentProject = ($grp['proj_status'] === 'Approved');
+            $isGroupLeaderWithApprovedProject = ($hasApprovedStudentProject && (int)$grp['created_by'] === (int)$userId);
+            
             $stmtSM = $dbSidebar->prepare("SELECT COUNT(*) FROM meetings WHERE group_id = ? AND status = 'Scheduled' AND meeting_date >= NOW()");
             $stmtSM->execute([$grp['id']]);
             $pendingStudentMeetings = $stmtSM->fetchColumn();
         }
         
-        // Chat count
-        $stmtChatCount = $dbSidebar->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND redirect_url LIKE '%/chat%'");
-        $stmtChatCount->execute([$userId]);
-        $unreadStudentChat = $stmtChatCount->fetchColumn();
+        // Chat count only for group leader
+        if ($isGroupLeaderWithApprovedProject) {
+            $stmtChatCount = $dbSidebar->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND redirect_url LIKE '%/chat%'");
+            $stmtChatCount->execute([$userId]);
+            $unreadStudentChat = $stmtChatCount->fetchColumn();
+        }
     } catch (Exception $e) { }
 }
 
@@ -308,7 +313,7 @@ if ($role === 'supervisor') {
                         <i class="bi bi-award-fill"></i> <span>Final Grade</span>
                     </a>
                 </li>
-                <?php if (!empty($hasApprovedStudentProject)): ?>
+                <?php if (!empty($isGroupLeaderWithApprovedProject)): ?>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-chat-dots-fill"></i> <span>Chat with Supervisor</span></div>

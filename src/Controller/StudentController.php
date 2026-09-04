@@ -21,10 +21,9 @@ class StudentController extends BaseController {
         $db = \Database::getInstance()->getConnection();
         $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND redirect_url LIKE '%/chat%'")->execute([$_SESSION['user_id']]);
 
-        $db = \Database::getInstance()->getConnection();
         $userId = $_SESSION['user_id'];
         
-        // Find if student is the creator of an approved project
+        // Find if student is the creator (leader) of an approved project
         $stmt = $db->prepare("
             SELECT g.id as group_id, p.supervisor_id, sup.name as supervisor_name, u.email as supervisor_email
             FROM `groups` g
@@ -36,13 +35,18 @@ class StudentController extends BaseController {
         $stmt->execute([$userId]);
         $project = $stmt->fetch();
 
+        if (!$project) {
+            $this->flash('error', 'Supervisor chat is exclusively available to Group Leaders of approved projects.');
+            redirect('/student/dashboard');
+        }
+
         $this->render('student/chat', [
-            'isGroupLeader' => $project ? true : false,
-            'supervisor' => $project ? [
+            'isGroupLeader' => true,
+            'supervisor' => [
                 'id' => $project['supervisor_id'],
                 'name' => $project['supervisor_name'],
                 'email' => $project['supervisor_email']
-            ] : null,
+            ],
             'studentId' => $userId
         ]);
     }
