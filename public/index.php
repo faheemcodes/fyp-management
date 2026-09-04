@@ -1,18 +1,19 @@
 <?php
 // Session configuration
 
-// Set session cookie security parameters
-$cookieParams = session_get_cookie_params();
-session_set_cookie_params([
-    'lifetime' => 0, // Until browser is closed
-    'path' => $cookieParams['path'] ?? '/',
-    'domain' => $cookieParams['domain'] ?? '',
-    'secure' => isset($_SERVER['HTTPS']),
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    // Set session cookie security parameters
+    $cookieParams = session_get_cookie_params();
+    session_set_cookie_params([
+        'lifetime' => 0, // Until browser is closed
+        'path' => $cookieParams['path'] ?? '/',
+        'domain' => $cookieParams['domain'] ?? '',
+        'secure' => isset($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    session_start();
+}
 
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -55,18 +56,20 @@ spl_autoload_register(function ($class) {
 });
 
 // Helper function to redirect
-function redirect($path) {
-    // Normalize URL
-    $scriptName = $_SERVER['SCRIPT_NAME'];
-    $baseDir = dirname($scriptName);
-    if ($baseDir === '\\' || $baseDir === '/') {
-        $baseDir = '';
+if (!function_exists('redirect')) {
+    function redirect($path) {
+        // Normalize URL
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $baseDir = dirname($scriptName);
+        if ($baseDir === '\\' || $baseDir === '/') {
+            $baseDir = '';
+        }
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+        header('Location: ' . $baseDir . $path);
+        exit;
     }
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_write_close();
-    }
-    header('Location: ' . $baseDir . $path);
-    exit;
 }
 
 // Global helper to extract real first name initial (ignoring academic/honorific prefixes)

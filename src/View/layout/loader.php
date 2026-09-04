@@ -113,8 +113,8 @@
 
     // Show loader on form submissions
     document.addEventListener('submit', function(e) {
-        // Explicitly ignore chatbot and message forms
-        if (e.target && (e.target.id === 'ai-chat-form' || e.target.id === 'chatForm')) {
+        // Explicitly ignore chatbot and message forms, and forms targeting a new tab/window
+        if (e.target && (e.target.id === 'ai-chat-form' || e.target.id === 'chatForm' || e.target.target === '_blank' || e.target.getAttribute('target') === '_blank')) {
             return;
         }
         

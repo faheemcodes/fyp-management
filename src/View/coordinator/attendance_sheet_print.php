@@ -356,7 +356,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         </div>
                         <div>
                             <strong>Evaluators:</strong> 
-                            <?php echo !empty($evaluatorNames) ? htmlspecialchars(implode('  •  ', $evaluatorNames)) : '<span class="text-muted">Not Assigned</span>'; ?>
+                            <?php if (!empty($evaluatorNames)): ?>
+                                <?php echo htmlspecialchars(implode('  •  ', $evaluatorNames), ENT_QUOTES, 'UTF-8'); ?>
+                            <?php else: ?>
+                                <span class="text-muted">Not Assigned</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

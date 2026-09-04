@@ -168,7 +168,9 @@ $basePath = $bp;
 $userPrefix = $_SESSION['prefix'] ?? '';
 $userFirstName = $_SESSION['name'] ?? 'Coordinator';
 $userSurname = $_SESSION['surname'] ?? '';
-$displayHeroName = formatPersonName($userPrefix, $userFirstName, $userSurname);
+$displayHeroName = function_exists('formatPersonName') 
+    ? formatPersonName($userPrefix, $userFirstName, $userSurname) 
+    : trim(($userPrefix ? $userPrefix . ' ' : '') . $userFirstName . ($userSurname ? ' ' . $userSurname : ''));
 
 $pendingProposals = $pendingProposals ?? [];
 $supervisors = $supervisors ?? [];

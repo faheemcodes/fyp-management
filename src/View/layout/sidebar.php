@@ -44,8 +44,10 @@ if ($baseDir !== '/' && $baseDir !== '\\' && strpos($currentUri, $baseDir) === 0
 $currentUri = '/' . ltrim($currentUri, '/');
 
 // Helper to check active link
-function isActive($uri, $currentUri) {
-    return $currentUri === $uri ? 'active' : '';
+if (!function_exists('isActive')) {
+    function isActive($uri, $currentUri) {
+        return $currentUri === $uri ? 'active' : '';
+    }
 }
 
 // Helper to prefix base path
