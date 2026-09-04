@@ -40,6 +40,7 @@ class BaseController {
                 'auth/reset-password',
                 'coordinator/view_notice',
                 'coordinator/assessment_report',
+                'coordinator/attendance_sheet_print',
                 'committee/print_sheet',
                 'admin/reports_print',
                 'landing',

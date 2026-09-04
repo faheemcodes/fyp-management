@@ -152,7 +152,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.75); font-size: 0.85rem">Distribute project groups sequentially across presentation lab committees</p>
             </div>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-bold d-inline-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#generateAttendanceModal" style="color: #047fb0; font-size: 0.85rem;">
+                <i class="bi bi-printer-fill text-primary"></i> <span>Attendance Sheet</span>
+            </button>
             <a href="<?php echo $basePath; ?>/coordinator/assessment" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
                 <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Evaluation Sheets</span>
             </a>
@@ -524,3 +527,64 @@ function filterGroupTable(commNum, btn) {
     });
 }
 </script>
+
+<!-- Generate Attendance Sheet Modal -->
+<div class="modal fade" id="generateAttendanceModal" tabindex="-1" aria-labelledby="generateAttendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header border-bottom p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2.5 rounded-circle bg-primary bg-opacity-10 text-primary" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-file-earmark-spreadsheet-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold" id="generateAttendanceModalLabel" style="font-size: 1.05rem;">Generate Attendance Sheet</h5>
+                        <small class="text-muted">Print official attendance sheets separated by committee</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo $basePath; ?>/coordinator/attendance-sheet/print" method="GET" target="_blank">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-dark">Presentation Name <span class="text-danger">*</span></label>
+                        <input type="text" id="modal_presentation_name" name="presentation_name" class="form-control rounded-3 shadow-none" value="Proposal defense" required placeholder="e.g. Proposal defense">
+                        <div class="d-flex flex-wrap gap-1.5 mt-2">
+                            <span class="badge bg-light text-dark border" onclick="document.getElementById('modal_presentation_name').value = 'Proposal defense'" style="cursor: pointer; font-size: 0.72rem; padding: 4px 8px;">Proposal defense</span>
+                            <span class="badge bg-light text-dark border" onclick="document.getElementById('modal_presentation_name').value = 'FYP Progress Presentation'" style="cursor: pointer; font-size: 0.72rem; padding: 4px 8px;">FYP Progress</span>
+                            <span class="badge bg-light text-dark border" onclick="document.getElementById('modal_presentation_name').value = 'Final Defense Presentation'" style="cursor: pointer; font-size: 0.72rem; padding: 4px 8px;">Final Defense</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-dark">Committee Scope</label>
+                        <select name="committee" class="form-select rounded-3 shadow-none">
+                            <option value="all" selected>All Committees (Separate Pages)</option>
+                            <?php for ($i = 1; $i <= (int)$numCommittees; $i++): ?>
+                                <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
+                            <?php endfor; ?>
+                        </select>
+                        <small class="text-muted" style="font-size: 0.78rem;">Each committee prints cleanly on its own page.</small>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label fw-bold small text-dark">Session Year</label>
+                            <input type="text" name="session_year" class="form-control rounded-3 shadow-none" value="<?php echo date('Y'); ?>" placeholder="e.g. 2026">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold small text-dark">Shift</label>
+                            <input type="text" class="form-control rounded-3 shadow-none bg-light" value="<?php echo htmlspecialchars($shift ?? 'Morning'); ?>" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top p-3 px-4 bg-light rounded-bottom-4">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
+                        <i class="bi bi-printer-fill me-1"></i> Generate &amp; Print
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

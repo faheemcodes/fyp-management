@@ -441,6 +441,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/attendance-sheet" class="nav-link <?php echo isActive('/coordinator/attendance-sheet', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Attendance Sheets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
                         <i class="bi bi-megaphone-fill"></i> <span>Notice Generator</span>
                     </a>

@@ -232,6 +232,8 @@ $routes = [
     '/coordinator/batches' => ['Controller\CoordinatorController', 'batches'],
     '/coordinator/batches/create' => ['Controller\CoordinatorController', 'createBatch'],
     '/coordinator/batches/toggle' => ['Controller\CoordinatorController', 'toggleBatch'],
+    '/coordinator/attendance-sheet' => ['Controller\CoordinatorController', 'attendanceSheet'],
+    '/coordinator/attendance-sheet/print' => ['Controller\CoordinatorController', 'printAttendanceSheet'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Role switching
