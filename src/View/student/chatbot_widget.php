@@ -326,6 +326,22 @@ html.dark-theme .ai-message.ai-bot {
 .ai-message.ai-bot ul, .ai-message.ai-bot ol { margin: 0.3rem 0; padding-left: 1.1rem; }
 .ai-message.ai-bot li { margin-bottom: 0.15rem; }
 .ai-message.ai-bot strong { font-weight: 600; color: var(--text-primary); }
+.ai-message.ai-bot a {
+    color: #059669;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s ease;
+}
+.ai-message.ai-bot a:hover {
+    color: #10b981;
+}
+html.dark-theme .ai-message.ai-bot a {
+    color: #34d399;
+}
+html.dark-theme .ai-message.ai-bot a:hover {
+    color: #6ee7b7;
+}
 
 .ai-message.ai-bot code {
     background: rgba(16,185,129,0.08);
@@ -504,10 +520,14 @@ html.dark-theme .ai-input-wrapper:focus-within {
                 <p class="ai-welcome-title">Hi there! 👋</p>
                 <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
                 <div class="ai-quick-actions">
-                    <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
-                    <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                    <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
-                    <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
+                    <button class="ai-quick-btn" data-q="How is the portal structured and where do I find each feature?"><i class="bi bi-compass"></i> Portal Guide</button>
+                    <button class="ai-quick-btn" data-q="What are all the 8 FYP pipeline stages and what happens next?"><i class="bi bi-signpost-split"></i> 8 FYP Stages</button>
+                    <button class="ai-quick-btn" data-q="How do I form a group and add team members?"><i class="bi bi-people"></i> Group Formation</button>
+                    <button class="ai-quick-btn" data-q="How do I submit a proposal and why might a supervisor not appear?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
+                    <button class="ai-quick-btn" data-q="What are my upcoming deadlines and my current project stage?"><i class="bi bi-calendar-event"></i> Deadlines & Stage</button>
+                    <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
+                    <button class="ai-quick-btn" data-q="How and when can I upload the final thesis document?"><i class="bi bi-mortarboard"></i> Thesis Upload</button>
+                    <button class="ai-quick-btn" data-q="Who created this website?"><i class="bi bi-code-slash"></i> About Creator</button>
                 </div>
             </div>
         </div>
@@ -597,10 +617,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="ai-welcome-title">Hi there! 👋</p>
             <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
             <div class="ai-quick-actions">
-                <button class="ai-quick-btn" data-q="What are the FYP stages?"><i class="bi bi-signpost-split"></i> FYP Stages</button>
-                <button class="ai-quick-btn" data-q="How do I submit a proposal?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                <button class="ai-quick-btn" data-q="How do I choose a supervisor?"><i class="bi bi-person-check"></i> Choose a Supervisor</button>
-                <button class="ai-quick-btn" data-q="What deadlines should I know about?"><i class="bi bi-calendar-event"></i> Deadlines</button>
+                <button class="ai-quick-btn" data-q="How is the portal structured and where do I find each feature?"><i class="bi bi-compass"></i> Portal Guide</button>
+                <button class="ai-quick-btn" data-q="What are all the 8 FYP pipeline stages and what happens next?"><i class="bi bi-signpost-split"></i> 8 FYP Stages</button>
+                <button class="ai-quick-btn" data-q="How do I form a group and add team members?"><i class="bi bi-people"></i> Group Formation</button>
+                <button class="ai-quick-btn" data-q="How do I submit a proposal and why might a supervisor not appear?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
+                <button class="ai-quick-btn" data-q="What are my upcoming deadlines and my current project stage?"><i class="bi bi-calendar-event"></i> Deadlines & Stage</button>
+                <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
+                <button class="ai-quick-btn" data-q="How and when can I upload the final thesis document?"><i class="bi bi-mortarboard"></i> Thesis Upload</button>
+                <button class="ai-quick-btn" data-q="Who created this website?"><i class="bi bi-code-slash"></i> About Creator</button>
             </div>`;
         body.appendChild(welcome);
         attachQuickBtns();
@@ -633,6 +657,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (role === 'bot') {
             msgDiv.innerHTML = marked.parse(text);
+            if (window.appBasePath) {
+                msgDiv.querySelectorAll('a[href^="/"]').forEach(a => {
+                    const href = a.getAttribute('href');
+                    if (!href.startsWith(window.appBasePath)) {
+                        a.setAttribute('href', window.appBasePath + href);
+                    }
+                });
+            }
         } else {
             msgDiv.textContent = text;
         }
