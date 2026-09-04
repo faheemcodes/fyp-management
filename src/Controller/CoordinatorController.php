@@ -1422,9 +1422,9 @@ class CoordinatorController extends BaseController {
         $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
         $coordName = $this->getCoordinatorName($db, $userId);
 
-        $presentationName = trim($_GET['presentation_name'] ?? 'Proposal defense');
+        $presentationName = trim($_GET['presentation_name'] ?? 'Proposal Defense');
         if ($presentationName === '') {
-            $presentationName = 'Proposal defense';
+            $presentationName = 'Proposal Defense';
         }
 
         $selectedCommittee = trim($_GET['committee'] ?? 'all');

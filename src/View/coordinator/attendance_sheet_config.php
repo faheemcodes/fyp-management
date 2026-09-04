@@ -135,13 +135,13 @@ $totalCommittees = count($committeesGrouped);
                         <label class="form-label small fw-bold text-secondary mb-1" for="presentation_name_input">
                             Presentation / Defense Title <span class="text-danger">*</span>
                         </label>
-                        <input type="text" id="presentation_name_input" name="presentation_name" class="form-control form-control-custom" value="Proposal defense" required placeholder="e.g. Proposal defense">
+                        <input type="text" id="presentation_name_input" name="presentation_name" class="form-control form-control-custom" value="Proposal Defense" required placeholder="e.g. Proposal Defense">
                         
                         <!-- Quick Preset Titles -->
-                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2.5">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-1">
                             <span class="text-muted small fw-bold me-1" style="font-size: 0.75rem;">QUICK TITLES:</span>
-                            <button type="button" class="btn-filter-pill active" onclick="applyPreset('Proposal defense', this)">
-                                <i class="bi bi-check-lg"></i> Proposal defense
+                            <button type="button" class="btn-filter-pill active" onclick="applyPreset('Proposal Defense', this)">
+                                <i class="bi bi-check-lg"></i> Proposal Defense
                             </button>
                             <button type="button" class="btn-filter-pill" onclick="applyPreset('FYP Progress Presentation', this)">
                                 FYP Progress Presentation
