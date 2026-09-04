@@ -518,15 +518,15 @@ html.dark-theme .ai-input-wrapper:focus-within {
             <div class="ai-welcome-card">
                 <div class="ai-welcome-icon" style="background: transparent"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%;height: 100%;object-fit: contain"></div>
                 <p class="ai-welcome-title">Hi there! 👋</p>
-                <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
+                <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about navigating the portal, deadlines, rules, or helping you choose your perfect FYP project!</p>
                 <div class="ai-quick-actions">
+                    <button class="ai-quick-btn" data-q="Help me brainstorm and choose the perfect FYP project topic for my interests!"><i class="bi bi-lightbulb-fill"></i> Choose Project</button>
                     <button class="ai-quick-btn" data-q="How is the portal structured and where do I find each feature?"><i class="bi bi-compass"></i> Portal Guide</button>
                     <button class="ai-quick-btn" data-q="What are all the 8 FYP pipeline stages and what happens next?"><i class="bi bi-signpost-split"></i> 8 FYP Stages</button>
                     <button class="ai-quick-btn" data-q="How do I form a group and add team members?"><i class="bi bi-people"></i> Group Formation</button>
                     <button class="ai-quick-btn" data-q="How do I submit a proposal and why might a supervisor not appear?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                    <button class="ai-quick-btn" data-q="What are my upcoming deadlines and my current project stage?"><i class="bi bi-calendar-event"></i> Deadlines & Stage</button>
-                    <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
                     <button class="ai-quick-btn" data-q="How and when can I upload the final thesis document?"><i class="bi bi-mortarboard"></i> Thesis Upload</button>
+                    <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
                     <button class="ai-quick-btn" data-q="Who created this website?"><i class="bi bi-code-slash"></i> About Creator</button>
                 </div>
             </div>
@@ -615,15 +615,15 @@ document.addEventListener('DOMContentLoaded', () => {
         welcome.innerHTML = `
             <div class="ai-welcome-icon" style="background: transparent"><img src="<?php echo str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) === '/' ? '' : str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])); ?>/images/logo.png" style="width: 100%;height: 100%;object-fit: contain"></div>
             <p class="ai-welcome-title">Hi there! 👋</p>
-            <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about proposals, deadlines, or navigating the portal.</p>
+            <p class="ai-welcome-desc">I'm your FYP Buddy! Ask me anything about navigating the portal, deadlines, rules, or helping you choose your perfect FYP project!</p>
             <div class="ai-quick-actions">
+                <button class="ai-quick-btn" data-q="Help me brainstorm and choose the perfect FYP project topic for my interests!"><i class="bi bi-lightbulb-fill"></i> Choose Project</button>
                 <button class="ai-quick-btn" data-q="How is the portal structured and where do I find each feature?"><i class="bi bi-compass"></i> Portal Guide</button>
                 <button class="ai-quick-btn" data-q="What are all the 8 FYP pipeline stages and what happens next?"><i class="bi bi-signpost-split"></i> 8 FYP Stages</button>
                 <button class="ai-quick-btn" data-q="How do I form a group and add team members?"><i class="bi bi-people"></i> Group Formation</button>
                 <button class="ai-quick-btn" data-q="How do I submit a proposal and why might a supervisor not appear?"><i class="bi bi-file-earmark-plus"></i> Submit Proposal</button>
-                <button class="ai-quick-btn" data-q="What are my upcoming deadlines and my current project stage?"><i class="bi bi-calendar-event"></i> Deadlines & Stage</button>
-                <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
                 <button class="ai-quick-btn" data-q="How and when can I upload the final thesis document?"><i class="bi bi-mortarboard"></i> Thesis Upload</button>
+                <button class="ai-quick-btn" data-q="How do I request supervisor meetings and access supervisor chat?"><i class="bi bi-calendar2-check"></i> Meetings & Chat</button>
                 <button class="ai-quick-btn" data-q="Who created this website?"><i class="bi bi-code-slash"></i> About Creator</button>
             </div>`;
         body.appendChild(welcome);
