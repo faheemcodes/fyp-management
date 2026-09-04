@@ -119,7 +119,7 @@ $totalCommittees = count($committeesGrouped);
             </div>
 
             <div class="card-body p-4 p-md-5">
-                <form action="<?php echo $basePath; ?>/coordinator/attendance-sheet/print" method="GET" target="_blank">
+                <form action="<?php echo $basePath; ?>/coordinator/attendance-sheet/print" method="GET">
 
                     <!-- Presentation Title -->
                     <div class="mb-4">

@@ -1571,6 +1571,7 @@ class CoordinatorController extends BaseController {
             'shift' => $shift,
             'coordinatorName' => $coordName,
             'batchName' => $batchName,
+            'batchId' => $batchId,
             'sessionYear' => $sessionYear,
             'presentationName' => $presentationName,
             'selectedCommittee' => $selectedCommittee,

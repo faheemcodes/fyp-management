@@ -1,12 +1,13 @@
 <?php
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+$batchId = $batchId ?? 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($presentationName); ?> - Attendance Sheet</title>
+    <title><?php echo htmlspecialchars($presentationName ?? 'Presentation', ENT_QUOTES, 'UTF-8'); ?> - Attendance Sheet</title>
     <!-- Include Bootstrap for toolbar only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -27,15 +28,127 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             print-color-adjust: exact !important;
         }
 
-        /* ─── Screen Toolbar (Hidden in Print) ─── */
+        /* ─── Screen Floating Toolbar (Hidden in Print) ─── */
         .no-print-toolbar {
             position: sticky;
             top: 0;
             z-index: 999;
-            background: #1e293b;
-            color: #fff;
-            padding: 12px 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            padding: 10px 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .toolbar-back-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #f1f5f9;
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .toolbar-back-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transform: translateX(-2px);
+        }
+
+        .toolbar-input-group {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            padding: 0 14px;
+            height: 38px;
+            transition: all 0.2s ease;
+        }
+        .toolbar-input-group:focus-within {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .toolbar-input-group .toolbar-icon {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+        }
+        .toolbar-input-group input,
+        .toolbar-input-group select {
+            background: transparent;
+            border: none;
+            color: #f8fafc;
+            font-size: 0.82rem;
+            font-weight: 500;
+            outline: none;
+            width: 100%;
+        }
+        .toolbar-input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+        .toolbar-input-group select option {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 6px 10px;
+        }
+
+        .btn-toolbar-update {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #f1f5f9;
+            border-radius: 999px;
+            padding: 7px 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-toolbar-update:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+        }
+
+        .btn-toolbar-print {
+            background: linear-gradient(135deg, #047fb0 0%, #0284c7 100%);
+            border: none;
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 7px 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(4, 127, 176, 0.4);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-toolbar-print:hover {
+            box-shadow: 0 4px 16px rgba(4, 127, 176, 0.6);
+            transform: translateY(-1px);
+            color: #ffffff;
         }
 
         .paper-container {
@@ -265,40 +378,58 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
     <!-- ═══════════════ Screen Floating Toolbar (Hidden when Printing) ═══════════════ -->
     <div class="no-print-toolbar no-print">
-        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <a href="<?php echo $basePath; ?>/coordinator/committees" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                    <i class="bi bi-arrow-left me-1"></i> Back to Allocation
+        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3 px-2">
+            
+            <!-- Left: Back to Attendance Sheet & Context Info -->
+            <div class="d-flex align-items-center gap-2">
+                <a href="<?php echo $basePath; ?>/coordinator/attendance-sheet" class="toolbar-back-btn">
+                    <i class="bi bi-arrow-left"></i> <span>Back to Attendance Sheet</span>
                 </a>
-                <span class="fw-bold d-none d-md-inline" style="font-size: 0.95rem;">
-                    <i class="bi bi-file-earmark-spreadsheet-fill text-info me-1"></i> Attendance Sheet Generator
-                </span>
+                <div class="d-none d-lg-flex align-items-center gap-2 ps-2" style="border-left: 1px solid rgba(255, 255, 255, 0.12);">
+                    <span class="badge rounded-pill" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 600; font-size: 0.74rem;">
+                        <i class="bi bi-printer me-1"></i> Print Preview
+                    </span>
+                    <span class="text-white-50 small fw-medium" style="font-size: 0.8rem;">
+                        <?php echo htmlspecialchars($department ?? '', ENT_QUOTES, 'UTF-8'); ?> &bull; <?php echo htmlspecialchars($shift ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                </div>
             </div>
 
-            <!-- Quick Controls Form -->
+            <!-- Right: Quick Filters & Actions -->
             <form action="<?php echo $basePath; ?>/coordinator/attendance-sheet/print" method="GET" class="d-flex align-items-center gap-2 m-0 flex-wrap">
-                <div class="input-group input-group-sm" style="width: 220px;">
-                    <span class="input-group-text bg-secondary border-0 text-white"><i class="bi bi-tag-fill"></i></span>
-                    <input type="text" name="presentation_name" class="form-control" value="<?php echo htmlspecialchars($presentationName); ?>" placeholder="Presentation Title" title="Presentation Name">
+                
+                <!-- Presentation Title Filter -->
+                <div class="toolbar-input-group" style="width: 220px;" title="Presentation Title">
+                    <span class="toolbar-icon"><i class="bi bi-card-heading"></i></span>
+                    <input type="text" name="presentation_name" value="<?php echo htmlspecialchars($presentationName ?? 'Proposal Defense', ENT_QUOTES, 'UTF-8'); ?>" placeholder="Presentation Title">
                 </div>
 
-                <select name="committee" class="form-select form-select-sm" style="width: 180px;">
-                    <option value="all" <?php echo $selectedCommittee === 'all' ? 'selected' : ''; ?>>All Committees (Separate)</option>
-                    <?php foreach ($committeesGrouped as $cNum => $members): ?>
-                        <option value="<?php echo $cNum; ?>" <?php echo (string)$selectedCommittee === (string)$cNum ? 'selected' : ''; ?>>
-                            Committee <?php echo $cNum; ?> (<?php echo count($members); ?> Evaluators)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <!-- Committee Selector Filter -->
+                <div class="toolbar-input-group" style="width: 200px;" title="Filter by Committee">
+                    <span class="toolbar-icon"><i class="bi bi-people-fill"></i></span>
+                    <select name="committee">
+                        <option value="all" <?php echo $selectedCommittee === 'all' ? 'selected' : ''; ?>>All Committees (Separate)</option>
+                        <?php foreach ($committeesGrouped as $cNum => $members): ?>
+                            <option value="<?php echo (int)$cNum; ?>" <?php echo (string)$selectedCommittee === (string)$cNum ? 'selected' : ''; ?>>
+                                Committee <?php echo (int)$cNum; ?> (<?php echo count($members); ?> Evaluators)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <input type="hidden" name="session_year" value="<?php echo htmlspecialchars($sessionYear); ?>">
+                <?php if (!empty($batchId)): ?>
+                    <input type="hidden" name="batch_id" value="<?php echo (int)$batchId; ?>">
+                <?php endif; ?>
+                <input type="hidden" name="session_year" value="<?php echo htmlspecialchars($sessionYear ?? date('Y'), ENT_QUOTES, 'UTF-8'); ?>">
 
-                <button type="submit" class="btn btn-sm btn-outline-info rounded-pill px-3">
-                    <i class="bi bi-arrow-repeat me-1"></i> Update
+                <!-- Update Button -->
+                <button type="submit" class="btn-toolbar-update">
+                    <i class="bi bi-arrow-repeat"></i> <span>Update</span>
                 </button>
 
-                <button type="button" onclick="window.print()" class="btn btn-sm btn-success rounded-pill px-4 fw-bold shadow-sm ms-2">
-                    <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
+                <!-- Print / Save PDF Button -->
+                <button type="button" onclick="window.print()" class="btn-toolbar-print">
+                    <i class="bi bi-printer-fill"></i> <span>Print / Save PDF</span>
                 </button>
             </form>
         </div>
@@ -312,7 +443,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <i class="bi bi-exclamation-circle text-warning fs-1 d-block mb-3"></i>
                 <h5 class="fw-bold">No Approved Projects Found</h5>
                 <p class="text-muted">There are no approved projects for this department and shift to generate attendance sheets.</p>
-                <a href="<?php echo $basePath; ?>/coordinator/committees" class="btn btn-primary rounded-pill px-4">Back to Committees</a>
+                <a href="<?php echo $basePath; ?>/coordinator/attendance-sheet" class="btn btn-primary rounded-pill px-4">Back to Attendance Sheet</a>
             </div>
         <?php else: ?>
 
