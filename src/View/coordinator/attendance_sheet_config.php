@@ -132,7 +132,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <li class="d-flex align-items-start gap-2">
                     <i class="bi bi-check-circle-fill text-success mt-1"></i>
                     <div>
-                        <strong>Department Header &amp; Crest:</strong> Includes official faculty heading, session year, batch name, degree, and custom presentation title.
+                        <strong>Department Header:</strong> Includes official faculty heading, session year, batch name, degree, and custom presentation title.
                     </div>
                 </li>
                 <li class="d-flex align-items-start gap-2">

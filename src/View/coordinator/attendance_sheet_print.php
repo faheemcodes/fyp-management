@@ -333,8 +333,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
                 <!-- Header Block matching physical document -->
                 <div class="sheet-header">
-                    <img src="<?php echo $basePath; ?>/images/logo.png" alt="University Crest" class="sheet-logo">
-                    
                     <div class="header-dept-line">
                         Department of <?php echo htmlspecialchars($department); ?>, Faculty of Engineering &amp; Technology
                     </div>
