@@ -394,8 +394,8 @@ $hodName = $hodName ?? 'Head of Department';
                         $fin  = $s['final_presentation_marks'] !== null ? (float)$s['final_presentation_marks'] : null;
 
                         $hasAny = ($prop !== null || $prog !== null || $sup !== null || $fin !== null);
-                        $tot = $s['total_marks'] !== null ? (float)$s['total_marks'] : ($hasAny ? (($prop ?? 0) + ($prog ?? 0) + ($sup ?? 0) + ($fin ?? 0)) : null);
-                        $pct = $s['percentage'] !== null ? (float)$s['percentage'] : ($tot !== null ? round(($tot / 200.0) * 100.0, 1) : null);
+                        $tot = $s['total_marks'] !== null ? (int)round((float)$s['total_marks']) : ($hasAny ? (int)round(($prop ?? 0) + ($prog ?? 0) + ($sup ?? 0) + ($fin ?? 0)) : null);
+                        $pct = $s['percentage'] !== null ? (int)round((float)$s['percentage']) : ($tot !== null ? (int)round(($tot / 200.0) * 100.0) : null);
 
                         $grade = $s['grade'] ?? null;
                         if (!$grade && $pct !== null) {
@@ -435,12 +435,12 @@ $hodName = $hodName ?? 'Head of Department';
                                     Sup: <?php echo htmlspecialchars($s['supervisor_name'] ?? 'Unassigned', ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                             </td>
-                            <td class="num"><?php echo $prop !== null ? number_format($prop, 1) : '-'; ?></td>
-                            <td class="num"><?php echo $prog !== null ? number_format($prog, 1) : '-'; ?></td>
-                            <td class="num"><?php echo $sup !== null ? number_format($sup, 1) : '-'; ?></td>
-                            <td class="num"><?php echo $fin !== null ? number_format($fin, 1) : '-'; ?></td>
-                            <td class="num bold" style="background: #f4f4f4;"><?php echo $tot !== null ? number_format($tot, 1) : '-'; ?></td>
-                            <td class="num"><?php echo $pct !== null ? number_format($pct, 1) : '-'; ?></td>
+                            <td class="num"><?php echo $prop !== null ? (int)round($prop) : '-'; ?></td>
+                            <td class="num"><?php echo $prog !== null ? (int)round($prog) : '-'; ?></td>
+                            <td class="num"><?php echo $sup !== null ? (int)round($sup) : '-'; ?></td>
+                            <td class="num"><?php echo $fin !== null ? (int)round($fin) : '-'; ?></td>
+                            <td class="num bold" style="background: #f4f4f4;"><?php echo $tot !== null ? (int)round($tot) : '-'; ?></td>
+                            <td class="num"><?php echo $pct !== null ? (int)round($pct) : '-'; ?></td>
                             <td class="center bold"><?php echo htmlspecialchars($grade, ENT_QUOTES, 'UTF-8'); ?></td>
                             <td class="center bold"><?php echo htmlspecialchars($passFail, ENT_QUOTES, 'UTF-8'); ?></td>
                         </tr>
@@ -461,7 +461,7 @@ $hodName = $hodName ?? 'Head of Department';
             <div><strong>Passed:</strong> <?php echo (int)$passedCount; ?></div>
             <div><strong>Failed:</strong> <?php echo (int)$failedCount; ?></div>
             <div><strong>Pass Percentage:</strong> <?php echo $passRate; ?>%</div>
-            <div><strong>Batch Average Score:</strong> <?php echo $batchAvg; ?> / 200 (<?php echo round(($batchAvg / 200.0) * 100, 1); ?>%)</div>
+            <div><strong>Batch Average Score:</strong> <?php echo (int)round($batchAvg); ?> / 200 (<?php echo (int)round(($batchAvg / 200.0) * 100); ?>%)</div>
         </div>
 
         <!-- Official Signatures Row -->

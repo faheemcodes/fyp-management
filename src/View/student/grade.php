@@ -301,7 +301,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                 <?php echo htmlspecialchars($showGrade); ?>
             </div>
 
-            <h2 class="fw-bold mb-1" style="font-size: 2rem;letter-spacing: -0.03em"><?php echo number_format($showPercentage, 1); ?>%</h2>
+            <h2 class="fw-bold mb-1" style="font-size: 2rem;letter-spacing: -0.03em"><?php echo number_format($showPercentage, 0); ?>%</h2>
             <p class="text-muted mb-4" style="font-size: 0.82rem">Aggregate Percentage Score</p>
 
             <div class="border-top pt-3 row g-2">

@@ -1862,9 +1862,13 @@ class CoordinatorController extends BaseController {
         $dept = $this->getCoordinatorDept($db, $userId);
         $coordShift = $this->getCoordinatorShift($db, $userId);
 
-        // Fetch batches for this department
-        $stmtBatches = $db->prepare("SELECT * FROM academic_batches WHERE department = ? ORDER BY is_active DESC, id DESC");
-        $stmtBatches->execute([$dept]);
+        // Fetch batches for this coordinator's dept & shift
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All') 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $coordShift]);
         $batches = $stmtBatches->fetchAll();
 
         // Active batch default
@@ -1874,6 +1878,9 @@ class CoordinatorController extends BaseController {
                 $activeBatch = $b;
                 break;
             }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
         }
 
         $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
@@ -1970,7 +1977,7 @@ class CoordinatorController extends BaseController {
         }
         unset($s);
 
-        $avgScore = $totalStudents > 0 ? round($totalScoreSum / $totalStudents, 1) : 0;
+        $avgScore = $totalStudents > 0 ? (int)round($totalScoreSum / $totalStudents) : 0;
         $allMarksPublished = ($totalEvalsOverall > 0 && $publishedCount >= $totalEvalsOverall);
 
         $batchName = 'All Batches';
@@ -2096,8 +2103,12 @@ class CoordinatorController extends BaseController {
         $coordName = $this->getCoordinatorName($db, $userId);
         $hodName = $this->getHodNameForDept($db, $dept);
 
-        $stmtBatches = $db->prepare("SELECT * FROM academic_batches WHERE department = ? ORDER BY is_active DESC, id DESC");
-        $stmtBatches->execute([$dept]);
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All') 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $coordShift]);
         $batches = $stmtBatches->fetchAll();
 
         $activeBatch = null;
@@ -2106,6 +2117,9 @@ class CoordinatorController extends BaseController {
                 $activeBatch = $b;
                 break;
             }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
         }
 
         $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);

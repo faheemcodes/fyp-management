@@ -93,9 +93,9 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em">Batch Average</div>
-                    <h3 class="fw-bold mt-1 mb-0" style="color: #0891b2; font-size: 1.6rem;"><?php echo (float)$avgScore; ?> <span class="fs-6 fw-normal text-muted">/ 200</span></h3>
+                    <h3 class="fw-bold mt-1 mb-0" style="color: #0891b2; font-size: 1.6rem;"><?php echo (int)round((float)$avgScore); ?> <span class="fs-6 fw-normal text-muted">/ 200</span></h3>
                     <div class="small text-muted mt-1" style="font-size: 0.76rem;">
-                        Avg <?php echo round(((float)$avgScore / 200.0) * 100, 1); ?>% Overall
+                        Avg <?php echo (int)round(((float)$avgScore / 200.0) * 100); ?>% Overall
                     </div>
                 </div>
                 <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background: rgba(6, 182, 212, 0.12); color: #0891b2;">
@@ -253,8 +253,8 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                         $fin  = $s['final_presentation_marks'] !== null ? (float)$s['final_presentation_marks'] : null;
 
                         $hasAny = ($prop !== null || $prog !== null || $sup !== null || $fin !== null);
-                        $tot = $s['total_marks'] !== null ? (float)$s['total_marks'] : ($hasAny ? (($prop ?? 0) + ($prog ?? 0) + ($sup ?? 0) + ($fin ?? 0)) : null);
-                        $pct = $s['percentage'] !== null ? (float)$s['percentage'] : ($tot !== null ? round(($tot / 200.0) * 100.0, 1) : null);
+                        $tot = $s['total_marks'] !== null ? (int)round((float)$s['total_marks']) : ($hasAny ? (int)round(($prop ?? 0) + ($prog ?? 0) + ($sup ?? 0) + ($fin ?? 0)) : null);
+                        $pct = $s['percentage'] !== null ? (int)round((float)$s['percentage']) : ($tot !== null ? (int)round(($tot / 200.0) * 100.0) : null);
 
                         $grade = $s['grade'] ?? null;
                         if (!$grade && $pct !== null) {
@@ -315,14 +315,14 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                                     <?php echo htmlspecialchars($s['supervisor_name'] ?? 'Unassigned', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>
-                            <td class="text-center font-monospace"><?php echo $prop !== null ? number_format($prop, 1) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $prog !== null ? number_format($prog, 1) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $sup !== null ? number_format($sup, 1) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $fin !== null ? number_format($fin, 1) : '<span class="text-muted">-</span>'; ?></td>
+                            <td class="text-center font-monospace"><?php echo $prop !== null ? (int)round($prop) : '<span class="text-muted">-</span>'; ?></td>
+                            <td class="text-center font-monospace"><?php echo $prog !== null ? (int)round($prog) : '<span class="text-muted">-</span>'; ?></td>
+                            <td class="text-center font-monospace"><?php echo $sup !== null ? (int)round($sup) : '<span class="text-muted">-</span>'; ?></td>
+                            <td class="text-center font-monospace"><?php echo $fin !== null ? (int)round($fin) : '<span class="text-muted">-</span>'; ?></td>
                             <td class="text-center fw-bold font-monospace" style="color: #0f766e; font-size: 0.95rem;">
-                                <?php echo $tot !== null ? number_format($tot, 1) : '<span class="text-muted">-</span>'; ?>
+                                <?php echo $tot !== null ? (int)round($tot) : '<span class="text-muted">-</span>'; ?>
                             </td>
-                            <td class="text-center font-monospace fw-semibold"><?php echo $pct !== null ? number_format($pct, 1) . '%' : '<span class="text-muted">-</span>'; ?></td>
+                            <td class="text-center font-monospace fw-semibold"><?php echo $pct !== null ? (int)round($pct) . '%' : '<span class="text-muted">-</span>'; ?></td>
                             <td class="text-center">
                                 <span class="badge rounded-pill px-2.5 py-1 <?php echo $gradeBadgeClass; ?>" style="font-size: 0.75rem;">
                                     <?php echo htmlspecialchars($grade, ENT_QUOTES, 'UTF-8'); ?>
