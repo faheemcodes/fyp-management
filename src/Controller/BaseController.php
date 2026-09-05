@@ -43,6 +43,7 @@ class BaseController {
                 'coordinator/attendance_sheet_print',
                 'coordinator/presentation_sheet_print',
                 'coordinator/cumulative_sheet_print',
+                'hod/cumulative_sheet_print',
                 'committee/print_sheet',
                 'admin/reports_print',
                 'landing',

@@ -1311,6 +1311,373 @@ class HodController extends BaseController {
         ]);
     }
 
+    public function cumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getHodDepartment($db, $userId);
+
+        if (!$dept) {
+            $this->flash('error', 'Unauthorized access or department not found.');
+            redirect('/login');
+        }
+
+        // Fetch batches for this department
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        $batchIdParam = $_GET['batch_id'] ?? null;
+        if ($batchIdParam === 'all') {
+            $batchId = 0;
+        } elseif ($batchIdParam !== null && is_numeric($batchIdParam)) {
+            $batchId = (int)$batchIdParam;
+        } else {
+            $batchId = $activeBatch['id'] ?? 0;
+        }
+
+        $selectedShift = trim($_GET['shift'] ?? 'all');
+        if (!in_array($selectedShift, ['all', 'Morning', 'Evening'])) {
+            $selectedShift = 'all';
+        }
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($selectedShift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $selectedShift;
+        }
+
+        // Query students, groups, projects, supervisors, and grades
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status,
+                   gr.show_supervision_to_student
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        // Fetch evaluations visibility per group & stage
+        $groupIds = array_unique(array_filter(array_column($studentsList, 'group_id')));
+        $stageVis = [];
+        if (!empty($groupIds)) {
+            $inIds = implode(',', array_map('intval', $groupIds));
+            $stmtVis = $db->query("
+                SELECT group_id, stage, 
+                       MAX(show_to_student) as is_published,
+                       COUNT(*) as eval_count
+                FROM evaluations 
+                WHERE group_id IN ($inIds)
+                GROUP BY group_id, stage
+            ");
+            while ($vr = $stmtVis->fetch(\PDO::FETCH_ASSOC)) {
+                $gid = (int)$vr['group_id'];
+                $stageVis[$gid][$vr['stage']] = [
+                    'is_published' => (int)$vr['is_published'],
+                    'eval_count' => (int)$vr['eval_count']
+                ];
+            }
+        }
+
+        // Process student visibility and calculate stats
+        $totalStudents = count($studentsList);
+        $totalGroups = count($groupIds);
+        $fullyReleasedCount = 0;
+        $draftCount = 0;
+        $passedCount = 0;
+        $publishedSum = 0;
+        $publishedStudentsCount = 0;
+
+        foreach ($studentsList as &$s) {
+            $gid = (int)$s['group_id'];
+            $gStages = $stageVis[$gid] ?? [];
+
+            $propPub = !empty($gStages['Proposal Defence Presentation']['is_published']);
+            $progPub = !empty($gStages['FYP Progress Presentation']['is_published']);
+            $finPub  = !empty($gStages['Final Presentation']['is_published']);
+            $supPub  = !empty($s['show_supervision_to_student']);
+
+            $hasPropMark = ($s['proposal_defense_marks'] !== null);
+            $hasProgMark = ($s['progress_presentation_marks'] !== null);
+            $hasSupMark  = ($s['supervision_marks'] !== null);
+            $hasFinMark  = ($s['final_presentation_marks'] !== null);
+
+            // Stage-level visible marks for HOD (only if published by coordinator to students)
+            $s['vis_prop'] = ($hasPropMark && $propPub) ? (int)round((float)$s['proposal_defense_marks']) : null;
+            $s['vis_prog'] = ($hasProgMark && $progPub) ? (int)round((float)$s['progress_presentation_marks']) : null;
+            $s['vis_sup']  = ($hasSupMark && $supPub)   ? (int)round((float)$s['supervision_marks']) : null;
+            $s['vis_fin']  = ($hasFinMark && $finPub)   ? (int)round((float)$s['final_presentation_marks']) : null;
+
+            // Draft indicators
+            $s['prop_draft'] = ($hasPropMark && !$propPub);
+            $s['prog_draft'] = ($hasProgMark && !$progPub);
+            $s['sup_draft']  = ($hasSupMark && !$supPub);
+            $s['fin_draft']  = ($hasFinMark && !$finPub);
+
+            $s['has_any_eval'] = ($hasPropMark || $hasProgMark || $hasSupMark || $hasFinMark);
+            $s['has_any_draft'] = ($s['prop_draft'] || $s['prog_draft'] || $s['sup_draft'] || $s['fin_draft']);
+
+            // Are all evaluated components released?
+            $isFullyReleased = false;
+            if ($s['has_any_eval'] && !$s['has_any_draft']) {
+                $isFullyReleased = true;
+            }
+            $s['is_fully_released'] = $isFullyReleased;
+
+            if ($isFullyReleased) {
+                $fullyReleasedCount++;
+                $tot = (int)round((float)($s['total_marks'] ?? 0));
+                $publishedSum += $tot;
+                $publishedStudentsCount++;
+
+                if (($s['pass_fail_status'] ?? '') === 'Pass' || ($s['percentage'] ?? 0) >= 50) {
+                    $passedCount++;
+                }
+            } else {
+                if ($s['has_any_draft']) {
+                    $draftCount++;
+                }
+            }
+        }
+        unset($s);
+
+        $avgScore = $publishedStudentsCount > 0 ? (int)round($publishedSum / $publishedStudentsCount) : 0;
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('hod/cumulative_sheet', [
+            'department' => $dept,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'selectedBatchId' => $batchId,
+            'selectedBatchName' => $batchName,
+            'selectedShift' => $selectedShift,
+            'studentsList' => $studentsList,
+            'totalStudents' => $totalStudents,
+            'totalGroups' => $totalGroups,
+            'fullyReleasedCount' => $fullyReleasedCount,
+            'draftCount' => $draftCount,
+            'passedCount' => $passedCount,
+            'avgScore' => $avgScore
+        ]);
+    }
+
+    public function printCumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getHodDepartment($db, $userId);
+
+        if (!$dept) {
+            $this->flash('error', 'Unauthorized access or department not found.');
+            redirect('/login');
+        }
+
+        // Get HOD Name
+        $stmtH = $db->prepare("SELECT name FROM hods WHERE user_id = ?");
+        $stmtH->execute([$userId]);
+        $hodName = $stmtH->fetchColumn() ?: 'Head of Department';
+
+        // Batches
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept]);
+        $batches = $stmtBatches->fetchAll();
+
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        $batchIdParam = $_GET['batch_id'] ?? null;
+        if ($batchIdParam === 'all') {
+            $batchId = 0;
+        } elseif ($batchIdParam !== null && is_numeric($batchIdParam)) {
+            $batchId = (int)$batchIdParam;
+        } else {
+            $batchId = $activeBatch['id'] ?? 0;
+        }
+
+        $selectedShift = trim($_GET['shift'] ?? 'all');
+        if (!in_array($selectedShift, ['all', 'Morning', 'Evening'])) {
+            $selectedShift = 'all';
+        }
+
+        $dated = !empty($_GET['dated']) ? $_GET['dated'] : date('d-m-Y');
+
+        // Fetch Coordinator Name(s) for this department
+        $stmtCoord = $db->prepare("SELECT name, shift FROM coordinators WHERE department = ? ORDER BY shift ASC");
+        $stmtCoord->execute([$dept]);
+        $coordRows = $stmtCoord->fetchAll();
+        $coordNames = [];
+        foreach ($coordRows as $cr) {
+            $coordNames[] = $cr['name'] . ($cr['shift'] !== 'All' ? " ({$cr['shift']})" : "");
+        }
+        $coordinatorName = !empty($coordNames) ? implode(' / ', $coordNames) : 'Department Coordinator';
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($selectedShift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $selectedShift;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status,
+                   gr.show_supervision_to_student
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        // Stage visibility
+        $groupIds = array_unique(array_filter(array_column($studentsList, 'group_id')));
+        $stageVis = [];
+        if (!empty($groupIds)) {
+            $inIds = implode(',', array_map('intval', $groupIds));
+            $stmtVis = $db->query("
+                SELECT group_id, stage, 
+                       MAX(show_to_student) as is_published,
+                       COUNT(*) as eval_count
+                FROM evaluations 
+                WHERE group_id IN ($inIds)
+                GROUP BY group_id, stage
+            ");
+            while ($vr = $stmtVis->fetch(\PDO::FETCH_ASSOC)) {
+                $gid = (int)$vr['group_id'];
+                $stageVis[$gid][$vr['stage']] = [
+                    'is_published' => (int)$vr['is_published'],
+                    'eval_count' => (int)$vr['eval_count']
+                ];
+            }
+        }
+
+        foreach ($studentsList as &$s) {
+            $gid = (int)$s['group_id'];
+            $gStages = $stageVis[$gid] ?? [];
+
+            $propPub = !empty($gStages['Proposal Defence Presentation']['is_published']);
+            $progPub = !empty($gStages['FYP Progress Presentation']['is_published']);
+            $finPub  = !empty($gStages['Final Presentation']['is_published']);
+            $supPub  = !empty($s['show_supervision_to_student']);
+
+            $hasPropMark = ($s['proposal_defense_marks'] !== null);
+            $hasProgMark = ($s['progress_presentation_marks'] !== null);
+            $hasSupMark  = ($s['supervision_marks'] !== null);
+            $hasFinMark  = ($s['final_presentation_marks'] !== null);
+
+            $s['vis_prop'] = ($hasPropMark && $propPub) ? (int)round((float)$s['proposal_defense_marks']) : null;
+            $s['vis_prog'] = ($hasProgMark && $progPub) ? (int)round((float)$s['progress_presentation_marks']) : null;
+            $s['vis_sup']  = ($hasSupMark && $supPub)   ? (int)round((float)$s['supervision_marks']) : null;
+            $s['vis_fin']  = ($hasFinMark && $finPub)   ? (int)round((float)$s['final_presentation_marks']) : null;
+
+            $s['prop_draft'] = ($hasPropMark && !$propPub);
+            $s['prog_draft'] = ($hasProgMark && !$progPub);
+            $s['sup_draft']  = ($hasSupMark && !$supPub);
+            $s['fin_draft']  = ($hasFinMark && !$finPub);
+
+            $s['has_any_eval'] = ($hasPropMark || $hasProgMark || $hasSupMark || $hasFinMark);
+            $s['has_any_draft'] = ($s['prop_draft'] || $s['prog_draft'] || $s['sup_draft'] || $s['fin_draft']);
+            $s['is_fully_released'] = ($s['has_any_eval'] && !$s['has_any_draft']);
+        }
+        unset($s);
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('hod/cumulative_sheet_print', [
+            'department' => $dept,
+            'hodName' => $hodName,
+            'coordinatorName' => $coordinatorName,
+            'batches' => $batches,
+            'batchId' => $batchId,
+            'batchName' => $batchName,
+            'shift' => $selectedShift,
+            'dated' => $dated,
+            'studentsList' => $studentsList
+        ]);
+    }
+
     private function sendCredentialsMessage($db, $userId, $firstName, $lastName, $email, $cnic, $password, $portalType) {
         $hodUserId = $_SESSION['user_id'] ?? 0;
         $stmtH = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");

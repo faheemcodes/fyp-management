@@ -168,6 +168,8 @@ $routes = [
     '/hod/projects' => ['Controller\HodController', 'projects'],
     '/hod/projects/reassign-committee' => ['Controller\HodController', 'reassignGroupCommittee'],
     '/hod/profile' => ['Controller\HodController', 'profile'],
+    '/hod/cumulative-sheet' => ['Controller\HodController', 'cumulativeSheet'],
+    '/hod/cumulative-sheet/print' => ['Controller\HodController', 'printCumulativeSheet'],
     '/hod/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Student routes

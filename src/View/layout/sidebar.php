@@ -255,6 +255,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/hod/cumulative-sheet" class="nav-link <?php echo isActive('/hod/cumulative-sheet', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-ruled-fill"></i> <span>Cumulative Marks</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/hod/supervisors" class="nav-link <?php echo isActive('/hod/supervisors', $currentUri); ?>">
                         <i class="bi bi-person-badge-fill"></i> <span>View Faculty</span>
                     </a>
