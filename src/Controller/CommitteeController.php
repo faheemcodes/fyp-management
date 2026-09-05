@@ -302,10 +302,6 @@ class CommitteeController extends BaseController {
             if ($stage && !empty($evaluations)) {
                 $db = \Database::getInstance()->getConnection();
                 
-                $stmtVis = $db->prepare("SELECT show_to_student FROM evaluations WHERE evaluator_id = ? ORDER BY id DESC LIMIT 1");
-                $stmtVis->execute([$evaluatorId]);
-                $lastVis = $stmtVis->fetchColumn();
-                $show_to_student = ($lastVis !== false) ? (int)$lastVis : 0;
 
                 try {
                     $db->beginTransaction();
@@ -411,11 +407,11 @@ class CommitteeController extends BaseController {
                         $jsonDetails = json_encode($details);
 
                         if ($eval) {
-                            $stmtUpdate = $db->prepare("UPDATE evaluations SET marks_details = ?, total_marks = ?, remarks = ?, show_to_student = ? WHERE id = ?");
-                            $stmtUpdate->execute([$jsonDetails, $totalScore, $remarks, $show_to_student, $eval['id']]);
+                            $stmtUpdate = $db->prepare("UPDATE evaluations SET marks_details = ?, total_marks = ?, remarks = ? WHERE id = ?");
+                            $stmtUpdate->execute([$jsonDetails, $totalScore, $remarks, $eval['id']]);
                         } else {
-                            $stmtInsert = $db->prepare("INSERT INTO evaluations (group_id, evaluator_id, stage, marks_details, total_marks, remarks, show_to_student) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                            $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks, $show_to_student]);
+                            $stmtInsert = $db->prepare("INSERT INTO evaluations (group_id, evaluator_id, stage, marks_details, total_marks, remarks, show_to_student) VALUES (?, ?, ?, ?, ?, ?, 0)");
+                            $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks]);
                         }
                         
                         // Recalculate average marks for this stage PER STUDENT
@@ -554,11 +550,6 @@ class CommitteeController extends BaseController {
                 $totalScore = 0.00;
                 $details = [];
 
-                // Inherit evaluator's global visibility status from other evaluations, defaulting to 0
-                $stmtVis = $db->prepare("SELECT show_to_student FROM evaluations WHERE evaluator_id = ? ORDER BY id DESC LIMIT 1");
-                $stmtVis->execute([$evaluatorId]);
-                $lastVis = $stmtVis->fetchColumn();
-                $show_to_student = ($lastVis !== false) ? (int)$lastVis : 0;
 
                 if ($stage === 'Proposal Defence Presentation') {
                     $marksArr = $_POST['marks'] ?? [];
@@ -624,11 +615,11 @@ class CommitteeController extends BaseController {
                     $jsonDetails = json_encode($details);
 
                     if ($eval) {
-                        $stmtUpdate = $db->prepare("UPDATE evaluations SET marks_details = ?, total_marks = ?, remarks = ?, show_to_student = ? WHERE id = ?");
-                        $stmtUpdate->execute([$jsonDetails, $totalScore, $remarks, $show_to_student, $eval['id']]);
+                        $stmtUpdate = $db->prepare("UPDATE evaluations SET marks_details = ?, total_marks = ?, remarks = ? WHERE id = ?");
+                        $stmtUpdate->execute([$jsonDetails, $totalScore, $remarks, $eval['id']]);
                     } else {
-                        $stmtInsert = $db->prepare("INSERT INTO evaluations (group_id, evaluator_id, stage, marks_details, total_marks, remarks, show_to_student) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                        $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks, $show_to_student]);
+                        $stmtInsert = $db->prepare("INSERT INTO evaluations (group_id, evaluator_id, stage, marks_details, total_marks, remarks, show_to_student) VALUES (?, ?, ?, ?, ?, ?, 0)");
+                        $stmtInsert->execute([$groupId, $evaluatorId, $stage, $jsonDetails, $totalScore, $remarks]);
                     }
 
                     // Recalculate average marks for this stage PER STUDENT
@@ -744,31 +735,7 @@ class CommitteeController extends BaseController {
     }
 
     public function toggleCommitteeVisibility() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $evaluatorId = $_SESSION['user_id'];
-            $groupId = $_POST['group_id'] ?? null;
-            $stage = $_POST['stage'] ?? null;
-            $show = isset($_POST['show']) ? (int)$_POST['show'] : 0;
-
-            if ($groupId && $stage) {
-                $db = \Database::getInstance()->getConnection();
-                
-                // Update visibility
-                $stmt = $db->prepare("UPDATE evaluations SET show_to_student = ? WHERE group_id = ? AND evaluator_id = ? AND stage = ?");
-                $stmt->execute([$show, $groupId, $evaluatorId, $stage]);
-
-                $this->flash('success', $show ? "Marks for $stage are now visible to students." : "Marks for $stage are now hidden from students.");
-            } else {
-                $db = \Database::getInstance()->getConnection();
-                
-                // Global toggle for all evaluations by this committee member
-                $stmt = $db->prepare("UPDATE evaluations SET show_to_student = ? WHERE evaluator_id = ?");
-                $stmt->execute([$show, $evaluatorId]);
-
-                $this->flash('success', $show ? "All presentation marks are now visible to students." : "All presentation marks are now hidden from students.");
-            }
-        }
+        $this->flash('error', 'Only the Department Coordinator has authorization to publish or hide student marks.');
         redirect('/committee/evaluations');
     }
 

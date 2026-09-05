@@ -42,6 +42,7 @@ class BaseController {
                 'coordinator/assessment_report',
                 'coordinator/attendance_sheet_print',
                 'coordinator/presentation_sheet_print',
+                'coordinator/cumulative_sheet_print',
                 'committee/print_sheet',
                 'admin/reports_print',
                 'landing',

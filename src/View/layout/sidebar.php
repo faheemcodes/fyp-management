@@ -453,6 +453,11 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/cumulative-sheet" class="nav-link <?php echo isActive('/coordinator/cumulative-sheet', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-ruled-fill"></i> <span>Cumulative Sheet</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/notice" class="nav-link <?php echo isActive('/coordinator/notice', $currentUri); ?>">
                         <i class="bi bi-megaphone-fill"></i> <span>Notice Generator</span>
                     </a>

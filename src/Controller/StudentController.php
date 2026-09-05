@@ -849,7 +849,7 @@ class StudentController extends BaseController {
             $stmtEvals = $db->prepare("SELECT e.*, c.name as evaluator_name 
                                        FROM evaluations e
                                        JOIN committees c ON e.evaluator_id = c.user_id
-                                       WHERE e.group_id = ? AND e.total_marks > 0
+                                       WHERE e.group_id = ? AND (e.total_marks > 0 OR (e.remarks IS NOT NULL AND e.remarks != ''))
                                        ORDER BY e.stage ASC, c.name ASC");
             $stmtEvals->execute([$group['id']]);
             $evaluations = $stmtEvals->fetchAll();

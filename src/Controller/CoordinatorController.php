@@ -1855,6 +1855,321 @@ class CoordinatorController extends BaseController {
             'groupsByCommittee' => $groupsByCommittee
         ]);
     }
+
+    public function cumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $coordShift = $this->getCoordinatorShift($db, $userId);
+
+        // Fetch batches for this department
+        $stmtBatches = $db->prepare("SELECT * FROM academic_batches WHERE department = ? ORDER BY is_active DESC, id DESC");
+        $stmtBatches->execute([$dept]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
+        $shift = isset($_GET['shift']) ? $_GET['shift'] : 'all';
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($shift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $shift;
+        }
+
+        // Query students, groups, projects, supervisors, and grades
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status,
+                   gr.show_supervision_to_student
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        // Also fetch evaluations visibility per group
+        $groupIds = array_unique(array_filter(array_column($studentsList, 'group_id')));
+        $evalVisibilities = [];
+        if (!empty($groupIds)) {
+            $inIds = implode(',', array_map('intval', $groupIds));
+            $stmtVis = $db->query("
+                SELECT group_id, stage, show_to_student, total_marks 
+                FROM evaluations 
+                WHERE group_id IN ($inIds)
+            ");
+            $visRows = $stmtVis->fetchAll();
+            foreach ($visRows as $vr) {
+                $gid = (int)$vr['group_id'];
+                if (!isset($evalVisibilities[$gid])) {
+                    $evalVisibilities[$gid] = [
+                        'total_count' => 0,
+                        'published_count' => 0,
+                        'stages' => []
+                    ];
+                }
+                $evalVisibilities[$gid]['total_count']++;
+                if ($vr['show_to_student'] == 1) {
+                    $evalVisibilities[$gid]['published_count']++;
+                }
+                $evalVisibilities[$gid]['stages'][$vr['stage']] = (int)$vr['show_to_student'];
+            }
+        }
+
+        // Stats calculation
+        $totalStudents = count($studentsList);
+        $passedCount = 0;
+        $totalScoreSum = 0;
+        $publishedCount = 0;
+        $totalEvalsOverall = 0;
+
+        foreach ($studentsList as &$s) {
+            $gid = (int)$s['group_id'];
+            $gVis = $evalVisibilities[$gid] ?? null;
+            $s['is_published'] = ($gVis && $gVis['published_count'] > 0 && $gVis['published_count'] >= $gVis['total_count']);
+            $s['vis_data'] = $gVis;
+
+            if ($gVis) {
+                $publishedCount += $gVis['published_count'];
+                $totalEvalsOverall += $gVis['total_count'];
+            }
+
+            $score = (float)($s['total_marks'] ?? 0);
+            $totalScoreSum += $score;
+            if (($s['pass_fail_status'] ?? '') === 'Pass' || ($s['percentage'] ?? 0) >= 50) {
+                $passedCount++;
+            }
+        }
+        unset($s);
+
+        $avgScore = $totalStudents > 0 ? round($totalScoreSum / $totalStudents, 1) : 0;
+        $allMarksPublished = ($totalEvalsOverall > 0 && $publishedCount >= $totalEvalsOverall);
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('coordinator/cumulative_sheet', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'selectedBatchId' => $batchId,
+            'selectedBatchName' => $batchName,
+            'selectedShift' => $shift,
+            'studentsList' => $studentsList,
+            'totalStudents' => $totalStudents,
+            'totalGroups' => count($groupIds),
+            'passedCount' => $passedCount,
+            'avgScore' => $avgScore,
+            'allMarksPublished' => $allMarksPublished,
+            'publishedEvalsCount' => $publishedCount,
+            'totalEvalsOverall' => $totalEvalsOverall
+        ]);
+    }
+
+    public function toggleMarksVisibility() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId);
+
+            $action = $_POST['action'] ?? 'publish';
+            $show = ($action === 'publish') ? 1 : 0;
+            $stage = $_POST['stage'] ?? 'all';
+            $batchId = !empty($_POST['batch_id']) ? (int)$_POST['batch_id'] : null;
+            $groupId = !empty($_POST['group_id']) ? (int)$_POST['group_id'] : null;
+
+            try {
+                $db->beginTransaction();
+
+                // Build conditions for evaluations
+                $whereClauses = ["s.department = ?"];
+                $params = [$show, $dept];
+
+                if ($groupId) {
+                    $whereClauses[] = "g.id = ?";
+                    $params[] = $groupId;
+                }
+                if ($batchId) {
+                    $whereClauses[] = "g.batch_id = ?";
+                    $params[] = $batchId;
+                }
+                if ($stage !== 'all' && $stage !== 'supervision') {
+                    $whereClauses[] = "e.stage = ?";
+                    $params[] = $stage;
+                }
+
+                if ($stage !== 'supervision') {
+                    $whereSql = implode(' AND ', $whereClauses);
+                    $stmtEvals = $db->prepare("
+                        UPDATE evaluations e
+                        JOIN `groups` g ON e.group_id = g.id
+                        JOIN students s ON g.created_by = s.user_id
+                        SET e.show_to_student = ?
+                        WHERE $whereSql
+                    ");
+                    $stmtEvals->execute($params);
+                }
+
+                // If 'all' or 'supervision', also update grades.show_supervision_to_student
+                if ($stage === 'all' || $stage === 'supervision') {
+                    $gradeClauses = ["s.department = ?"];
+                    $gradeParams = [$show, $dept];
+
+                    if ($groupId) {
+                        $gradeClauses[] = "g.id = ?";
+                        $gradeParams[] = $groupId;
+                    }
+                    if ($batchId) {
+                        $gradeClauses[] = "g.batch_id = ?";
+                        $gradeParams[] = $batchId;
+                    }
+                    $gradeWhereSql = implode(' AND ', $gradeClauses);
+
+                    $stmtGrades = $db->prepare("
+                        UPDATE grades gr
+                        JOIN `groups` g ON gr.group_id = g.id
+                        JOIN students s ON g.created_by = s.user_id
+                        SET gr.show_supervision_to_student = ?
+                        WHERE $gradeWhereSql
+                    ");
+                    $stmtGrades->execute($gradeParams);
+                }
+
+                $db->commit();
+                $msg = $show ? 'Marks have been successfully published to students.' : 'Marks have been hidden from students.';
+                $this->flash('success', $msg);
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error updating marks visibility.');
+            }
+        }
+
+        $redirectUrl = '/coordinator/cumulative-sheet';
+        if (!empty($_POST['batch_id'])) {
+            $redirectUrl .= '?batch_id=' . (int)$_POST['batch_id'];
+        }
+        redirect($redirectUrl);
+    }
+
+    public function printCumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $coordShift = $this->getCoordinatorShift($db, $userId);
+        $coordName = $this->getCoordinatorName($db, $userId);
+        $hodName = $this->getHodNameForDept($db, $dept);
+
+        $stmtBatches = $db->prepare("SELECT * FROM academic_batches WHERE department = ? ORDER BY is_active DESC, id DESC");
+        $stmtBatches->execute([$dept]);
+        $batches = $stmtBatches->fetchAll();
+
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
+        $shift = isset($_GET['shift']) ? $_GET['shift'] : 'all';
+        $dated = !empty($_GET['dated']) ? $_GET['dated'] : date('d-m-Y');
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($shift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $shift;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('coordinator/cumulative_sheet_print', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'coordinatorName' => $coordName,
+            'hodName' => $hodName,
+            'batches' => $batches,
+            'batchId' => $batchId,
+            'batchName' => $batchName,
+            'shift' => $shift,
+            'dated' => $dated,
+            'studentsList' => $studentsList
+        ]);
+    }
 }
 
 

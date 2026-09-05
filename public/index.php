@@ -239,6 +239,9 @@ $routes = [
     '/coordinator/attendance-sheet/print' => ['Controller\CoordinatorController', 'printAttendanceSheet'],
     '/coordinator/presentation-sheets' => ['Controller\CoordinatorController', 'presentationSheets'],
     '/coordinator/presentation-sheets/print' => ['Controller\CoordinatorController', 'printPresentationSheets'],
+    '/coordinator/cumulative-sheet' => ['Controller\CoordinatorController', 'cumulativeSheet'],
+    '/coordinator/cumulative-sheet/toggle-visibility' => ['Controller\CoordinatorController', 'toggleMarksVisibility'],
+    '/coordinator/cumulative-sheet/print' => ['Controller\CoordinatorController', 'printCumulativeSheet'],
     '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
     
     // Role switching

@@ -259,11 +259,7 @@ elseif ($showGrade === 'F') $gradeColor = '#dc2626';
                                                     <div style="font-size: 0.82rem;color: var(--text-secondary)">
                                                         <strong style="font-size: 0.75rem;text-transform: uppercase;letter-spacing: 0.04em">Remarks:</strong>
                                                         <div class="mt-1 p-2 rounded-2" style="background: var(--card-bg);border: 1px solid var(--border-color);line-height: 1.6">
-                                                            <?php if ($se['show_to_student'] == 1): ?>
-                                                                <?php echo nl2br(htmlspecialchars(trim($se['remarks']))); ?>
-                                                            <?php else: ?>
-                                                                <em style="color: var(--text-secondary)">Feedback is hidden by the evaluator.</em>
-                                                            <?php endif; ?>
+                                                            <?php echo nl2br(htmlspecialchars(trim($se['remarks'] ?? ''), ENT_QUOTES, 'UTF-8')); ?>
                                                         </div>
                                                     </div>
                                                 </div>

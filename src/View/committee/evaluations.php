@@ -388,37 +388,6 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 </p>
             </div>
         </div>
-        
-        <?php
-        $anyHidden = false;
-        $hasEvaluations = false;
-        foreach ($groups as $g) {
-            if ($g['proposal_defense']) {
-                $hasEvaluations = true;
-                if ($g['proposal_defense']['show_to_student'] == 0) $anyHidden = true;
-            }
-            if ($g['progress_eval']) {
-                $hasEvaluations = true;
-                if ($g['progress_eval']['show_to_student'] == 0) $anyHidden = true;
-            }
-            if ($g['final_presentation']) {
-                $hasEvaluations = true;
-                if ($g['final_presentation']['show_to_student'] == 0) $anyHidden = true;
-            }
-        }
-        $globalShowAction = ($anyHidden || !$hasEvaluations) ? 1 : 0;
-        ?>
-        <div class="d-flex gap-2">
-            <form action="<?php echo $bp; ?>/committee/evaluations/toggle-visibility" method="POST" class="m-0">
-                <input type="hidden" name="show" value="<?php echo htmlspecialchars((string)($globalShowAction), ENT_QUOTES, 'UTF-8'); ?>">
-                <button type="submit" class="btn <?php echo $globalShowAction ? 'btn-light text-black' : 'btn-outline-light'; ?> rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem">
-                    <i class="bi <?php echo $globalShowAction ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> me-1"></i>
-                    <?php echo $globalShowAction ? 'Publish Marks' : 'Hide Marks'; ?>
-                </button>
-            
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-</form>
-        </div>
     </div>
 </div>
 
