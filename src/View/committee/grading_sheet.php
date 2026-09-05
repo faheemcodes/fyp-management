@@ -155,7 +155,7 @@
     padding: 2px !important;
     color: var(--text-primary) !important;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 500;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 .eval-input::-webkit-outer-spin-button,
@@ -179,7 +179,7 @@ html.dark-theme .eval-input {
     min-width: 60px !important;
     padding: 5px 8px !important;
     font-size: 0.95rem !important;
-    font-weight: 700 !important;
+    font-weight: 500 !important;
     border-radius: 6px !important;
 }
 .eval-remarks-input {
@@ -567,9 +567,9 @@ $groupCount = count($grouped ?? []);
                             <th rowspan="2" style="width: 220px">Title of Project</th>
                             <th rowspan="2" style="width: 150px">Primary Supervisor</th>
                             <th colspan="2">Group Members</th>
-                            <th rowspan="2" style="width: 120px">Presentation<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
-                            <th rowspan="2" style="width: 120px">Thesis<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
-                            <th rowspan="2" style="width: 120px">Project Demo<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 120px">Presentation<br><span style="font-size: 0.75rem;font-weight: 400;opacity: 0.85;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 120px">Thesis<br><span style="font-size: 0.75rem;font-weight: 400;opacity: 0.85;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 120px">Project Demo<br><span style="font-size: 0.75rem;font-weight: 400;opacity: 0.85;text-transform: none">(25 marks)</span></th>
                             <th rowspan="2" style="width: 200px">Your Group Remarks</th>
                         </tr>
                         <tr>
