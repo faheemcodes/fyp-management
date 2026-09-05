@@ -17,7 +17,15 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                     <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Cumulative Evaluation &amp; Grading Sheet</h4>
                     <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); font-size: 0.8rem;">
-                        <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
+                        Batch <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(139, 92, 246, 0.35); color: #ffffff; border: 1px solid rgba(139, 92, 246, 0.5); font-size: 0.8rem;">
+                        <?php if ($coordinatorShift === 'Evening'): ?>
+                            <i class="bi bi-moon-stars-fill me-1"></i>
+                        <?php else: ?>
+                            <i class="bi bi-sun-fill me-1"></i>
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift
                     </span>
                     <?php if ($allMarksPublished): ?>
                         <span class="badge rounded-pill px-2.5 py-1 fw-semibold bg-success text-white" style="font-size: 0.76rem;">
@@ -25,12 +33,12 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                         </span>
                     <?php else: ?>
                         <span class="badge rounded-pill px-2.5 py-1 fw-semibold bg-warning text-dark" style="font-size: 0.76rem;">
-                            <i class="bi bi-eye-slash-fill me-1"></i> Marks Hidden / Partially Published
+                            <i class="bi bi-eye-slash-fill me-1"></i> Marks Hidden / Draft Mode
                         </span>
                     <?php endif; ?>
                 </div>
                 <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.78); font-size: 0.84rem">
-                    Comprehensive final marks across Proposal Defence (40), Progress (40), Supervision (45), and Final Presentation (75) &bull; Total 200 Marks
+                    Official <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift evaluation records across Proposal Defence (40), Progress (40), Supervision (45), and Final Presentation (75) &bull; Total 200 Marks
                 </p>
             </div>
         </div>
@@ -42,7 +50,7 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
             </button>
 
             <!-- Print Cumulative Sheet (Same tab) -->
-            <a href="<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>&shift=<?php echo urlencode($selectedShift); ?>" class="btn btn-success rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.85rem;">
+            <a href="<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>" class="btn btn-success rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.85rem;">
                 <i class="bi bi-printer-fill"></i> <span>Print Sheet</span>
             </a>
 
@@ -156,14 +164,22 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                 </select>
             </div>
 
-            <!-- Shift Filter -->
+            <!-- Coordinator Shift Indicator -->
             <div class="col-md-2">
-                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;">Shift</label>
-                <select name="shift" class="form-select form-select-sm rounded-pill" onchange="document.getElementById('filterForm').submit()">
-                    <option value="all" <?php echo $selectedShift === 'all' ? 'selected' : ''; ?>>All Shifts</option>
-                    <option value="Morning" <?php echo $selectedShift === 'Morning' ? 'selected' : ''; ?>>Morning</option>
-                    <option value="Evening" <?php echo $selectedShift === 'Evening' ? 'selected' : ''; ?>>Evening</option>
-                </select>
+                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;">Coordinator Shift</label>
+                <?php if ($coordinatorShift === 'All'): ?>
+                    <select name="shift" class="form-select form-select-sm rounded-pill" onchange="document.getElementById('filterForm').submit()">
+                        <option value="all" <?php echo $selectedShift === 'all' ? 'selected' : ''; ?>>All Shifts</option>
+                        <option value="Morning" <?php echo $selectedShift === 'Morning' ? 'selected' : ''; ?>>Morning</option>
+                        <option value="Evening" <?php echo $selectedShift === 'Evening' ? 'selected' : ''; ?>>Evening</option>
+                    </select>
+                <?php else: ?>
+                    <div class="form-control form-control-sm rounded-pill bg-light border d-flex align-items-center gap-2 fw-bold text-dark" style="font-size: 0.82rem; height: 31px;">
+                        <i class="bi <?php echo $coordinatorShift === 'Evening' ? 'bi-moon-stars-fill text-purple' : 'bi-sun-fill text-warning'; ?>"></i>
+                        <span><?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift</span>
+                    </div>
+                    <input type="hidden" name="shift" value="<?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php endif; ?>
             </div>
 
             <!-- Grade Filter (Client-side) -->
@@ -425,8 +441,8 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                     <!-- Target Scope Info -->
                     <div class="p-2.5 rounded-3 bg-light border text-muted small" style="font-size: 0.78rem;">
                         <i class="bi bi-info-circle me-1"></i>
-                        Target: <strong><?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?></strong> 
-                        (<?php echo $selectedShift === 'all' ? 'All Shifts' : htmlspecialchars($selectedShift, ENT_QUOTES, 'UTF-8') . ' Shift'; ?>).
+                        Target: <strong>Batch <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?></strong> 
+                        (<strong><?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift</strong>).
                     </div>
                 </div>
 

@@ -313,14 +313,10 @@ $hodName = $hodName ?? 'Head of Department';
                 </select>
             </div>
 
-            <!-- Shift -->
+            <!-- Coordinator Shift Badge -->
             <div class="toolbar-input-group">
-                <i class="bi bi-clock-fill toolbar-icon"></i>
-                <select id="toolbarShiftSelect" onchange="updatePrintFilters()">
-                    <option value="all" <?php echo $shift === 'all' ? 'selected' : ''; ?>>All Shifts</option>
-                    <option value="Morning" <?php echo $shift === 'Morning' ? 'selected' : ''; ?>>Morning</option>
-                    <option value="Evening" <?php echo $shift === 'Evening' ? 'selected' : ''; ?>>Evening</option>
-                </select>
+                <i class="bi <?php echo $coordinatorShift === 'Evening' ? 'bi-moon-stars-fill' : 'bi-sun-fill'; ?> toolbar-icon"></i>
+                <span style="color: #f8fafc; font-size: 0.82rem; font-weight: 600;"><?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift</span>
             </div>
 
             <!-- Date -->
@@ -346,10 +342,10 @@ $hodName = $hodName ?? 'Head of Department';
         <div class="report-header">
             <div class="uni">UNIVERSITY OF SINDH, JAMSHORO</div>
             <div class="dept">DEPARTMENT OF <?php echo strtoupper(htmlspecialchars($department, ENT_QUOTES, 'UTF-8')); ?></div>
-            <div class="title-badge">FINAL YEAR PROJECT (FYP) - CUMULATIVE EVALUATION &amp; GRADING SHEET</div>
+            <div class="title-badge">FINAL YEAR PROJECT (FYP) - CUMULATIVE EVALUATION &amp; GRADING SHEET (<?php echo strtoupper(htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8')); ?> SHIFT)</div>
             <div class="meta-row">
                 <strong>Batch:</strong> <?php echo htmlspecialchars($batchName, ENT_QUOTES, 'UTF-8'); ?> &nbsp;|&nbsp;
-                <strong>Shift:</strong> <?php echo htmlspecialchars($shift === 'all' ? 'Morning / Evening' : $shift, ENT_QUOTES, 'UTF-8'); ?> &nbsp;|&nbsp;
+                <strong>Shift:</strong> <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift &nbsp;|&nbsp;
                 <strong>Dated:</strong> <?php echo htmlspecialchars($dated, ENT_QUOTES, 'UTF-8'); ?>
             </div>
             <div class="scheme-info">
@@ -490,9 +486,8 @@ $hodName = $hodName ?? 'Head of Department';
 <script>
 function updatePrintFilters() {
     const batchId = document.getElementById('toolbarBatchSelect').value;
-    const shift = document.getElementById('toolbarShiftSelect').value;
     const dated = encodeURIComponent(document.getElementById('toolbarDateInput').value);
-    const url = '<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=' + batchId + '&shift=' + shift + '&dated=' + dated;
+    const url = '<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=' + batchId + '&dated=' + dated;
     window.location.href = url;
 }
 </script>

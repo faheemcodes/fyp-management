@@ -1884,7 +1884,7 @@ class CoordinatorController extends BaseController {
         }
 
         $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
-        $shift = isset($_GET['shift']) ? $_GET['shift'] : 'all';
+        $effectiveShift = ($coordShift !== 'All') ? $coordShift : (isset($_GET['shift']) ? $_GET['shift'] : 'all');
 
         $batchSql = "";
         $params = [$dept];
@@ -1894,9 +1894,9 @@ class CoordinatorController extends BaseController {
         }
 
         $shiftSql = "";
-        if ($shift !== 'all') {
+        if ($effectiveShift !== 'all') {
             $shiftSql = " AND st.shift = ?";
-            $params[] = $shift;
+            $params[] = $effectiveShift;
         }
 
         // Query students, groups, projects, supervisors, and grades
@@ -1997,7 +1997,7 @@ class CoordinatorController extends BaseController {
             'activeBatch' => $activeBatch,
             'selectedBatchId' => $batchId,
             'selectedBatchName' => $batchName,
-            'selectedShift' => $shift,
+            'selectedShift' => $effectiveShift,
             'studentsList' => $studentsList,
             'totalStudents' => $totalStudents,
             'totalGroups' => count($groupIds),
@@ -2015,6 +2015,7 @@ class CoordinatorController extends BaseController {
             $db = \Database::getInstance()->getConnection();
             $userId = $_SESSION['user_id'] ?? 0;
             $dept = $this->getCoordinatorDept($db, $userId);
+            $coordShift = $this->getCoordinatorShift($db, $userId);
 
             $action = $_POST['action'] ?? 'publish';
             $show = ($action === 'publish') ? 1 : 0;
@@ -2029,6 +2030,10 @@ class CoordinatorController extends BaseController {
                 $whereClauses = ["s.department = ?"];
                 $params = [$show, $dept];
 
+                if ($coordShift !== 'All') {
+                    $whereClauses[] = "s.shift = ?";
+                    $params[] = $coordShift;
+                }
                 if ($groupId) {
                     $whereClauses[] = "g.id = ?";
                     $params[] = $groupId;
@@ -2059,6 +2064,10 @@ class CoordinatorController extends BaseController {
                     $gradeClauses = ["s.department = ?"];
                     $gradeParams = [$show, $dept];
 
+                    if ($coordShift !== 'All') {
+                        $gradeClauses[] = "s.shift = ?";
+                        $gradeParams[] = $coordShift;
+                    }
                     if ($groupId) {
                         $gradeClauses[] = "g.id = ?";
                         $gradeParams[] = $groupId;
@@ -2123,7 +2132,7 @@ class CoordinatorController extends BaseController {
         }
 
         $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
-        $shift = isset($_GET['shift']) ? $_GET['shift'] : 'all';
+        $effectiveShift = ($coordShift !== 'All') ? $coordShift : (isset($_GET['shift']) ? $_GET['shift'] : 'all');
         $dated = !empty($_GET['dated']) ? $_GET['dated'] : date('d-m-Y');
 
         $batchSql = "";
@@ -2134,9 +2143,9 @@ class CoordinatorController extends BaseController {
         }
 
         $shiftSql = "";
-        if ($shift !== 'all') {
+        if ($effectiveShift !== 'all') {
             $shiftSql = " AND st.shift = ?";
-            $params[] = $shift;
+            $params[] = $effectiveShift;
         }
 
         $query = "
@@ -2179,7 +2188,7 @@ class CoordinatorController extends BaseController {
             'batches' => $batches,
             'batchId' => $batchId,
             'batchName' => $batchName,
-            'shift' => $shift,
+            'shift' => $effectiveShift,
             'dated' => $dated,
             'studentsList' => $studentsList
         ]);
