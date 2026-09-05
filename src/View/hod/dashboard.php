@@ -279,12 +279,12 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     </div>
 </div>
 
-<!-- ── Stat Cards Grid (Row 1: 3 Cards, Row 2: 2 Cards) ── -->
+<!-- ── Stat Cards Grid (8 Action Cards in 2 Rows of 4) ── -->
 <div class="mb-4">
-    <!-- Row 1: 3 Stat Cards -->
+    <!-- Row 1: Academic & Faculty Cohort (4 Cards) -->
     <div class="row g-3 mb-3">
         <!-- 1. FYP Groups Card -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-3">
             <a href="<?php echo $basePath; ?>/hod/projects" class="text-decoration-none">
                 <div class="card premium-stat-card premium-card-purple">
                     <div class="premium-card-accent"></div>
@@ -305,7 +305,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
         </div>
 
         <!-- 2. Supervisors Card -->
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-3">
             <a href="<?php echo $basePath; ?>/hod/supervisors" class="text-decoration-none">
                 <div class="card premium-stat-card premium-card-green">
                     <div class="premium-card-accent"></div>
@@ -326,7 +326,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
         </div>
 
         <!-- 3. Committee Card -->
-        <div class="col-12 col-md-12 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-3">
             <a href="<?php echo $basePath; ?>/hod/committee" class="text-decoration-none">
                 <div class="card premium-stat-card premium-card-blue">
                     <div class="premium-card-accent"></div>
@@ -345,12 +345,9 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 </div>
             </a>
         </div>
-    </div>
 
-    <!-- Row 2: 2 Stat Cards -->
-    <div class="row g-3">
         <!-- 4. Coordinators Card -->
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-sm-6 col-lg-3">
             <a href="<?php echo $basePath; ?>/hod/coordinators" class="text-decoration-none">
                 <div class="card premium-stat-card premium-card-rose">
                     <div class="premium-card-accent"></div>
@@ -369,9 +366,12 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                 </div>
             </a>
         </div>
+    </div>
 
+    <!-- Row 2: Verification, Marks, Repository & Settings (4 Cards) -->
+    <div class="row g-3">
         <!-- 5. Verify Students Card -->
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-sm-6 col-lg-3">
             <a href="<?php echo $basePath; ?>/hod/students/verify" class="text-decoration-none">
                 <div class="card premium-stat-card premium-card-amber">
                     <div class="premium-card-accent"></div>
@@ -387,6 +387,71 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                                 <?php endif; ?>
                             </div>
                             <div class="premium-card-label">Verify Students</div>
+                        </div>
+                        <div class="premium-card-arrow">
+                            <i class="bi bi-arrow-right-short"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 6. Cumulative Marks Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="<?php echo $basePath; ?>/hod/cumulative-sheet" class="text-decoration-none">
+                <div class="card premium-stat-card premium-card-indigo">
+                    <div class="premium-card-accent"></div>
+                    <div class="d-flex align-items-center gap-3 position-relative z-1">
+                        <div class="premium-card-icon premium-icon-indigo">
+                            <i class="bi bi-file-earmark-ruled-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_students'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                            <div class="premium-card-label">Cumulative Marks</div>
+                        </div>
+                        <div class="premium-card-arrow">
+                            <i class="bi bi-arrow-right-short"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 7. Previous Projects Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="<?php echo $basePath; ?>/hod/previous-projects" class="text-decoration-none">
+                <div class="card premium-stat-card premium-card-teal">
+                    <div class="premium-card-accent"></div>
+                    <div class="d-flex align-items-center gap-3 position-relative z-1">
+                        <div class="premium-card-icon premium-icon-teal">
+                            <i class="bi bi-archive-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['previous_projects'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                            <div class="premium-card-label">Previous Projects</div>
+                        </div>
+                        <div class="premium-card-arrow">
+                            <i class="bi bi-arrow-right-short"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- 8. Department Settings Card -->
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="<?php echo $basePath; ?>/hod/settings" class="text-decoration-none">
+                <div class="card premium-stat-card premium-card-cyan">
+                    <div class="premium-card-accent"></div>
+                    <div class="d-flex align-items-center gap-3 position-relative z-1">
+                        <div class="premium-card-icon premium-icon-cyan">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="premium-card-count" style="font-size: 1.15rem;"><?php echo htmlspecialchars($maxMorning . 'M / ' . $maxEvening . 'E Slots', ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <div class="premium-card-label">Department Settings</div>
                         </div>
                         <div class="premium-card-arrow">
                             <i class="bi bi-arrow-right-short"></i>

@@ -68,7 +68,44 @@ class CoordinatorController extends BaseController {
             JOIN students s ON g.created_by = s.user_id
             WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested') AND b.is_active = 1$shiftFilter");
         $stmtPendingCount->execute([$dept]);
-        $stats['pending_proposals'] = $stmtPendingCount->fetchColumn();
+        $stats['pending_proposals'] = (int)$stmtPendingCount->fetchColumn();
+
+        // Approved groups in department & shift (Active batch only)
+        $stmtGroups = $db->prepare("SELECT COUNT(*) FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1$shiftFilter");
+        $stmtGroups->execute([$dept]);
+        $stats['total_groups'] = (int)$stmtGroups->fetchColumn();
+
+        // Groups assigned to a committee number
+        $stmtAlloc = $db->prepare("SELECT COUNT(DISTINCT g.id) FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 AND g.committee_number IS NOT NULL AND g.committee_number > 0$shiftFilter");
+        $stmtAlloc->execute([$dept]);
+        $stats['allocated_groups'] = (int)$stmtAlloc->fetchColumn();
+
+        // Academic Batches in coordinator's department
+        $stmtBatches = $db->prepare("SELECT COUNT(*) FROM academic_batches WHERE department = ?");
+        $stmtBatches->execute([$dept]);
+        $stats['total_batches'] = (int)$stmtBatches->fetchColumn();
+
+        // Active Deadlines
+        $stmtDeadlines = $db->prepare("SELECT COUNT(*) FROM deadlines WHERE department = ? AND status = 'Active'");
+        $stmtDeadlines->execute([$dept]);
+        $stats['active_deadlines'] = (int)$stmtDeadlines->fetchColumn();
+
+        // Concluded / Previous Projects
+        $stmtPrev = $db->prepare("SELECT COUNT(*) FROM projects p 
+            JOIN `groups` g ON p.group_id = g.id 
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE b.is_active = 0 AND p.status = 'Approved' AND s.department = ?$shiftFilter");
+        $stmtPrev->execute([$dept]);
+        $stats['previous_projects'] = (int)$stmtPrev->fetchColumn();
 
         // Fetch unverified proposals for the department & shift (active batch only)
         $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 

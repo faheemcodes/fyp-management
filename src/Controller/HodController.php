@@ -29,6 +29,23 @@ class HodController extends BaseController {
         $stmtCoordCount->execute([$dept]);
         $stats['coordinators'] = $stmtCoordCount->fetchColumn();
 
+        $stmtStudCount = $db->prepare("SELECT COUNT(DISTINCT s.user_id) 
+            FROM students s 
+            JOIN `groups` g ON s.user_id = g.created_by OR s.user_id IN (SELECT student_id FROM group_members WHERE group_id = g.id)
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE s.department = ? AND b.is_active = 1");
+        $stmtStudCount->execute([$dept]);
+        $stats['total_students'] = (int)$stmtStudCount->fetchColumn();
+
+        $stmtPrevCount = $db->prepare("SELECT COUNT(*) 
+            FROM projects p 
+            JOIN `groups` g ON p.group_id = g.id 
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE b.is_active = 0 AND p.status = 'Approved' AND s.department = ?");
+        $stmtPrevCount->execute([$dept]);
+        $stats['previous_projects'] = (int)$stmtPrevCount->fetchColumn();
+
         // FYP Progress Stages Funnel (Active batches only)
         $stages = [
             'Proposal Submitted' => 0,

@@ -211,20 +211,26 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
     </div>
 </div>
 
-<!-- ── Premium Stat Cards Row ── -->
+<!-- ── Premium Stat Cards Grid (12 Action Cards in 3 Rows of 4) ── -->
 <div class="row g-3 mb-4">
 
-    <!-- Pending Proposals Card -->
-    <div class="col-xl-4 col-md-6">
+    <!-- Row 1: Submissions, Verification & Committee Distribution -->
+    <!-- 1. Pending Proposals Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
         <a href="<?php echo $bp; ?>/coordinator/proposals" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-purple">
+            <div class="card premium-stat-card premium-card-purple h-100">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
                     <div class="premium-card-icon premium-icon-purple">
                         <i class="bi bi-file-earmark-check-fill"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_proposals'] ?? count($pendingProposals)), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_proposals'] ?? count($pendingProposals)), ENT_QUOTES, 'UTF-8'); ?></span>
+                            <?php if (!empty($stats['pending_proposals'])): ?>
+                                <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Review</span>
+                            <?php endif; ?>
+                        </div>
                         <div class="premium-card-label">Pending Proposals</div>
                     </div>
                     <div class="premium-card-arrow">
@@ -235,17 +241,22 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
         </a>
     </div>
 
-    <!-- Verify Students Card -->
-    <div class="col-xl-4 col-md-6">
+    <!-- 2. Verify Students Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
         <a href="<?php echo $bp; ?>/coordinator/users" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-amber">
+            <div class="card premium-stat-card premium-card-amber h-100">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
                     <div class="premium-card-icon premium-icon-amber">
                         <i class="bi bi-person-check-fill"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_approvals'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_approvals'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
+                            <?php if (!empty($stats['pending_approvals'])): ?>
+                                <span class="badge bg-danger rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Pending</span>
+                            <?php endif; ?>
+                        </div>
                         <div class="premium-card-label">Verify Students</div>
                     </div>
                     <div class="premium-card-arrow">
@@ -256,17 +267,22 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
         </a>
     </div>
 
-    <!-- Verify Meetings Card -->
-    <div class="col-xl-4 col-md-6">
+    <!-- 3. Verify Meetings Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
         <a href="<?php echo $bp; ?>/coordinator/meetings" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-green">
+            <div class="card premium-stat-card premium-card-green h-100">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
                     <div class="premium-card-icon premium-icon-green">
-                        <i class="bi bi-shield-check"></i>
+                        <i class="bi bi-calendar2-check-fill"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_meetings'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="premium-card-count"><?php echo htmlspecialchars((string)($stats['pending_meetings'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
+                            <?php if (!empty($stats['pending_meetings'])): ?>
+                                <span class="badge bg-warning text-dark rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Audit</span>
+                            <?php endif; ?>
+                        </div>
                         <div class="premium-card-label">Verify Meetings</div>
                     </div>
                     <div class="premium-card-arrow">
@@ -277,10 +293,120 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
         </a>
     </div>
 
-    <!-- Notices Generated Card -->
-    <div class="col-xl-6 col-md-6">
+    <!-- 4. Group Allocation Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/committees" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue">
+                        <i class="bi bi-diagram-3-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count">
+                            <?php echo htmlspecialchars((string)($stats['allocated_groups'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>
+                            <span style="font-size: 0.95rem; font-weight: 600; opacity: 0.7;">/ <?php echo htmlspecialchars((string)($stats['total_groups'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
+                        </div>
+                        <div class="premium-card-label">Group Allocation</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Row 2: Defense, Evaluation & Grading Sheets -->
+    <!-- 5. Presentation Sheets Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/presentation-sheets" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-cyan h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-cyan">
+                        <i class="bi bi-printer-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count" style="font-size: 1.25rem;">Generate</div>
+                        <div class="premium-card-label">Presentation Sheets</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 6. Attendance Sheets Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/attendance-sheet" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-teal h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-teal">
+                        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count" style="font-size: 1.25rem;">Generate</div>
+                        <div class="premium-card-label">Attendance Sheets</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 7. External Assessment Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/assessment" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-blue h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-blue">
+                        <i class="bi bi-file-earmark-excel-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count" style="font-size: 1.25rem;">Assessment</div>
+                        <div class="premium-card-label">External Sheet</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 8. Cumulative Sheet Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/cumulative-sheet" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-indigo h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-indigo">
+                        <i class="bi bi-file-earmark-ruled-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_students'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Cumulative Sheet</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Row 3: Notices, Milestones, Batches & Archive -->
+    <!-- 9. Notice Generator Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
         <a href="<?php echo $bp; ?>/coordinator/notice" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-rose">
+            <div class="card premium-stat-card premium-card-rose h-100">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
                     <div class="premium-card-icon premium-icon-rose">
@@ -298,18 +424,23 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
         </a>
     </div>
 
-    <!-- External Assessment Card -->
-    <div class="col-xl-6 col-md-12">
-        <a href="<?php echo $bp; ?>/coordinator/assessment" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-blue">
+    <!-- 10. Timeline & Deadlines Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/deadlines" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-amber h-100">
                 <div class="premium-card-accent"></div>
                 <div class="d-flex align-items-center gap-3 position-relative z-1">
-                    <div class="premium-card-icon premium-icon-blue" style="width: 50px; height: 50px; font-size: 1.3rem;">
-                        <i class="bi bi-journal-check"></i>
+                    <div class="premium-card-icon premium-icon-amber">
+                        <i class="bi bi-calendar-event-fill"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em; color: var(--text-primary);">External Assessment</div>
-                        <div class="mt-1" style="font-size: 0.78rem; color: var(--text-secondary);">Generate dynamic grading sheets</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="premium-card-count"><?php echo htmlspecialchars((string)($stats['active_deadlines'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></span>
+                            <?php if (!empty($stats['active_deadlines'])): ?>
+                                <span class="badge bg-success rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">Active</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="premium-card-label">Timeline &amp; Deadlines</div>
                     </div>
                     <div class="premium-card-arrow">
                         <i class="bi bi-arrow-right-short"></i>
@@ -318,6 +449,49 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
             </div>
         </a>
     </div>
+
+    <!-- 11. Academic Batches Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/batches" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-purple h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-purple">
+                        <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_batches'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Academic Batches</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 12. Previous Projects Card -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <a href="<?php echo $bp; ?>/coordinator/previous-projects" class="text-decoration-none">
+            <div class="card premium-stat-card premium-card-teal h-100">
+                <div class="premium-card-accent"></div>
+                <div class="d-flex align-items-center gap-3 position-relative z-1">
+                    <div class="premium-card-icon premium-icon-teal">
+                        <i class="bi bi-archive-fill"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['previous_projects'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="premium-card-label">Previous Projects</div>
+                    </div>
+                    <div class="premium-card-arrow">
+                        <i class="bi bi-arrow-right-short"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
 </div>
 
 <!-- ── Main Content: Pending Proposals Table ── -->
