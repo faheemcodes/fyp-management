@@ -74,13 +74,6 @@
             height: 25px; /* Scaled 1.25x */
         }
 
-        /* Signature */
-        .sig-line {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 11pt; /* Scaled 1.25x */
-            font-weight: bold;
-        }
 
         /* ─── Print Button ─── */
         .no-print { text-align: center; margin-bottom: 12px; font-family: Arial, sans-serif; }
@@ -114,7 +107,6 @@
             table.sheet td { font-size: 8pt !important; }
             table.sheet th.vtext { height: 80px !important; width: 20px !important; font-size: 6.5pt !important; padding: 3px 1px !important; }
             table.sheet td.mark { width: 20px !important; height: 20px !important; }
-            .sig-line { font-size: 9pt !important; margin-top: 15px !important; }
 
             .no-print { display: none !important; }
 
@@ -165,7 +157,7 @@ $isMinimized = ($stage === 'Final Presentation' && isset($_GET['view']) && $_GET
 
 <div class="evaluator-row">
     <div>Dated: <?php echo date('d-m-Y'); ?></div>
-    <div>Evaluators' Name: <span style="text-decoration: underline;padding: 0 50px"><?php echo htmlspecialchars($committee['name'] ?? ''); ?></span></div>
+    <div>Evaluators' Name: ___________________________________</div>
     <div>Evaluators' Signature: _______________</div>
 </div>
 
@@ -327,8 +319,6 @@ $isMinimized = ($stage === 'Final Presentation' && isset($_GET['view']) && $_GET
     </tbody>
 <?php endif; ?>
 </table>
-
-<div class="sig-line">Instructor's Signature: _______________</div>
 
 </body>
 </html>

@@ -43,7 +43,7 @@ $totalCommittees = $totalCommittees ?? count($committeesGrouped ?? []);
             <i class="bi bi-check-circle-fill fs-5"></i>
         </div>
         <div class="small" style="font-size: 0.84rem; color: var(--text-secondary, #475569);">
-            <strong style="color: var(--text-primary, #1e293b);">Committee-Ready Evaluation Sheets:</strong> These sheets fetch the exact table layout used in the Committee portal. When you choose <strong>All Committees</strong>, each committee cleanly prints on its own page with its specific evaluators' names, signature line, and assigned student groups.
+            <strong style="color: var(--text-primary, #1e293b);">Committee-Ready Evaluation Sheets:</strong> These sheets fetch the exact table layout used in the Committee portal. When you choose <strong>All Committees</strong>, each committee cleanly prints on its own page with its committee number, evaluator blanks, and assigned student groups.
         </div>
     </div>
 </div>

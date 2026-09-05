@@ -220,13 +220,6 @@ $selectedCommittee = $selectedCommittee ?? 'all';
             height: 24px;
         }
 
-        /* Signature Line */
-        .sig-line {
-            text-align: right;
-            margin-top: 24px;
-            font-size: 10.5pt;
-            font-weight: bold;
-        }
 
         /* ─── Print Styles & Page Breaks ─── */
         @media print {
@@ -297,10 +290,6 @@ $selectedCommittee = $selectedCommittee ?? 'all';
             table.sheet td.mark {
                 width: 20px !important;
                 height: 20px !important;
-            }
-            .sig-line {
-                font-size: 9pt !important;
-                margin-top: 18px !important;
             }
 
             table.sheet,
@@ -445,7 +434,7 @@ $selectedCommittee = $selectedCommittee ?? 'all';
                     <div class="evaluator-row">
                         <div class="comm-badge-title">Committee: #<?php echo (int)$cNum; ?></div>
                         <div>Dated: <u><?php echo htmlspecialchars($dated ?? '', ENT_QUOTES, 'UTF-8'); ?></u></div>
-                        <div>Evaluators' Name: <span style="text-decoration: underline; padding: 0 20px"><?php echo htmlspecialchars($evalNamesStr ?? '', ENT_QUOTES, 'UTF-8'); ?></span></div>
+                        <div>Evaluators' Name: ___________________________________</div>
                         <div>Signature: _______________</div>
                     </div>
 
@@ -621,11 +610,6 @@ $selectedCommittee = $selectedCommittee ?? 'all';
                             </tbody>
                         <?php endif; ?>
                     </table>
-
-                    <!-- Signature Line -->
-                    <div class="sig-line">
-                        Evaluators' Signature: _______________________________
-                    </div>
 
                 </div>
 
