@@ -1,132 +1,138 @@
+<!-- Coordinator Cumulative Evaluation Sheet View -->
 <?php
 $title = "Cumulative Evaluation Sheet - Coordinator Portal";
 $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 $selectedBatchId = $selectedBatchId ?? 0;
 $selectedShift = $selectedShift ?? 'all';
 $selectedBatchName = $selectedBatchName ?? 'All Batches';
+$department = $department ?? 'Software Engineering';
+$coordinatorShift = $coordinatorShift ?? 'Morning';
 ?>
 
-<!-- ═══════════════ Hero Header ═══════════════ -->
-<div class="page-hero mb-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #047857 100%);">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <div class="d-flex align-items-center gap-3">
-            <div class="page-hero-icon" style="background: rgba(255, 255, 255, 0.14); color: #34d399; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;">
-                <i class="bi bi-file-earmark-ruled-fill fs-4"></i>
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="page-hero mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
+        <!-- Left: Icon & Titles -->
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+            <div class="page-hero-icon">
+                <i class="bi bi-file-earmark-ruled-fill"></i>
             </div>
             <div>
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em">Cumulative Evaluation &amp; Grading Sheet</h4>
-                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.35); font-size: 0.8rem;">
-                        Batch <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
+                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.45);">
+                    Department Coordinator
+                </p>
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2">
+                    Cumulative Evaluation &amp; Grading Sheet
+                </h4>
+                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
+                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
+                        <i class="bi bi-building me-1.5"></i><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?>
                     </span>
-                    <span class="badge rounded-pill px-3 py-1.5 fw-bold" style="background: rgba(139, 92, 246, 0.35); color: #ffffff; border: 1px solid rgba(139, 92, 246, 0.5); font-size: 0.8rem;">
-                        <?php if ($coordinatorShift === 'Evening'): ?>
-                            <i class="bi bi-moon-stars-fill me-1"></i>
-                        <?php else: ?>
-                            <i class="bi bi-sun-fill me-1"></i>
-                        <?php endif; ?>
-                        <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift
+                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(16,185,129,0.25); color: #6ee7b7; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.3);">
+                        <i class="bi bi-clock-history me-1.5"></i>Shift: <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
+                        <i class="bi bi-mortarboard-fill me-1.5"></i>Batch: <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
                     </span>
                     <?php if ($allMarksPublished): ?>
-                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold bg-success text-white" style="font-size: 0.76rem;">
-                            <i class="bi bi-check-circle-fill me-1"></i> Marks Published to Students
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(16,185,129,0.3); color: #a7f3d0; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.4);">
+                            <i class="bi bi-eye-fill me-1.5"></i>Marks Published to Students
                         </span>
                     <?php else: ?>
-                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold bg-warning text-dark" style="font-size: 0.76rem;">
-                            <i class="bi bi-eye-slash-fill me-1"></i> Marks Hidden / Draft Mode
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(245,158,11,0.25); color: #fde68a; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(245,158,11,0.35);">
+                            <i class="bi bi-eye-slash-fill me-1.5"></i>Marks Draft Mode
                         </span>
                     <?php endif; ?>
                 </div>
-                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.78); font-size: 0.84rem">
+                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.78); font-size: 0.84rem">
                     Official <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift evaluation records across Proposal Defence (40), Progress (40), Supervision (45), and Final Presentation (75) &bull; Total 200 Marks
                 </p>
             </div>
         </div>
 
-        <div class="d-flex gap-2 flex-wrap">
+        <!-- Right: Action Buttons -->
+        <div class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-end">
             <!-- Publish / Hide Marks Button -->
-            <button type="button" class="btn btn-warning rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm text-dark" data-bs-toggle="modal" data-bs-target="#publishMarksModal" style="font-size: 0.85rem;">
+            <button type="button" class="btn btn-sm btn-warning rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm text-dark" data-bs-toggle="modal" data-bs-target="#publishMarksModal" style="font-size: 0.85rem;">
                 <i class="bi bi-shield-lock-fill"></i> <span>Publish / Hide Marks</span>
             </button>
 
             <!-- Print Cumulative Sheet (Same tab) -->
-            <a href="<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>" class="btn btn-success rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.85rem;">
-                <i class="bi bi-printer-fill"></i> <span>Print Sheet</span>
+            <a href="<?php echo $basePath; ?>/coordinator/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #0f172a; font-size: 0.85rem;">
+                <i class="bi bi-printer-fill text-primary"></i> <span>Print Sheet</span>
             </a>
 
             <!-- Return to Presentation Sheets -->
-            <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
+            <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.35); font-size: 0.85rem;">
                 <i class="bi bi-collection-fill"></i> <span>Presentation Sheets</span>
             </a>
         </div>
     </div>
 </div>
 
-<!-- ═══════════════ KPI Summary Cards ═══════════════ -->
+<!-- ═══════════════ KPI Summary Cards (Standard Portal Cards) ═══════════════ -->
 <div class="row g-3 mb-4">
+    <!-- Total Students -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 rounded-4 shadow-sm p-3 h-100" style="background: var(--card-bg, #ffffff);">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em">Total Students</div>
-                    <h3 class="fw-bold mt-1 mb-0" style="color: var(--text-primary); font-size: 1.6rem;"><?php echo (int)$totalStudents; ?></h3>
-                    <div class="small text-muted mt-1" style="font-size: 0.76rem;">In <?php echo (int)$totalGroups; ?> FYP Groups</div>
+        <div class="card premium-stat-card premium-card-blue h-100">
+            <div class="premium-card-accent"></div>
+            <div class="d-flex align-items-center gap-3 position-relative z-1">
+                <div class="premium-card-icon premium-icon-blue">
+                    <i class="bi bi-people-fill"></i>
                 </div>
-                <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background: rgba(59, 130, 246, 0.12); color: #3b82f6;">
-                    <i class="bi bi-people-fill fs-4"></i>
+                <div class="flex-grow-1">
+                    <div class="premium-card-count"><?php echo (int)$totalStudents; ?></div>
+                    <div class="premium-card-label">Total Students (<?php echo (int)$totalGroups; ?> Groups)</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Passed Students -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 rounded-4 shadow-sm p-3 h-100" style="background: var(--card-bg, #ffffff);">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em">Passed Students</div>
-                    <h3 class="fw-bold mt-1 mb-0 text-success" style="font-size: 1.6rem;"><?php echo (int)$passedCount; ?></h3>
-                    <div class="small text-muted mt-1" style="font-size: 0.76rem;">
-                        <?php echo $totalStudents > 0 ? round(($passedCount / $totalStudents) * 100, 1) : 0; ?>% Passing Rate
-                    </div>
+        <div class="card premium-stat-card premium-card-green h-100">
+            <div class="premium-card-accent"></div>
+            <div class="d-flex align-items-center gap-3 position-relative z-1">
+                <div class="premium-card-icon premium-icon-green">
+                    <i class="bi bi-patch-check-fill"></i>
                 </div>
-                <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background: rgba(16, 185, 129, 0.12); color: #10b981;">
-                    <i class="bi bi-patch-check-fill fs-4"></i>
+                <div class="flex-grow-1">
+                    <div class="premium-card-count text-success"><?php echo (int)$passedCount; ?></div>
+                    <div class="premium-card-label">Passed (<?php echo $totalStudents > 0 ? round(($passedCount / $totalStudents) * 100, 1) : 0; ?>% Rate)</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Batch Average -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 rounded-4 shadow-sm p-3 h-100" style="background: var(--card-bg, #ffffff);">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em">Batch Average</div>
-                    <h3 class="fw-bold mt-1 mb-0" style="color: #0891b2; font-size: 1.6rem;"><?php echo (int)round((float)$avgScore); ?> <span class="fs-6 fw-normal text-muted">/ 200</span></h3>
-                    <div class="small text-muted mt-1" style="font-size: 0.76rem;">
-                        Avg <?php echo (int)round(((float)$avgScore / 200.0) * 100); ?>% Overall
-                    </div>
+        <div class="card premium-stat-card premium-card-amber h-100">
+            <div class="premium-card-accent"></div>
+            <div class="d-flex align-items-center gap-3 position-relative z-1">
+                <div class="premium-card-icon premium-icon-amber">
+                    <i class="bi bi-bar-chart-fill"></i>
                 </div>
-                <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background: rgba(6, 182, 212, 0.12); color: #0891b2;">
-                    <i class="bi bi-bar-chart-fill fs-4"></i>
+                <div class="flex-grow-1">
+                    <div class="premium-card-count"><?php echo (int)round((float)$avgScore); ?> <small class="fs-6 fw-normal text-muted">/ 200</small></div>
+                    <div class="premium-card-label">Batch Average (<?php echo (int)round(((float)$avgScore / 200.0) * 100); ?>%)</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Marks Published -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 rounded-4 shadow-sm p-3 h-100" style="background: var(--card-bg, #ffffff);">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <div class="text-muted small fw-semibold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em">Marks Published</div>
-                    <h3 class="fw-bold mt-1 mb-0 <?php echo $allMarksPublished ? 'text-success' : 'text-warning'; ?>" style="font-size: 1.6rem;">
-                        <?php echo (int)$publishedEvalsCount; ?> <span class="fs-6 fw-normal text-muted">/ <?php echo (int)$totalEvalsOverall; ?></span>
-                    </h3>
-                    <div class="small text-muted mt-1" style="font-size: 0.76rem;">
-                        <?php echo $allMarksPublished ? 'Fully visible to students' : 'Only remarks visible'; ?>
-                    </div>
+        <div class="card premium-stat-card <?php echo $allMarksPublished ? 'premium-card-green' : 'premium-card-purple'; ?> h-100">
+            <div class="premium-card-accent"></div>
+            <div class="d-flex align-items-center gap-3 position-relative z-1">
+                <div class="premium-card-icon <?php echo $allMarksPublished ? 'premium-icon-green' : 'premium-icon-purple'; ?>">
+                    <i class="bi <?php echo $allMarksPublished ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?>"></i>
                 </div>
-                <div class="rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; background: <?php echo $allMarksPublished ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)'; ?>; color: <?php echo $allMarksPublished ? '#10b981' : '#d97706'; ?>;">
-                    <i class="bi <?php echo $allMarksPublished ? 'bi-eye-fill' : 'bi-eye-slash-fill'; ?> fs-4"></i>
+                <div class="flex-grow-1">
+                    <div class="premium-card-count <?php echo $allMarksPublished ? 'text-success' : ''; ?>">
+                        <?php echo (int)$publishedEvalsCount; ?> <small class="fs-6 fw-normal text-muted">/ <?php echo (int)$totalEvalsOverall; ?></small>
+                    </div>
+                    <div class="premium-card-label"><?php echo $allMarksPublished ? 'Marks Published' : 'Draft Mode (Hidden)'; ?></div>
                 </div>
             </div>
         </div>
@@ -136,10 +142,10 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
 <!-- ═══════════════ Notice Banner ═══════════════ -->
 <div class="card border-0 rounded-4 shadow-sm mb-4 p-3" style="background: rgba(59, 130, 246, 0.05); border-left: 4px solid #3b82f6 !important;">
     <div class="d-flex gap-3 align-items-center">
-        <div class="p-2 rounded-circle text-primary" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.15); flex-shrink: 0;">
+        <div class="p-2 rounded-circle" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.15); color: #2563eb; flex-shrink: 0;">
             <i class="bi bi-info-circle-fill fs-5"></i>
         </div>
-        <div class="small" style="font-size: 0.84rem; color: var(--text-secondary, #475569);">
+        <div class="small" style="font-size: 0.84rem; color: var(--text-secondary, #475569); line-height: 1.5;">
             <strong style="color: var(--text-primary, #1e293b);">Coordinator Authority on Marks Visibility:</strong> 
             Only the Coordinator has administrative authority to publish or hide final student marks. Committee member access to publish marks has been locked. 
             <strong>Student Project Comments:</strong> Feedback and remarks written by committee members are directly and automatically visible to students to guide their project revisions.
@@ -215,14 +221,17 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
 
 <!-- ═══════════════ Cumulative Marks Table ═══════════════ -->
 <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4" style="background: var(--card-bg, #ffffff);">
-    <div class="card-header bg-transparent py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2 border-bottom">
-        <div>
-            <h6 class="fw-bold mb-0" style="color: var(--text-primary); font-size: 0.95rem;">
-                <i class="bi bi-table me-2 text-primary"></i>Student Performance Records
-            </h6>
-            <small class="text-muted" style="font-size: 0.78rem;">
-                Showing <span id="visibleRowCount"><?php echo count($studentsList); ?></span> of <?php echo count($studentsList); ?> students
-            </small>
+    <div class="page-section-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3">
+            <div class="page-section-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+                <i class="bi bi-table"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-0" style="color: var(--text-primary); font-size: 0.95rem;">Student Performance Records</h6>
+                <small class="text-muted" style="font-size: 0.78rem;">
+                    Showing <span id="visibleRowCount"><?php echo count($studentsList); ?></span> of <?php echo count($studentsList); ?> students
+                </small>
+            </div>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" id="resetFiltersBtn">
@@ -232,9 +241,9 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0" id="cumulativeTable" style="font-size: 0.85rem;">
-            <thead class="table-light text-uppercase fw-bold" style="font-size: 0.73rem; letter-spacing: 0.04em;">
-                <tr>
+        <table class="table table-hover align-middle mb-0 modern-table" id="cumulativeTable" style="font-size: 0.85rem;">
+            <thead style="background: var(--form-bg, #f8fafc); border-bottom: 1px solid var(--border-color, #e2e8f0);">
+                <tr class="text-uppercase fw-bold" style="font-size: 0.74rem; letter-spacing: 0.04em; color: var(--text-secondary, #64748b);">
                     <th class="ps-4 text-center" style="width: 45px;">#</th>
                     <th>Roll No</th>
                     <th>Student Name</th>
@@ -335,7 +344,7 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                             <td class="text-center font-monospace"><?php echo $prog !== null ? (int)round($prog) : '<span class="text-muted">-</span>'; ?></td>
                             <td class="text-center font-monospace"><?php echo $sup !== null ? (int)round($sup) : '<span class="text-muted">-</span>'; ?></td>
                             <td class="text-center font-monospace"><?php echo $fin !== null ? (int)round($fin) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center fw-bold font-monospace" style="color: #0f766e; font-size: 0.95rem;">
+                            <td class="text-center fw-bold font-monospace" style="color: #10b981; font-size: 0.95rem;">
                                 <?php echo $tot !== null ? (int)round($tot) : '<span class="text-muted">-</span>'; ?>
                             </td>
                             <td class="text-center font-monospace fw-semibold"><?php echo $pct !== null ? (int)round($pct) . '%' : '<span class="text-muted">-</span>'; ?></td>
@@ -346,11 +355,11 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                             </td>
                             <td class="text-center">
                                 <?php if ($passFail === 'Pass'): ?>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 0.74rem;">
+                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.74rem;">
                                         Pass
                                     </span>
                                 <?php elseif ($passFail === 'Fail'): ?>
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 0.74rem;">
+                                    <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1" style="font-size: 0.74rem;">
                                         Fail
                                     </span>
                                 <?php else: ?>
@@ -359,11 +368,11 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                             </td>
                             <td class="text-center pe-4">
                                 <?php if ($isPublished): ?>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="Marks visible to student">
+                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="Marks visible to student">
                                         <i class="bi bi-eye-fill me-1"></i> Visible
                                     </span>
                                 <?php else: ?>
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 text-dark" style="font-size: 0.72rem;" title="Marks hidden from student">
+                                    <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 text-dark" style="font-size: 0.72rem;" title="Marks hidden from student">
                                         <i class="bi bi-eye-slash-fill me-1"></i> Hidden
                                     </span>
                                 <?php endif; ?>
@@ -380,7 +389,7 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
 <div class="modal fade" id="publishMarksModal" tabindex="-1" aria-labelledby="publishMarksModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: var(--card-bg, #ffffff);">
-            <div class="modal-header border-bottom py-3 px-4" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff;">
+            <div class="modal-header border-bottom py-3 px-4" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #ffffff;">
                 <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-shield-lock-fill text-warning fs-5"></i>
                     <h5 class="modal-title fw-bold m-0" id="publishMarksModalLabel" style="font-size: 1.05rem;">Manage Student Marks Visibility</h5>
@@ -398,7 +407,7 @@ $selectedBatchName = $selectedBatchName ?? 'All Batches';
                             <i class="bi bi-shield-check text-success me-1"></i> Coordinator-Exclusive Control
                         </div>
                         <div class="small text-muted" style="font-size: 0.8rem; line-height: 1.5;">
-                            Only coordinators have authorization to publish marks. Committee members no longer have visibility toggles.
+                            Only coordinators have authorization to publish marks. Committee member access to publish marks has been locked. 
                             <strong>Note:</strong> Committee comments and remarks remain accessible to students continuously to support their academic revisions.
                         </div>
                     </div>
