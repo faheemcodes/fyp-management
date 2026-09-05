@@ -53,12 +53,6 @@ $shift = $shift ?? 'Morning';
                     Presentation Evaluation Sheets
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
-                        <i class="bi bi-building me-1.5"></i><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(16,185,129,0.25); color: #6ee7b7; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.3);">
-                        <i class="bi bi-clock-history me-1.5"></i>Shift: <?php echo htmlspecialchars($shift, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
                     <?php if ($totalCommittees > 0): ?>
                         <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
                             <i class="bi bi-people-fill me-1.5"></i><?php echo (int)$totalCommittees; ?> Committees
@@ -80,12 +74,6 @@ $shift = $shift ?? 'Morning';
         <div class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-end">
             <a href="<?php echo $basePath; ?>/coordinator/cumulative-sheet" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #0f172a; font-size: 0.85rem;">
                 <i class="bi bi-file-earmark-ruled-fill text-primary"></i> <span>Cumulative Sheet</span>
-            </a>
-            <a href="<?php echo $basePath; ?>/coordinator/attendance-sheet" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.35); font-size: 0.85rem;">
-                <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Attendance Sheets</span>
-            </a>
-            <a href="<?php echo $basePath; ?>/coordinator/committees" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.35); font-size: 0.85rem;">
-                <i class="bi bi-diagram-3-fill"></i> <span>Group Allocation</span>
             </a>
         </div>
     </div>
