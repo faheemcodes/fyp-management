@@ -153,8 +153,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
         </div>
         <div class="d-flex gap-2 flex-wrap">
-            <button type="button" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-bold d-inline-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#generateAttendanceModal" style="color: #047fb0; font-size: 0.85rem;">
-                <i class="bi bi-printer-fill text-primary"></i> <span>Attendance Sheet</span>
+            <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-bold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #047fb0; font-size: 0.85rem;">
+                <i class="bi bi-printer-fill text-primary"></i> <span>Presentation Sheets</span>
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#generateAttendanceModal" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
+                <i class="bi bi-clipboard-check"></i> <span>Attendance Sheet</span>
             </button>
             <a href="<?php echo $basePath; ?>/coordinator/assessment" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.4); font-size: 0.85rem;">
                 <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Evaluation Sheets</span>

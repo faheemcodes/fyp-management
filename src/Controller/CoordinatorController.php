@@ -1579,6 +1579,282 @@ class CoordinatorController extends BaseController {
             'groupsByCommittee' => $groupsByCommittee
         ]);
     }
+
+    public function presentationSheets() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        // Fetch batches for this coordinator's dept & shift
+        $stmtBatches = $db->prepare("
+            SELECT id, name, shift, is_active 
+            FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All')
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $shift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        // Fetch committee count and details
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        $totalCommittees = count($committeesGrouped);
+
+        $this->render('coordinator/presentation_sheet_config', [
+            'department' => $dept,
+            'shift' => $shift,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'committeesGrouped' => $committeesGrouped,
+            'totalCommittees' => $totalCommittees
+        ]);
+    }
+
+    public function printPresentationSheets() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+        $coordName = $this->getCoordinatorName($db, $userId);
+
+        $stage = trim($_GET['stage'] ?? 'Proposal Defence Presentation');
+        if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
+            $stage = 'Proposal Defence Presentation';
+        }
+
+        $selectedCommittee = trim($_GET['committee'] ?? 'all');
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : 0;
+        $view = trim($_GET['view'] ?? 'minimized');
+        $dated = trim($_GET['dated'] ?? date('d-m-Y'));
+
+        // If no batch_id given, find the active batch
+        if ($batchId <= 0) {
+            $stmtAct = $db->prepare("
+                SELECT id, name, shift 
+                FROM academic_batches 
+                WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1 
+                LIMIT 1
+            ");
+            $stmtAct->execute([$dept, $shift]);
+            $actB = $stmtAct->fetch();
+            if ($actB) {
+                $batchId = (int)$actB['id'];
+                $batchName = $actB['name'];
+            } else {
+                $batchName = 'Batch ' . date('Y');
+            }
+        } else {
+            $stmtB = $db->prepare("SELECT name, shift FROM academic_batches WHERE id = ?");
+            $stmtB->execute([$batchId]);
+            $bRow = $stmtB->fetch();
+            $batchName = $bRow ? $bRow['name'] : 'Batch';
+        }
+
+        // Fetch all batches for toolbar filter
+        $stmtBatches = $db->prepare("
+            SELECT id, name, shift, is_active 
+            FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All')
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $shift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Fetch committee members grouped
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        // Fetch groups
+        $shiftSql = ($shift !== 'All') ? " AND (s.shift = ? OR s.shift IS NULL)" : "";
+        $params = [$dept, 'Approved'];
+        if ($shift !== 'All') {
+            $params[] = $shift;
+        }
+
+        $batchSql = "";
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.committee_number, g.created_by,
+                   p.title as project_title, sup.name as supervisor_name,
+                   s.shift as student_shift, s.department as student_department
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? AND p.status = ? $shiftSql $batchSql
+            ORDER BY g.committee_number ASC, g.group_code ASC, g.id ASC
+        ";
+        $stmtGroups = $db->prepare($query);
+        $stmtGroups->execute($params);
+        $groups = $stmtGroups->fetchAll();
+
+        // Fetch members for these groups
+        $groupIds = array_map(fn($g) => (int)$g['group_id'], $groups);
+        $membersByGroup = [];
+
+        if (!empty($groupIds)) {
+            $inIds = implode(',', $groupIds);
+            $stmtM = $db->query("
+                SELECT gm.group_id, s.user_id, s.student_id as roll_no, s.name as student_name
+                FROM group_members gm
+                JOIN students s ON gm.student_id = s.user_id
+                WHERE gm.group_id IN ($inIds)
+                ORDER BY s.student_id ASC
+            ");
+            $memberRows = $stmtM->fetchAll();
+            foreach ($memberRows as $mr) {
+                $gid = (int)$mr['group_id'];
+                if (!isset($membersByGroup[$gid])) {
+                    $membersByGroup[$gid] = [];
+                }
+                $membersByGroup[$gid][] = [
+                    'roll_no' => $mr['roll_no'],
+                    'student_name' => $mr['student_name']
+                ];
+            }
+        }
+
+        // Previous comments for FYP Progress Presentation
+        $commentsByGroup = [];
+        if ($stage === 'FYP Progress Presentation' && !empty($groupIds)) {
+            $inIds = implode(',', $groupIds);
+            $stmtComments = $db->query("
+                SELECT e.group_id, e.remarks 
+                FROM evaluations e 
+                WHERE e.group_id IN ($inIds) AND e.stage = 'Proposal Defence Presentation' AND e.remarks IS NOT NULL AND e.remarks != ''
+            ");
+            $commentRows = $stmtComments->fetchAll();
+            foreach ($commentRows as $cr) {
+                $gid = (int)$cr['group_id'];
+                if (!isset($commentsByGroup[$gid])) {
+                    $commentsByGroup[$gid] = [];
+                }
+                $commentsByGroup[$gid][] = $cr['remarks'];
+            }
+        }
+
+        // Structure groups by committee
+        $groupsByCommittee = [];
+        foreach ($groups as $grp) {
+            $cNum = !empty($grp['committee_number']) ? (int)$grp['committee_number'] : 1;
+            $gid = (int)$grp['group_id'];
+            $members = $membersByGroup[$gid] ?? [];
+            if (empty($members)) {
+                $stmtL = $db->prepare("SELECT student_id as roll_no, name as student_name FROM students WHERE user_id = ?");
+                $stmtL->execute([$grp['created_by']]);
+                if ($leader = $stmtL->fetch()) {
+                    $members = [[
+                        'roll_no' => $leader['roll_no'],
+                        'student_name' => $leader['student_name']
+                    ]];
+                }
+            }
+
+            $grpMembersData = [];
+            $prevComments = isset($commentsByGroup[$gid]) ? implode(' ', $commentsByGroup[$gid]) : '';
+
+            foreach ($members as $m) {
+                $grpMembersData[] = [
+                    'group_id' => $gid,
+                    'group_code' => $grp['group_code'],
+                    'project_title' => $grp['project_title'],
+                    'supervisor_name' => $grp['supervisor_name'],
+                    'roll_no' => $m['roll_no'],
+                    'student_name' => $m['student_name'],
+                    'previous_comments' => $prevComments
+                ];
+            }
+
+            if (!isset($groupsByCommittee[$cNum])) {
+                $groupsByCommittee[$cNum] = [];
+            }
+            $groupsByCommittee[$cNum][$gid] = $grpMembersData;
+        }
+
+        // If specific committee is selected, filter
+        if ($selectedCommittee !== 'all') {
+            $targetCNum = (int)$selectedCommittee;
+            $filtered = [];
+            if (isset($groupsByCommittee[$targetCNum])) {
+                $filtered[$targetCNum] = $groupsByCommittee[$targetCNum];
+            } else {
+                $filtered[$targetCNum] = [];
+            }
+            $groupsByCommittee = $filtered;
+        } else {
+            foreach (array_keys($committeesGrouped) as $cNum) {
+                if (!isset($groupsByCommittee[$cNum])) {
+                    $groupsByCommittee[$cNum] = [];
+                }
+            }
+            ksort($groupsByCommittee);
+        }
+
+        $this->render('coordinator/presentation_sheet_print', [
+            'department' => $dept,
+            'shift' => $shift,
+            'coordinatorName' => $coordName,
+            'stage' => $stage,
+            'selectedCommittee' => $selectedCommittee,
+            'batchId' => $batchId,
+            'batchName' => $batchName,
+            'batches' => $batches,
+            'view' => $view,
+            'dated' => $dated,
+            'committeesGrouped' => $committeesGrouped,
+            'groupsByCommittee' => $groupsByCommittee
+        ]);
+    }
 }
 
 
