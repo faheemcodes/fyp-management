@@ -9,6 +9,131 @@ $department = $department ?? 'Software Engineering';
 $coordinatorShift = $coordinatorShift ?? 'Morning';
 ?>
 
+<style>
+/* ── Cumulative Table Readability, Spacing & S.No Boldness ── */
+#cumulativeTable {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+#cumulativeTable th {
+    padding: 13px 10px !important;
+    vertical-align: middle;
+    font-size: 0.73rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary, #64748b) !important;
+    background: var(--form-bg, #f8fafc) !important;
+    border-bottom: 1.5px solid var(--border-color, #e2e8f0) !important;
+    white-space: nowrap;
+}
+#cumulativeTable td {
+    padding: 13px 10px !important;
+    vertical-align: middle;
+    font-size: 0.86rem !important;
+    border-bottom: 1px solid var(--border-color, #f1f5f9) !important;
+}
+#cumulativeTable tbody tr {
+    transition: background-color 0.15s ease;
+}
+#cumulativeTable tbody tr:hover td {
+    background-color: rgba(16, 185, 129, 0.035) !important;
+}
+
+/* S.No column: reduced boldness, light and clear */
+.col-serial-num {
+    width: 48px;
+    text-align: center;
+    font-weight: 400 !important;
+    color: var(--text-secondary, #94a3b8) !important;
+    font-size: 0.8rem !important;
+}
+th.col-serial-num {
+    font-weight: 600 !important;
+    color: var(--text-secondary, #64748b) !important;
+}
+
+/* Student Name column: generous dedicated space */
+.col-student-name {
+    min-width: 210px;
+    width: 230px;
+}
+.student-name-text {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-primary, #0f172a);
+    line-height: 1.35;
+}
+
+/* Roll Number */
+.col-roll-no {
+    min-width: 110px;
+    width: 115px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-primary, #1e293b);
+    white-space: nowrap;
+}
+
+/* Group & Project */
+.col-group-project {
+    min-width: 200px;
+    max-width: 250px;
+}
+.project-title-sub {
+    font-size: 0.77rem;
+    color: var(--text-secondary, #64748b);
+    line-height: 1.35;
+    margin-top: 2px;
+}
+
+/* Supervisor */
+.col-supervisor {
+    min-width: 130px;
+    max-width: 160px;
+    font-size: 0.82rem;
+    color: var(--text-secondary, #475569);
+}
+
+/* Numerical Marks Columns */
+.col-mark {
+    width: 68px;
+    text-align: center;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.88rem;
+    color: var(--text-primary, #1e293b);
+}
+.col-total-mark {
+    width: 82px;
+    text-align: center;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.94rem;
+    font-weight: 800;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.04);
+}
+.col-pct {
+    width: 64px;
+    text-align: center;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.col-grade {
+    width: 68px;
+    text-align: center;
+}
+.col-status {
+    width: 78px;
+    text-align: center;
+}
+.col-visibility {
+    width: 105px;
+    text-align: center;
+}
+</style>
+
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero mb-4">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
@@ -236,22 +361,22 @@ $coordinatorShift = $coordinatorShift ?? 'Morning';
 
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0 modern-table" id="cumulativeTable" style="font-size: 0.85rem;">
-            <thead style="background: var(--form-bg, #f8fafc); border-bottom: 1px solid var(--border-color, #e2e8f0);">
-                <tr class="text-uppercase fw-bold" style="font-size: 0.74rem; letter-spacing: 0.04em; color: var(--text-secondary, #64748b);">
-                    <th class="ps-4 text-center" style="width: 45px;">#</th>
-                    <th>Roll No</th>
-                    <th>Student Name</th>
-                    <th>Group / Project</th>
-                    <th>Supervisor</th>
-                    <th class="text-center" style="width: 80px;" title="Proposal Defence (Max 40)">Prop.<br><small class="text-muted">(40)</small></th>
-                    <th class="text-center" style="width: 80px;" title="FYP Progress Presentation (Max 40)">Prog.<br><small class="text-muted">(40)</small></th>
-                    <th class="text-center" style="width: 80px;" title="Supervisor Evaluation (Max 45)">Sup.<br><small class="text-muted">(45)</small></th>
-                    <th class="text-center" style="width: 80px;" title="Final Presentation (Max 75)">Final<br><small class="text-muted">(75)</small></th>
-                    <th class="text-center fw-bolder text-primary" style="width: 85px;" title="Total Marks (Max 200)">Total<br><small>(200)</small></th>
-                    <th class="text-center" style="width: 65px;">%</th>
-                    <th class="text-center" style="width: 65px;">Grade</th>
-                    <th class="text-center" style="width: 80px;">Status</th>
-                    <th class="text-center pe-4" style="width: 120px;">Visibility</th>
+            <thead style="background: var(--form-bg, #f8fafc); border-bottom: 1.5px solid var(--border-color, #e2e8f0);">
+                <tr class="text-uppercase" style="font-size: 0.73rem; letter-spacing: 0.04em; color: var(--text-secondary, #64748b);">
+                    <th class="ps-3 text-center col-serial-num">#</th>
+                    <th class="col-roll-no">Roll No</th>
+                    <th class="col-student-name">Student Name</th>
+                    <th class="col-group-project">Group / Project</th>
+                    <th class="col-supervisor">Supervisor</th>
+                    <th class="col-mark" title="Proposal Defence (Max 40)">Prop.<br><small class="text-muted fw-normal">(40)</small></th>
+                    <th class="col-mark" title="FYP Progress Presentation (Max 40)">Prog.<br><small class="text-muted fw-normal">(40)</small></th>
+                    <th class="col-mark" title="Supervisor Evaluation (Max 45)">Sup.<br><small class="text-muted fw-normal">(45)</small></th>
+                    <th class="col-mark" title="Final Presentation (Max 75)">Final<br><small class="text-muted fw-normal">(75)</small></th>
+                    <th class="col-total-mark" title="Total Marks (Max 200)">Total<br><small class="fw-normal">(200)</small></th>
+                    <th class="col-pct">%</th>
+                    <th class="col-grade">Grade</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-visibility pe-3">Visibility</th>
                 </tr>
             </thead>
             <tbody>
@@ -313,41 +438,43 @@ $coordinatorShift = $coordinatorShift ?? 'Morning';
                             data-grade="<?php echo htmlspecialchars($grade, ENT_QUOTES, 'UTF-8'); ?>"
                             data-status="<?php echo htmlspecialchars($passFail, ENT_QUOTES, 'UTF-8'); ?>">
                             
-                            <td class="ps-4 text-center text-muted fw-semibold" style="font-size: 0.78rem;"><?php echo $serial++; ?></td>
-                            <td class="fw-bold" style="color: var(--text-primary); font-family: monospace; font-size: 0.88rem;">
+                            <td class="ps-3 col-serial-num"><?php echo $serial++; ?></td>
+                            <td class="col-roll-no">
                                 <?php echo htmlspecialchars($s['roll_no'] ?? 'N/A', ENT_QUOTES, 'UTF-8'); ?>
                             </td>
-                            <td>
-                                <div class="fw-semibold" style="color: var(--text-primary);"><?php echo htmlspecialchars($s['student_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
-                                <small class="text-muted" style="font-size: 0.74rem;"><?php echo htmlspecialchars($s['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?> Shift</small>
+                            <td class="col-student-name">
+                                <div class="student-name-text"><?php echo htmlspecialchars($s['student_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
+                                <small class="text-muted d-block mt-0.5" style="font-size: 0.74rem;">
+                                    <i class="bi bi-clock me-1 text-secondary opacity-75"></i><?php echo htmlspecialchars($s['shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?> Shift
+                                </small>
                             </td>
-                            <td>
+                            <td class="col-group-project">
                                 <span class="badge bg-light text-dark border px-2 py-1 mb-1 font-monospace" style="font-size: 0.74rem;">
                                     <?php echo htmlspecialchars($s['group_code'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <div class="text-truncate text-secondary" style="max-width: 220px; font-size: 0.78rem;" title="<?php echo htmlspecialchars($s['project_title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                <div class="text-truncate project-title-sub" title="<?php echo htmlspecialchars($s['project_title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($s['project_title'] ?? 'Untitled', ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                             </td>
-                            <td>
-                                <span class="text-truncate d-block" style="max-width: 140px; font-size: 0.8rem;" title="<?php echo htmlspecialchars($s['supervisor_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                            <td class="col-supervisor">
+                                <span class="text-truncate d-block" title="<?php echo htmlspecialchars($s['supervisor_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars($s['supervisor_name'] ?? 'Unassigned', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>
-                            <td class="text-center font-monospace"><?php echo $prop !== null ? (int)round($prop) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $prog !== null ? (int)round($prog) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $sup !== null ? (int)round($sup) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center font-monospace"><?php echo $fin !== null ? (int)round($fin) : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center fw-bold font-monospace" style="color: #10b981; font-size: 0.95rem;">
-                                <?php echo $tot !== null ? (int)round($tot) : '<span class="text-muted">-</span>'; ?>
+                            <td class="col-mark"><?php echo $prop !== null ? (int)round($prop) : '<span class="text-muted opacity-50">&mdash;</span>'; ?></td>
+                            <td class="col-mark"><?php echo $prog !== null ? (int)round($prog) : '<span class="text-muted opacity-50">&mdash;</span>'; ?></td>
+                            <td class="col-mark"><?php echo $sup !== null ? (int)round($sup) : '<span class="text-muted opacity-50">&mdash;</span>'; ?></td>
+                            <td class="col-mark"><?php echo $fin !== null ? (int)round($fin) : '<span class="text-muted opacity-50">&mdash;</span>'; ?></td>
+                            <td class="col-total-mark">
+                                <?php echo $tot !== null ? (int)round($tot) : '<span class="text-muted opacity-50">&mdash;</span>'; ?>
                             </td>
-                            <td class="text-center font-monospace fw-semibold"><?php echo $pct !== null ? (int)round($pct) . '%' : '<span class="text-muted">-</span>'; ?></td>
-                            <td class="text-center">
+                            <td class="col-pct"><?php echo $pct !== null ? (int)round($pct) . '%' : '<span class="text-muted opacity-50">&mdash;</span>'; ?></td>
+                            <td class="col-grade">
                                 <span class="badge rounded-pill px-2.5 py-1 <?php echo $gradeBadgeClass; ?>" style="font-size: 0.75rem;">
                                     <?php echo htmlspecialchars($grade, ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </td>
-                            <td class="text-center">
+                            <td class="col-status">
                                 <?php if ($passFail === 'Pass'): ?>
                                     <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.74rem;">
                                         Pass
@@ -360,7 +487,7 @@ $coordinatorShift = $coordinatorShift ?? 'Morning';
                                     <span class="text-muted" style="font-size: 0.78rem;">Pending</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-center pe-4">
+                            <td class="col-visibility pe-3">
                                 <?php if ($isPublished): ?>
                                     <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="Marks visible to student">
                                         <i class="bi bi-eye-fill me-1"></i> Visible
