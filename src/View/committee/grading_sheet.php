@@ -174,6 +174,14 @@ html.dark-theme .eval-input {
     box-shadow: 0 0 0 2px rgba(16,185,129,0.15) !important;
     outline: none;
 }
+.eval-input-merged {
+    width: 60px !important;
+    min-width: 60px !important;
+    padding: 5px 8px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+}
 .eval-remarks-input {
     width: 100%;
     min-width: 150px;
@@ -353,7 +361,9 @@ html.dark-theme .gs-group-badge { background: rgba(16,185,129,0.15); color: #34d
 }
 </style>
 <?php 
-$title = "Online Grading Sheet - " . htmlspecialchars($stage);
+$viewMode = $view ?? $_GET['view'] ?? 'detailed';
+$isMinimized = ($stage === 'Final Presentation' && $viewMode === 'minimized');
+$title = ($isMinimized ? "Online Grading Sheet (Minimize Version) - " : "Online Grading Sheet - ") . htmlspecialchars($stage);
 $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
 
 // Determine hero icon and color scheme based on stage
@@ -371,7 +381,7 @@ if ($stage === 'Proposal Defence Presentation') {
     $heroSubtitle = 'Evaluate project progress and development milestones.';
 } elseif ($stage === 'Final Presentation') {
     $heroIcon = 'bi-trophy';
-    $heroSubtitle = 'Complete final evaluation including presentation, thesis, and demo.';
+    $heroSubtitle = $isMinimized ? 'Quick evaluation mode with merged Presentation and Thesis scores.' : 'Complete final evaluation including presentation, thesis, and demo.';
 }
 
 $groupCount = count($grouped ?? []);
@@ -389,6 +399,9 @@ $groupCount = count($grouped ?? []);
             <div>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
                     <?php echo htmlspecialchars($stage); ?> Grading
+                    <?php if ($isMinimized): ?>
+                        <span class="badge rounded-pill bg-white text-dark ms-2 fw-semibold" style="font-size: 0.72rem;vertical-align: middle;letter-spacing: normal">Minimize Version</span>
+                    <?php endif; ?>
                 </h4>
                 <p class="mb-1 mt-1" style="font-size: 0.8rem;color: rgba(255,255,255,0.7)">
                     <?php echo htmlspecialchars((string)($heroSubtitle), ENT_QUOTES, 'UTF-8'); ?>
@@ -409,7 +422,7 @@ $groupCount = count($grouped ?? []);
             </div>
 
             <!-- Print Button -->
-            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;white-space: nowrap">
+            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?><?php echo $isMinimized ? '&view=minimized' : ''; ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;white-space: nowrap">
                 <i class="bi bi-printer me-1"></i> Print
             </a>
         </div>
@@ -431,6 +444,7 @@ $groupCount = count($grouped ?? []);
 
 <form action="<?php echo $bp; ?>/committee/grading-sheet/save" method="POST">
     <input type="hidden" name="stage" value="<?php echo htmlspecialchars($stage); ?>">
+    <input type="hidden" name="view" value="<?php echo htmlspecialchars($isMinimized ? 'minimized' : 'detailed'); ?>">
     
     <div class="gs-section">
         <div class="gs-section-header">
@@ -439,11 +453,29 @@ $groupCount = count($grouped ?? []);
                     <i class="bi <?php echo htmlspecialchars((string)($heroIcon), ENT_QUOTES, 'UTF-8'); ?>"></i>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;color: var(--text-primary)">Grading Sheet</h6>
-                    <small class="text-muted" style="font-size: 0.78rem">Enter marks for each student below</small>
+                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;color: var(--text-primary)">
+                        Grading Sheet
+                        <?php if ($isMinimized): ?>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-2" style="font-size: 0.72rem;font-weight: 600">Minimize Version</span>
+                        <?php endif; ?>
+                    </h6>
+                    <small class="text-muted" style="font-size: 0.78rem">
+                        <?php echo $isMinimized ? 'Merged Presentation (25) and Thesis (25) for quick grading' : 'Enter marks for each student below'; ?>
+                    </small>
                 </div>
             </div>
-            <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <?php if ($stage === 'Final Presentation'): ?>
+                    <?php if ($isMinimized): ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final+Presentation" class="btn btn-outline-primary rounded-pill px-3 py-1 fw-semibold shadow-sm" style="font-size: 0.8rem">
+                            <i class="bi bi-arrows-angle-expand me-1"></i> Detailed Version
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final+Presentation&view=minimized" class="btn btn-primary rounded-pill px-3 py-1 fw-semibold shadow-sm text-white" style="font-size: 0.8rem">
+                            <i class="bi bi-arrows-angle-contract me-1"></i> Minimize Version
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-light rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.8rem">
                     <i class="bi bi-arrow-left me-1"></i> Back to Evaluations
                 </a>
@@ -527,6 +559,132 @@ $groupCount = count($grouped ?? []);
                         <?php endif; ?>
                     </tbody>
                     
+                <?php elseif ($stage === 'Final Presentation' && $isMinimized): ?>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 45px">Sr.No</th>
+                            <th rowspan="2" style="width: 100px">Project ID</th>
+                            <th rowspan="2" style="width: 220px">Title of Project</th>
+                            <th rowspan="2" style="width: 150px">Primary Supervisor</th>
+                            <th colspan="2">Group Members</th>
+                            <th rowspan="2" style="width: 120px">Presentation<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 120px">Thesis<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 120px">Project Demo<br><span style="font-size: 0.75rem;font-weight: 500;text-transform: none">(25 marks)</span></th>
+                            <th rowspan="2" style="width: 200px">Your Group Remarks</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 100px">Roll No</th>
+                            <th style="width: 160px">Full Name</th>
+                        </tr>
+                    </thead>
+                    <?php 
+                    $srNo = 1;
+                    foreach ($grouped as $groupId => $members): 
+                        $numMembers = count($members);
+                        $firstMember = $members[0];
+
+                        $m0 = $firstMember['marks'] ?? [];
+                        $presVal0 = '';
+                        if (isset($m0['presentation']) && $m0['presentation'] !== '') {
+                            $presVal0 = $m0['presentation'];
+                        } elseif (isset($m0['pres_contents']) || isset($m0['pres_time']) || isset($m0['pres_confidence']) || isset($m0['pres_qa']) || isset($m0['pres_language'])) {
+                            $presSum = (float)($m0['pres_contents']??0) + (float)($m0['pres_time']??0) + (float)($m0['pres_confidence']??0) + (float)($m0['pres_qa']??0) + (float)($m0['pres_language']??0);
+                            $presVal0 = ($presSum > 0) ? $presSum : '';
+                        }
+
+                        $thesisVal0 = '';
+                        if (isset($m0['thesis']) && $m0['thesis'] !== '') {
+                            $thesisVal0 = $m0['thesis'];
+                        } elseif (isset($m0['thesis_contents']) || isset($m0['thesis_formatting']) || isset($m0['thesis_referencing']) || isset($m0['thesis_fig']) || isset($m0['thesis_completeness'])) {
+                            $thesisSum = (float)($m0['thesis_contents']??0) + (float)($m0['thesis_formatting']??0) + (float)($m0['thesis_referencing']??0) + (float)($m0['thesis_fig']??0) + (float)($m0['thesis_completeness']??0);
+                            $thesisVal0 = ($thesisSum > 0) ? $thesisSum : '';
+                        }
+
+                        $demoVal0 = $m0['demo_total'] ?? $m0['demo'] ?? '';
+                    ?>
+                    <tbody class="eval-group-tbody">
+                            <tr>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell fw-bold"><?php echo $srNo++; ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="merged-cell">
+                                    <span class="gs-group-badge"><?php echo htmlspecialchars($firstMember['group_code']); ?></span>
+                                </td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+                                
+                                <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+                                <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+                                
+                                <!-- Merged Presentation Field (25 marks) -->
+                                <td class="text-center">
+                                    <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][presentation]" value="<?php echo htmlspecialchars((string)$presVal0, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                </td>
+                                
+                                <!-- Merged Thesis Field (25 marks) -->
+                                <td class="text-center">
+                                    <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis]" value="<?php echo htmlspecialchars((string)$thesisVal0, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                </td>
+                                
+                                <!-- Project Demo Field (25 marks) -->
+                                <td class="text-center">
+                                    <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($firstMember['student_id']), ENT_QUOTES, 'UTF-8'); ?>][demo_total]" value="<?php echo htmlspecialchars((string)$demoVal0, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                </td>
+                                
+                                <!-- Group Remarks -->
+                                <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <textarea class="eval-remarks-input" rows="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][remarks]" placeholder="Remarks..."><?php echo htmlspecialchars($firstMember['group_remarks']); ?></textarea>
+                                </td>
+                            </tr>
+                            <?php for ($i = 1; $i < $numMembers; $i++): 
+                                $member = $members[$i];
+                                $mi = $member['marks'] ?? [];
+                                $presVali = '';
+                                if (isset($mi['presentation']) && $mi['presentation'] !== '') {
+                                    $presVali = $mi['presentation'];
+                                } elseif (isset($mi['pres_contents']) || isset($mi['pres_time']) || isset($mi['pres_confidence']) || isset($mi['pres_qa']) || isset($mi['pres_language'])) {
+                                    $presSum = (float)($mi['pres_contents']??0) + (float)($mi['pres_time']??0) + (float)($mi['pres_confidence']??0) + (float)($mi['pres_qa']??0) + (float)($mi['pres_language']??0);
+                                    $presVali = ($presSum > 0) ? $presSum : '';
+                                }
+
+                                $thesisVali = '';
+                                if (isset($mi['thesis']) && $mi['thesis'] !== '') {
+                                    $thesisVali = $mi['thesis'];
+                                } elseif (isset($mi['thesis_contents']) || isset($mi['thesis_formatting']) || isset($mi['thesis_referencing']) || isset($mi['thesis_fig']) || isset($mi['thesis_completeness'])) {
+                                    $thesisSum = (float)($mi['thesis_contents']??0) + (float)($mi['thesis_formatting']??0) + (float)($mi['thesis_referencing']??0) + (float)($mi['thesis_fig']??0) + (float)($mi['thesis_completeness']??0);
+                                    $thesisVali = ($thesisSum > 0) ? $thesisSum : '';
+                                }
+
+                                $demoVali = $mi['demo_total'] ?? $mi['demo'] ?? '';
+                            ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+                                    <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+                                    
+                                    <td class="text-center">
+                                        <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][presentation]" value="<?php echo htmlspecialchars((string)$presVali, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][thesis]" value="<?php echo htmlspecialchars((string)$thesisVali, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <input type="number" step="0.5" min="0" max="25" class="eval-input eval-input-merged" name="evaluations[<?php echo htmlspecialchars((string)($groupId), ENT_QUOTES, 'UTF-8'); ?>][marks][<?php echo htmlspecialchars((string)($member['student_id']), ENT_QUOTES, 'UTF-8'); ?>][demo_total]" value="<?php echo htmlspecialchars((string)$demoVali, ENT_QUOTES, 'UTF-8'); ?>" placeholder="0-25">
+                                    </td>
+                                </tr>
+                            <?php endfor; ?>
+                    </tbody>
+                    <?php endforeach; ?>
+                    <tbody>
+                        <?php if (empty($grouped)): ?>
+                            <tr>
+                                <td colspan="10" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox" style="font-size: 2rem;display: block;margin-bottom: 8px;opacity: 0.4"></i>
+                                    No approved projects assigned to you for evaluation.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+
                 <?php elseif ($stage === 'Final Presentation'): ?>
                     <thead>
                         <tr>
@@ -777,5 +935,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Auto-clamp evaluation inputs to min/max attributes
+    document.querySelectorAll('.eval-input').forEach(input => {
+        input.addEventListener('input', function() {
+            const max = parseFloat(this.getAttribute('max'));
+            const min = parseFloat(this.getAttribute('min') || 0);
+            if (this.value !== '') {
+                const val = parseFloat(this.value);
+                if (!isNaN(max) && val > max) {
+                    this.value = max;
+                } else if (!isNaN(min) && val < min) {
+                    this.value = min;
+                }
+            }
+        });
+    });
 });
 </script>

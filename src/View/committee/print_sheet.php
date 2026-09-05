@@ -148,6 +148,10 @@
 </head>
 <body>
 
+<?php 
+$isMinimized = ($stage === 'Final Presentation' && isset($_GET['view']) && $_GET['view'] === 'minimized');
+?>
+
 <div class="no-print">
     <button class="print-btn" onclick="window.print()">🖨️ Print Sheet</button>
     <button class="back-btn" onclick="window.history.back()">← Go Back</button>
@@ -156,7 +160,7 @@
 <div class="report-header">
     <div class="dept">Department of <?php echo htmlspecialchars($committee['department'] ?? 'Software Engineering'); ?> - Faculty of Engineering and Technology</div>
     <div class="batch">BS (Software Engineering) - Batch 2k<?php echo date('y') - 4; ?> - Morning</div>
-    <div class="stage-title"><?php echo htmlspecialchars($stage); ?></div>
+    <div class="stage-title"><?php echo htmlspecialchars($stage . ($isMinimized ? ' (Minimize Version)' : '')); ?></div>
 </div>
 
 <div class="evaluator-row">
@@ -215,6 +219,52 @@
     <?php endforeach; ?>
     <?php if (empty($grouped)): ?>
         <tr><td colspan="<?php echo $stage === 'FYP Progress Presentation' ? 9 : 8; ?>" class="center" style="padding: 20px;color: #999">No approved projects found.</td></tr>
+    <?php endif; ?>
+    </tbody>
+
+<?php elseif ($stage === 'Final Presentation' && $isMinimized): ?>
+    <thead>
+        <tr>
+            <th rowspan="2" style="width: 25px">S.<br>No</th>
+            <th rowspan="2" style="width: 60px">Project ID</th>
+            <th rowspan="2">Title of Project</th>
+            <th rowspan="2" style="width: 110px">Primary Supervisor</th>
+            <th colspan="2">Group Members</th>
+            <th rowspan="2" style="width: 70px">Presentation<br>(25 marks)</th>
+            <th rowspan="2" style="width: 70px">Thesis<br>(25 marks)</th>
+            <th rowspan="2" style="width: 70px">Project Demo<br>(25 marks)</th>
+        </tr>
+        <tr>
+            <th style="width: 85px">Roll No</th>
+            <th style="min-width: 140px;width: auto">Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php 
+    $srNo = 1;
+    foreach ($grouped as $groupId => $members): 
+        $numMembers = count($members);
+        $firstMember = $members[0];
+    ?>
+        <tr>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center"><?php echo $srNo++; ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>" class="center" style="font-size: 7.5pt"><?php echo htmlspecialchars($firstMember['group_code']); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['project_title'] ?: 'Untitled'); ?></td>
+            <td rowspan="<?php echo htmlspecialchars((string)($numMembers), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($firstMember['supervisor_name'] ?: 'Not Assigned'); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($firstMember['student_name']); ?></td>
+            <?php for($k=0; $k<3; $k++): ?><td class="mark"></td><?php endfor; ?>
+        </tr>
+        <?php for ($i = 1; $i < $numMembers; $i++): $member = $members[$i]; ?>
+        <tr>
+            <td><?php echo htmlspecialchars($member['roll_no']); ?></td>
+            <td><?php echo htmlspecialchars($member['student_name']); ?></td>
+            <?php for($k=0; $k<3; $k++): ?><td class="mark"></td><?php endfor; ?>
+        </tr>
+        <?php endfor; ?>
+    <?php endforeach; ?>
+    <?php if (empty($grouped)): ?>
+        <tr><td colspan="9" class="center" style="padding: 20px;color: #999">No approved projects found.</td></tr>
     <?php endif; ?>
     </tbody>
 

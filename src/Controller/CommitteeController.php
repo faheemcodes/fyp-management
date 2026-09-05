@@ -209,6 +209,7 @@ class CommitteeController extends BaseController {
     public function gradingSheet() {
         $evaluatorId = $_SESSION['user_id'];
         $stage = $_GET['stage'] ?? '';
+        $view = $_GET['view'] ?? 'detailed';
         
         if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
             die("Invalid stage.");
@@ -286,7 +287,8 @@ class CommitteeController extends BaseController {
 
         $this->render('committee/grading_sheet', [
             'grouped' => $grouped,
-            'stage' => $stage
+            'stage' => $stage,
+            'view' => $view
         ]);
     }
 
@@ -341,26 +343,58 @@ class CommitteeController extends BaseController {
                             }
                             if (count($marksArr) > 0) $totalScore /= count($marksArr);
                         } else if ($stage === 'Final Presentation') {
+                            $isMinimized = (isset($_POST['view']) && $_POST['view'] === 'minimized');
+
                             foreach ($marksArr as $studentId => $sm) {
-                                // Extract the 15 fields into the 3 main categories
-                                $pres_total = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0));
-                                $thesis_total = ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0));
-                                $demo_total = (float)($sm['demo_total']??0); // Demo is just one 25 mark block
+                                $hasPresMerged = isset($sm['presentation']) && $sm['presentation'] !== '';
+                                $hasThesisMerged = isset($sm['thesis']) && $sm['thesis'] !== '';
                                 
+                                $presSubSum = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0));
+                                $thesisSubSum = ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0));
+
+                                if ($hasPresMerged && (!$presSubSum || $isMinimized)) {
+                                    $pres_total = (float)$sm['presentation'];
+                                    $pres_share = round($pres_total / 5.0, 2);
+                                    $pres_contents = $pres_time = $pres_confidence = $pres_qa = $pres_language = (string)$pres_share;
+                                } else {
+                                    $pres_total = $presSubSum;
+                                    $pres_contents = $sm['pres_contents'] ?? '';
+                                    $pres_time = $sm['pres_time'] ?? '';
+                                    $pres_confidence = $sm['pres_confidence'] ?? '';
+                                    $pres_qa = $sm['pres_qa'] ?? '';
+                                    $pres_language = $sm['pres_language'] ?? '';
+                                }
+
+                                if ($hasThesisMerged && (!$thesisSubSum || $isMinimized)) {
+                                    $thesis_total = (float)$sm['thesis'];
+                                    $thesis_share = round($thesis_total / 5.0, 2);
+                                    $thesis_contents = $thesis_formatting = $thesis_referencing = $thesis_fig = $thesis_completeness = (string)$thesis_share;
+                                } else {
+                                    $thesis_total = $thesisSubSum;
+                                    $thesis_contents = $sm['thesis_contents'] ?? '';
+                                    $thesis_formatting = $sm['thesis_formatting'] ?? '';
+                                    $thesis_referencing = $sm['thesis_referencing'] ?? '';
+                                    $thesis_fig = $sm['thesis_fig'] ?? '';
+                                    $thesis_completeness = $sm['thesis_completeness'] ?? '';
+                                }
+
+                                $demo_val = isset($sm['demo_total']) && $sm['demo_total'] !== '' ? $sm['demo_total'] : ($sm['demo'] ?? '');
+                                $demo_total = (float)$demo_val;
+
                                 $details[$studentId] = [
-                                    'pres_contents' => $sm['pres_contents']??'',
-                                    'pres_time' => $sm['pres_time']??'',
-                                    'pres_confidence' => $sm['pres_confidence']??'',
-                                    'pres_qa' => $sm['pres_qa']??'',
-                                    'pres_language' => $sm['pres_language']??'',
-                                    'thesis_contents' => $sm['thesis_contents']??'',
-                                    'thesis_formatting' => $sm['thesis_formatting']??'',
-                                    'thesis_referencing' => $sm['thesis_referencing']??'',
-                                    'thesis_fig' => $sm['thesis_fig']??'',
-                                    'thesis_completeness' => $sm['thesis_completeness']??'',
-                                    'demo_total' => $sm['demo_total']??'',
+                                    'pres_contents' => $pres_contents,
+                                    'pres_time' => $pres_time,
+                                    'pres_confidence' => $pres_confidence,
+                                    'pres_qa' => $pres_qa,
+                                    'pres_language' => $pres_language,
+                                    'thesis_contents' => $thesis_contents,
+                                    'thesis_formatting' => $thesis_formatting,
+                                    'thesis_referencing' => $thesis_referencing,
+                                    'thesis_fig' => $thesis_fig,
+                                    'thesis_completeness' => $thesis_completeness,
+                                    'demo_total' => (string)$demo_val,
                                     
-                                    // Legacy mapping for existing total sum
+                                    // Merged values for easy access and legacy compatibility
                                     'presentation' => $pres_total,
                                     'thesis' => $thesis_total,
                                     'demo' => $demo_total
@@ -406,13 +440,14 @@ class CommitteeController extends BaseController {
                                     // For new format, we need to specifically sum the correct fields
                                     if ($stage === 'Final Presentation') {
                                         $sm = $mDetails[$sId];
-                                        $evTotal = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0))
-                                                 + ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0))
-                                                 + (float)($sm['demo_total']??0);
-                                        // Legacy fallback
-                                        if (isset($sm['thesis']) && !isset($sm['thesis_contents'])) {
-                                            $evTotal = (float)($sm['thesis']??0) + (float)($sm['demo']??0) + (float)($sm['presentation']??0);
-                                        }
+                                        $presSubSum = ((float)($sm['pres_contents']??0) + (float)($sm['pres_time']??0) + (float)($sm['pres_confidence']??0) + (float)($sm['pres_qa']??0) + (float)($sm['pres_language']??0));
+                                        $thesisSubSum = ((float)($sm['thesis_contents']??0) + (float)($sm['thesis_formatting']??0) + (float)($sm['thesis_referencing']??0) + (float)($sm['thesis_fig']??0) + (float)($sm['thesis_completeness']??0));
+                                        $demoVal = (float)($sm['demo_total'] ?? $sm['demo'] ?? 0);
+
+                                        $presVal = (isset($sm['presentation']) && $sm['presentation'] !== '') ? (float)$sm['presentation'] : $presSubSum;
+                                        $thesisVal = (isset($sm['thesis']) && $sm['thesis'] !== '') ? (float)$sm['thesis'] : $thesisSubSum;
+
+                                        $evTotal = $presVal + $thesisVal + $demoVal;
                                         $studentTotal += $evTotal;
                                     } else {
                                         // Proposal or Progress
@@ -499,7 +534,11 @@ class CommitteeController extends BaseController {
                 }
             }
         }
-        redirect('/committee/grading-sheet?stage=' . urlencode($_POST['stage'] ?? ''));
+        $redirectUrl = '/committee/grading-sheet?stage=' . urlencode($_POST['stage'] ?? '');
+        if (!empty($_POST['view']) && $_POST['view'] === 'minimized') {
+            $redirectUrl .= '&view=minimized';
+        }
+        redirect($redirectUrl);
     }
 
     public function gradeEvaluation() {
