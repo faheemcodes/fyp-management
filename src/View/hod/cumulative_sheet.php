@@ -159,19 +159,10 @@ th.col-serial-num {
             </div>
         </div>
 
-        <!-- Right: Only Total Students Count -->
-        <div class="d-flex align-items-center justify-content-center justify-content-md-end">
-            <div class="d-flex align-items-center gap-3 px-3.5 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.22);">
-                <i class="bi bi-people-fill text-white fs-5"></i>
-                <div class="text-start">
-                    <div class="text-white fw-bold lh-1" style="font-size: 1.25rem; font-family: 'SFMono-Regular', Consolas, monospace;">
-                        <?php echo (int)$totalStudents; ?>
-                    </div>
-                    <small style="color: rgba(255, 255, 255, 0.78); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">
-                        Total Students
-                    </small>
-                </div>
-            </div>
+        <!-- Right: Total Students Count -->
+        <div class="text-white text-md-end text-center mt-2 mt-md-0 flex-shrink-0">
+            <div class="fs-3 fw-bold lh-1" style="letter-spacing: -0.02em; font-family: 'SFMono-Regular', Consolas, monospace;"><?php echo (int)$totalStudents; ?></div>
+            <div class="small opacity-75 mt-1" style="font-size: 0.8rem; font-weight: 500;">Total Students</div>
         </div>
     </div>
 </div>
@@ -182,9 +173,7 @@ th.col-serial-num {
         <div class="row g-2 align-items-center">
             <!-- Batch Filter -->
             <div class="col-12 col-md-3">
-                <label class="form-label small fw-bold text-secondary mb-1" for="batchSelect">
-                    <i class="bi bi-mortarboard me-1"></i> Academic Batch
-                </label>
+                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;" for="batchSelect">Academic Batch</label>
                 <select name="batch_id" id="batchSelect" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
                     <option value="all" <?php echo ($selectedBatchId == 0) ? 'selected' : ''; ?>>All Batches</option>
                     <?php foreach ($batches as $b): ?>
@@ -197,9 +186,7 @@ th.col-serial-num {
 
             <!-- Shift Filter (All Shifts / Morning / Evening) -->
             <div class="col-12 col-md-3">
-                <label class="form-label small fw-bold text-secondary mb-1" for="shiftSelect">
-                    <i class="bi bi-clock me-1"></i> Department Shift
-                </label>
+                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;" for="shiftSelect">Department Shift</label>
                 <select name="shift" id="shiftSelect" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
                     <option value="all" <?php echo ($selectedShift === 'all') ? 'selected' : ''; ?>>All Shifts (Morning &amp; Evening)</option>
                     <option value="Morning" <?php echo ($selectedShift === 'Morning') ? 'selected' : ''; ?>>Morning Shift</option>
@@ -209,9 +196,7 @@ th.col-serial-num {
 
             <!-- Grade / Status Filter (Client-side) -->
             <div class="col-12 col-md-2">
-                <label class="form-label small fw-bold text-secondary mb-1" for="statusFilter">
-                    <i class="bi bi-funnel me-1"></i> Release Status
-                </label>
+                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;" for="statusFilter">Release Status</label>
                 <select id="statusFilter" class="form-select form-select-sm rounded-pill">
                     <option value="all">All Records</option>
                     <option value="released">Released Only</option>
@@ -223,9 +208,7 @@ th.col-serial-num {
 
             <!-- Search Filter (Client-side) -->
             <div class="col-12 col-md-4">
-                <label class="form-label small fw-bold text-secondary mb-1" for="liveSearchInput">
-                    <i class="bi bi-search me-1"></i> Quick Search
-                </label>
+                <label class="form-label text-muted small fw-semibold mb-1" style="font-size: 0.76rem;" for="liveSearchInput">Quick Search</label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text rounded-start-pill bg-light border-end-0">
                         <i class="bi bi-search text-muted"></i>
