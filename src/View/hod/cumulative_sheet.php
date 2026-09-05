@@ -143,9 +143,9 @@ th.col-serial-num {
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
 <div class="page-hero mb-4">
-    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 position-relative z-1">
-        <!-- Left: Icon & Titles -->
-        <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-center text-md-start">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 position-relative z-1">
+        <!-- Left: Icon, Title & Short Description -->
+        <div class="d-flex align-items-center gap-3 text-start">
             <div class="page-hero-icon">
                 <i class="bi bi-file-earmark-ruled-fill"></i>
             </div>
@@ -153,119 +153,23 @@ th.col-serial-num {
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2">
                     Cumulative Evaluation &amp; Marks Sheet
                 </h4>
-                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.15); color: #ffffff; font-size: 0.76rem; font-weight: 600; gap: 7px;">
-                        <i class="bi bi-building" style="font-size: 0.82rem;"></i>
-                        <span><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?></span>
-                    </span>
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600; gap: 7px;">
-                        <i class="bi bi-mortarboard-fill" style="font-size: 0.82rem;"></i>
-                        <span>Batch: <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?></span>
-                    </span>
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600; gap: 7px;">
-                        <i class="bi bi-clock" style="font-size: 0.82rem;"></i>
-                        <span>Shift: <?php echo htmlspecialchars($selectedShift === 'all' ? 'All Shifts' : $selectedShift, ENT_QUOTES, 'UTF-8'); ?></span>
-                    </span>
-                </div>
-                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.78); font-size: 0.84rem">
-                    Comprehensive departmental marks across Proposal Defence (40), Progress (40), Supervision (45), and Final Presentation (75) &bull; Total 200 Marks
+                <p class="mb-0 mt-1" style="color: rgba(255,255,255,0.82); font-size: 0.85rem">
+                    Official departmental evaluation and grading records across all project stages.
                 </p>
             </div>
         </div>
 
-        <!-- Right: Action Buttons -->
-        <div class="d-flex gap-2 flex-wrap justify-content-center justify-content-md-end">
-            <!-- Print Cumulative Sheet -->
-            <a href="<?php echo $basePath; ?>/hod/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>&shift=<?php echo urlencode($selectedShift); ?>" class="btn btn-sm btn-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="color: #047fb0; font-size: 0.85rem;">
-                <i class="bi bi-printer-fill"></i> <span>Print Official Sheet</span>
-            </a>
-
-            <!-- Return to Projects -->
-            <a href="<?php echo $basePath; ?>/hod/projects" class="btn btn-sm btn-outline-light rounded-pill px-3.5 py-2 fw-semibold d-inline-flex align-items-center gap-2" style="border: 1.5px solid rgba(255,255,255,0.35); font-size: 0.85rem;">
-                <i class="bi bi-kanban-fill"></i> <span>Department Projects</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- ═══════════════ Official Marks Release Policy Notice ═══════════════ -->
-<div class="notice-info-box mb-4 shadow-sm">
-    <div class="d-flex align-items-start gap-3">
-        <div class="text-primary fs-4 flex-shrink-0 mt-0.5">
-            <i class="bi bi-shield-check"></i>
-        </div>
-        <div class="flex-grow-1">
-            <h6 class="fw-bold mb-1" style="color: #047fb0; font-size: 0.92rem;">
-                Coordinator Marks Release &amp; Visibility Policy
-            </h6>
-            <p class="mb-0 text-muted" style="font-size: 0.82rem; line-height: 1.5;">
-                In accordance with academic regulations, student evaluation marks and final grades become visible in this HOD overview once they have been officially reviewed and released (published to students) by the Department Coordinator. Unreleased marks remain protected in <strong>Draft Mode</strong> to maintain evaluation integrity until coordinator sign-off.
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- ═══════════════ KPI Summary Cards ═══════════════ -->
-<div class="row g-3 mb-4">
-    <!-- Total Students -->
-    <div class="col-sm-6 col-xl-3">
-        <div class="card premium-stat-card premium-card-blue h-100">
-            <div class="premium-card-accent"></div>
-            <div class="d-flex align-items-center gap-3 position-relative z-1">
-                <div class="premium-card-icon premium-icon-blue">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="premium-card-count"><?php echo (int)$totalStudents; ?></div>
-                    <div class="premium-card-label">Total Students (<?php echo (int)$totalGroups; ?> Groups)</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fully Released Records -->
-    <div class="col-sm-6 col-xl-3">
-        <div class="card premium-stat-card premium-card-green h-100">
-            <div class="premium-card-accent"></div>
-            <div class="d-flex align-items-center gap-3 position-relative z-1">
-                <div class="premium-card-icon premium-icon-green">
-                    <i class="bi bi-eye-fill"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="premium-card-count text-success"><?php echo (int)$fullyReleasedCount; ?></div>
-                    <div class="premium-card-label">Released by Coordinator</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Draft / Pending Release -->
-    <div class="col-sm-6 col-xl-3">
-        <div class="card premium-stat-card premium-card-amber h-100">
-            <div class="premium-card-accent"></div>
-            <div class="d-flex align-items-center gap-3 position-relative z-1">
-                <div class="premium-card-icon premium-icon-amber">
-                    <i class="bi bi-hourglass-split"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="premium-card-count text-warning"><?php echo (int)$draftCount; ?></div>
-                    <div class="premium-card-label">Draft Mode (Pending Release)</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Released Batch Average -->
-    <div class="col-sm-6 col-xl-3">
-        <div class="card premium-stat-card premium-card-purple h-100">
-            <div class="premium-card-accent"></div>
-            <div class="d-flex align-items-center gap-3 position-relative z-1">
-                <div class="premium-card-icon premium-icon-purple">
-                    <i class="bi bi-bar-chart-fill"></i>
-                </div>
-                <div class="flex-grow-1">
-                    <div class="premium-card-count"><?php echo (int)round((float)$avgScore); ?> <small class="fs-6 fw-normal text-muted">/ 200</small></div>
-                    <div class="premium-card-label">Released Average (<?php echo (int)round(((float)$avgScore / 200.0) * 100); ?>%)</div>
+        <!-- Right: Only Total Students Count -->
+        <div class="d-flex align-items-center justify-content-center justify-content-md-end">
+            <div class="d-flex align-items-center gap-3 px-3.5 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.22);">
+                <i class="bi bi-people-fill text-white fs-5"></i>
+                <div class="text-start">
+                    <div class="text-white fw-bold lh-1" style="font-size: 1.25rem; font-family: 'SFMono-Regular', Consolas, monospace;">
+                        <?php echo (int)$totalStudents; ?>
+                    </div>
+                    <small style="color: rgba(255, 255, 255, 0.78); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">
+                        Total Students
+                    </small>
                 </div>
             </div>
         </div>
@@ -348,7 +252,10 @@ th.col-serial-num {
             </div>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" id="resetFiltersBtn">
+            <a href="<?php echo $basePath; ?>/hod/cumulative-sheet/print?batch_id=<?php echo (int)$selectedBatchId; ?>&shift=<?php echo urlencode($selectedShift); ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 fw-semibold d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem;">
+                <i class="bi bi-printer-fill"></i> <span>Print Sheet</span>
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1.5" id="resetFiltersBtn" style="font-size: 0.8rem;">
                 <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
             </button>
         </div>
