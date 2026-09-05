@@ -393,18 +393,18 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Proposal Defence Presentation') ? 'active' : ''; ?>" title="Grade Proposal Presentation">
-                        <i class="bi bi-table"></i> <span>Grade Proposal Presentation</span>
+                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Proposal Defence Presentation') ? 'active' : ''; ?>" title="Proposal Presentation">
+                        <i class="bi bi-table"></i> <span>Proposal Presentation</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'FYP Progress Presentation') ? 'active' : ''; ?>" title="Grade Progress Presentation">
-                        <i class="bi bi-table"></i> <span>Grade Progress Presentation</span>
+                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'FYP Progress Presentation') ? 'active' : ''; ?>" title="Progress Presentation">
+                        <i class="bi bi-table"></i> <span>Progress Presentation</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Final Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Final Presentation') ? 'active' : ''; ?>" title="Grade Final Presentation">
-                        <i class="bi bi-table"></i> <span>Grade Final Presentation</span>
+                    <a href="<?php echo $urlPrefix; ?>/committee/grading-sheet?stage=Final Presentation" class="nav-link <?php echo isActive('/committee/grading-sheet', $currentUri) && (isset($_GET['stage']) && $_GET['stage'] === 'Final Presentation') ? 'active' : ''; ?>" title="Final Presentation">
+                        <i class="bi bi-table"></i> <span>Final Presentation</span>
                     </a>
                 </li>
 
