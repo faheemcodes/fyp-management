@@ -433,11 +433,6 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/coordinator/assessment" class="nav-link <?php echo isActive('/coordinator/assessment', $currentUri); ?>">
-                        <i class="bi bi-file-earmark-excel-fill"></i> <span>External Assessment</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/committees" class="nav-link <?php echo isActive('/coordinator/committees', $currentUri); ?>">
                         <i class="bi bi-diagram-3-fill"></i> <span>Group Allocation</span>
                     </a>
@@ -450,6 +445,11 @@ if ($role === 'supervisor') {
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/coordinator/presentation-sheets" class="nav-link <?php echo isActive('/coordinator/presentation-sheets', $currentUri); ?>">
                         <i class="bi bi-printer-fill"></i> <span>Presentation Sheets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/coordinator/assessment" class="nav-link <?php echo isActive('/coordinator/assessment', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-excel-fill"></i> <span>External Sheet</span>
                     </a>
                 </li>
                 <li class="nav-item">
