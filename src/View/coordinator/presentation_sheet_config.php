@@ -51,13 +51,15 @@ $shift = $shift ?? 'Morning';
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
                     <?php if ($totalCommittees > 0): ?>
-                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
-                            <i class="bi bi-people-fill me-1.5"></i><?php echo (int)$totalCommittees; ?> Committees
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600; gap: 7px;">
+                            <i class="bi bi-people-fill" style="font-size: 0.82rem;"></i>
+                            <span><?php echo (int)$totalCommittees; ?> Committees</span>
                         </span>
                     <?php endif; ?>
                     <?php if (!empty($activeBatch)): ?>
-                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
-                            <i class="bi bi-mortarboard-fill me-1.5"></i>Batch: <?php echo htmlspecialchars($activeBatch['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600; gap: 7px;">
+                            <i class="bi bi-mortarboard-fill" style="font-size: 0.82rem;"></i>
+                            <span>Batch: <?php echo htmlspecialchars($activeBatch['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
                         </span>
                     <?php endif; ?>
                 </div>

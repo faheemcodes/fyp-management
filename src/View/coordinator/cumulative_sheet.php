@@ -22,16 +22,19 @@ $coordinatorShift = $coordinatorShift ?? 'Morning';
                     Cumulative Evaluation &amp; Grading Sheet
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
-                        <i class="bi bi-mortarboard-fill me-1.5"></i>Batch: <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
+                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600; gap: 7px;">
+                        <i class="bi bi-mortarboard-fill" style="font-size: 0.82rem;"></i>
+                        <span>Batch: <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?></span>
                     </span>
                     <?php if ($allMarksPublished): ?>
-                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(16,185,129,0.3); color: #a7f3d0; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.4);">
-                            <i class="bi bi-eye-fill me-1.5"></i>Marks Published to Students
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(16,185,129,0.3); color: #a7f3d0; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.4); gap: 7px;">
+                            <i class="bi bi-eye-fill" style="font-size: 0.82rem;"></i>
+                            <span>Marks Published to Students</span>
                         </span>
                     <?php else: ?>
-                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(245,158,11,0.25); color: #fde68a; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(245,158,11,0.35);">
-                            <i class="bi bi-eye-slash-fill me-1.5"></i>Marks Draft Mode
+                        <span class="badge rounded-pill px-3 py-1.5 text-nowrap d-inline-flex align-items-center" style="background: rgba(245,158,11,0.25); color: #fde68a; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(245,158,11,0.35); gap: 7px;">
+                            <i class="bi bi-eye-slash-fill" style="font-size: 0.82rem;"></i>
+                            <span>Marks Draft Mode</span>
                         </span>
                     <?php endif; ?>
                 </div>
