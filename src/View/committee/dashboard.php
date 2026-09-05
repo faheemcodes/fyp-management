@@ -133,7 +133,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
 
 <!-- -- Premium Stat Cards Row -- -->
 <div class="row g-3 mb-4 mt-2">
-    <!-- Grade Proposal Card -->
+    <!-- Proposal Presentation Card -->
     <div class="col-xl-4 col-sm-6">
         <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-purple">
@@ -143,7 +143,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
                         <i class="bi bi-table"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Grade Proposal</div>
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Proposal Presentation</div>
                         <div class="text-secondary mt-1" style="font-size: 0.78rem;">Proposal Defence Assessment</div>
                     </div>
                     <div class="premium-card-arrow">
@@ -154,7 +154,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
         </a>
     </div>
 
-    <!-- Grade Progress Card -->
+    <!-- Progress Presentation Card -->
     <div class="col-xl-4 col-sm-6">
         <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-amber">
@@ -164,7 +164,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
                         <i class="bi bi-table"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Grade Progress</div>
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Progress Presentation</div>
                         <div class="text-secondary mt-1" style="font-size: 0.78rem;">FYP Progress Assessment</div>
                     </div>
                     <div class="premium-card-arrow">
@@ -175,7 +175,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
         </a>
     </div>
 
-    <!-- Grade Final Card -->
+    <!-- Final Presentation Card -->
     <div class="col-xl-4 col-sm-6">
         <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-rose">
@@ -185,7 +185,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
                         <i class="bi bi-table"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Grade Final</div>
+                        <div class="text-dark fw-bold" style="font-size: 1.1rem; letter-spacing: -0.01em;">Final Presentation</div>
                         <div class="text-secondary mt-1" style="font-size: 0.78rem;">Final Presentation Assessment</div>
                     </div>
                     <div class="premium-card-arrow">
