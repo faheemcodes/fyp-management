@@ -422,7 +422,7 @@ $groupCount = count($grouped ?? []);
             </div>
 
             <!-- Print Button -->
-            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?><?php echo $isMinimized ? '&view=minimized' : ''; ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" target="_blank" style="font-size: 0.85rem;white-space: nowrap">
+            <a href="<?php echo $bp; ?>/committee/evaluations/print?stage=<?php echo urlencode($stage); ?><?php echo $isMinimized ? '&view=minimized' : ''; ?>" class="btn btn-outline-light rounded-pill px-4 fw-semibold shadow-sm" style="font-size: 0.85rem;white-space: nowrap">
                 <i class="bi bi-printer me-1"></i> Print
             </a>
         </div>

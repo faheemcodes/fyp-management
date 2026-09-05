@@ -63,7 +63,7 @@ $totalCommittees = $totalCommittees ?? count($committeesGrouped ?? []);
                 </p>
             </div>
             <div>
-                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Proposal+Defence+Presentation&committee=all" target="_blank" class="btn btn-outline-primary rounded-pill w-100 fw-semibold py-2" style="font-size: 0.85rem;">
+                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Proposal+Defence+Presentation&committee=all" class="btn btn-outline-primary rounded-pill w-100 fw-semibold py-2" style="font-size: 0.85rem;">
                     <i class="bi bi-printer-fill me-1"></i> Print All Committees
                 </a>
             </div>
@@ -83,7 +83,7 @@ $totalCommittees = $totalCommittees ?? count($committeesGrouped ?? []);
                 </p>
             </div>
             <div>
-                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=FYP+Progress+Presentation&committee=all" target="_blank" class="btn btn-outline-info rounded-pill w-100 fw-semibold py-2 text-dark" style="font-size: 0.85rem;">
+                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=FYP+Progress+Presentation&committee=all" class="btn btn-outline-info rounded-pill w-100 fw-semibold py-2 text-dark" style="font-size: 0.85rem;">
                     <i class="bi bi-printer-fill me-1"></i> Print All Committees
                 </a>
             </div>
@@ -103,10 +103,10 @@ $totalCommittees = $totalCommittees ?? count($committeesGrouped ?? []);
                 </p>
             </div>
             <div class="d-flex flex-column gap-2">
-                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=minimized&committee=all" target="_blank" class="btn btn-success rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
+                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=minimized&committee=all" class="btn btn-success rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
                     <i class="bi bi-arrows-angle-contract me-1"></i> Print Minimize Version (All)
                 </a>
-                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=detailed&committee=all" target="_blank" class="btn btn-outline-secondary rounded-pill w-100 fw-semibold py-1.5" style="font-size: 0.78rem;">
+                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=detailed&committee=all" class="btn btn-outline-secondary rounded-pill w-100 fw-semibold py-1.5" style="font-size: 0.78rem;">
                     <i class="bi bi-arrows-angle-expand me-1"></i> Print Detailed Version (All)
                 </a>
             </div>
@@ -134,7 +134,7 @@ $totalCommittees = $totalCommittees ?? count($committeesGrouped ?? []);
             </div>
 
             <div class="card-body p-4 p-md-5">
-                <form action="<?php echo $basePath; ?>/coordinator/presentation-sheets/print" method="GET" target="_blank">
+                <form action="<?php echo $basePath; ?>/coordinator/presentation-sheets/print" method="GET">
 
                     <!-- Presentation Stage -->
                     <div class="mb-4">
