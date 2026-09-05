@@ -18,19 +18,10 @@ $coordinatorShift = $coordinatorShift ?? 'Morning';
                 <i class="bi bi-file-earmark-ruled-fill"></i>
             </div>
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.45);">
-                    Department Coordinator
-                </p>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2">
                     Cumulative Evaluation &amp; Grading Sheet
                 </h4>
                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap justify-content-center justify-content-md-start">
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
-                        <i class="bi bi-building me-1.5"></i><?php echo htmlspecialchars($department, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
-                    <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(16,185,129,0.25); color: #6ee7b7; font-size: 0.76rem; font-weight: 600; border: 1px solid rgba(16,185,129,0.3);">
-                        <i class="bi bi-clock-history me-1.5"></i>Shift: <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
                     <span class="badge rounded-pill px-3 py-1.5 text-nowrap" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.95); font-size: 0.76rem; font-weight: 600;">
                         <i class="bi bi-mortarboard-fill me-1.5"></i>Batch: <?php echo htmlspecialchars($selectedBatchName, ENT_QUOTES, 'UTF-8'); ?>
                     </span>

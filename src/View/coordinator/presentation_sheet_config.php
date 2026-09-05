@@ -46,9 +46,6 @@ $shift = $shift ?? 'Morning';
                 <i class="bi bi-printer-fill"></i>
             </div>
             <div>
-                <p class="mb-1" style="font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.45);">
-                    Department Coordinator
-                </p>
                 <h4 class="text-white fw-bold m-0" style="font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.2">
                     Presentation Evaluation Sheets
                 </h4>
