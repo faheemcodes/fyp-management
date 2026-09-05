@@ -402,9 +402,9 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
         </a>
     </div>
 
-    <!-- Row 3: Notices, Milestones, Batches & Archive -->
+    <!-- Row 3: Notices, Milestones & Batches -->
     <!-- 9. Notice Generator Card -->
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-md-4">
         <a href="<?php echo $bp; ?>/coordinator/notice" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-rose h-100">
                 <div class="premium-card-accent"></div>
@@ -425,7 +425,7 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
     </div>
 
     <!-- 10. Timeline & Deadlines Card -->
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-md-4">
         <a href="<?php echo $bp; ?>/coordinator/deadlines" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-amber h-100">
                 <div class="premium-card-accent"></div>
@@ -451,7 +451,7 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
     </div>
 
     <!-- 11. Academic Batches Card -->
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-md-4">
         <a href="<?php echo $bp; ?>/coordinator/batches" class="text-decoration-none">
             <div class="card premium-stat-card premium-card-purple h-100">
                 <div class="premium-card-accent"></div>
@@ -462,27 +462,6 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
                     <div class="flex-grow-1">
                         <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['total_batches'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
                         <div class="premium-card-label">Academic Batches</div>
-                    </div>
-                    <div class="premium-card-arrow">
-                        <i class="bi bi-arrow-right-short"></i>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <!-- 12. Previous Projects Card -->
-    <div class="col-12 col-sm-6 col-xl-3">
-        <a href="<?php echo $bp; ?>/coordinator/previous-projects" class="text-decoration-none">
-            <div class="card premium-stat-card premium-card-teal h-100">
-                <div class="premium-card-accent"></div>
-                <div class="d-flex align-items-center gap-3 position-relative z-1">
-                    <div class="premium-card-icon premium-icon-teal">
-                        <i class="bi bi-archive-fill"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['previous_projects'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></div>
-                        <div class="premium-card-label">Previous Projects</div>
                     </div>
                     <div class="premium-card-arrow">
                         <i class="bi bi-arrow-right-short"></i>

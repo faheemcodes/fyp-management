@@ -98,15 +98,6 @@ class CoordinatorController extends BaseController {
         $stmtDeadlines->execute([$dept]);
         $stats['active_deadlines'] = (int)$stmtDeadlines->fetchColumn();
 
-        // Concluded / Previous Projects
-        $stmtPrev = $db->prepare("SELECT COUNT(*) FROM projects p 
-            JOIN `groups` g ON p.group_id = g.id 
-            JOIN academic_batches b ON g.batch_id = b.id 
-            JOIN students s ON g.created_by = s.user_id 
-            WHERE b.is_active = 0 AND p.status = 'Approved' AND s.department = ?$shiftFilter");
-        $stmtPrev->execute([$dept]);
-        $stats['previous_projects'] = (int)$stmtPrev->fetchColumn();
-
         // Fetch unverified proposals for the department & shift (active batch only)
         $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
             FROM proposals pr

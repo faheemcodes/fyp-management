@@ -163,8 +163,8 @@ th.col-serial-num {
                         </span>
                     <?php endif; ?>
                 </div>
-                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.78); font-size: 0.84rem">
-                    Official <?php echo htmlspecialchars($coordinatorShift, ENT_QUOTES, 'UTF-8'); ?> Shift evaluation records across Proposal Defence (40), Progress (40), Supervision (45), and Final Presentation (75) &bull; Total 200 Marks
+                <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.82); font-size: 0.85rem">
+                    Official evaluation and grading records across all project stages.
                 </p>
             </div>
         </div>
