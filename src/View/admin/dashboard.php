@@ -152,6 +152,11 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 .admin-table tr:last-child td {
     border-bottom: none;
 }
+.premium-card-emerald { border-left: 3px solid #059669 !important; }
+.premium-card-emerald:hover { box-shadow: 0 8px 24px rgba(5, 150, 105, 0.18) !important; }
+.premium-card-emerald .premium-card-accent { background: #059669; }
+.premium-card-emerald .premium-card-arrow { color: #059669; }
+.premium-icon-emerald { background: rgba(5, 150, 105, 0.12); color: #059669; }
 </style>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
@@ -307,7 +312,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                             <i class="bi bi-printer-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <div class="premium-card-count" style="font-size: 1.25rem;">Generate</div>
+                            <div class="premium-card-count">3 <span style="font-size: 0.95rem; font-weight: 600; opacity: 0.7;">Stages</span></div>
                             <div class="premium-card-label">Presentation Sheets</div>
                         </div>
                         <div class="premium-card-arrow">
@@ -328,7 +333,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                             <i class="bi bi-file-earmark-spreadsheet-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <div class="premium-card-count" style="font-size: 1.25rem;">Generate</div>
+                            <div class="premium-card-count"><?php echo htmlspecialchars((string)($stats['allocated_groups'] ?? 0), ENT_QUOTES, 'UTF-8'); ?> <span style="font-size: 0.95rem; font-weight: 600; opacity: 0.7;">Groups</span></div>
                             <div class="premium-card-label">Attendance Sheets</div>
                         </div>
                         <div class="premium-card-arrow">
@@ -392,10 +397,10 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
         <!-- 9. Supervisor Slots Card -->
         <div class="col-12 col-md-4">
             <a href="<?php echo $basePath; ?>/admin/slots" class="text-decoration-none">
-                <div class="card premium-stat-card premium-card-green h-100">
+                <div class="card premium-stat-card premium-card-emerald h-100">
                     <div class="premium-card-accent"></div>
                     <div class="d-flex align-items-center gap-3 position-relative z-1">
-                        <div class="premium-card-icon premium-icon-green">
+                        <div class="premium-card-icon premium-icon-emerald">
                             <i class="bi bi-person-badge-fill"></i>
                         </div>
                         <div class="flex-grow-1">

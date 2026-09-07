@@ -55,7 +55,7 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
                     <!-- Department -->
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Department</label>
-                        <select name="department" id="deptSelect" class="form-select form-control-custom" onchange="window.location.href='<?php echo $basePath; ?>/admin/attendance-sheet?department='+encodeURIComponent(this.value)+'&shift='+encodeURIComponent(document.getElementById('shiftSelect').value)">
+                        <select name="department" id="deptSelect" class="form-select form-control-custom" onchange="updateFilters()">
                             <?php foreach ($departments as $d): ?>
                                 <option value="<?php echo htmlspecialchars($d); ?>" <?php echo ($selectedDept === $d) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($d); ?>
@@ -68,7 +68,7 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <label class="form-label small fw-bold text-secondary">Academic Batch</label>
-                            <select name="batch_id" class="form-select form-control-custom" onchange="window.location.href='<?php echo $basePath; ?>/admin/attendance-sheet?department='+encodeURIComponent(document.getElementById('deptSelect').value)+'&batch_id='+this.value+'&shift='+encodeURIComponent(document.getElementById('shiftSelect').value)">
+                            <select name="batch_id" id="batchSelect" class="form-select form-control-custom" onchange="updateFilters()">
                                 <?php foreach ($batches as $b): ?>
                                     <option value="<?php echo $b['id']; ?>" <?php echo ($selectedBatchId == $b['id']) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($b['name']); ?> <?php echo !empty($b['is_active']) ? '(Active)' : ''; ?>
@@ -78,7 +78,7 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
                         </div>
                         <div class="col-6">
                             <label class="form-label small fw-bold text-secondary">Shift</label>
-                            <select name="shift" id="shiftSelect" class="form-select form-control-custom" onchange="window.location.href='<?php echo $basePath; ?>/admin/attendance-sheet?department='+encodeURIComponent(document.getElementById('deptSelect').value)+'&shift='+encodeURIComponent(this.value)">
+                            <select name="shift" id="shiftSelect" class="form-select form-control-custom" onchange="updateFilters()">
                                 <option value="Morning" <?php echo ($selectedShift === 'Morning') ? 'selected' : ''; ?>>Morning</option>
                                 <option value="Evening" <?php echo ($selectedShift === 'Evening') ? 'selected' : ''; ?>>Evening</option>
                             </select>
@@ -88,7 +88,7 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
                     <!-- Committee Number -->
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Committee Number</label>
-                        <select name="committee_number" class="form-select form-control-custom" onchange="window.location.href='<?php echo $basePath; ?>/admin/attendance-sheet?department='+encodeURIComponent(document.getElementById('deptSelect').value)+'&shift='+encodeURIComponent(document.getElementById('shiftSelect').value)+'&committee_number='+this.value">
+                        <select name="committee_number" id="commSelect" class="form-select form-control-custom" onchange="updateFilters()">
                             <?php for ($c = 1; $c <= 8; $c++): ?>
                                 <option value="<?php echo $c; ?>" <?php echo ($selectedCommittee == $c) ? 'selected' : ''; ?>>
                                     Committee <?php echo $c; ?>
@@ -177,3 +177,13 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
         </div>
     </div>
 </form>
+
+<script>
+function updateFilters() {
+    const dept = encodeURIComponent(document.getElementById('deptSelect').value);
+    const batchId = encodeURIComponent(document.getElementById('batchSelect').value);
+    const shift = encodeURIComponent(document.getElementById('shiftSelect').value);
+    const comm = encodeURIComponent(document.getElementById('commSelect').value);
+    window.location.href = '<?php echo $basePath; ?>/admin/attendance-sheet?department=' + dept + '&batch_id=' + batchId + '&shift=' + shift + '&committee_number=' + comm;
+}
+</script>

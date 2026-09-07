@@ -50,7 +50,7 @@ $department = $department ?? 'Software Engineering';
             gap: 6px;
         }
         .print-canvas {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 24px auto;
             background: #ffffff;
             padding: 24px 30px;
@@ -164,10 +164,10 @@ $department = $department ?? 'Software Engineering';
                 <th>Group Code</th>
                 <th>Project Title</th>
                 <th>Supervisor</th>
-                <th style="width: 55px;">Proposal<br>(30)</th>
-                <th style="width: 55px;">Progress<br>(30)</th>
-                <th style="width: 55px;">Supervision<br>(50)</th>
-                <th style="width: 55px;">Final<br>(90)</th>
+                <th style="width: 55px;">Proposal<br>(40)</th>
+                <th style="width: 55px;">Progress<br>(40)</th>
+                <th style="width: 55px;">Supervision<br>(45)</th>
+                <th style="width: 55px;">Final<br>(75)</th>
                 <th style="width: 60px;">Total<br>(200)</th>
                 <th style="width: 45px;">%</th>
                 <th style="width: 45px;">Grade</th>

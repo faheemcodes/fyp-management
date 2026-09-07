@@ -200,7 +200,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     <?php foreach (($prop['members'] ?? []) as $mem): 
                                         $avatar = !empty($mem['avatar']) && file_exists(__DIR__ . '/../../../public/uploads/avatars/' . $mem['avatar']) 
                                             ? $basePath . '/uploads/avatars/' . $mem['avatar'] 
-                                            : $basePath . '/images/default-avatar.svg';
+                                            : $basePath . '/uploads/avatars/default_avatar.svg';
                                     ?>
                                         <img src="<?php echo $avatar; ?>" alt="<?php echo htmlspecialchars($mem['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars($mem['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars($mem['student_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>)">
                                     <?php endforeach; ?>

@@ -78,8 +78,8 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                         <?php foreach($supervisorsList as $sup): 
                             $current = (int)$sup['current_slots'];
                             $max = (int)$sup['total_max_slots'];
-                            $remaining = $max - $current;
-                            $percentage = ($current / $max) * 100;
+                            $remaining = max(0, $max - $current);
+                            $percentage = ($max > 0) ? ($current / $max) * 100 : 0;
                             $statusColor = $percentage >= 100 ? 'danger' : ($percentage >= 75 ? 'warning' : 'success');
                             $statusText = $percentage >= 100 ? 'Full' : 'Available';
                         ?>

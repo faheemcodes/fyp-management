@@ -140,6 +140,7 @@ $routes = [
     '/admin/projects/delete' => ['Controller\AdminController', 'deleteProject'],
     '/admin/grades/edit' => ['Controller\AdminController', 'editGrades'],
     '/admin/assign-supervisor' => ['Controller\AdminController', 'assignSupervisor'],
+    '/admin/groups/assign' => ['Controller\AdminController', 'assignSupervisor'],
     '/admin/proposals' => ['Controller\AdminController', 'proposals'],
     '/admin/proposals/review' => ['Controller\AdminController', 'reviewProposal'],
     '/admin/committees' => ['Controller\AdminController', 'committees'],

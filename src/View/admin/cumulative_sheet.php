@@ -172,10 +172,10 @@ foreach (($students ?? []) as $st) {
                     <th>Student Name</th>
                     <th>Group / Project</th>
                     <th>Supervisor</th>
-                    <th class="text-center">Proposal<br><span style="font-size:0.68rem;opacity:0.75">(30)</span></th>
-                    <th class="text-center">Progress<br><span style="font-size:0.68rem;opacity:0.75">(30)</span></th>
-                    <th class="text-center">Supervision<br><span style="font-size:0.68rem;opacity:0.75">(50)</span></th>
-                    <th class="text-center">Final<br><span style="font-size:0.68rem;opacity:0.75">(90)</span></th>
+                    <th class="text-center">Proposal<br><span style="font-size:0.68rem;opacity:0.75">(40)</span></th>
+                    <th class="text-center">Progress<br><span style="font-size:0.68rem;opacity:0.75">(40)</span></th>
+                    <th class="text-center">Supervision<br><span style="font-size:0.68rem;opacity:0.75">(45)</span></th>
+                    <th class="text-center">Final<br><span style="font-size:0.68rem;opacity:0.75">(75)</span></th>
                     <th class="text-center">Total<br><span style="font-size:0.68rem;opacity:0.75">(200)</span></th>
                     <th class="text-center">%</th>
                     <th class="text-center">Grade</th>
