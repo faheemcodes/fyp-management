@@ -20,15 +20,9 @@ class AdminController extends BaseController {
         $db = \Database::getInstance()->getConnection();
 
         $stats = [];
-        // Core user metrics
+        // Core metrics
         $stats['total_users'] = (int)$db->query("SELECT COUNT(*) FROM users")->fetchColumn();
-        $stats['students'] = (int)$db->query("SELECT COUNT(*) FROM users WHERE role = 'student'")->fetchColumn();
         $stats['supervisors'] = (int)$db->query("SELECT COUNT(*) FROM users WHERE role = 'supervisor'")->fetchColumn();
-        $stats['coordinators'] = (int)$db->query("SELECT COUNT(*) FROM coordinators")->fetchColumn();
-        $stats['committee'] = (int)$db->query("SELECT COUNT(*) FROM committees")->fetchColumn();
-        $stats['hods'] = (int)$db->query("SELECT COUNT(*) FROM hods")->fetchColumn();
-
-        // Project and group metrics
         $stats['active_projects'] = (int)$db->query("SELECT COUNT(*) FROM projects WHERE status = 'Approved'")->fetchColumn();
         
         $stmtTotGrp = $db->query("SELECT COUNT(*) FROM `groups` g LEFT JOIN academic_batches b ON g.batch_id = b.id WHERE b.is_active = 1 OR b.id IS NULL");
@@ -53,7 +47,9 @@ class AdminController extends BaseController {
         // Grade metrics
         $avgMarks = $db->query("SELECT AVG(percentage) FROM grades WHERE percentage > 0")->fetchColumn();
         $stats['avg_marks'] = $avgMarks ? round($avgMarks, 1) . '%' : 'N/A';
-        $stats['total_evaluated_students'] = (int)$db->query("SELECT COUNT(*) FROM grades WHERE total_marks > 0")->fetchColumn();
+
+        // Active batch
+        $stats['active_batch_name'] = $db->query("SELECT name FROM academic_batches WHERE is_active = 1 LIMIT 1")->fetchColumn() ?: '2023';
 
         // FYP Progress Stages Funnel (University-wide)
         $stages = [
@@ -89,10 +85,6 @@ class AdminController extends BaseController {
             $stmtSp->execute([$dept]);
             $supCount = (int)$stmtSp->fetchColumn();
 
-            $stmtCd = $db->prepare("SELECT COUNT(*) FROM coordinators WHERE department = ?");
-            $stmtCd->execute([$dept]);
-            $coordCount = (int)$stmtCd->fetchColumn();
-
             $stmtAp = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN students s ON g.created_by = s.user_id WHERE s.department = ? AND p.status = 'Approved'");
             $stmtAp->execute([$dept]);
             $projCount = (int)$stmtAp->fetchColumn();
@@ -102,7 +94,6 @@ class AdminController extends BaseController {
                     'students' => $studCount,
                     'groups' => $grpCount,
                     'supervisors' => $supCount,
-                    'coordinators' => $coordCount,
                     'approved_projects' => $projCount
                 ];
             }
@@ -129,41 +120,12 @@ class AdminController extends BaseController {
             ORDER BY pr.submitted_at ASC LIMIT 5
         ")->fetchAll();
 
-        // Recent users and groups
-        $recentUsers = $db->query("SELECT u.*, 
-            COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Admin') as name,
-            COALESCE(s.department, sup.department, c.department, d.department, coord.department, 'N/A') as department
-            FROM users u
-            LEFT JOIN students s ON u.id = s.user_id
-            LEFT JOIN supervisors sup ON u.id = sup.user_id
-            LEFT JOIN committees c ON u.id = c.user_id
-            LEFT JOIN hods d ON u.id = d.user_id
-            LEFT JOIN coordinators coord ON u.id = coord.user_id
-            ORDER BY u.created_at DESC LIMIT 5")->fetchAll();
-
-        $recentGroups = $db->query("SELECT g.*, p.title as project_title, s.name as creator_name, s.department 
-            FROM `groups` g
-            LEFT JOIN projects p ON g.id = p.group_id
-            LEFT JOIN students s ON g.created_by = s.user_id
-            ORDER BY g.created_at DESC LIMIT 5")->fetchAll();
-
-        // Fetch all supervisors and their approved slots count
-        $supervisorsList = $db->query("
-            SELECT s.user_id, s.name, s.department, 
-            (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots
-            FROM supervisors s
-            ORDER BY s.name ASC LIMIT 5
-        ")->fetchAll();
-
         $this->render('admin/dashboard', [
             'stats' => $stats,
             'stages' => $stages,
             'departmentStats' => $departmentStats,
             'pendingStudentsList' => $pendingStudentsList,
-            'pendingProposalsList' => $pendingProposalsList,
-            'recentUsers' => $recentUsers,
-            'recentGroups' => $recentGroups,
-            'supervisorsList' => $supervisorsList
+            'pendingProposalsList' => $pendingProposalsList
         ]);
     }
 

@@ -6,8 +6,7 @@ class BaseController {
 
     public function __construct() {
         $this->db = \Database::getInstance()->getConnection();
-        
-        }
+    }
 
     protected function validateCsrf() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

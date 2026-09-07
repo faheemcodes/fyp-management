@@ -1,8 +1,4 @@
 <style>
-/* ─── Section Panel ─── */
-
-
-
 @media (min-width: 769px) {
     .table-responsive {
         overflow: visible !important;
@@ -46,11 +42,6 @@
     border: 1px solid var(--border-color);
     border-radius: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-
-@media (max-width: 768px) {
-    
 }
 </style>
 <!-- Admin User Management View -->

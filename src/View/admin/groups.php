@@ -1,8 +1,4 @@
 <style>
-/* ─── Section Panel ─── */
-
-
-
 @media (min-width: 769px) {
     .table-responsive {
         overflow: visible !important;
@@ -12,18 +8,6 @@
     .table-responsive {
         padding-bottom: 120px; /* Space for dropdowns on mobile */
     }
-}
-
-/* ─── Modern Table Styles ─── */
-
-
-
-
-
-
-
-@media (max-width: 768px) {
-    
 }
 
 .avatar-stack {
@@ -550,7 +534,6 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         editGradesBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 document.getElementById('editGradesGroupId').value = this.getAttribute('data-id');
-                document.getElementById('editGradesProp').value = Math.round(parseFloat(this.getAttribute('data-prop') || 0));
                 
                 const defVal = this.getAttribute('data-def');
                 document.getElementById('editGradesDef').value = defVal !== '' ? Math.round(parseFloat(defVal)) : '';
