@@ -50,18 +50,6 @@ class AdminController extends BaseController {
         $stmtPendingMeet = $db->query("SELECT COUNT(*) FROM meetings WHERE status = 'Completed'");
         $stats['pending_meetings'] = (int)($stmtPendingMeet ? $stmtPendingMeet->fetchColumn() : 0);
 
-        $stmtActiveDeadlines = $db->query("SELECT COUNT(*) FROM deadlines WHERE status = 'Active' AND deadline_date >= NOW()");
-        $stats['active_deadlines'] = (int)($stmtActiveDeadlines ? $stmtActiveDeadlines->fetchColumn() : 0);
-
-        $stmtNotices = $db->query("SELECT COUNT(*) FROM notices WHERE is_hidden = 0 OR is_hidden IS NULL");
-        $stats['total_notices'] = (int)($stmtNotices ? $stmtNotices->fetchColumn() : 0);
-
-        $stmtBatches = $db->query("SELECT COUNT(*) FROM academic_batches");
-        $stats['total_batches'] = (int)($stmtBatches ? $stmtBatches->fetchColumn() : 0);
-
-        $stmtActiveBatch = $db->query("SELECT name FROM academic_batches WHERE is_active = 1 LIMIT 1");
-        $stats['active_batch_name'] = $stmtActiveBatch ? $stmtActiveBatch->fetchColumn() : '2023';
-
         // Grade metrics
         $avgMarks = $db->query("SELECT AVG(percentage) FROM grades WHERE percentage > 0")->fetchColumn();
         $stats['avg_marks'] = $avgMarks ? round($avgMarks, 1) . '%' : 'N/A';
@@ -187,7 +175,7 @@ class AdminController extends BaseController {
             (SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = s.user_id AND p.status = 'Approved' AND b.is_active = 1) as current_slots,
             (COALESCE(ds.max_morning_slots, 5) + COALESCE(ds.max_evening_slots, 5)) as total_max_slots
             FROM supervisors s
-            LEFT JOIN department_settings ds ON s.department = ds.department
+            LEFT JOIN department_settings ds ON s.department COLLATE utf8mb4_unicode_ci = ds.department COLLATE utf8mb4_unicode_ci
             ORDER BY s.name ASC
         ")->fetchAll();
 
@@ -491,83 +479,6 @@ class AdminController extends BaseController {
             }
         }
         redirect('/admin/groups');
-    }
-
-    public function deadlines() {
-        $db = \Database::getInstance()->getConnection();
-        
-        $department = $_GET['department'] ?? 'Software Engineering';
-        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $stage = $_POST['stage'] ?? '';
-            $date = $_POST['deadline_date'] ?? '';
-            $status = $_POST['status'] ?? 'Inactive';
-            $formDepartment = $_POST['department'] ?? 'Software Engineering';
-            
-            if ($stage && $date) {
-                $stmt = $db->prepare("INSERT INTO deadlines (stage, deadline_date, status, department) VALUES (?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE deadline_date = ?, status = ?");
-                $stmt->execute([$stage, $date, $status, $formDepartment, $date, $status]);
-                
-                // Notify students in that department if active
-                if ($status === 'Active') {
-                    $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
-                    $stmtStudents->execute([$formDepartment]);
-                    $students = $stmtStudents->fetchAll();
-                    foreach ($students as $s) {
-                        $this->addNotification($s['user_id'], 'Deadline Updated', "The deadline for $stage has been updated to $date.");
-                    }
-                }
-                
-                $this->flash('success', "$stage deadline updated for $formDepartment.");
-                redirect('/admin/deadlines?department=' . urlencode($formDepartment));
-            }
-        }
-        
-        $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY id ASC");
-        $stmt->execute([$department]);
-        $deadlines = $stmt->fetchAll();
-        $this->render('admin/deadlines', [
-            'deadlines' => $deadlines,
-            'department' => $department
-        ]);
-    }
-
-    public function reports() {
-        $db = \Database::getInstance()->getConnection();
-        
-        // Fetch stats for reporting
-        $progressStages = $db->query("SELECT progress_stage, COUNT(*) as count FROM `groups` GROUP BY progress_stage")->fetchAll();
-        
-        $studentGrades = $db->query("SELECT g.group_code, p.title as project_title, gr.*, s.name as supervisor_name, st.name as student_name, st.student_id as roll_no, st.department, st.shift
-            FROM `groups` g
-            JOIN projects p ON g.id = p.group_id
-            JOIN grades gr ON g.id = gr.group_id
-            JOIN students st ON gr.student_id = st.user_id
-            LEFT JOIN supervisors s ON p.supervisor_id = s.user_id
-            ORDER BY g.group_code ASC, gr.total_marks DESC")->fetchAll();
-            
-        $this->render('admin/reports', [
-            'progressStages' => $progressStages,
-            'studentGrades' => $studentGrades
-        ]);
-    }
-
-    public function printReports() {
-        $db = \Database::getInstance()->getConnection();
-        
-        $studentGrades = $db->query("SELECT g.group_code, p.title as project_title, gr.*, s.name as supervisor_name, st.name as student_name, st.student_id as roll_no, st.department, st.shift
-            FROM `groups` g
-            JOIN projects p ON g.id = p.group_id
-            JOIN grades gr ON g.id = gr.group_id
-            JOIN students st ON gr.student_id = st.user_id
-            LEFT JOIN supervisors s ON p.supervisor_id = s.user_id
-            ORDER BY g.group_code ASC, gr.total_marks DESC")->fetchAll();
-            
-        $this->render('admin/reports_print', [
-            'studentGrades' => $studentGrades
-        ]);
     }
 
     public function editUser() {
@@ -1060,24 +971,6 @@ class AdminController extends BaseController {
         }
         redirect('/admin/groups');
     }
-
-    public function deleteDeadline() {
-        $stage = $_GET['stage'] ?? '';
-        $department = $_GET['department'] ?? 'Software Engineering';
-        if ($stage) {
-            $db = \Database::getInstance()->getConnection();
-            try {
-                $stmt = $db->prepare("DELETE FROM deadlines WHERE stage = ? AND department = ?");
-                $stmt->execute([$stage, $department]);
-                $this->flash('success', "Deadline for $stage deleted successfully.");
-            } catch (\Exception $e) {
-                $this->flash('error', 'Error deleting deadline. Please try again.');
-            }
-        }
-        redirect('/admin/deadlines?department=' . urlencode($department));
-    }
-
-
 
     public function proposals() {
         $db = \Database::getInstance()->getConnection();
@@ -1838,197 +1731,6 @@ class AdminController extends BaseController {
             }
         }
         redirect('/admin/meetings');
-    }
-
-    public function notice() {
-        $db = \Database::getInstance()->getConnection();
-        $departments = $this->getAllDepartments();
-        $notices = $db->query("
-            SELECT n.*, u.email as sender_email, 
-                   COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Admin') as sender_name
-            FROM notices n
-            LEFT JOIN users u ON n.sender_id = u.id
-            LEFT JOIN students s ON u.id = s.user_id
-            LEFT JOIN supervisors sup ON u.id = sup.user_id
-            LEFT JOIN committees c ON u.id = c.user_id
-            LEFT JOIN hods d ON u.id = d.user_id
-            LEFT JOIN coordinators coord ON u.id = coord.user_id
-            ORDER BY n.notice_date DESC, n.id DESC
-        ")->fetchAll();
-
-        $this->render('admin/notice', [
-            'notices' => $notices,
-            'departments' => $departments
-        ]);
-    }
-
-    public function createNotice() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $subject = trim($_POST['subject'] ?? '');
-            $body = trim($_POST['body'] ?? '');
-            $notice_date = $_POST['notice_date'] ?? date('Y-m-d');
-            $ref_no = trim($_POST['ref_no'] ?? '');
-            $target_audience = $_POST['target_audience'] ?? 'All';
-            $department = $_POST['department'] ?? 'All';
-            $is_public = isset($_POST['is_public']) ? 1 : 0;
-            $userId = $_SESSION['user_id'] ?? 1;
-
-            if (!empty($subject) && !empty($body)) {
-                $db = \Database::getInstance()->getConnection();
-                try {
-                    $stmt = $db->prepare("
-                        INSERT INTO notices (sender_id, subject, body, notice_date, ref_no, target_audience, department, is_public)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    ");
-                    $stmt->execute([$userId, $subject, $body, $notice_date, $ref_no, $target_audience, $department, $is_public]);
-                    $this->flash('success', 'Notice published successfully.');
-                } catch (\Exception $e) {
-                    $this->flash('error', 'Error creating notice.');
-                }
-            } else {
-                $this->flash('error', 'Subject and Body are required.');
-            }
-        }
-        redirect('/admin/notice');
-    }
-
-    public function toggleNoticeVisibility() {
-        $id = (int)($_GET['id'] ?? 0);
-        if ($id > 0) {
-            $db = \Database::getInstance()->getConnection();
-            $stmt = $db->prepare("UPDATE notices SET is_public = IF(is_public = 1, 0, 1) WHERE id = ?");
-            $stmt->execute([$id]);
-            $this->flash('success', 'Notice visibility updated.');
-        }
-        redirect('/admin/notice');
-    }
-
-    public function deleteNotice() {
-        $id = (int)($_GET['id'] ?? 0);
-        if ($id > 0) {
-            $db = \Database::getInstance()->getConnection();
-            $stmt = $db->prepare("DELETE FROM notices WHERE id = ?");
-            $stmt->execute([$id]);
-            $this->flash('success', 'Notice deleted successfully.');
-        }
-        redirect('/admin/notice');
-    }
-
-    public function batches() {
-        $db = \Database::getInstance()->getConnection();
-        $departments = $this->getAllDepartments();
-        $batches = $db->query("
-            SELECT b.*, 
-                   (SELECT COUNT(*) FROM `groups` WHERE batch_id = b.id) as groups_count
-            FROM academic_batches b
-            ORDER BY b.is_active DESC, b.id DESC
-        ")->fetchAll();
-
-        $this->render('admin/batches', [
-            'batches' => $batches,
-            'departments' => $departments
-        ]);
-    }
-
-    public function createBatch() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $name = trim($_POST['name'] ?? '');
-            $department = trim($_POST['department'] ?? 'Software Engineering');
-            $shift = $_POST['shift'] ?? 'Morning';
-            $isActive = isset($_POST['is_active']) ? 1 : 0;
-            $isRegistrationOpen = isset($_POST['is_registration_open']) ? 1 : 0;
-
-            if (!empty($name)) {
-                $db = \Database::getInstance()->getConnection();
-                try {
-                    $stmt = $db->prepare("INSERT INTO academic_batches (name, department, shift, is_active, is_registration_open) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$name, $department, $shift, $isActive, $isRegistrationOpen]);
-                    $this->flash('success', "Academic Batch '$name' created successfully.");
-                } catch (\Exception $e) {
-                    $this->flash('error', 'Error creating batch. Name may already exist.');
-                }
-            } else {
-                $this->flash('error', 'Batch Name is required.');
-            }
-        }
-        redirect('/admin/batches');
-    }
-
-    public function toggleBatch() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $id = (int)($_POST['id'] ?? 0);
-            $field = $_POST['field'] ?? 'is_active';
-
-            if ($id > 0 && in_array($field, ['is_active', 'is_registration_open'])) {
-                $db = \Database::getInstance()->getConnection();
-                try {
-                    $stmt = $db->prepare("UPDATE academic_batches SET $field = IF($field = 1, 0, 1) WHERE id = ?");
-                    $stmt->execute([$id]);
-                    $this->flash('success', "Batch status toggled successfully.");
-                } catch (\Exception $e) {
-                    $this->flash('error', 'Error toggling batch status.');
-                }
-            }
-        }
-        redirect('/admin/batches');
-    }
-
-    public function settings() {
-        $db = \Database::getInstance()->getConnection();
-        $departments = $this->getAllDepartments();
-        $selectedDept = $_GET['department'] ?? 'Software Engineering';
-        if (!in_array($selectedDept, $departments)) {
-            $selectedDept = $departments[0];
-        }
-
-        $stmt = $db->prepare("SELECT * FROM department_settings WHERE department = ?");
-        $stmt->execute([$selectedDept]);
-        $settings = $stmt->fetch() ?: [
-            'department' => $selectedDept,
-            'max_morning_slots' => 5,
-            'max_evening_slots' => 5,
-            'max_group_members' => 3,
-            'num_committees' => 2
-        ];
-
-        $this->render('admin/settings', [
-            'departments' => $departments,
-            'selectedDept' => $selectedDept,
-            'settings' => $settings
-        ]);
-    }
-
-    public function updateSettings() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->validateCsrf();
-            $dept = $_POST['department'] ?? 'Software Engineering';
-            $maxMorning = max(1, min(50, (int)($_POST['max_morning_slots'] ?? 5)));
-            $maxEvening = max(1, min(50, (int)($_POST['max_evening_slots'] ?? 5)));
-            $maxGroup = max(1, min(10, (int)($_POST['max_group_members'] ?? 3)));
-            $numCommittees = max(1, min(10, (int)($_POST['num_committees'] ?? 2)));
-
-            $db = \Database::getInstance()->getConnection();
-            try {
-                $stmt = $db->prepare("
-                    INSERT INTO department_settings (department, max_morning_slots, max_evening_slots, max_group_members, num_committees)
-                    VALUES (?, ?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE 
-                        max_morning_slots = VALUES(max_morning_slots),
-                        max_evening_slots = VALUES(max_evening_slots),
-                        max_group_members = VALUES(max_group_members),
-                        num_committees = VALUES(num_committees)
-                ");
-                $stmt->execute([$dept, $maxMorning, $maxEvening, $maxGroup, $numCommittees]);
-                $this->flash('success', "Settings for '$dept' updated successfully.");
-            } catch (\Exception $e) {
-                $this->flash('error', 'Error saving department settings.');
-            }
-            redirect('/admin/settings?department=' . urlencode($dept));
-        }
-        redirect('/admin/settings');
     }
 
     private function sendEmail($toEmail, $subject, $message) {

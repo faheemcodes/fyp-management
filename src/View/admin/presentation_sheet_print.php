@@ -186,7 +186,7 @@ $groups = $groups ?? [];
                 padding: 0 !important;
                 font-size: 9pt !important;
             }
-            .no-print {
+            .no-print-toolbar, .no-print, .d-print-none {
                 display: none !important;
             }
             .sheet-wrapper {
@@ -212,7 +212,7 @@ $groups = $groups ?? [];
 <body>
 
     <!-- ═══════════════ Screen Floating Toolbar ═══════════════ -->
-    <div class="no-print-toolbar no-print">
+    <div class="no-print-toolbar no-print d-print-none">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
             <div class="d-flex align-items-center gap-3">
                 <a href="<?php echo $basePath; ?>/admin/presentation-sheets?department=<?php echo urlencode($department); ?>&shift=<?php echo urlencode($shift); ?>&committee_number=<?php echo (int)$committeeNumber; ?>" class="toolbar-back-btn">

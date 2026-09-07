@@ -269,36 +269,6 @@ if ($role === 'supervisor') {
                         <i class="bi bi-person-badge-fill"></i> <span>Supervisor Slots</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/deadlines" class="nav-link <?php echo isActive('/admin/deadlines', $currentUri); ?>">
-                        <i class="bi bi-calendar2-event-fill"></i> <span>Timeline &amp; Deadlines</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/notice" class="nav-link <?php echo isActive('/admin/notice', $currentUri); ?>">
-                        <i class="bi bi-megaphone-fill"></i> <span>Notice Generator</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/batches" class="nav-link <?php echo isActive('/admin/batches', $currentUri); ?>">
-                        <i class="bi bi-box-seam-fill"></i> <span>Academic Batches</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/settings" class="nav-link <?php echo isActive('/admin/settings', $currentUri); ?>">
-                        <i class="bi bi-sliders"></i> <span>Department Settings</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/previous-projects" class="nav-link <?php echo isActive('/admin/previous-projects', $currentUri); ?>">
-                        <i class="bi bi-archive-fill"></i> <span>Previous Projects</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?php echo $urlPrefix; ?>/admin/reports" class="nav-link <?php echo isActive('/admin/reports', $currentUri); ?>">
-                        <i class="bi bi-file-earmark-bar-graph-fill"></i> <span>Analytics &amp; Reports</span>
-                    </a>
-                </li>
 
             <?php elseif ($role === 'hod'): ?>
                 <li class="nav-item">

@@ -54,25 +54,27 @@ $department = $department ?? 'Software Engineering';
             gap: 6px;
         }
         .print-canvas {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 20px auto;
+            max-width: 900px;
+            margin: 24px auto;
             background: #ffffff;
-            padding: 14mm 16mm;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            padding: 24px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 6px;
         }
         @media print {
-            .no-print-toolbar { display: none !important; }
-            body { background: #ffffff !important; }
+            .no-print-toolbar, .no-print, .d-print-none { display: none !important; }
+            body { background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
             .print-canvas {
                 width: 100% !important;
+                max-width: 100% !important;
                 margin: 0 !important;
-                padding: 6mm 10mm !important;
+                padding: 0 !important;
                 box-shadow: none !important;
+                border-radius: 0 !important;
             }
             @page {
                 size: A4 portrait;
-                margin: 8mm 10mm;
+                margin: 10mm 12mm;
             }
         }
         .header-title-main {
@@ -121,7 +123,7 @@ $department = $department ?? 'Software Engineering';
 <body>
 
 <!-- Floating Toolbar -->
-<div class="no-print-toolbar d-flex align-items-center justify-content-between">
+<div class="no-print-toolbar no-print d-print-none d-flex align-items-center justify-content-between">
     <a href="<?php echo $basePath; ?>/admin/attendance-sheet" class="toolbar-back-btn">
         <i class="bi bi-arrow-left"></i> Back to Config
     </a>
