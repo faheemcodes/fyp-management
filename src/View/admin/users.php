@@ -78,6 +78,84 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
+<!-- ═══════════════ Metric KPI Cards ═══════════════ -->
+<div class="row g-3 mb-4">
+    <!-- Total Users -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Total Users</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo (int)($stats['total_users'] ?? count($users)); ?></h4>
+        </div>
+    </div>
+    <!-- Students -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(6, 182, 212, 0.12); color: #0891b2;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Students</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo (int)($stats['total_students'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Supervisors -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Supervisors</span>
+            </div>
+            <h4 class="fw-bold m-0 text-success"><?php echo (int)($stats['total_supervisors'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Coordinators -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Coordinators</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #7c3aed;"><?php echo (int)($stats['total_coordinators'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Committee Members -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(99, 102, 241, 0.12); color: #4f46e5;">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Committees</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #4f46e5;"><?php echo (int)($stats['total_committees'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Pending Approvals -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Pending</span>
+            </div>
+            <h4 class="fw-bold m-0 <?php echo (!empty($stats['pending_users'])) ? 'text-warning animate-pulse' : 'text-dark'; ?>">
+                <?php echo (int)($stats['pending_users'] ?? 0); ?>
+            </h4>
+        </div>
+    </div>
+</div>
+
 <div class="page-section">
     <!-- Filters and Search Controls -->
     <div class="page-section-header">
@@ -85,7 +163,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <!-- Search Input -->
             <div class="flex-grow-1 d-flex align-items-center px-3">
                 <i class="bi bi-search text-muted me-2"></i>
-                <input type="text" class="form-control premium-filter-input table-search w-100" placeholder="Search users by name, email, department..." data-target="users-table">
+                <input type="text" class="form-control premium-filter-input table-search w-100" placeholder="Search users by name, email, department, roll number..." data-target="users-table">
             </div>
             
             <!-- Divider -->
@@ -97,9 +175,10 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     <option value="all">All Roles</option>
                     <option value="student">Student</option>
                     <option value="supervisor">Supervisor</option>
-                    <option value="committee">Committee</option>
-                    <option value="hod">HOD</option>
                     <option value="coordinator">Coordinator</option>
+                    <option value="committee">Committee Member</option>
+                    <option value="hod">HOD</option>
+                    <option value="admin">Administrator</option>
                 </select>
             </div>
 
@@ -139,7 +218,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             <thead>
                 <tr>
                     <th class="ps-4">User Details</th>
-                    <th>Role</th>
+                    <th>Role(s)</th>
                     <th>Department</th>
                     <th>Status</th>
                     <th class="text-end pe-4">Actions</th>
@@ -152,8 +231,46 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     $uFirstName = $u['name'] ?? '';
                     $uSurname = $u['surname'] ?? '';
                     $uFullName = formatPersonName($uPrefix, $uFirstName, $uSurname);
+
+                    // Build multi-role list and badges
+                    $rolesList = [];
+                    $roleBadges = [];
+                    if ($u['role'] === 'admin') {
+                        $rolesList[] = 'admin';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(239, 68, 68, 0.12); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-shield-lock-fill me-1"></i>Admin</span>';
+                    }
+                    if (!empty($u['is_student']) || $u['role'] === 'student') {
+                        $rolesList[] = 'student';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-mortarboard-fill me-1"></i>Student</span>';
+                    }
+                    if (!empty($u['is_hod']) || $u['role'] === 'hod') {
+                        $rolesList[] = 'hod';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-award-fill me-1"></i>HOD</span>';
+                    }
+                    if (!empty($u['is_supervisor']) || $u['role'] === 'supervisor') {
+                        $rolesList[] = 'supervisor';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-person-workspace me-1"></i>Supervisor</span>';
+                    }
+                    if (!empty($u['is_coordinator']) || $u['role'] === 'coordinator') {
+                        $rolesList[] = 'coordinator';
+                        $shiftLabel = !empty($u['coord_shift']) ? ' (' . htmlspecialchars($u['coord_shift'], ENT_QUOTES, 'UTF-8') . ')' : '';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-person-badge-fill me-1"></i>Coord' . $shiftLabel . '</span>';
+                    }
+                    if (!empty($u['is_committee']) || $u['role'] === 'committee') {
+                        $rolesList[] = 'committee';
+                        $commNum = !empty($u['committee_number']) ? ' #' . htmlspecialchars((string)$u['committee_number'], ENT_QUOTES, 'UTF-8') : '';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(6, 182, 212, 0.12); color: #0891b2; border: 1px solid rgba(6, 182, 212, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-diagram-3-fill me-1"></i>Committee' . $commNum . '</span>';
+                    }
+                    if (empty($roleBadges)) {
+                        $roleBadges[] = '<span class="badge rounded-pill bg-light text-secondary border">' . htmlspecialchars($u['role']) . '</span>';
+                        $rolesList[] = $u['role'];
+                    }
+                    $rolesAttr = implode(' ', array_unique($rolesList));
+                    $isSup = (!empty($u['is_supervisor']) || $u['role'] === 'supervisor') ? '1' : '0';
+                    $isCoord = (!empty($u['is_coordinator']) || $u['role'] === 'coordinator') ? '1' : '0';
+                    $isComm = (!empty($u['is_committee']) || $u['role'] === 'committee') ? '1' : '0';
                 ?>
-                <tr data-role="<?php echo htmlspecialchars($u['role']); ?>" data-department="<?php echo htmlspecialchars($u['department']); ?>" data-status="<?php echo htmlspecialchars($u['status']); ?>">
+                <tr data-role="<?php echo htmlspecialchars($rolesAttr); ?>" data-department="<?php echo htmlspecialchars($u['department']); ?>" data-status="<?php echo htmlspecialchars($u['status']); ?>">
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
                             <?php if ($u['role'] === 'student'): ?>
@@ -167,20 +284,20 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             <div>
                                 <div class="fw-semibold" style="font-size: 0.9rem"><?php echo htmlspecialchars($uFullName); ?></div>
                                 <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
-                                <?php if($u['student_id']): ?>
+                                <?php if(!empty($u['student_id'])): ?>
                                     <div class="mt-1 fw-bold" style="color: var(--primary-color);font-size: 0.75rem"><?php echo htmlspecialchars($u['student_id']); ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <span class="status-pill bg-light text-secondary border">
-                            <?php echo htmlspecialchars($u['role']); ?>
-                        </span>
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <?php echo implode(' ', $roleBadges); ?>
+                        </div>
                     </td>
                     <td>
                         <div class="fw-medium" style="font-size: 0.85rem"><?php echo htmlspecialchars($u['department']); ?></div>
-                        <?php if($u['designation']): ?>
+                        <?php if(!empty($u['designation'])): ?>
                             <small class="text-muted" style="font-size: 0.75rem"><?php echo htmlspecialchars($u['designation']); ?></small>
                         <?php endif; ?>
                     </td>
@@ -200,6 +317,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                 data-name="<?php echo htmlspecialchars($uFullName); ?>"
                                 data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
+                                data-roles="<?php echo htmlspecialchars(implode(', ', array_map('ucfirst', $rolesList))); ?>"
+                                data-is-supervisor="<?php echo $isSup; ?>"
+                                data-is-coordinator="<?php echo $isCoord; ?>"
+                                data-coord-shift="<?php echo htmlspecialchars($u['coord_shift'] ?? 'Morning'); ?>"
+                                data-is-committee="<?php echo $isComm; ?>"
+                                data-committee-number="<?php echo htmlspecialchars((string)($u['committee_number'] ?? '1')); ?>"
                                 data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
                                 data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? 'N/A'); ?>"
                                 data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? 'N/A'); ?>"
@@ -225,6 +348,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
                                     data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
                                     data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
+                                    data-is-supervisor="<?php echo $isSup; ?>"
+                                    data-is-coordinator="<?php echo $isCoord; ?>"
+                                    data-coord-shift="<?php echo htmlspecialchars($u['coord_shift'] ?? 'Morning'); ?>"
+                                    data-is-committee="<?php echo $isComm; ?>"
+                                    data-committee-number="<?php echo htmlspecialchars((string)($u['committee_number'] ?? '1')); ?>"
                                     data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
                                     data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? ''); ?>"
                                     data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? ''); ?>"
@@ -353,6 +481,60 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <option value="Teaching Assistant">Teaching Assistant</option>
                             </select>
                         </div>
+                        <div class="col-md-12 mt-2">
+                            <div class="p-3 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                <label class="form-label text-dark fw-bold mb-2 d-flex align-items-center gap-2" style="font-size: 0.84rem">
+                                    <i class="bi bi-person-gear text-primary"></i> Faculty Appointments &amp; Roles
+                                </label>
+                                <div class="d-flex flex-column gap-2.5">
+                                    <!-- Supervisor Toggle -->
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="createIsSupervisor" name="is_supervisor" value="1" checked>
+                                        <label class="form-check-label fw-medium text-secondary" for="createIsSupervisor" style="font-size: 0.82rem;">
+                                            Appoint as <strong>Supervisor</strong> (Project supervision &amp; mentoring)
+                                        </label>
+                                    </div>
+                                    <!-- Coordinator Toggle -->
+                                    <div class="border-top pt-2">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="createIsCoordinator" name="is_coordinator" value="1" onchange="document.getElementById('createCoordShiftWrap').style.display = this.checked ? 'block' : 'none';">
+                                            <label class="form-check-label fw-medium text-secondary" for="createIsCoordinator" style="font-size: 0.82rem;">
+                                                Appoint as <strong>Coordinator</strong> (Departmental schedules &amp; sheets)
+                                            </label>
+                                        </div>
+                                        <div id="createCoordShiftWrap" class="mt-2 ps-4" style="display: none;">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-muted small">Shift:</span>
+                                                <select class="form-select form-select-sm w-auto" name="coord_shift" id="createCoordShift" style="font-size: 0.8rem;">
+                                                    <option value="Morning">Morning Shift</option>
+                                                    <option value="Evening">Evening Shift</option>
+                                                    <option value="All">All Shifts</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Committee Member Toggle -->
+                                    <div class="border-top pt-2">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="createIsCommittee" name="is_committee" value="1" onchange="document.getElementById('createCommitteeNumWrap').style.display = this.checked ? 'block' : 'none';">
+                                            <label class="form-check-label fw-medium text-secondary" for="createIsCommittee" style="font-size: 0.82rem;">
+                                                Appoint as <strong>Committee Member</strong> (Evaluator for defenses)
+                                            </label>
+                                        </div>
+                                        <div id="createCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-muted small">Committee #:</span>
+                                                <select class="form-select form-select-sm w-auto" name="committee_number" id="createCommitteeNumber" style="font-size: 0.8rem;">
+                                                    <?php for($i=1; $i<=8; $i++): ?>
+                                                        <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -477,6 +659,62 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <option value="HOD">HOD</option>
                                         <option value="System Admin">System Admin</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Faculty Multi-Role Appointments Section -->
+                    <div class="col-12 d-none mb-3" id="editModalMultiRoleFields">
+                        <div class="p-3 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                            <label class="form-label text-dark fw-bold mb-2 d-flex align-items-center gap-2" style="font-size: 0.82rem">
+                                <i class="bi bi-person-gear text-primary"></i> Faculty Appointments &amp; Roles
+                            </label>
+                            <div class="d-flex flex-column gap-2">
+                                <!-- Supervisor Switch -->
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="editIsSupervisor" name="is_supervisor" value="1">
+                                    <label class="form-check-label fw-medium text-secondary" for="editIsSupervisor" style="font-size: 0.8rem;">
+                                        Appointed as <strong>Supervisor</strong> (Project supervision &amp; mentoring)
+                                    </label>
+                                </div>
+                                <!-- Coordinator Switch -->
+                                <div class="border-top pt-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="editIsCoordinator" name="is_coordinator" value="1" onchange="document.getElementById('editCoordShiftWrap').style.display = this.checked ? 'block' : 'none';">
+                                        <label class="form-check-label fw-medium text-secondary" for="editIsCoordinator" style="font-size: 0.8rem;">
+                                            Appointed as <strong>Coordinator</strong> (Departmental schedules &amp; sheets)
+                                        </label>
+                                    </div>
+                                    <div id="editCoordShiftWrap" class="mt-2 ps-4" style="display: none;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-muted small">Shift:</span>
+                                            <select class="form-select form-select-sm w-auto" name="coord_shift" id="editCoordShift" style="font-size: 0.78rem;">
+                                                <option value="Morning">Morning Shift</option>
+                                                <option value="Evening">Evening Shift</option>
+                                                <option value="All">All Shifts</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Committee Member Switch -->
+                                <div class="border-top pt-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="editIsCommittee" name="is_committee" value="1" onchange="document.getElementById('editCommitteeNumWrap').style.display = this.checked ? 'block' : 'none';">
+                                        <label class="form-check-label fw-medium text-secondary" for="editIsCommittee" style="font-size: 0.8rem;">
+                                            Appointed as <strong>Committee Member</strong> (Defense &amp; evaluation panel)
+                                        </label>
+                                    </div>
+                                    <div id="editCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-muted small">Committee #:</span>
+                                            <select class="form-select form-select-sm w-auto" name="committee_number" id="editCommitteeNumber" style="font-size: 0.78rem;">
+                                                <?php for($i=1; $i<=8; $i++): ?>
+                                                    <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -609,6 +847,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                     
                                     <!-- Staff details -->
                                     <tr class="border-bottom staff-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Designation:</td><td id="detailDesignation" class="py-2">Assistant Professor</td></tr>
+                                    <tr class="border-bottom coord-detail-row d-none"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Coordinator Shift:</td><td id="detailCoordShift" class="py-2">Morning Shift</td></tr>
+                                    <tr class="border-bottom committee-detail-row d-none"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Committee Allocation:</td><td id="detailCommitteeNum" class="py-2">Committee #1</td></tr>
                                     
                                     <!-- Common details -->
                                     <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Contact Number:</td><td id="detailPhone" class="py-2">+923001234567</td></tr>
@@ -660,13 +900,19 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 supervisorFields.classList.remove('d-none');
                 prefixGroup.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = false;
-                
-                if (role === 'hod' || role === 'committee' || role === 'supervisor') {
-                    departmentGroup.classList.remove('d-none');
-                } else if (role === 'coordinator') {
-                    departmentGroup.classList.add('d-none');
-                }
+                departmentGroup.classList.remove('d-none');
                 surnameGroup.classList.remove('d-none');
+                
+                // Pre-configure appointment toggles based on primary role selected
+                if (role === 'supervisor') {
+                    document.getElementById('createIsSupervisor').checked = true;
+                } else if (role === 'coordinator') {
+                    document.getElementById('createIsCoordinator').checked = true;
+                    document.getElementById('createCoordShiftWrap').style.display = 'block';
+                } else if (role === 'committee') {
+                    document.getElementById('createIsCommittee').checked = true;
+                    document.getElementById('createCommitteeNumWrap').style.display = 'block';
+                }
             } else {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.add('d-none');
@@ -682,6 +928,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 const userId = this.getAttribute('data-id');
                 const name = this.getAttribute('data-name');
                 const role = this.getAttribute('data-role');
+                const roles = this.getAttribute('data-roles') || role;
+                const isCoordinator = this.getAttribute('data-is-coordinator') === '1';
+                const coordShift = this.getAttribute('data-coord-shift') || 'Morning';
+                const isCommittee = this.getAttribute('data-is-committee') === '1';
+                const committeeNumber = this.getAttribute('data-committee-number') || '1';
                 const email = this.getAttribute('data-email');
                 const cnic = this.getAttribute('data-cnic');
                 const studentId = this.getAttribute('data-student-id');
@@ -708,9 +959,43 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 document.getElementById('detailDomicile').textContent = domicile;
                 document.getElementById('detailAddress').textContent = address;
                 
-                // Role Badge
-                const roleBadge = document.querySelector('#detailRoleBadge span');
-                roleBadge.textContent = role;
+                // Role Badges in View Modal
+                const roleBadgeContainer = document.getElementById('detailRoleBadge');
+                if (roleBadgeContainer) {
+                    roleBadgeContainer.innerHTML = '';
+                    const rList = roles.split(',').map(r => r.trim()).filter(Boolean);
+                    rList.forEach(r => {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge rounded-pill me-1 px-3 py-1.5 shadow-xs';
+                        if (r.toLowerCase() === 'supervisor') {
+                            badge.style.background = 'rgba(16, 185, 129, 0.15)';
+                            badge.style.color = '#059669';
+                            badge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                        } else if (r.toLowerCase() === 'coordinator') {
+                            badge.style.background = 'rgba(139, 92, 246, 0.15)';
+                            badge.style.color = '#7c3aed';
+                            badge.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+                        } else if (r.toLowerCase().includes('committee')) {
+                            badge.style.background = 'rgba(6, 182, 212, 0.15)';
+                            badge.style.color = '#0891b2';
+                            badge.style.border = '1px solid rgba(6, 182, 212, 0.3)';
+                        } else if (r.toLowerCase() === 'hod') {
+                            badge.style.background = 'rgba(99, 102, 241, 0.15)';
+                            badge.style.color = '#4f46e5';
+                            badge.style.border = '1px solid rgba(99, 102, 241, 0.3)';
+                        } else if (r.toLowerCase() === 'admin') {
+                            badge.style.background = 'rgba(239, 68, 68, 0.15)';
+                            badge.style.color = '#dc2626';
+                            badge.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                        } else {
+                            badge.style.background = 'rgba(59, 130, 246, 0.15)';
+                            badge.style.color = '#2563eb';
+                            badge.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                        }
+                        badge.textContent = r;
+                        roleBadgeContainer.appendChild(badge);
+                    });
+                }
                 
                 // Status Badge
                 const statusBadge = document.getElementById('detailStatusBadge');
@@ -746,10 +1031,14 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 // Conditional Student/Staff rows display
                 const studentRows = document.querySelectorAll('.student-detail-row');
                 const staffRows = document.querySelectorAll('.staff-detail-row');
+                const coordRow = document.querySelector('.coord-detail-row');
+                const committeeRow = document.querySelector('.committee-detail-row');
                 
                 if (role === 'student') {
                     studentRows.forEach(row => row.classList.remove('d-none'));
                     staffRows.forEach(row => row.classList.add('d-none'));
+                    if (coordRow) coordRow.classList.add('d-none');
+                    if (committeeRow) committeeRow.classList.add('d-none');
                     document.getElementById('detailStudentId').textContent = studentId;
                     document.getElementById('detailShift').textContent = shift;
                     document.getElementById('detailFather').textContent = father;
@@ -757,6 +1046,23 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     studentRows.forEach(row => row.classList.add('d-none'));
                     staffRows.forEach(row => row.classList.remove('d-none'));
                     document.getElementById('detailDesignation').textContent = designation;
+
+                    if (coordRow) {
+                        if (isCoordinator) {
+                            coordRow.classList.remove('d-none');
+                            document.getElementById('detailCoordShift').textContent = coordShift + ' Shift';
+                        } else {
+                            coordRow.classList.add('d-none');
+                        }
+                    }
+                    if (committeeRow) {
+                        if (isCommittee) {
+                            committeeRow.classList.remove('d-none');
+                            document.getElementById('detailCommitteeNum').textContent = 'Committee #' + committeeNumber;
+                        } else {
+                            committeeRow.classList.add('d-none');
+                        }
+                    }
                 }
                 
                 // Pending modal action buttons
@@ -807,6 +1113,12 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 const address = this.getAttribute('data-address');
                 const father = this.getAttribute('data-father');
                 
+                const isSupervisor = this.getAttribute('data-is-supervisor') === '1';
+                const isCoordinator = this.getAttribute('data-is-coordinator') === '1';
+                const coordShift = this.getAttribute('data-coord-shift') || 'Morning';
+                const isCommittee = this.getAttribute('data-is-committee') === '1';
+                const committeeNumber = this.getAttribute('data-committee-number') || '1';
+                
                 document.getElementById('editModalId').value = userId;
                 document.getElementById('editModalRole').value = role;
                 document.getElementById('editModalRoleDisplay').value = role;
@@ -832,6 +1144,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 
                 const stdFields = document.getElementById('editModalStudentFields');
                 const staffFields = document.getElementById('editModalStaffFields');
+                const multiRoleFields = document.getElementById('editModalMultiRoleFields');
                 const prefixCol = document.getElementById('editModalPrefixCol');
                 const deptGroup = document.getElementById('editModalDeptGroup');
                 
@@ -840,6 +1153,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 
                 if (stdFields) stdFields.classList.add('d-none');
                 if (staffFields) staffFields.classList.add('d-none');
+                if (multiRoleFields) multiRoleFields.classList.add('d-none');
                 if (prefixCol) prefixCol.classList.add('d-none');
                 if (deptGroup) deptGroup.classList.remove('d-none');
                 if (roleSection) roleSection.classList.add('d-none');
@@ -857,6 +1171,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     if (staffFields) staffFields.classList.remove('d-none');
                     if (prefixCol) prefixCol.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
+
+                    // Configure faculty multi-role switches
+                    if (multiRoleFields) {
+                        multiRoleFields.classList.remove('d-none');
+                        document.getElementById('editIsSupervisor').checked = isSupervisor;
+                        document.getElementById('editIsCoordinator').checked = isCoordinator;
+                        document.getElementById('editCoordShift').value = coordShift;
+                        document.getElementById('editCoordShiftWrap').style.display = isCoordinator ? 'block' : 'none';
+                        document.getElementById('editIsCommittee').checked = isCommittee;
+                        document.getElementById('editCommitteeNumber').value = committeeNumber;
+                        document.getElementById('editCommitteeNumWrap').style.display = isCommittee ? 'block' : 'none';
+                    }
                 }
             });
         });

@@ -18,6 +18,71 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
     </div>
 </div>
 
+<?php
+$totalSupervisors = count($supervisorsList ?? []);
+$totalMaxSlotsSum = 0;
+$totalOccupiedSlotsSum = 0;
+$fullCapacityCount = 0;
+foreach ($supervisorsList ?? [] as $sup) {
+    $cur = (int)$sup['current_slots'];
+    $mx = (int)$sup['total_max_slots'];
+    $totalOccupiedSlotsSum += $cur;
+    $totalMaxSlotsSum += $mx;
+    if ($cur >= $mx && $mx > 0) {
+        $fullCapacityCount++;
+    }
+}
+$availableCapacityCount = max(0, $totalMaxSlotsSum - $totalOccupiedSlotsSum);
+?>
+
+<!-- ═══════════════ Metric KPI Cards ═══════════════ -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Total Supervisors</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo $totalSupervisors; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Allocated Groups</span>
+            </div>
+            <h4 class="fw-bold m-0 text-primary"><?php echo $totalOccupiedSlotsSum; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(6, 182, 212, 0.12); color: #0891b2;">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Available Slots</span>
+            </div>
+            <h4 class="fw-bold m-0 text-success"><?php echo $availableCapacityCount; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+                    <i class="bi bi-shield-exclamation"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">At Full Capacity</span>
+            </div>
+            <h4 class="fw-bold m-0 <?php echo ($fullCapacityCount > 0) ? 'text-warning' : 'text-dark'; ?>"><?php echo $fullCapacityCount; ?></h4>
+        </div>
+    </div>
+</div>
+
 <div class="page-section">
     <!-- Filters and Search Controls -->
     <div class="page-section-header">

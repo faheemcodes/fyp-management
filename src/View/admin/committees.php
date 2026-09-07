@@ -83,27 +83,47 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 <!-- Allocation KPI Summary Cards -->
 <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
-        <div class="p-3 rounded-3 border text-center shadow-sm" style="background: var(--card-bg);">
-            <div class="text-secondary small fw-semibold">Total Approved Groups</div>
-            <div class="fw-bold fs-3 text-dark"><?php echo $totalGroups; ?></div>
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
+                    <i class="bi bi-folder-check"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Approved Groups</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo $totalGroups; ?></h4>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="p-3 rounded-3 border text-center shadow-sm" style="background: var(--card-bg);">
-            <div class="text-secondary small fw-semibold">Configured Committees</div>
-            <div class="fw-bold fs-3 text-primary"><?php echo $numCommittees; ?></div>
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Configured Committees</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #7c3aed;"><?php echo $numCommittees; ?></h4>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="p-3 rounded-3 border text-center shadow-sm" style="background: var(--card-bg);">
-            <div class="text-secondary small fw-semibold">Allocated Groups</div>
-            <div class="fw-bold fs-3 text-success"><?php echo $totalGroups - $unassignedCount; ?></div>
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Allocated Groups</span>
+            </div>
+            <h4 class="fw-bold m-0 text-success"><?php echo $totalGroups - $unassignedCount; ?></h4>
         </div>
     </div>
     <div class="col-6 col-md-3">
-        <div class="p-3 rounded-3 border text-center shadow-sm" style="background: var(--card-bg);">
-            <div class="text-secondary small fw-semibold">Unallocated Groups</div>
-            <div class="fw-bold fs-3 text-danger"><?php echo $unassignedCount; ?></div>
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(239, 68, 68, 0.12); color: #dc2626;">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Unallocated Groups</span>
+            </div>
+            <h4 class="fw-bold m-0 <?php echo ($unassignedCount > 0) ? 'text-danger' : 'text-dark'; ?>"><?php echo $unassignedCount; ?></h4>
         </div>
     </div>
 </div>

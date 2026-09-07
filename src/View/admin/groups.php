@@ -79,6 +79,74 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
 </div>
+<?php
+// Compute quick KPI metrics for groups
+$totalGroupsCount = count($groups ?? []);
+$withSupervisorCount = 0;
+$unassignedSupCount = 0;
+$completedGradingCount = 0;
+$inPresentationCount = 0;
+foreach ($groups ?? [] as $grp) {
+    if (!empty($grp['supervisor_id'])) {
+        $withSupervisorCount++;
+    } else {
+        $unassignedSupCount++;
+    }
+    if ($grp['progress_stage'] === 'Final Grading Completed') {
+        $completedGradingCount++;
+    } elseif (strpos($grp['progress_stage'] ?? '', 'Presentation') !== false || strpos($grp['progress_stage'] ?? '', 'Defence') !== false) {
+        $inPresentationCount++;
+    }
+}
+?>
+
+<!-- ═══════════════ Metric KPI Cards ═══════════════ -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
+                    <i class="bi bi-folder-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Total Groups</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo $totalGroupsCount; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Supervised</span>
+            </div>
+            <h4 class="fw-bold m-0 text-success"><?php echo $withSupervisorCount; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+                    <i class="bi bi-person-x-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Awaiting Supervisor</span>
+            </div>
+            <h4 class="fw-bold m-0 <?php echo ($unassignedSupCount > 0) ? 'text-warning' : 'text-dark'; ?>"><?php echo $unassignedSupCount; ?></h4>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Final Completed</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #7c3aed;"><?php echo $completedGradingCount; ?></h4>
+        </div>
+    </div>
+</div>
 
 <div class="page-section">
     <!-- Filters and Search Controls -->

@@ -104,8 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 let filterMatch = true;
                 for (let i = 0; i < activeFilters.length; i++) {
                     const f = activeFilters[i];
-                    const rowVal = row.dataset[f.column];
-                    if (rowVal !== f.value) {
+                    const rowVal = (row.dataset[f.column] || '').trim();
+                    const matches = (rowVal === f.value) || (rowVal.split(/\s+/).includes(f.value));
+                    if (!matches) {
                         filterMatch = false;
                         break;
                     }
@@ -130,8 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 let filterMatch = true;
                 for (let i = 0; i < activeFilters.length; i++) {
                     const f = activeFilters[i];
-                    const cardVal = card.dataset[f.column];
-                    if (cardVal !== f.value) {
+                    const cardVal = (card.dataset[f.column] || '').trim();
+                    const matches = (cardVal === f.value) || (cardVal.split(/\s+/).includes(f.value));
+                    if (!matches) {
                         filterMatch = false;
                         break;
                     }

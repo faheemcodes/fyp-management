@@ -149,7 +149,17 @@ class AdminController extends BaseController {
     public function users() {
         $db = \Database::getInstance()->getConnection();
         
-        // Fetch all users with details
+        // Fetch KPI stats for users management
+        $stats = [
+            'total_users' => (int)$db->query("SELECT COUNT(*) FROM users")->fetchColumn(),
+            'total_students' => (int)$db->query("SELECT COUNT(*) FROM students")->fetchColumn(),
+            'total_supervisors' => (int)$db->query("SELECT COUNT(*) FROM supervisors")->fetchColumn(),
+            'total_coordinators' => (int)$db->query("SELECT COUNT(*) FROM coordinators")->fetchColumn(),
+            'total_committees' => (int)$db->query("SELECT COUNT(*) FROM committees")->fetchColumn(),
+            'pending_users' => (int)$db->query("SELECT COUNT(*) FROM users WHERE status = 'pending'")->fetchColumn(),
+        ];
+
+        // Fetch all users with full multi-role assignment details
         $users = $db->query("
             SELECT u.*, 
             COALESCE(s.name, sup.name, c.name, d.name, coord.name, 'Administrator') as name,
@@ -168,7 +178,15 @@ class AdminController extends BaseController {
             prof.gender,
             prof.province_state,
             prof.district,
-            prof.home_address
+            prof.home_address,
+            (SELECT COUNT(*) FROM supervisors WHERE user_id = u.id) as is_supervisor,
+            (SELECT COUNT(*) FROM coordinators WHERE user_id = u.id) as is_coordinator,
+            (SELECT shift FROM coordinators WHERE user_id = u.id LIMIT 1) as coord_shift,
+            (SELECT designation FROM coordinators WHERE user_id = u.id LIMIT 1) as coord_designation,
+            (SELECT COUNT(*) FROM committees WHERE user_id = u.id) as is_committee,
+            (SELECT committee_number FROM committees WHERE user_id = u.id LIMIT 1) as committee_number,
+            (SELECT COUNT(*) FROM hods WHERE user_id = u.id) as is_hod,
+            (SELECT COUNT(*) FROM students WHERE user_id = u.id) as is_student
             FROM users u
             LEFT JOIN students s ON u.id = s.user_id
             LEFT JOIN supervisors sup ON u.id = sup.user_id
@@ -179,7 +197,8 @@ class AdminController extends BaseController {
             ORDER BY CASE WHEN u.status = 'pending' THEN 1 ELSE 2 END ASC, u.created_at DESC")->fetchAll();
 
         $this->render('admin/users', [
-            'users' => $users
+            'users' => $users,
+            'stats' => $stats
         ]);
     }
 
@@ -329,17 +348,30 @@ class AdminController extends BaseController {
                     $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, gender, home_address) VALUES (?, ?, ?, ?, '1980-01-01', 'Male', 'Not Provided Yet')");
                     $stmt->execute([$userId, $prefix, $surname, $cnic]);
                     
-                    if ($role === 'supervisor') {
+                    $is_supervisor = isset($_POST['is_supervisor']) && ($_POST['is_supervisor'] === '1' || $_POST['is_supervisor'] === 'on');
+                    $is_coordinator = isset($_POST['is_coordinator']) && ($_POST['is_coordinator'] === '1' || $_POST['is_coordinator'] === 'on');
+                    $coord_shift = !empty($_POST['coord_shift']) ? $_POST['coord_shift'] : 'Morning';
+                    $is_committee = isset($_POST['is_committee']) && ($_POST['is_committee'] === '1' || $_POST['is_committee'] === 'on');
+                    $committee_number = max(1, min(8, (int)($_POST['committee_number'] ?? 1)));
+
+                    if ($role === 'supervisor') $is_supervisor = true;
+                    if ($role === 'coordinator') $is_coordinator = true;
+                    if ($role === 'committee') $is_committee = true;
+
+                    if ($is_supervisor) {
                         $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
                         $stmt->execute([$userId, $name, $designation, $department]);
-                    } else if ($role === 'hod') {
+                    }
+                    if ($is_coordinator) {
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $designation, $department, $coord_shift]);
+                    }
+                    if ($is_committee) {
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$userId, $name, $designation, $department, $committee_number]);
+                    }
+                    if ($role === 'hod') {
                         $stmt = $db->prepare("INSERT INTO hods (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
-                        $stmt->execute([$userId, $name, $department, $designation]);
-                    } else if ($role === 'coordinator') {
-                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
-                        $stmt->execute([$userId, $name, $department, $designation]);
-                    } else if ($role === 'committee') {
-                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department, designation) VALUES (?, ?, ?, ?)");
                         $stmt->execute([$userId, $name, $department, $designation]);
                     }
                 }
@@ -504,22 +536,72 @@ class AdminController extends BaseController {
                     $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, department, shift) VALUES (?, ?, ?, ?, ?)
                         ON DUPLICATE KEY UPDATE student_id = ?, name = ?, department = ?, shift = ?");
                     $stmt->execute([$id, $student_id, $name, $department, $shift, $student_id, $name, $department, $shift]);
-                } else if ($role === 'supervisor') {
-                    $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?");
-                    $stmt->execute([$id, $name, $designation, $department, $name, $designation, $department]);
-                } else if ($role === 'hod') {
-                    $stmt = $db->prepare("INSERT INTO hods (user_id, name, department, designation) VALUES (?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
-                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
-                } else if ($role === 'coordinator') {
-                    $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department, designation) VALUES (?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
-                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
-                } else if ($role === 'committee') {
-                    $stmt = $db->prepare("INSERT INTO committees (user_id, name, department, designation) VALUES (?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
-                    $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
+                } else {
+                    $is_supervisor = isset($_POST['is_supervisor']) && ($_POST['is_supervisor'] === '1' || $_POST['is_supervisor'] === 'on');
+                    $is_coordinator = isset($_POST['is_coordinator']) && ($_POST['is_coordinator'] === '1' || $_POST['is_coordinator'] === 'on');
+                    $coord_shift = !empty($_POST['coord_shift']) ? $_POST['coord_shift'] : 'Morning';
+                    $is_committee = isset($_POST['is_committee']) && ($_POST['is_committee'] === '1' || $_POST['is_committee'] === 'on');
+                    $committee_number = max(1, min(8, (int)($_POST['committee_number'] ?? 1)));
+
+                    // If role was explicitly submitted as one of the faculty roles
+                    if ($role === 'supervisor') {
+                        $is_supervisor = true;
+                    } elseif ($role === 'coordinator') {
+                        $is_coordinator = true;
+                    } elseif ($role === 'committee') {
+                        $is_committee = true;
+                    }
+
+                    // Supervisors sync
+                    if ($is_supervisor) {
+                        $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?");
+                        $stmt->execute([$id, $name, $designation, $department, $name, $designation, $department]);
+                    } else {
+                        $stmt = $db->prepare("DELETE FROM supervisors WHERE user_id = ?");
+                        $stmt->execute([$id]);
+                    }
+
+                    // Coordinators sync
+                    if ($is_coordinator) {
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, designation, department, shift) VALUES (?, ?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?, shift = ?");
+                        $stmt->execute([$id, $name, $designation, $department, $coord_shift, $name, $designation, $department, $coord_shift]);
+                    } else {
+                        $stmt = $db->prepare("DELETE FROM coordinators WHERE user_id = ?");
+                        $stmt->execute([$id]);
+                    }
+
+                    // Committees sync
+                    if ($is_committee) {
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, designation, department, committee_number) VALUES (?, ?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE name = ?, designation = ?, department = ?, committee_number = ?");
+                        $stmt->execute([$id, $name, $designation, $department, $committee_number, $name, $designation, $department, $committee_number]);
+                    } else {
+                        $stmt = $db->prepare("DELETE FROM committees WHERE user_id = ?");
+                        $stmt->execute([$id]);
+                    }
+
+                    // HOD sync
+                    if ($role === 'hod') {
+                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department, designation) VALUES (?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE name = ?, department = ?, designation = ?");
+                        $stmt->execute([$id, $name, $department, $designation, $name, $department, $designation]);
+                    }
+
+                    // Ensure primary role in users table remains consistent
+                    $primaryRole = $role;
+                    if ($role === 'hod') {
+                        $primaryRole = 'hod';
+                    } elseif ($is_supervisor || $role === 'supervisor') {
+                        $primaryRole = 'supervisor';
+                    } elseif ($is_coordinator || $role === 'coordinator') {
+                        $primaryRole = 'coordinator';
+                    } elseif ($is_committee || $role === 'committee') {
+                        $primaryRole = 'committee';
+                    }
+                    $stmtRole = $db->prepare("UPDATE users SET role = ? WHERE id = ?");
+                    $stmtRole->execute([$primaryRole, $id]);
                 }
                 
                 // Keep profiles table in sync
