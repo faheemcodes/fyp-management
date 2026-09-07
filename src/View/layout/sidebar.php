@@ -202,7 +202,13 @@ if ($role === 'supervisor') {
                 <?php
                     $dbSidebar = \Database::getInstance()->getConnection();
                     $stmtSidebar = $dbSidebar->query("SELECT COUNT(*) FROM users WHERE status = 'pending' AND role = 'student'");
-                    $pendingStudentsCount = $stmtSidebar->fetchColumn();
+                    $pendingStudentsCount = (int)$stmtSidebar->fetchColumn();
+
+                    $stmtPropCount = $dbSidebar->query("SELECT COUNT(*) FROM proposals WHERE status IN ('Submitted', 'Under Review')");
+                    $pendingProposalsCount = (int)($stmtPropCount ? $stmtPropCount->fetchColumn() : 0);
+
+                    $stmtMeetCount = $dbSidebar->query("SELECT COUNT(*) FROM meetings WHERE status = 'Completed'");
+                    $pendingMeetingsCount = (int)($stmtMeetCount ? $stmtMeetCount->fetchColumn() : 0);
                 ?>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/admin/dashboard" class="nav-link <?php echo isActive('/admin/dashboard', $currentUri); ?>">
@@ -213,7 +219,7 @@ if ($role === 'supervisor') {
                     <a href="<?php echo $urlPrefix; ?>/admin/users" class="nav-link <?php echo isActive('/admin/users', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-people-fill"></i> <span>Manage Users</span></div>
                         <?php if ($pendingStudentsCount > 0): ?>
-                        <span class="badge rounded-pill ms-auto" style="font-size: 0.7rem; font-weight: 700; padding: 0.4em 0.7em; background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);"><?php echo $pendingStudentsCount; ?></span>
+                        <span class="badge rounded-pill ms-auto" style="font-size: 0.7rem; font-weight: 700; padding: 0.35em 0.65em; background: rgba(220, 53, 69, 0.15); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);"><?php echo $pendingStudentsCount; ?></span>
                         <?php endif; ?>
                     </a>
                 </li>
@@ -223,18 +229,74 @@ if ($role === 'supervisor') {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/proposals" class="nav-link <?php echo isActive('/admin/proposals', $currentUri); ?> d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-file-earmark-text-fill"></i> <span>Project Proposals</span></div>
+                        <?php if ($pendingProposalsCount > 0): ?>
+                        <span class="badge rounded-pill ms-auto" style="font-size: 0.7rem; font-weight: 700; padding: 0.35em 0.65em; background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.3);"><?php echo $pendingProposalsCount; ?></span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/committees" class="nav-link <?php echo isActive('/admin/committees', $currentUri); ?>">
+                        <i class="bi bi-diagram-3-fill"></i> <span>Group Allocation</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/cumulative-sheet" class="nav-link <?php echo isActive('/admin/cumulative-sheet', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-ruled-fill"></i> <span>Cumulative Sheet</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/presentation-sheets" class="nav-link <?php echo isActive('/admin/presentation-sheets', $currentUri); ?>">
+                        <i class="bi bi-printer-fill"></i> <span>Presentation Sheets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/attendance-sheet" class="nav-link <?php echo isActive('/admin/attendance-sheet', $currentUri); ?>">
+                        <i class="bi bi-file-earmark-spreadsheet-fill"></i> <span>Attendance Sheets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/meetings" class="nav-link <?php echo isActive('/admin/meetings', $currentUri); ?> d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-calendar2-check-fill"></i> <span>Meetings Audit</span></div>
+                        <?php if ($pendingMeetingsCount > 0): ?>
+                        <span class="badge rounded-pill ms-auto" style="font-size: 0.7rem; font-weight: 700; padding: 0.35em 0.65em; background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3);"><?php echo $pendingMeetingsCount; ?></span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/admin/slots" class="nav-link <?php echo isActive('/admin/slots', $currentUri); ?>">
                         <i class="bi bi-person-badge-fill"></i> <span>Supervisor Slots</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/admin/deadlines" class="nav-link <?php echo isActive('/admin/deadlines', $currentUri); ?>">
-                        <i class="bi bi-calendar2-event-fill"></i> <span>Deadlines</span>
+                        <i class="bi bi-calendar2-event-fill"></i> <span>Timeline &amp; Deadlines</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/notice" class="nav-link <?php echo isActive('/admin/notice', $currentUri); ?>">
+                        <i class="bi bi-megaphone-fill"></i> <span>Notice Generator</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/batches" class="nav-link <?php echo isActive('/admin/batches', $currentUri); ?>">
+                        <i class="bi bi-box-seam-fill"></i> <span>Academic Batches</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/settings" class="nav-link <?php echo isActive('/admin/settings', $currentUri); ?>">
+                        <i class="bi bi-sliders"></i> <span>Department Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo $urlPrefix; ?>/admin/previous-projects" class="nav-link <?php echo isActive('/admin/previous-projects', $currentUri); ?>">
+                        <i class="bi bi-archive-fill"></i> <span>Previous Projects</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo $urlPrefix; ?>/admin/reports" class="nav-link <?php echo isActive('/admin/reports', $currentUri); ?>">
-                        <i class="bi bi-file-earmark-bar-graph-fill"></i> <span>Analytics & Reports</span>
+                        <i class="bi bi-file-earmark-bar-graph-fill"></i> <span>Analytics &amp; Reports</span>
                     </a>
                 </li>
 
