@@ -4,9 +4,9 @@
 */
 
 :root {
-    --admin-primary: #059669;
-    --admin-primary-hover: #047857;
-    --admin-primary-light: rgba(5, 150, 105, 0.1);
+    --admin-primary: #2563eb;
+    --admin-primary-hover: #1d4ed8;
+    --admin-primary-light: rgba(37, 99, 235, 0.1);
     
     --admin-success: #10b981;
     --admin-success-hover: #059669;
@@ -29,12 +29,12 @@
     --admin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --admin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --admin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --admin-shadow-glow: 0 0 15px rgba(16, 185, 129, 0.3);
+    --admin-shadow-glow: 0 0 15px rgba(37, 99, 235, 0.3);
 }
 
 [data-theme="dark"] {
-    --admin-bg: #121212;
-    --admin-card-bg: rgba(30, 30, 30, 0.75);
+    --admin-bg: #0b1120;
+    --admin-card-bg: rgba(30, 41, 59, 0.75);
     --admin-text-main: #f3f4f6;
     --admin-text-muted: #9ca3af;
     --admin-border: rgba(64, 64, 64, 0.8);
@@ -59,11 +59,12 @@ body {
 
 /* Hero Section Restyling */
 .admin-hero {
-    background: linear-gradient(135deg, #2b4034 0%, #3a5244 100%);
+    background: linear-gradient(135deg, #0b1329 0%, #1e3a8a 50%, #172554 100%);
     border-radius: 20px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: var(--admin-shadow-lg);
+    box-shadow: 0 12px 35px rgba(30, 58, 138, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
 }
@@ -75,7 +76,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -104,20 +105,20 @@ body {
 
 /* Premium Buttons */
 .btn-premium {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     border: none;
     border-radius: 12px;
     padding: 0.6rem 1.2rem;
     font-weight: 600;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .btn-premium:hover {
-    background: linear-gradient(135deg, #059669, #047857);
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
     color: white;
 }
 

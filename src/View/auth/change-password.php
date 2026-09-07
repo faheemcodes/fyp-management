@@ -1,9 +1,10 @@
 <style>
 /* ─── Premium Change Password Styles ─── */
 .cp-info-card {
-    background: linear-gradient(135deg, #1e352f 0%, #3e5641 50%, #1e352f 100%);
+    background: linear-gradient(135deg, #0b1329 0%, #1e3a8a 50%, #172554 100%);
     border-radius: 1.5rem;
     box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -15,7 +16,7 @@
     right: -20%;
     width: 250px;
     height: 250px;
-    background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -26,7 +27,7 @@
     left: -10%;
     width: 200px;
     height: 200px;
-    background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(14,165,233,0.2) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -76,17 +77,17 @@
 }
 
 .cp-submit-btn {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     border: none;
     border-radius: 99px;
     font-weight: 600;
     color: #fff;
-    box-shadow: 0 8px 20px -6px rgba(16,185,129,0.5);
+    box-shadow: 0 8px 20px -6px rgba(37,99,235,0.5);
     transition: all 0.3s ease;
 }
 .cp-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px -6px rgba(16,185,129,0.6);
+    box-shadow: 0 12px 24px -6px rgba(37,99,235,0.6);
     color: #fff;
 }
 </style>

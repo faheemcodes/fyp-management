@@ -608,7 +608,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
         
         <div class="contacts-list">
             <div class="contact-item" data-leader-id="broadcast" data-leader-name="Broadcast to All Groups" data-avatar="" data-initial="B" data-group-code="">
-                <div class="contact-avatar" style="overflow: hidden; background: linear-gradient(135deg, var(--primary-color), #2b4034);">
+                <div class="contact-avatar" style="overflow: hidden; background: linear-gradient(135deg, var(--primary-color), #0b1329);">
                     <i class="bi bi-megaphone-fill"></i>
                 </div>
                 <div class="contact-info">

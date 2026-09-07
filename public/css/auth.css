@@ -120,7 +120,7 @@ body {
 .input-wrap input:focus {
     border-color: var(--lp-accent);
     background: var(--lp-bg);
-    box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.15); /* Emerald tint */
+    box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.18);
 }
 
 .input-wrap label {
@@ -202,7 +202,7 @@ body {
     background: var(--lp-bg);
     color: var(--lp-accent);
     border-color: var(--lp-accent);
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
 .step-dot.completed {
@@ -272,7 +272,7 @@ body {
 .form-control:focus, .form-select:focus {
     border-color: var(--lp-accent) !important;
     background-color: var(--lp-bg) !important;
-    box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.15) !important;
+    box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.18) !important;
 }
 
 .form-control::placeholder {
@@ -301,7 +301,7 @@ body {
 .btn-login:hover, .btn-register:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
 .btn-login:active, .btn-register:active {
@@ -395,8 +395,8 @@ body {
 
 /* ─── Info Note ─── */
 .info-note {
-    background: rgba(16, 185, 129, 0.08);
-    border-left: 3px solid #10b981;
+    background: rgba(37, 99, 235, 0.08);
+    border-left: 3px solid #2563eb;
     border-radius: 0 10px 10px 0;
     padding: 14px 16px;
 }
@@ -420,12 +420,12 @@ body {
 
 .avatar-dropzone:hover {
     border-color: var(--lp-accent) !important;
-    background: rgba(16, 185, 129, 0.05);
+    background: rgba(37, 99, 235, 0.05);
 }
 
 .avatar-dropzone.dragover {
     border-color: var(--lp-accent) !important;
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(37, 99, 235, 0.1);
     transform: scale(1.01);
 }
 
@@ -440,7 +440,7 @@ body {
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid var(--lp-accent);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
 }
 
 .btn-remove-preview {

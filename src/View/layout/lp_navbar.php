@@ -25,27 +25,27 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             --lp-border: rgba(0,0,0,0.06);
             --lp-text: #111827;
             --lp-text-muted: #64748b;
-            --lp-accent: #10b981;
+            --lp-accent: #2563eb;
             --lp-nav-bg: rgba(255,255,255,0.9);
             --lp-violet: #8b5cf6;
             --lp-rose: #f43f5e;
             --lp-amber: #f59e0b;
-            --lp-teal: #14b8a6;
+            --lp-teal: #0284c7;
         }
         :root[data-theme="dark"] {
-            --lp-bg: #121212;
-            --lp-bg-alt: #18181b;
-            --lp-card: #27272a;
-            --lp-card-hover: #3f3f46;
+            --lp-bg: #0b1120;
+            --lp-bg-alt: #111827;
+            --lp-card: #1e293b;
+            --lp-card-hover: #334155;
             --lp-border: rgba(255,255,255,0.08);
             --lp-text: #f8fafc;
-            --lp-text-muted: #a1a1aa;
-            --lp-accent: #10b981;
-            --lp-nav-bg: rgba(18,18,18,0.9);
+            --lp-text-muted: #94a3b8;
+            --lp-accent: #3b82f6;
+            --lp-nav-bg: rgba(11,17,32,0.9);
             --lp-violet: #a78bfa;
             --lp-rose: #fb7185;
             --lp-amber: #fbbf24;
-            --lp-teal: #2dd4bf;
+            --lp-teal: #38bdf8;
         }
 
         html, body {
