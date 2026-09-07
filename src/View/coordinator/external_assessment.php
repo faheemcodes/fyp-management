@@ -20,12 +20,12 @@
     transition: all 0.2s;
 }
 .attr-row:hover {
-    border-color: #10b981;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
 }
 .total-tracker {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
     border-radius: 12px;
     padding: 20px;
     text-align: center;
@@ -131,7 +131,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                 
                 <div class="d-flex justify-content-between align-items-center">
                     <p class="text-muted m-0" style="font-size: 0.85rem"><i class="bi bi-info-circle me-1"></i>This will generate a CSV file containing all approved project groups in the <strong><?php echo htmlspecialchars($department); ?></strong> department.</p>
-                    <button type="submit" class="btn btn-success rounded-pill px-5 py-2 fw-bold shadow" id="generateBtn" disabled>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow" id="generateBtn" disabled>
                         <i class="bi bi-file-earmark-spreadsheet-fill me-2"></i>Generate Sheet
                     </button>
                 </div>

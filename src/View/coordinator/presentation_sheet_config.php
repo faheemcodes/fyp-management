@@ -18,8 +18,8 @@ $shift = $shift ?? 'Morning';
     transition: all 0.2s ease;
 }
 .form-control-custom:focus {
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     background: var(--card-bg, #ffffff);
     color: var(--text-primary, #0f172a);
     outline: none;
@@ -140,21 +140,21 @@ $shift = $shift ?? 'Morning';
 
     <!-- 3. Final Presentation -->
     <div class="col-md-4">
-        <div class="card stage-action-card h-100 border-0 p-4 text-center d-flex flex-column justify-content-between" style="border-top: 4px solid #10b981 !important;">
+        <div class="card stage-action-card h-100 border-0 p-4 text-center d-flex flex-column justify-content-between" style="border-top: 4px solid #2563eb !important;">
             <div>
-                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 54px; height: 54px; background: rgba(16, 185, 129, 0.12); color: #059669;">
+                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 54px; height: 54px; background: rgba(37, 99, 235, 0.12); color: #2563eb;">
                     <i class="bi bi-trophy-fill fs-4"></i>
                 </div>
                 <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
                     <h5 class="fw-bold mb-0" style="color: var(--text-primary); font-size: 1.05rem;">Final Presentation</h5>
-                    <span class="badge rounded-pill bg-success-subtle text-success" style="font-size: 0.72rem;">75 Marks</span>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary" style="font-size: 0.72rem;">75 Marks</span>
                 </div>
                 <p class="text-muted small mb-3" style="font-size: 0.82rem; line-height: 1.4;">
                     Final defense evaluation with Presentation (25), Thesis (25), and Project Demo (25).
                 </p>
             </div>
             <div class="d-flex flex-column gap-2">
-                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=minimized&committee=all" class="btn btn-success rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
+                <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=minimized&committee=all" class="btn btn-primary rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
                     <i class="bi bi-arrows-angle-contract me-1"></i> Print Minimized Version (All)
                 </a>
                 <a href="<?php echo $basePath; ?>/coordinator/presentation-sheets/print?stage=Final+Presentation&view=detailed&committee=all" class="btn btn-outline-secondary rounded-pill w-100 fw-semibold py-1.5" style="font-size: 0.78rem;">
@@ -171,7 +171,7 @@ $shift = $shift ?? 'Morning';
         <div class="card border-0 rounded-4 shadow-sm overflow-hidden" style="background: var(--card-bg, #ffffff);">
             <div class="page-section-header d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="page-section-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+                    <div class="page-section-icon" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
                         <i class="bi bi-sliders"></i>
                     </div>
                     <div>

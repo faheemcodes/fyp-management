@@ -489,7 +489,7 @@ th.col-serial-num {
                             </td>
                             <td class="col-visibility pe-3">
                                 <?php if ($isPublished): ?>
-                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="Marks visible to student">
+                                    <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="Marks visible to student">
                                         <i class="bi bi-eye-fill me-1"></i> Visible
                                     </span>
                                 <?php else: ?>

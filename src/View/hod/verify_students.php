@@ -25,7 +25,7 @@ $pendingCount = count($students);
         <?php if ($pendingCount > 0): ?>
         <form action="<?php echo $basePath; ?>/hod/students/approve-all" method="POST" class="m-0 align-self-stretch align-self-md-center" onsubmit="return confirm('Approve all <?php echo $pendingCount; ?> pending student registrations?');">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-            <button type="submit" class="btn btn-success rounded-pill px-4 py-2 w-100 shadow-sm border-0 d-flex align-items-center justify-content-center gap-2 fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669)">
+            <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 w-100 shadow-sm border-0 d-flex align-items-center justify-content-center gap-2 fw-semibold" style="background: linear-gradient(135deg, #2563eb, #1d4ed8)">
                 <i class="bi bi-check-all fs-5"></i>
                 <span>Approve All (<?php echo $pendingCount; ?>)</span>
             </button>
@@ -85,7 +85,7 @@ $pendingCount = count($students);
                     <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2.5 py-1 small">Pending</span></td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="<?php echo $basePath; ?>/hod/students/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.25); font-weight: 600" onmouseover="this.style.background='rgba(16, 185, 129, 0.2)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.12)';" onclick="confirmAction(event, 'Approve this student?')">
+                            <a href="<?php echo $basePath; ?>/hod/students/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.25); font-weight: 600" onmouseover="this.style.background='rgba(37, 99, 235, 0.2)';" onmouseout="this.style.background='rgba(37, 99, 235, 0.12)';" onclick="confirmAction(event, 'Approve this student?')">
                                 <i class="bi bi-check-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-1.5">Approve</span>
                             </a>
                             <button type="button" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.25); font-weight: 600" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)';" onmouseout="this.style.background='rgba(239, 68, 68, 0.12)';" onclick="openRejectModal('<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($s['name']), ENT_QUOTES, 'UTF-8'); ?>')">
@@ -98,7 +98,7 @@ $pendingCount = count($students);
                 <?php if (empty($students)): ?>
                 <tr>
                     <td colspan="6" class="text-center py-5 text-muted">
-                        <i class="bi bi-check-circle fs-2 text-success d-block mb-2"></i>
+                        <i class="bi bi-check-circle fs-2 text-primary d-block mb-2"></i>
                         <strong>No pending registrations</strong>
                     </td>
                 </tr>

@@ -286,12 +286,12 @@ foreach ($meetings as $m) {
                                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                             <input type="hidden" name="meeting_id" value="<?php echo (int)$m['id']; ?>">
                                             <input type="hidden" name="status" value="Verified">
-                                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold shadow-sm d-inline-flex align-items-center gap-1" style="font-size: 0.8rem;">
+                                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-bold shadow-sm d-inline-flex align-items-center gap-1" style="font-size: 0.8rem;">
                                                 <i class="bi bi-patch-check-fill"></i> Verify
                                             </button>
                                         </form>
                                     <?php elseif ($status === 'Verified'): ?>
-                                        <span class="badge rounded-pill bg-success-subtle text-success px-2.5 py-1 fw-bold" style="font-size: 0.75rem;">
+                                        <span class="badge rounded-pill bg-primary-subtle text-primary px-2.5 py-1 fw-bold" style="font-size: 0.75rem;">
                                             <i class="bi bi-check-all me-1"></i> Verified
                                         </span>
                                     <?php else: ?>

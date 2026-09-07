@@ -507,7 +507,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                                     <td class="text-center fw-semibold text-secondary"><?php echo $dInfo['groups']; ?></td>
                                     <td class="text-center fw-semibold text-secondary"><?php echo $dInfo['supervisors']; ?></td>
                                     <td class="text-center">
-                                        <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.12); color: #10b981; font-size: 0.8rem; font-weight: 700; padding: 4px 10px;">
+                                        <span class="badge rounded-pill" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-size: 0.8rem; font-weight: 700; padding: 4px 10px;">
                                             <?php echo $dInfo['approved_projects']; ?> Approved
                                         </span>
                                     </td>
@@ -572,7 +572,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo $pStd['id']; ?>" class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold flex-shrink-0" style="font-size: 0.75rem;">
+                                        <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo $pStd['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-bold flex-shrink-0" style="font-size: 0.75rem;">
                                             Approve
                                         </a>
                                     </div>

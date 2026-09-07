@@ -107,7 +107,7 @@ $selectedCommittee = $selectedCommittee ?? 'all';
         }
 
         .btn-toolbar-print {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: linear-gradient(135deg, #047fb0 0%, #0284c7 100%);
             border: none;
             color: #ffffff;
             border-radius: 999px;
@@ -117,14 +117,14 @@ $selectedCommittee = $selectedCommittee ?? 'all';
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 2px 10px rgba(4, 127, 176, 0.4);
             transition: all 0.2s ease;
             white-space: nowrap;
             cursor: pointer;
         }
         .btn-toolbar-print:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 4px 15px rgba(4, 127, 176, 0.6);
             color: #ffffff;
         }
 

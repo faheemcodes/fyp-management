@@ -280,7 +280,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <?php $avatarFile = !empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg'; ?>
                                 <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px;height: 42px;object-fit: cover;border: 2px solid var(--card-bg)" alt="Avatar">
                             <?php else: ?>
-                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px;height: 42px;font-weight: bold;background: rgba(16,185,129,0.1);color: #10b981;border: 2px solid var(--card-bg)">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px;height: 42px;font-weight: bold;background: rgba(37,99,235,0.1);color: #2563eb;border: 2px solid var(--card-bg)">
                                     <?php echo getNameInitial($uFirstName); ?>
                                 </div>
                             <?php endif; ?>
@@ -306,7 +306,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td>
                         <?php if($u['status'] === 'approved'): ?>
-                            <span class="status-pill" style="background: rgba(16,185,129,0.15);color: #059669">Approved</span>
+                            <span class="status-pill" style="background: rgba(37,99,235,0.15);color: #2563eb">Approved</span>
                         <?php elseif($u['status'] === 'pending'): ?>
                             <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15);color: #d97706">Pending</span>
                         <?php else: ?>
@@ -833,7 +833,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         
                         <div id="modalActionButtonsDesktop" class="mt-4 pt-3 border-top d-none d-md-block">
                             <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
-                            <a id="modalApproveBtnDesktop" href="#" class="btn btn-success w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                            <a id="modalApproveBtnDesktop" href="#" class="btn btn-primary w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
                             <button id="modalRejectBtnDesktop" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
                         </div>
                     </div>
@@ -870,7 +870,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                         <div id="modalActionButtonsMobile" class="mt-4 pt-3 border-top d-block d-md-none d-none">
                             <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
                             <div class="d-flex flex-column gap-2">
-                                <a id="modalApproveBtnMobile" href="#" class="btn btn-success w-100 rounded-pill shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                                <a id="modalApproveBtnMobile" href="#" class="btn btn-primary w-100 rounded-pill shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
                                 <button id="modalRejectBtnMobile" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
                             </div>
                         </div>

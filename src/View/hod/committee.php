@@ -33,13 +33,13 @@ $numCommittees = $num_committees ?? 2;
     color: #2563eb;
 }
 .action-btn-edit {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.25);
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.25);
 }
 .action-btn-edit:hover {
-    background: rgba(16, 185, 129, 0.2);
-    color: #059669;
+    background: rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
 }
 .action-btn-delete {
     background: rgba(239, 68, 68, 0.1);
@@ -161,7 +161,7 @@ $numCommittees = $num_committees ?? 2;
                 <tr data-committee="<?php echo $commNum; ?>">
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
+                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
                                 <?php echo getNameInitial($commFirstName); ?>
                             </div>
                             <div>
@@ -298,7 +298,7 @@ $numCommittees = $num_committees ?? 2;
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
                                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #ffffff;">Save Changes</button>
+                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-semibold text-white" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">Save Changes</button>
                                     </div>
                                 </div>
                             </form>
@@ -443,7 +443,7 @@ $numCommittees = $num_committees ?? 2;
                 <div class="modal-footer border-0 p-4 pt-0">
                     <div class="d-flex w-100 gap-2">
                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Add Member</button>
+                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold text-white" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">Add Member</button>
                     </div>
                 </div>
             </form>

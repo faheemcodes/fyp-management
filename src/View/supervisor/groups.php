@@ -367,15 +367,15 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                                 <?php $ext = strtolower(pathinfo($g['proposal_file_path'], PATHINFO_EXTENSION)); ?>
                                 <?php if ($ext === 'pdf'): ?>
                                     <!-- Laptop Offcanvas trigger -->
-                                    <span role="button" class="small text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #10b981;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span role="button" class="small text-decoration-none mt-1 d-none d-md-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #2563eb;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
                                     </span>
                                     <!-- Mobile new tab trigger -->
-                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block d-md-none fw-medium" style="font-size: 0.75rem; color: #2563eb;">
                                         <i class="bi bi-box-arrow-up-right me-1"></i>View PDF
                                     </a>
                                 <?php else: ?>
-                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                    <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #2563eb;">
                                         <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
                                     </a>
                                 <?php endif; ?>
@@ -456,7 +456,7 @@ $globalSupervisionShowAction = ($anySupervisionHidden || !$hasSupervisionGrades)
                     <?php if(!empty($g['proposal_file_path'])): ?>
                         <?php $ext = strtolower(pathinfo($g['proposal_file_path'], PATHINFO_EXTENSION)); ?>
                         <div class="mb-2">
-                            <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                            <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none fw-medium" style="font-size: 0.75rem; color: #2563eb;">
                                 <i class="bi <?php echo ($ext === 'pdf') ? 'bi-box-arrow-up-right' : 'bi-file-earmark-arrow-down-fill'; ?> me-1"></i> <?php echo ($ext === 'pdf') ? 'View PDF' : 'Download'; ?>
                             </a>
                         </div>
@@ -685,11 +685,11 @@ foreach($groups as $g):
                         <?php if (!empty($g['proposal_file_path'])): ?>
                             <div class="mt-2">
                                 <!-- Desktop Offcanvas trigger -->
-                                <button type="button" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-none d-md-inline-flex align-items-center gap-1" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                <button type="button" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-none d-md-inline-flex align-items-center gap-1" style="font-size: 0.75rem; background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2);" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                     <i class="bi bi-layout-sidebar-reverse me-1"></i>View Proposal PDF
                                 </button>
                                 <!-- Mobile new tab trigger -->
-                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-inline-flex d-md-none align-items-center gap-1" style="font-size: 0.75rem; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2);">
+                                <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-1 rounded-pill fw-semibold d-inline-flex d-md-none align-items-center gap-1" style="font-size: 0.75rem; background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2);">
                                     <i class="bi bi-box-arrow-up-right me-1"></i>View Proposal PDF
                                 </a>
                             </div>
@@ -734,7 +734,7 @@ foreach($groups as $g):
         </div>
     </div>
     <div class="d-flex align-items-center gap-3">
-        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
+        <a href="<?php echo $basePath . htmlspecialchars($g['proposal_file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); transition: all 0.2s ease;">
             <i class="bi bi-box-arrow-up-right"></i> Open New Tab
         </a>
         <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>

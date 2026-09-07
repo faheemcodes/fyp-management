@@ -111,21 +111,21 @@ $selectedStage = $selectedStage ?? 'Proposal Defence Presentation';
 
     <!-- 3. Final Presentation -->
     <div class="col-md-4">
-        <div class="card stage-card h-100 border-0 p-4 text-center d-flex flex-column justify-content-between" style="border-top: 4px solid #10b981 !important;">
+        <div class="card stage-card h-100 border-0 p-4 text-center d-flex flex-column justify-content-between" style="border-top: 4px solid #2563eb !important;">
             <div>
-                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: rgba(16, 185, 129, 0.12); color: #059669;">
+                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: rgba(37, 99, 235, 0.12); color: #2563eb;">
                     <i class="bi bi-trophy-fill fs-4"></i>
                 </div>
                 <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
                     <h5 class="fw-bold mb-0" style="color: var(--text-primary); font-size: 1.05rem;">Final Presentation</h5>
-                    <span class="badge rounded-pill bg-success-subtle text-success" style="font-size: 0.72rem;">75 Marks</span>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary" style="font-size: 0.72rem;">75 Marks</span>
                 </div>
                 <p class="text-muted small mb-3" style="font-size: 0.82rem; line-height: 1.4;">
                     Final defense evaluation with Presentation (25), Thesis (25), and Project Demo (25).
                 </p>
             </div>
             <div>
-                <a href="<?php echo $basePath; ?>/admin/presentation-sheets/print?department=<?php echo urlencode($selectedDept); ?>&shift=<?php echo urlencode($selectedShift); ?>&batch_id=<?php echo (int)$selectedBatchId; ?>&committee_number=<?php echo (int)$selectedCommittee; ?>&stage=Final+Presentation" target="_blank" class="btn btn-success rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
+                <a href="<?php echo $basePath; ?>/admin/presentation-sheets/print?department=<?php echo urlencode($selectedDept); ?>&shift=<?php echo urlencode($selectedShift); ?>&batch_id=<?php echo (int)$selectedBatchId; ?>&committee_number=<?php echo (int)$selectedCommittee; ?>&stage=Final+Presentation" target="_blank" class="btn btn-primary rounded-pill w-100 fw-semibold py-2 shadow-sm text-white" style="font-size: 0.85rem;">
                     <i class="bi bi-printer-fill me-1"></i> Print Final Sheet
                 </a>
             </div>

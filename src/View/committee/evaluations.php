@@ -439,7 +439,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                             <i class="bi bi-file-text me-1"></i>Abstract
                         </button>
                         <?php if (!empty($g['thesis_file'])): ?>
-                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-success" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($g['thesis_file']); ?>')" style="font-size: 0.8rem">
+                        <button class="btn btn-link text-decoration-none p-0 fw-semibold text-primary" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($g['thesis_file']); ?>')" style="font-size: 0.8rem">
                             <i class="bi bi-file-earmark-pdf-fill me-1"></i>Thesis
                         </button>
                         <?php endif; ?>
@@ -448,7 +448,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <!-- 1. Proposal Defence -->
                     <td>
                         <?php if ($g['proposal_defense'] && $g['proposal_defense']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
                             <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>
@@ -457,7 +457,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <!-- 2. FYP Progress -->
                     <td>
                         <?php if ($g['progress_eval'] && $g['progress_eval']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
                             <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=FYP Progress Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>
@@ -466,7 +466,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                     <!-- 3. Final Presentation -->
                     <td>
                         <?php if ($g['final_presentation'] && $g['final_presentation']['total_marks'] > 0): ?>
-                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
+                            <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600"><i class="bi bi-eye me-1"></i>Graded</a>
                         <?php else: ?>
                             <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Final Presentation" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;font-weight: 600">Evaluate</a>
                         <?php endif; ?>

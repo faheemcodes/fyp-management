@@ -207,7 +207,7 @@ foreach ($groups ?? [] as $grp) {
             <tbody>
                 <?php foreach($groups as $g): ?>
                 <tr data-supervisor="<?php echo htmlspecialchars($g['supervisor_id'] ? $g['supervisor_name'] : 'unassigned'); ?>" data-stage="<?php echo htmlspecialchars($g['progress_stage']); ?>">
-                    <td class="ps-4 fw-bold" style="color: #10b981;font-size: 0.95rem;font-family: monospace">
+                    <td class="ps-4 fw-bold" style="color: #2563eb;font-size: 0.95rem;font-family: monospace">
                         <?php echo htmlspecialchars($g['group_code'] ?? 'Pending'); ?>
                     </td>
                     <td>
@@ -226,7 +226,7 @@ foreach ($groups ?? [] as $grp) {
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <?php if(count($g['members']) > 3): ?>
-                                <div class="avatar-circle" style="background: rgba(16,185,129,0.1);color: #10b981">
+                                <div class="avatar-circle" style="background: rgba(37,99,235,0.1);color: #2563eb">
                                     +<?php echo count($g['members']) - 3; ?>
                                 </div>
                             <?php endif; ?>
@@ -235,7 +235,7 @@ foreach ($groups ?? [] as $grp) {
                     <td>
                         <?php if($g['supervisor_id']): ?>
                             <div class="d-flex flex-column">
-                                <span class="fw-semibold text-dark" style="font-size: 0.85rem"><i class="bi bi-person-badge text-success me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.85rem"><i class="bi bi-person-badge text-primary me-1"></i><?php echo htmlspecialchars($g['supervisor_name']); ?></span>
                                 <button class="btn btn-link p-0 text-decoration-none text-start text-primary" style="font-size: 0.7rem;margin-top: 2px" data-bs-toggle="modal" data-bs-target="#assignModal<?php echo htmlspecialchars((string)($g['id']), ENT_QUOTES, 'UTF-8'); ?>">Change Supervisor</button>
                             </div>
                         <?php else: ?>

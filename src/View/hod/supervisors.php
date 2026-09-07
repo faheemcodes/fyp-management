@@ -32,13 +32,13 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     color: #2563eb;
 }
 .action-btn-edit {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.25);
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.25);
 }
 .action-btn-edit:hover {
-    background: rgba(16, 185, 129, 0.2);
-    color: #059669;
+    background: rgba(37, 99, 235, 0.2);
+    color: #1d4ed8;
 }
 .action-btn-delete {
     background: rgba(239, 68, 68, 0.1);
@@ -123,7 +123,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <tr>
                     <td class="ps-4">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
+                            <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.95rem">
                                 <?php echo getNameInitial($supFirstName); ?>
                             </div>
                             <div>
@@ -134,7 +134,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     </td>
                     <td><span class="badge border rounded-pill px-3 py-1.5" style="background: var(--form-bg); color: var(--text-secondary); border-color: var(--border-color) !important; font-size: 0.84rem; font-weight: 500;"><?php echo htmlspecialchars($s['designation'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                     <td>
-                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
+                        <span class="badge border rounded-pill px-3 py-1.5" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; border-color: rgba(37, 99, 235, 0.25) !important; font-size: 0.84rem; font-weight: 600;">
                             <?php echo (int)($s['morning_projects'] ?? 0); ?> / <?php echo (int)($maxMorning ?? 5); ?> Groups
                         </span>
                     </td>
@@ -318,7 +318,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div class="modal-footer border-0 p-4 pt-0">
                                     <div class="d-flex w-100 gap-2">
                                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #ffffff;">Save Changes</button>
+                                        <button type="submit" class="btn flex-grow-1 rounded-pill fw-semibold text-white" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">Save Changes</button>
                                     </div>
                                 </div>
                             </form>
@@ -429,7 +429,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 <div class="modal-footer border-0 p-4 pt-0">
                     <div class="d-flex w-100 gap-2">
                         <button type="button" class="btn btn-light flex-grow-1 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Add Faculty Member</button>
+                        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold text-white" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">Add Faculty Member</button>
                     </div>
                 </div>
             </form>

@@ -474,7 +474,7 @@ th.col-serial-num {
                             <!-- Coordinator Release Status -->
                             <td class="col-visibility pe-3">
                                 <?php if ($isFullyReleased): ?>
-                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="All marks officially released to students by coordinator">
+                                    <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1" style="font-size: 0.72rem;" title="All marks officially released to students by coordinator">
                                         <i class="bi bi-eye-fill me-1"></i> Released
                                     </span>
                                 <?php elseif ($hasAnyDraft): ?>

@@ -150,7 +150,7 @@ html.dark-theme .modal .btn-close:hover {
     <!-- Header -->
     <div class="eval-section-header">
         <div class="d-flex align-items-center gap-3">
-            <div class="eval-section-icon" style="background: rgba(16, 185, 129, 0.1);color: #10b981">
+            <div class="eval-section-icon" style="background: rgba(37, 99, 235, 0.1);color: #2563eb">
                 <i class="bi bi-inbox-fill"></i>
             </div>
             <div>
@@ -190,7 +190,7 @@ html.dark-theme .modal .btn-close:hover {
                             </div>
                                            <td class="font-monospace fw-semibold" style="color: var(--text-primary);font-size: 0.88rem;"><?php echo htmlspecialchars($s['student_id']); ?></td>
                     <td>
-                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.75rem; font-weight: 600;"><?php echo htmlspecialchars($s['shift']); ?></span>
+                        <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 0.75rem; font-weight: 600;"><?php echo htmlspecialchars($s['shift']); ?></span>
                     </td>
                     <td>
                         <span class="badge status-badge-pending"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
@@ -200,7 +200,7 @@ html.dark-theme .modal .btn-close:hover {
                             <button class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(4, 127, 176, 0.1);color: #047fb0;border: none;font-weight: 600" onmouseover="this.style.background='rgba(4, 127, 176, 0.18)';" onmouseout="this.style.background='rgba(4, 127, 176, 0.1)';" data-bs-toggle="modal" data-bs-target="#detailsModal<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>">
                                 <i class="bi bi-info-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Details</span>
                             </button>
-                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(16, 185, 129, 0.1);color: #10b981;border: none;font-weight: 600" onmouseover="this.style.background='rgba(16, 185, 129, 0.18)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)';" onclick="confirmAction(event, 'Approve this student?')">
+                            <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(37, 99, 235, 0.1);color: #2563eb;border: none;font-weight: 600" onmouseover="this.style.background='rgba(37, 99, 235, 0.18)';" onmouseout="this.style.background='rgba(37, 99, 235, 0.1)';" onclick="confirmAction(event, 'Approve this student?')">
                                 <i class="bi bi-check-circle-fill" style="font-size: 0.85rem"></i> <span class="d-none d-md-inline ms-2">Approve</span>
                             </a>
                             <button type="button" class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center px-3 transition-all" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;border: none;font-weight: 600" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="openRejectModal('<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>')">
@@ -303,7 +303,7 @@ html.dark-theme .modal .btn-close:hover {
             <!-- Action Buttons -->
             <div class="modal-footer border-0 p-4 pt-0">
                 <div class="d-flex w-100 gap-2">
-                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669);font-size: 0.9rem;padding: 0.5rem 0" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';" onclick="confirmAction(event, 'Approve this student?')">
+                    <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/approve?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold text-white transition-all shadow-sm d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);font-size: 0.9rem;padding: 0.5rem 0" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';" onclick="confirmAction(event, 'Approve this student?')">
                         <i class="bi bi-check-circle-fill me-2 fs-6"></i> Approve
                     </a>
                     <a href="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/coordinator/users/reject?id=<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" class="btn flex-grow-1 rounded-pill fw-bold transition-all d-flex align-items-center justify-content-center" style="background: rgba(168, 10, 52, 0.1);color: #a80a34;font-size: 0.9rem;padding: 0.5rem 0" onmouseover="this.style.background='rgba(168, 10, 52, 0.18)';" onmouseout="this.style.background='rgba(168, 10, 52, 0.1)';" onclick="confirmAction(event, 'Reject and delete this registration?')">

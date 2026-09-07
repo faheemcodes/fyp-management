@@ -50,9 +50,9 @@
     text-decoration: none;
 }
 .action-btn:hover {
-    background: rgba(16,185,129,0.1);
-    color: #10b981;
-    border-color: rgba(16,185,129,0.2);
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.2);
 }
 .action-btn.review:hover {
     background: rgba(13,148,136,0.1);
@@ -66,20 +66,17 @@
     border-radius: 12px;
     padding: 12px 14px;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
 }
 .notice-minimal-item:hover {
     background: var(--card-bg);
     border-color: rgba(37, 99, 235, 0.35);
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 .notice-minimal-item .notice-accent-bar {
     position: absolute;
@@ -106,26 +103,35 @@
     gap: 4px;
     letter-spacing: 0.02em;
 }
-.notice-view-btn {
-    font-size: 0.78rem;
-    font-weight: 600;
+.notice-arrow-icon {
+    font-size: 0.72rem;
     color: var(--text-secondary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 5px 12px;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
     transition: all 0.2s ease;
-    white-space: nowrap;
-    text-decoration: none;
-    line-height: 1;
 }
-.notice-minimal-item:hover .notice-view-btn {
-    background: rgba(37, 99, 235, 0.12);
-    color: #2563eb;
-    border-color: rgba(37, 99, 235, 0.3);
+.notice-minimal-item:hover .notice-arrow-icon {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+    transform: translate(2px, -2px);
+}
+.notice-subject-text {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 6px;
 }
 
 .notice-list {
@@ -263,40 +269,37 @@ $firstName = explode(' ', $fullName)[0];
 
 <!-- -- Main Content Grid (Pending Proposals & Notices) -- -->
 <div class="row g-4 mb-4">
-    <!-- ── Recent Notices (col-lg-4) ── -->
-    <div class="col-lg-4">
-        <div class="card border-0 p-3 p-xl-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
-            <div class="page-section-header mb-4 position-relative">
+    <!-- -- Recent Notices (25%) -- -->
+    <div class="col-lg-3 col-xl-3">
+        <div class="card border-0 p-3 p-xl-3 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
+            <div class="page-section-header mb-3 position-relative">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6; width: 36px; height: 36px; font-size: 0.95rem;">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6; width: 34px; height: 34px; font-size: 0.9rem;">
                         <i class="bi bi-bell-fill"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0" style="font-size: 0.95rem;">Recent Notices</h6>
-                        <small style="font-size: 0.74rem;">Latest announcements and updates</small>
+                        <h6 class="mb-0" style="font-size: 0.92rem;">Recent Notices</h6>
+                        <small style="font-size: 0.72rem;">Latest updates</small>
                     </div>
                 </div>
             </div>
             
-            <div class="notice-list custom-scroll" style="max-height: 320px; overflow-y: auto;">
+            <div class="notice-list custom-scroll" style="max-height: 300px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                     <div class="notice-accent-bar"></div>
-                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <span class="notice-date-badge">
-                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
-                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
-                            </span>
-                        </div>
-                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
-                            <?php echo htmlspecialchars($n['subject']); ?>
-                        </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="notice-date-badge">
+                            <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                            <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                        </span>
+                        <span class="notice-arrow-icon">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
                     </div>
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
-                        <span>View</span>
-                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
-                    </button>
+                    <div class="notice-subject-text" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                        <?php echo htmlspecialchars($n['subject']); ?>
+                    </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
@@ -309,8 +312,8 @@ $firstName = explode(' ', $fullName)[0];
         </div>
     </div>
 
-    <!-- ── Pending Proposals (col-lg-8) ── -->
-    <div class="col-lg-8">
+    <!-- -- Pending Proposals (75%) -- -->
+    <div class="col-lg-9 col-xl-9">
         <div class="card border-0 p-3 p-md-4 h-100" id="pending-proposals" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
             <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
@@ -359,11 +362,11 @@ $firstName = explode(' ', $fullName)[0];
                                 <?php if(!empty($pr['file_path'])): ?>
                                     <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                                     <?php if($ext === 'pdf'): ?>
-                                        <span role="button" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #10b981;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
+                                        <span role="button" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; cursor: pointer; color: #2563eb;" data-bs-toggle="offcanvas" data-bs-target="#pdfOffcanvas<?php echo htmlspecialchars((string)($pr['id']), ENT_QUOTES, 'UTF-8'); ?>">
                                             <i class="bi bi-layout-sidebar-reverse me-1"></i>View PDF
                                         </span>
                                     <?php else: ?>
-                                        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none mt-1 d-inline-block fw-medium" style="font-size: 0.75rem; color: #2563eb;">
                                             <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download Document
                                         </a>
                                     <?php endif; ?>
@@ -451,7 +454,7 @@ $firstName = explode(' ', $fullName)[0];
                         <?php if(!empty($pr['file_path'])): ?>
                             <?php $ext = strtolower(pathinfo($pr['file_path'], PATHINFO_EXTENSION)); ?>
                             <div class="mb-2">
-                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none fw-medium" style="font-size: 0.75rem; color: #10b981;">
+                                <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="small text-decoration-none fw-medium" style="font-size: 0.75rem; color: #2563eb;">
                                     <i class="bi <?php echo ($ext === 'pdf') ? 'bi-box-arrow-up-right' : 'bi-file-earmark-arrow-down-fill'; ?> me-1"></i> <?php echo ($ext === 'pdf') ? 'View PDF' : 'Download'; ?>
                                 </a>
                             </div>
@@ -742,7 +745,7 @@ foreach($noticesForModal as $n):
         </div>
     </div>
     <div class="d-flex align-items-center gap-3">
-        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); transition: all 0.2s ease;">
+        <a href="<?php echo $basePath . htmlspecialchars($pr['file_path']); ?>" target="_blank" onclick="window.open(this.href, '_blank'); return false;" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill d-flex align-items-center gap-2" style="background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); transition: all 0.2s ease;">
             <i class="bi bi-box-arrow-up-right"></i> Open New Tab
         </a>
         <button type="button" class="btn-close ms-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>

@@ -282,7 +282,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
                                 </div>
                             </td>
                             <td>
-                                <span style="font-size: 0.65rem;background: rgba(16,185,129,0.1);color: #059669;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase">
+                                <span style="font-size: 0.65rem;background: rgba(37,99,235,0.1);color: #2563eb;padding: 4px 10px;border-radius: 20px;font-weight: 700;text-transform: uppercase">
                                     <?php echo htmlspecialchars($g['progress_stage']); ?>
                                 </span>
                             </td>

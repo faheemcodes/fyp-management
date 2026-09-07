@@ -244,7 +244,7 @@ $isCoordinatorMultiShift = ($coordinatorShift === 'All');
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" id="submitBtn" class="btn rounded-pill fw-bold w-100 py-2.5 shadow-sm text-white transition-all d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.9rem;">
+                    <button type="submit" id="submitBtn" class="btn rounded-pill fw-bold w-100 py-2.5 shadow-sm text-white transition-all d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); font-size: 0.9rem;">
                         <i class="bi bi-check2-circle me-2 fs-6"></i>
                         <span id="submitBtnText">Publish Deadline</span>
                     </button>
@@ -328,7 +328,7 @@ $isCoordinatorMultiShift = ($coordinatorShift === 'All');
                                         <?php if ($isPassed): ?>
                                             <span class="badge rounded-pill px-2 py-0.5" style="background: rgba(239,68,68,0.1); color: #dc2626; font-size: 0.68rem; font-weight: 700;">Passed</span>
                                         <?php else: ?>
-                                            <span class="badge rounded-pill px-2.5 py-0.5" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.68rem; font-weight: 700;">
+                                            <span class="badge rounded-pill px-2.5 py-0.5" style="background: rgba(37,99,235,0.12); color: #2563eb; font-size: 0.68rem; font-weight: 700;">
                                                 <?php echo $daysLeft == 0 ? 'Today' : ($daysLeft == 1 ? 'Tomorrow' : "$daysLeft days left"); ?>
                                             </span>
                                         <?php endif; ?>
@@ -337,7 +337,7 @@ $isCoordinatorMultiShift = ($coordinatorShift === 'All');
                             </td>
                             <td>
                                 <?php if ($dl['status'] === 'Active'): ?>
-                                    <span class="badge rounded-pill px-2.5 py-1 text-nowrap" style="background: rgba(16,185,129,0.12); color: #059669; font-size: 0.74rem; font-weight: 700;">
+                                    <span class="badge rounded-pill px-2.5 py-1 text-nowrap" style="background: rgba(37,99,235,0.12); color: #2563eb; font-size: 0.74rem; font-weight: 700;">
                                         <i class="bi bi-check-circle-fill me-1"></i>Active
                                     </span>
                                 <?php else: ?>

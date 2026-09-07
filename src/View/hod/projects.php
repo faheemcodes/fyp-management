@@ -220,9 +220,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             $msColor = '#2563eb';
                             $msBorder = 'rgba(59, 130, 246, 0.25)';
                             if ($stageCategory === 'proposal') {
-                                $msBg = 'rgba(16, 185, 129, 0.1)';
-                                $msColor = '#059669';
-                                $msBorder = 'rgba(16, 185, 129, 0.25)';
+                                $msBg = 'rgba(37, 99, 235, 0.1)';
+                                $msColor = '#2563eb';
+                                $msBorder = 'rgba(37, 99, 235, 0.25)';
                             } elseif ($stageCategory === 'defense') {
                                 $msBg = 'rgba(245, 158, 11, 0.1)';
                                 $msColor = '#d97706';
@@ -523,7 +523,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <div>
                                     <div class="d-flex align-items-center justify-content-between mb-1">
                                         <strong style="color: var(--text-primary); font-size: 0.88rem;">Final Thesis / Report</strong>
-                                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.25) !important; font-size: 0.75rem; font-weight: 600;">
+                                        <span class="badge border rounded-pill px-2.5 py-1" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; border-color: rgba(37, 99, 235, 0.25) !important; font-size: 0.75rem; font-weight: 600;">
                                             <?php echo !empty($p['thesis_file']) ? 'Available' : 'Pending'; ?>
                                         </span>
                                     </div>
@@ -531,7 +531,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 </div>
                                 <?php if (!empty($finalThUrl)): ?>
                                 <div class="d-flex gap-2 mt-2">
-                                    <button type="button" class="btn btn-sm btn-success rounded-pill px-3 fw-semibold flex-grow-1" style="font-size: 0.78rem;" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
+                                    <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold flex-grow-1" style="font-size: 0.78rem;" onclick="previewDocument('<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>', 'Thesis', '<?php echo htmlspecialchars(addslashes($p['project_title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars(addslashes($p['group_code'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>')">
                                         <i class="bi bi-eye me-1"></i> Preview
                                     </button>
                                     <a href="<?php echo htmlspecialchars($finalThUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" download class="btn btn-sm btn-outline-secondary rounded-pill px-2.5" style="font-size: 0.78rem;" title="Download Thesis">
@@ -615,10 +615,10 @@ function previewDocument(fileUrl, docType, title, groupCode) {
     const badge = document.getElementById('docModalBadge');
 
     if (docType === 'Thesis') {
-        iconBox.style.background = 'rgba(16, 185, 129, 0.12)';
-        iconBox.style.color = '#10b981';
-        badge.style.background = 'rgba(16, 185, 129, 0.15)';
-        badge.style.color = '#10b981';
+        iconBox.style.background = 'rgba(37, 99, 235, 0.12)';
+        iconBox.style.color = '#2563eb';
+        badge.style.background = 'rgba(37, 99, 235, 0.15)';
+        badge.style.color = '#2563eb';
         icon.className = 'bi bi-file-earmark-arrow-down-fill fs-5';
     } else {
         iconBox.style.background = 'rgba(59, 130, 246, 0.12)';

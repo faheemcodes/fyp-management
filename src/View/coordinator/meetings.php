@@ -33,7 +33,7 @@
     <div class="col-lg-8">
         <div class="card border-0 p-4 h-100">
             <div class="page-section-header mb-4">
-                <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                <div class="page-section-icon" style="background: rgba(37, 99, 235, 0.1);color: #2563eb">
                     <i class="bi bi-shield-check"></i>
                 </div>
                 <div>
@@ -78,7 +78,7 @@
                             </div>
                             
                             <?php if (!empty($meeting['supervisor_notes'])): ?>
-                                <div class="mb-3 p-3 rounded" style="background: var(--form-bg); border-left: 3px solid #10b981;">
+                                <div class="mb-3 p-3 rounded" style="background: var(--form-bg); border-left: 3px solid #2563eb;">
                                     <div class="fw-bold mb-1 text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.05em; color: var(--text-secondary)">Supervisor Notes</div>
                                     <p class="small mb-0" style="color: var(--text-secondary); line-height: 1.5; font-size: 0.8rem;"><?php echo nl2br(htmlspecialchars($meeting['supervisor_notes'])); ?></p>
                                 </div>
@@ -96,7 +96,7 @@
                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                     <input type="hidden" name="meeting_id" value="<?php echo $meeting['id']; ?>">
                                     <input type="hidden" name="status" value="Verified">
-                                    <button type="submit" class="btn btn-sm btn-success rounded-pill fw-bold px-3.5 py-1.5" style="font-size: 0.8rem;"><i class="bi bi-shield-check me-1"></i> Verify Meeting</button>
+                                    <button type="submit" class="btn btn-sm btn-primary rounded-pill fw-bold px-3.5 py-1.5" style="font-size: 0.8rem;"><i class="bi bi-shield-check me-1"></i> Verify Meeting</button>
                                 </form>
                             </div>
                         </li>

@@ -96,12 +96,12 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
                                 <span class="fw-semibold text-dark"><?php echo (int)($b['group_count'] ?? 0); ?></span>
                                 <span class="text-muted" style="font-size: 0.8rem;">groups</span>
                                 <?php if (!empty($b['approved_projects_count'])): ?>
-                                    <span class="badge bg-success-subtle text-success ms-1" style="font-size: 0.7rem;"><?php echo (int)$b['approved_projects_count']; ?> approved</span>
+                                    <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.7rem;"><?php echo (int)$b['approved_projects_count']; ?> approved</span>
                                 <?php endif; ?>
                             </td>
                             <td class="py-3 text-center">
                                 <?php if ($b['is_active']): ?>
-                                    <span class="badge rounded-pill px-3 py-2" style="background: rgba(16, 185, 129, 0.12); color: #059669; font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.25);">
+                                    <span class="badge rounded-pill px-3 py-2" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-weight: 600; border: 1px solid rgba(37, 99, 235, 0.25);">
                                         <i class="bi bi-check-circle-fill me-1"></i> Active
                                     </span>
                                 <?php else: ?>

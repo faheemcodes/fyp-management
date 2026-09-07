@@ -141,7 +141,7 @@
                                         </div>
                                         <div class="modal-footer border-0 pt-0">
                                             <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-success fw-bold px-4">Confirm</button>
+                                            <button type="submit" class="btn btn-primary fw-bold px-4">Confirm</button>
                                         </div>
                                     </form>
                                 </div>

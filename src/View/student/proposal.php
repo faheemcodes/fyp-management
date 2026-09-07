@@ -276,13 +276,13 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
                 <div class="page-section-body">
                     <?php if ($project['thesis_file']): ?>
-                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(16,185,129,0.05), rgba(16,185,129,0.1)); border: 1px dashed rgba(16,185,129,0.3);">
-                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(16,185,129,0.15); border-radius: 50%; color: #10b981;">
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(37,99,235,0.05), rgba(37,99,235,0.1)); border: 1px dashed rgba(37,99,235,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(37,99,235,0.15); border-radius: 50%; color: #2563eb;">
                                 <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
                             </div>
-                            <h6 class="fw-bold mb-1" style="color: #059669;">Thesis Submitted</h6>
+                            <h6 class="fw-bold mb-1" style="color: #2563eb;">Thesis Submitted</h6>
                             <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
-                            <button type="button" class="btn btn-sm btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
                                 <i class="bi bi-eye-fill me-2"></i>Open Document
                             </button>
                         </div>
@@ -519,13 +519,13 @@ foreach (($supervisors ?? []) as $s) {
                 </div>
                 <div class="page-section-body">
                     <?php if ($project['thesis_file']): ?>
-                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(16,185,129,0.05), rgba(16,185,129,0.1)); border: 1px dashed rgba(16,185,129,0.3);">
-                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(16,185,129,0.15); border-radius: 50%; color: #10b981;">
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(37,99,235,0.05), rgba(37,99,235,0.1)); border: 1px dashed rgba(37,99,235,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(37,99,235,0.15); border-radius: 50%; color: #2563eb;">
                                 <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
                             </div>
-                            <h6 class="fw-bold mb-1" style="color: #059669;">Thesis Submitted</h6>
+                            <h6 class="fw-bold mb-1" style="color: #2563eb;">Thesis Submitted</h6>
                             <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
-                            <button type="button" class="btn btn-sm btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
                                 <i class="bi bi-eye-fill me-2"></i>Open Document
                             </button>
                         </div>

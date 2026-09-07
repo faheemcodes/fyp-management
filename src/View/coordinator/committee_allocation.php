@@ -396,7 +396,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <span class="badge font-monospace rounded-pill text-nowrap" style="background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.72rem; font-weight: 700; padding: 3px 8px;">
                                     <?php echo htmlspecialchars($g['group_code'] ?? 'PENDING', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
-                                <span class="badge rounded-pill text-nowrap" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.7rem; font-weight: 600; padding: 3px 8px;">
+                                <span class="badge rounded-pill text-nowrap" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 0.7rem; font-weight: 600; padding: 3px 8px;">
                                     <?php echo htmlspecialchars($g['student_shift'] ?? 'Morning', ENT_QUOTES, 'UTF-8'); ?>
                                 </span>
                             </div>
