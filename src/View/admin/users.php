@@ -69,8 +69,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             </div>
         </div>
         
-        <!-- Action Button -->
-        <div>
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn-hero-glass rounded-pill px-3.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#liveCommitteesModal">
+                <i class="bi bi-diagram-3-fill me-2"></i>Live Committees
+            </button>
             <button class="btn-hero-glass rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">
                 <i class="bi bi-person-plus-fill me-2"></i>Add New User
             </button>
@@ -481,7 +484,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                 <option value="Teaching Assistant">Teaching Assistant</option>
                             </select>
                         </div>
-                        <div class="col-md-12 mt-2">
+                        <div class="col-md-12 mt-2" id="createFacultyRolesWrap">
                             <div class="p-3 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
                                 <label class="form-label text-dark fw-bold mb-2 d-flex align-items-center gap-2" style="font-size: 0.84rem">
                                     <i class="bi bi-person-gear text-primary"></i> Faculty Appointments &amp; Roles
@@ -522,13 +525,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                             </label>
                                         </div>
                                         <div id="createCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="text-muted small">Committee #:</span>
-                                                <select class="form-select form-select-sm w-auto" name="committee_number" id="createCommitteeNumber" style="font-size: 0.8rem;">
-                                                    <?php for($i=1; $i<=8; $i++): ?>
-                                                        <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
-                                                    <?php endfor; ?>
-                                                </select>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="text-muted small">Committee:</span>
+                                                    <select class="form-select form-select-sm w-auto" name="committee_number" id="createCommitteeNumber" style="font-size: 0.8rem;">
+                                                        <option value="1">Committee 1</option>
+                                                        <option value="2">Committee 2</option>
+                                                    </select>
+                                                </div>
+                                                <div id="createCommitteeLiveHint" class="text-muted" style="font-size: 0.72rem;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -706,13 +711,15 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         </label>
                                     </div>
                                     <div id="editCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="text-muted small">Committee #:</span>
-                                            <select class="form-select form-select-sm w-auto" name="committee_number" id="editCommitteeNumber" style="font-size: 0.78rem;">
-                                                <?php for($i=1; $i<=8; $i++): ?>
-                                                    <option value="<?php echo $i; ?>">Committee <?php echo $i; ?></option>
-                                                <?php endfor; ?>
-                                            </select>
+                                        <div class="d-flex flex-column gap-1">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-muted small">Committee:</span>
+                                                <select class="form-select form-select-sm w-auto" name="committee_number" id="editCommitteeNumber" style="font-size: 0.78rem;">
+                                                    <option value="1">Committee 1</option>
+                                                    <option value="2">Committee 2</option>
+                                                </select>
+                                            </div>
+                                            <div id="editCommitteeLiveHint" class="text-muted" style="font-size: 0.72rem;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -877,8 +884,221 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     </div>
 </div>
 
+<!-- ═══════════════ Live Committees Roster Modal ═══════════════ -->
+<div class="modal fade admin-modal" id="liveCommitteesModal" tabindex="-1" aria-labelledby="liveCommitteesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                        <i class="bi bi-diagram-3-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="modal-title fw-bold m-0" id="liveCommitteesModalLabel" style="color: var(--text-primary)">Live Evaluation Committees &amp; Panels</h6>
+                        <small class="text-muted" style="font-size: 0.76rem">Live active rosters and evaluator assignments across all university departments</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Department Selection Tabs -->
+                <ul class="nav nav-pills gap-2 mb-4 p-1.5 rounded-pill" style="background: var(--form-bg); width: fit-content;" id="liveCommDeptTabs">
+                    <?php 
+                    $firstDept = true;
+                    foreach (($departmentCommittees ?? []) as $dName => $dInfo): 
+                    ?>
+                        <li class="nav-item">
+                            <button class="nav-link rounded-pill py-1.5 px-3 small fw-semibold <?php echo $firstDept ? 'active' : ''; ?>" 
+                                    data-bs-toggle="pill" 
+                                    data-bs-target="#live-pane-<?php echo preg_replace('/[^a-zA-Z0-9]/', '', $dName); ?>" 
+                                    type="button" style="font-size: 0.8rem;">
+                                <?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?>
+                                <span class="badge rounded-pill ms-1" style="background: rgba(0,0,0,0.1); font-size: 0.7rem;"><?php echo (int)($dInfo['total_members'] ?? 0); ?></span>
+                            </button>
+                        </li>
+                    <?php 
+                        $firstDept = false;
+                    endforeach; 
+                    ?>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="liveCommTabContent">
+                    <?php 
+                    $firstPane = true;
+                    foreach (($departmentCommittees ?? []) as $dName => $dInfo): 
+                        $slug = preg_replace('/[^a-zA-Z0-9]/', '', $dName);
+                    ?>
+                        <div class="tab-pane fade <?php echo $firstPane ? 'show active' : ''; ?>" id="live-pane-<?php echo $slug; ?>">
+                            <div class="d-flex align-items-center justify-content-between mb-3 p-2.5 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge rounded-pill bg-primary px-3 py-1.5 fw-bold" style="font-size: 0.78rem;">
+                                        <?php echo (int)($dInfo['num_committees'] ?? 2); ?> Configured Committees
+                                    </span>
+                                    <span class="badge rounded-pill bg-secondary px-3 py-1.5 fw-bold" style="font-size: 0.78rem;">
+                                        <?php echo (int)($dInfo['total_members'] ?? 0); ?> Total Appointed Evaluators
+                                    </span>
+                                </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">Department: <strong><?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?></strong></small>
+                            </div>
+
+                            <div class="row g-3">
+                                <?php if (empty($dInfo['committees'])): ?>
+                                    <div class="col-12">
+                                        <div class="text-center py-4 text-muted">No committee data available for this department.</div>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($dInfo['committees'] as $cNum => $cData): ?>
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="card border h-100 shadow-xs rounded-3 overflow-hidden" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+                                                <div class="card-header py-2.5 px-3 d-flex align-items-center justify-content-between border-bottom" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="badge rounded-pill px-2.5 py-1 fw-bold" style="background: rgba(6, 182, 212, 0.15); color: #0891b2; border: 1px solid rgba(6, 182, 212, 0.3); font-size: 0.78rem;">
+                                                            Committee <?php echo (int)$cNum; ?>
+                                                        </span>
+                                                    </div>
+                                                    <span class="badge rounded-pill px-2 py-0.5" style="background: rgba(0,0,0,0.06); color: var(--text-secondary); font-size: 0.72rem;">
+                                                        <?php echo (int)$cData['member_count']; ?> member<?php echo $cData['member_count'] === 1 ? '' : 's'; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="card-body p-3">
+                                                    <?php if (empty($cData['members'])): ?>
+                                                        <div class="text-center py-3 text-muted" style="font-size: 0.8rem;">
+                                                            <i class="bi bi-person-x fs-4 d-block mb-1 opacity-50"></i>
+                                                            No evaluators assigned yet.
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <div class="d-flex flex-column gap-2">
+                                                            <?php foreach ($cData['members'] as $mem): ?>
+                                                                <div class="d-flex align-items-center gap-2.5 p-2 rounded-2" style="background: var(--form-bg);">
+                                                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0" style="width: 32px; height: 32px; background: linear-gradient(135deg, #0284c7, #0369a1); font-size: 0.75rem;">
+                                                                        <?php 
+                                                                        $parts = explode(' ', trim($mem['name']));
+                                                                        $initials = strtoupper(substr($parts[0] ?? '', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                                                                        echo htmlspecialchars($initials ?: 'CM', ENT_QUOTES, 'UTF-8');
+                                                                        ?>
+                                                                    </div>
+                                                                    <div class="min-w-0 flex-grow-1">
+                                                                        <div class="fw-semibold text-dark text-truncate" style="font-size: 0.82rem;">
+                                                                            <?php echo htmlspecialchars($mem['name'], ENT_QUOTES, 'UTF-8'); ?>
+                                                                        </div>
+                                                                        <div class="text-muted text-truncate" style="font-size: 0.72rem;">
+                                                                            <?php echo htmlspecialchars($mem['designation'] ?: 'Committee Evaluator', ENT_QUOTES, 'UTF-8'); ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="card-footer py-2 px-3 border-top text-end" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+                                                    <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.75rem;" 
+                                                            onclick="filterByCommittee(<?php echo (int)$cNum; ?>, '<?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?>')">
+                                                        Filter in Users Table &rarr;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php 
+                        $firstPane = false;
+                    endforeach; 
+                    ?>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        window.departmentCommittees = <?php echo json_encode($departmentCommittees ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
+        window.updateCommitteeOptions = function(deptSelectId, commSelectId, selectedVal, hintId) {
+            const deptSelect = document.getElementById(deptSelectId);
+            const commSelect = document.getElementById(commSelectId);
+            if (!deptSelect || !commSelect) return;
+            
+            const dept = deptSelect.value;
+            const data = (window.departmentCommittees && window.departmentCommittees[dept]) ? window.departmentCommittees[dept] : null;
+            
+            commSelect.innerHTML = '';
+            
+            if (data && data.committees) {
+                const commList = Object.values(data.committees);
+                commList.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.number;
+                    const count = c.member_count;
+                    let label = `Committee ${c.number}`;
+                    if (count > 0) {
+                        const names = c.members.map(m => m.name).slice(0, 2).join(', ');
+                        const extra = count > 2 ? ` +${count - 2} more` : '';
+                        label += ` (${count} member${count > 1 ? 's' : ''}: ${names}${extra})`;
+                    } else {
+                        label += ` (0 members - Empty)`;
+                    }
+                    opt.textContent = label;
+                    if (selectedVal && parseInt(selectedVal, 10) === parseInt(c.number, 10)) {
+                        opt.selected = true;
+                    }
+                    commSelect.appendChild(opt);
+                });
+                
+                // Add option to create next committee if desired
+                const nextNum = commList.length + 1;
+                const nextOpt = document.createElement('option');
+                nextOpt.value = nextNum;
+                nextOpt.textContent = `+ New Committee (#${nextNum})`;
+                if (selectedVal && parseInt(selectedVal, 10) === nextNum) {
+                    nextOpt.selected = true;
+                }
+                commSelect.appendChild(nextOpt);
+                
+                if (hintId) {
+                    const hintEl = document.getElementById(hintId);
+                    if (hintEl) {
+                        hintEl.innerHTML = `<i class="bi bi-info-circle me-1 text-primary"></i>Live: <strong>${dept}</strong> has <strong>${data.num_committees}</strong> active committees (${data.total_members} evaluators assigned).`;
+                    }
+                }
+            } else {
+                for (let i = 1; i <= 4; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = `Committee ${i}`;
+                    if (selectedVal && parseInt(selectedVal, 10) === i) opt.selected = true;
+                    commSelect.appendChild(opt);
+                }
+                if (hintId) {
+                    const hintEl = document.getElementById(hintId);
+                    if (hintEl) hintEl.textContent = '';
+                }
+            }
+        };
+
+        // Initialize Live Committees for Create Modal
+        window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
+
+        const modalDeptSelect = document.getElementById('modalDepartment');
+        if (modalDeptSelect) {
+            modalDeptSelect.addEventListener('change', function() {
+                window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
+            });
+        }
+
+        const editDeptSelect = document.getElementById('editModalDepartment');
+        if (editDeptSelect) {
+            editDeptSelect.addEventListener('change', function() {
+                window.updateCommitteeOptions('editModalDepartment', 'editCommitteeNumber', null, 'editCommitteeLiveHint');
+            });
+        }
+
         const roleSelect = document.getElementById('modalRole');
         const studentFields = document.getElementById('modalStudentFields');
         const supervisorFields = document.getElementById('modalSupervisorFields');
@@ -888,6 +1108,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
         roleSelect.addEventListener('change', function() {
             const role = this.value;
+            const facultyRolesWrap = document.getElementById('createFacultyRolesWrap');
+            const supCheck = document.getElementById('createIsSupervisor');
+            const coordCheck = document.getElementById('createIsCoordinator');
+            const commCheck = document.getElementById('createIsCommittee');
+
             if (role === 'student') {
                 studentFields.classList.remove('d-none');
                 supervisorFields.classList.add('d-none');
@@ -895,7 +1120,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 surnameGroup.classList.remove('d-none');
                 prefixGroup.classList.remove('d-none');
                 document.getElementById('modalStudentId').required = true;
-            } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee' || role === 'hod') {
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
+            } else if (role === 'hod') {
+                // HOD is the super role - strictly cannot be supervisor, coordinator, or committee
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.remove('d-none');
                 prefixGroup.classList.remove('d-none');
@@ -903,21 +1130,38 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                 departmentGroup.classList.remove('d-none');
                 surnameGroup.classList.remove('d-none');
                 
-                // Pre-configure appointment toggles based on primary role selected
-                if (role === 'supervisor') {
-                    document.getElementById('createIsSupervisor').checked = true;
-                } else if (role === 'coordinator') {
-                    document.getElementById('createIsCoordinator').checked = true;
-                    document.getElementById('createCoordShiftWrap').style.display = 'block';
-                } else if (role === 'committee') {
-                    document.getElementById('createIsCommittee').checked = true;
-                    document.getElementById('createCommitteeNumWrap').style.display = 'block';
-                }
+                // Do NOT show faculty appointments & roles for HOD
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
+                if (supCheck) { supCheck.checked = false; supCheck.disabled = true; }
+                if (coordCheck) { coordCheck.checked = false; coordCheck.disabled = true; }
+                if (commCheck) { commCheck.checked = false; commCheck.disabled = true; }
+                document.getElementById('createCoordShiftWrap').style.display = 'none';
+                document.getElementById('createCommitteeNumWrap').style.display = 'none';
+            } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee') {
+                studentFields.classList.add('d-none');
+                supervisorFields.classList.remove('d-none');
+                prefixGroup.classList.remove('d-none');
+                document.getElementById('modalStudentId').required = false;
+                departmentGroup.classList.remove('d-none');
+                surnameGroup.classList.remove('d-none');
+                
+                // Show faculty appointments & roles
+                if (facultyRolesWrap) facultyRolesWrap.classList.remove('d-none');
+                if (supCheck) { supCheck.disabled = false; supCheck.checked = (role === 'supervisor'); }
+                if (coordCheck) { coordCheck.disabled = false; coordCheck.checked = (role === 'coordinator'); }
+                if (commCheck) { commCheck.disabled = false; commCheck.checked = (role === 'committee'); }
+                
+                document.getElementById('createCoordShiftWrap').style.display = (role === 'coordinator') ? 'block' : 'none';
+                document.getElementById('createCommitteeNumWrap').style.display = (role === 'committee') ? 'block' : 'none';
+
+                // Refresh live committee numbers for the current department
+                window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
             } else {
                 studentFields.classList.add('d-none');
                 supervisorFields.classList.add('d-none');
                 prefixGroup.classList.add('d-none');
                 document.getElementById('modalStudentId').required = false;
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
             }
         });
 
@@ -1167,7 +1411,22 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     if (stdFields) stdFields.classList.remove('d-none');
                     document.getElementById('editModalStudentId').value = studentId;
                     document.getElementById('editModalShift').value = shift;
-                } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee' || normalizedRole === 'hod') {
+                } else if (normalizedRole === 'hod') {
+                    if (staffFields) staffFields.classList.remove('d-none');
+                    if (prefixCol) prefixCol.classList.remove('d-none');
+                    document.getElementById('editModalDesignation').value = designation;
+
+                    // HOD is the super role - strictly DO NOT show faculty appointments & roles
+                    if (multiRoleFields) multiRoleFields.classList.add('d-none');
+                    const editSup = document.getElementById('editIsSupervisor');
+                    const editCoord = document.getElementById('editIsCoordinator');
+                    const editComm = document.getElementById('editIsCommittee');
+                    if (editSup) { editSup.checked = false; editSup.disabled = true; }
+                    if (editCoord) { editCoord.checked = false; editCoord.disabled = true; }
+                    if (editComm) { editComm.checked = false; editComm.disabled = true; }
+                    document.getElementById('editCoordShiftWrap').style.display = 'none';
+                    document.getElementById('editCommitteeNumWrap').style.display = 'none';
+                } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee') {
                     if (staffFields) staffFields.classList.remove('d-none');
                     if (prefixCol) prefixCol.classList.remove('d-none');
                     document.getElementById('editModalDesignation').value = designation;
@@ -1175,12 +1434,18 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                     // Configure faculty multi-role switches
                     if (multiRoleFields) {
                         multiRoleFields.classList.remove('d-none');
-                        document.getElementById('editIsSupervisor').checked = isSupervisor;
-                        document.getElementById('editIsCoordinator').checked = isCoordinator;
+                        const editSup = document.getElementById('editIsSupervisor');
+                        const editCoord = document.getElementById('editIsCoordinator');
+                        const editComm = document.getElementById('editIsCommittee');
+                        if (editSup) { editSup.disabled = false; editSup.checked = isSupervisor; }
+                        if (editCoord) { editCoord.disabled = false; editCoord.checked = isCoordinator; }
+                        if (editComm) { editComm.disabled = false; editComm.checked = isCommittee; }
                         document.getElementById('editCoordShift').value = coordShift;
                         document.getElementById('editCoordShiftWrap').style.display = isCoordinator ? 'block' : 'none';
                         document.getElementById('editIsCommittee').checked = isCommittee;
-                        document.getElementById('editCommitteeNumber').value = committeeNumber;
+                        
+                        // Populate live committee options for this department
+                        window.updateCommitteeOptions('editModalDepartment', 'editCommitteeNumber', committeeNumber, 'editCommitteeLiveHint');
                         document.getElementById('editCommitteeNumWrap').style.display = isCommittee ? 'block' : 'none';
                     }
                 }
@@ -1191,6 +1456,28 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             document.getElementById('rejectModalId').value = userId;
             const modal = new bootstrap.Modal(document.getElementById('rejectUserModal'));
             modal.show();
+        };
+
+        window.filterByCommittee = function(commNum, deptName) {
+            const modalEl = document.getElementById('liveCommitteesModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+            // Set role filter to committee
+            const roleFilter = document.querySelector('select[data-column="role"]');
+            if (roleFilter) {
+                roleFilter.value = 'committee';
+            }
+            // Set department filter
+            const deptFilter = document.querySelector('select[data-column="department"]');
+            if (deptFilter && deptName) {
+                deptFilter.value = deptName;
+            }
+            // Trigger table filtering
+            const event = new Event('change');
+            if (roleFilter) roleFilter.dispatchEvent(event);
+            if (deptFilter) deptFilter.dispatchEvent(event);
         };
     });
 </script>

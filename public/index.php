@@ -144,6 +144,7 @@ $routes = [
     '/admin/proposals' => ['Controller\AdminController', 'proposals'],
     '/admin/proposals/review' => ['Controller\AdminController', 'reviewProposal'],
     '/admin/committees' => ['Controller\AdminController', 'committees'],
+    '/admin/committees/live' => ['Controller\AdminController', 'liveCommittees'],
     '/admin/committees/distribute' => ['Controller\AdminController', 'distributeCommittees'],
     '/admin/committees/reassign' => ['Controller\AdminController', 'reassignGroupCommittee'],
     '/admin/cumulative-sheet' => ['Controller\AdminController', 'cumulativeSheet'],

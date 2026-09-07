@@ -196,9 +196,65 @@ class AdminController extends BaseController {
             LEFT JOIN profiles prof ON u.id = prof.user_id
             ORDER BY CASE WHEN u.status = 'pending' THEN 1 ELSE 2 END ASC, u.created_at DESC")->fetchAll();
 
+        // Fetch department settings for live committee counts
+        $stmtSettings = $db->query("SELECT department, num_committees FROM department_settings");
+        $deptSettings = $stmtSettings ? ($stmtSettings->fetchAll(\PDO::FETCH_KEY_PAIR) ?: []) : [];
+
+        // Fetch all active committee members live
+        $stmtCommittees = $db->query("
+            SELECT c.user_id, c.name, c.designation, c.department, c.committee_number, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            ORDER BY c.department ASC, c.committee_number ASC, c.name ASC
+        ");
+        $liveCommittees = $stmtCommittees ? ($stmtCommittees->fetchAll(\PDO::FETCH_ASSOC) ?: []) : [];
+
+        $departmentsList = [
+            'Software Engineering',
+            'Information Technology',
+            'Data Science',
+            'Electronic Engineering',
+            'Telecommunication Engineering'
+        ];
+
+        $departmentCommittees = [];
+        foreach ($departmentsList as $dept) {
+            $numComm = isset($deptSettings[$dept]) ? (int)$deptSettings[$dept] : 2;
+            $deptMembers = array_values(array_filter($liveCommittees, fn($c) => $c['department'] === $dept));
+            
+            $maxCommNum = max($numComm, 1);
+            foreach ($deptMembers as $m) {
+                if ((int)$m['committee_number'] > $maxCommNum) {
+                    $maxCommNum = (int)$m['committee_number'];
+                }
+            }
+            
+            $committeesData = [];
+            for ($i = 1; $i <= $maxCommNum; $i++) {
+                $membersInThis = array_values(array_filter($deptMembers, fn($m) => (int)($m['committee_number'] ?? 1) === $i));
+                $committeesData[$i] = [
+                    'number' => $i,
+                    'member_count' => count($membersInThis),
+                    'members' => array_map(fn($mb) => [
+                        'name' => $mb['name'],
+                        'designation' => $mb['designation'],
+                        'email' => $mb['email']
+                    ], $membersInThis)
+                ];
+            }
+            
+            $departmentCommittees[$dept] = [
+                'num_committees' => $numComm,
+                'total_members' => count($deptMembers),
+                'committees' => $committeesData
+            ];
+        }
+
         $this->render('admin/users', [
             'users' => $users,
-            'stats' => $stats
+            'stats' => $stats,
+            'departmentCommittees' => $departmentCommittees,
+            'liveCommittees' => $liveCommittees
         ]);
     }
 
@@ -352,11 +408,18 @@ class AdminController extends BaseController {
                     $is_coordinator = isset($_POST['is_coordinator']) && ($_POST['is_coordinator'] === '1' || $_POST['is_coordinator'] === 'on');
                     $coord_shift = !empty($_POST['coord_shift']) ? $_POST['coord_shift'] : 'Morning';
                     $is_committee = isset($_POST['is_committee']) && ($_POST['is_committee'] === '1' || $_POST['is_committee'] === 'on');
-                    $committee_number = max(1, min(8, (int)($_POST['committee_number'] ?? 1)));
+                    $committee_number = max(1, min(20, (int)($_POST['committee_number'] ?? 1)));
 
                     if ($role === 'supervisor') $is_supervisor = true;
                     if ($role === 'coordinator') $is_coordinator = true;
                     if ($role === 'committee') $is_committee = true;
+
+                    // HOD is the super role - strictly cannot be supervisor, coordinator, or committee member
+                    if ($role === 'hod') {
+                        $is_supervisor = false;
+                        $is_coordinator = false;
+                        $is_committee = false;
+                    }
 
                     if ($is_supervisor) {
                         $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
@@ -541,7 +604,7 @@ class AdminController extends BaseController {
                     $is_coordinator = isset($_POST['is_coordinator']) && ($_POST['is_coordinator'] === '1' || $_POST['is_coordinator'] === 'on');
                     $coord_shift = !empty($_POST['coord_shift']) ? $_POST['coord_shift'] : 'Morning';
                     $is_committee = isset($_POST['is_committee']) && ($_POST['is_committee'] === '1' || $_POST['is_committee'] === 'on');
-                    $committee_number = max(1, min(8, (int)($_POST['committee_number'] ?? 1)));
+                    $committee_number = max(1, min(20, (int)($_POST['committee_number'] ?? 1)));
 
                     // If role was explicitly submitted as one of the faculty roles
                     if ($role === 'supervisor') {
@@ -550,6 +613,13 @@ class AdminController extends BaseController {
                         $is_coordinator = true;
                     } elseif ($role === 'committee') {
                         $is_committee = true;
+                    }
+
+                    // HOD is the super role - strictly cannot be supervisor, coordinator, or committee member
+                    if ($role === 'hod') {
+                        $is_supervisor = false;
+                        $is_coordinator = false;
+                        $is_committee = false;
                     }
 
                     // Supervisors sync
@@ -1803,5 +1873,38 @@ class AdminController extends BaseController {
                 error_log("PHPMailer failed in AdminController: " . $mail->ErrorInfo);
             }
         }
+    }
+
+    public function liveCommittees() {
+        $this->requireRole('admin');
+        $dept = $_GET['department'] ?? '';
+        $db = \Database::getInstance()->getConnection();
+        
+        $stmtSettings = $db->query("SELECT department, num_committees FROM department_settings");
+        $deptSettings = $stmtSettings ? ($stmtSettings->fetchAll(\PDO::FETCH_KEY_PAIR) ?: []) : [];
+        
+        $query = "
+            SELECT c.user_id, c.name, c.designation, c.department, c.committee_number, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+        ";
+        $params = [];
+        if (!empty($dept)) {
+            $query .= " WHERE c.department = ? ";
+            $params[] = $dept;
+        }
+        $query .= " ORDER BY c.department ASC, c.committee_number ASC, c.name ASC ";
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        $members = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'department' => $dept,
+            'num_committees' => $deptSettings[$dept] ?? 2,
+            'members' => $members
+        ]);
+        exit;
     }
 }
