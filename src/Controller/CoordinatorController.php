@@ -138,10 +138,16 @@ class CoordinatorController extends BaseController {
         $stmtSups->execute([$dept]);
         $supervisors = $stmtSups->fetchAll();
 
+        // Fetch recent department notices
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE (sender_id = ? OR target_audience LIKE '%all%' OR target_audience LIKE '%coordinator%') AND (is_hidden = 0 OR is_hidden IS NULL) ORDER BY notice_date DESC LIMIT 5");
+        $stmtNotices->execute([$userId]);
+        $recentNotices = $stmtNotices->fetchAll();
+
         $this->render('coordinator/dashboard', [
             'stats' => $stats,
             'pendingProposals' => $pendingProposals,
             'supervisors' => $supervisors,
+            'recentNotices' => $recentNotices,
             'department' => $dept,
             'shift' => $shift
         ]);

@@ -16,7 +16,7 @@
 }
 .notice-minimal-item:hover {
     background: var(--card-bg);
-    border-color: rgba(16, 185, 129, 0.3);
+    border-color: rgba(37, 99, 235, 0.35);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
@@ -26,7 +26,7 @@
     top: 0;
     bottom: 0;
     width: 3.5px;
-    background: #10b981;
+    background: #2563eb;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -36,8 +36,8 @@
 .notice-date-badge {
     font-size: 0.68rem;
     font-weight: 600;
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
     padding: 2px 8px;
     border-radius: 6px;
     display: inline-flex;
@@ -62,9 +62,9 @@
     line-height: 1;
 }
 .notice-minimal-item:hover .notice-view-btn {
-    background: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.3);
 }
 
 .notice-list {
@@ -115,7 +115,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
                     <span style="font-size: 0.75rem;background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.85);padding: 4px 12px;border-radius: 20px;font-weight: 600">
                         <i class="bi bi-building me-1"></i><?php echo htmlspecialchars($committee['department'] ?? 'Department'); ?>
                     </span>
-                    <span style="font-size: 0.75rem;background: rgba(16, 185, 129, 0.2);color: #34d399;border: 1px solid rgba(16, 185, 129, 0.4);padding: 4px 14px;border-radius: 20px;font-weight: 700;letter-spacing: 0.02em;display: inline-flex;align-items: center;gap: 5px;">
+                    <span style="font-size: 0.75rem;background: rgba(37, 99, 235, 0.2);color: #93c5fd;border: 1px solid rgba(37, 99, 235, 0.4);padding: 4px 14px;border-radius: 20px;font-weight: 700;letter-spacing: 0.02em;display: inline-flex;align-items: center;gap: 5px;">
                         <i class="bi bi-shield-check"></i>Committee <?php echo $commNum; ?>
                     </span>
                 </div>
@@ -244,15 +244,17 @@ $commNum = (int)($committee['committee_number'] ?? 1);
     <!-- Main Content -->
     <div class="col-xl-8">
         <div class="card border-0 p-3 p-md-4 h-100">
-            <div class="page-section-header mb-4 position-relative">
-                <div class="page-section-icon" style="background: rgba(16, 185, 129, 0.1);color: #10b981">
-                    <i class="bi bi-people-fill"></i>
+            <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="page-section-icon" style="background: rgba(37, 99, 235, 0.1);color: #2563eb">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <h6>FYP Student Groups & Stages</h6>
+                        <small>View assigned groups and track progress</small>
+                    </div>
                 </div>
-                <div class="flex-grow-1">
-                    <h6>FYP Student Groups & Stages</h6>
-                    <small>View assigned groups and track progress</small>
-                </div>
-                <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm" style="font-size: 0.8rem; background: #10b981; color: #fff; border: none;">
+                <a href="<?php echo $bp; ?>/committee/evaluations" class="btn btn-sm rounded-pill px-4 fw-bold shadow-sm" style="font-size: 0.8rem; background: #2563eb; color: #fff; border: none;">
                     Evaluate
                 </a>
             </div>

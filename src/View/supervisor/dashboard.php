@@ -66,17 +66,20 @@
     border-radius: 12px;
     padding: 12px 14px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block;
 }
 .notice-minimal-item:hover {
     background: var(--card-bg);
-    border-color: rgba(16, 185, 129, 0.35);
+    border-color: rgba(37, 99, 235, 0.35);
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 .notice-minimal-item .notice-accent-bar {
     position: absolute;
@@ -84,7 +87,7 @@
     top: 0;
     bottom: 0;
     width: 3.5px;
-    background: #10b981;
+    background: #2563eb;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -94,8 +97,8 @@
 .notice-date-badge {
     font-size: 0.68rem;
     font-weight: 600;
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
     padding: 2px 8px;
     border-radius: 6px;
     display: inline-flex;
@@ -103,35 +106,46 @@
     gap: 4px;
     letter-spacing: 0.02em;
 }
-.notice-arrow-icon {
-    font-size: 0.72rem;
+.notice-view-btn {
+    font-size: 0.78rem;
+    font-weight: 600;
     color: var(--text-secondary);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 12px;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 4px;
     transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    line-height: 1;
 }
-.notice-minimal-item:hover .notice-arrow-icon {
-    background: #10b981;
-    color: #fff;
-    border-color: #10b981;
-    transform: translate(2px, -2px);
+.notice-minimal-item:hover .notice-view-btn {
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.3);
 }
-.notice-subject-text {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: var(--text-primary);
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-top: 6px;
+
+.notice-list {
+    padding-right: 8px;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.notice-list::-webkit-scrollbar {
+    width: 5px;
+}
+.notice-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.notice-list::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.25);
+    border-radius: 10px;
+}
+.notice-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 150, 0.45);
 }
 
 .notice-list {
@@ -249,37 +263,40 @@ $firstName = explode(' ', $fullName)[0];
 
 <!-- -- Main Content Grid (Pending Proposals & Notices) -- -->
 <div class="row g-4 mb-4">
-    <!-- -- Recent Notices (25%) -- -->
-    <div class="col-lg-3 col-xl-3">
-        <div class="card border-0 p-3 p-xl-3 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
-            <div class="page-section-header mb-3 position-relative">
+    <!-- ── Recent Notices (col-lg-4) ── -->
+    <div class="col-lg-4">
+        <div class="card border-0 p-3 p-xl-4 h-100" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
+            <div class="page-section-header mb-4 position-relative">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6; width: 34px; height: 34px; font-size: 0.9rem;">
+                    <div class="page-section-icon" style="background: rgba(59, 130, 246, 0.1);color: #3b82f6; width: 36px; height: 36px; font-size: 0.95rem;">
                         <i class="bi bi-bell-fill"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0" style="font-size: 0.92rem;">Recent Notices</h6>
-                        <small style="font-size: 0.72rem;">Latest updates</small>
+                        <h6 class="mb-0" style="font-size: 0.95rem;">Recent Notices</h6>
+                        <small style="font-size: 0.74rem;">Latest announcements and updates</small>
                     </div>
                 </div>
             </div>
             
-            <div class="notice-list custom-scroll" style="max-height: 300px; overflow-y: auto;">
+            <div class="notice-list custom-scroll" style="max-height: 320px; overflow-y: auto;">
                 <?php foreach($recentNotices as $n): ?>
                 <div class="notice-minimal-item" role="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>">
                     <div class="notice-accent-bar"></div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="notice-date-badge">
-                            <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
-                            <?php echo date('M d', strtotime($n['notice_date'])); ?>
-                        </span>
-                        <span class="notice-arrow-icon">
-                            <i class="bi bi-arrow-up-right"></i>
-                        </span>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="notice-date-badge">
+                                <i class="bi bi-calendar3" style="font-size: 0.62rem;"></i>
+                                <?php echo date('M d', strtotime($n['notice_date'])); ?>
+                            </span>
+                        </div>
+                        <div class="text-truncate" style="font-size: 0.85rem; font-weight: 500; color: var(--text-primary);" title="<?php echo htmlspecialchars($n['subject']); ?>">
+                            <?php echo htmlspecialchars($n['subject']); ?>
+                        </div>
                     </div>
-                    <div class="notice-subject-text" title="<?php echo htmlspecialchars($n['subject']); ?>">
-                        <?php echo htmlspecialchars($n['subject']); ?>
-                    </div>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#noticeModal<?php echo $n['id']; ?>" class="notice-view-btn flex-shrink-0" onclick="event.stopPropagation();">
+                        <span>View</span>
+                        <i class="bi bi-arrow-up-right" style="font-size: 0.7rem;"></i>
+                    </button>
                 </div>
                 <?php endforeach; ?>
                 <?php if(empty($recentNotices)): ?>
@@ -292,10 +309,8 @@ $firstName = explode(' ', $fullName)[0];
         </div>
     </div>
 
-
-
-    <!-- -- Pending Proposals (75%) -- -->
-    <div class="col-lg-9 col-xl-9">
+    <!-- ── Pending Proposals (col-lg-8) ── -->
+    <div class="col-lg-8">
         <div class="card border-0 p-3 p-md-4 h-100" id="pending-proposals" style="border-radius: 16px; background: var(--card-bg); box-shadow: var(--card-shadow)">
             <div class="page-section-header mb-4 position-relative d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">

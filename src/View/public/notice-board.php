@@ -33,7 +33,7 @@
     .notice-item:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        border-color: rgba(16,185,129,0.3);
+        border-color: rgba(37, 99, 235, 0.4);
     }
     .notice-meta {
         display: flex;
@@ -52,8 +52,8 @@
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
-        background: rgba(16,185,129,0.15);
-        color: #34d399;
+        background: rgba(37, 99, 235, 0.15);
+        color: #60a5fa;
     }
     .notice-ref {
         background: rgba(255,255,255,0.1);
@@ -95,8 +95,8 @@
         background: #334155;
     }
     .page-link.active {
-        background: #10b981;
-        border-color: #10b981;
+        background: #2563eb;
+        border-color: #2563eb;
     }
 </style>
 <?php include __DIR__ . '/../layout/auth_header.php'; ?>

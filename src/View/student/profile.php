@@ -258,8 +258,8 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
 
 <!-- ═══════════════ Status Alert ═══════════════ -->
 <?php if ($isLocked): ?>
-    <div class="profile-alert" style="background: rgba(16,185,129,0.06);color: #059669">
-        <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+    <div class="profile-alert" style="background: rgba(37,99,235,0.06);color: #1d4ed8">
+        <div class="profile-alert-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
             <i class="bi bi-shield-lock-fill"></i>
         </div>
         <div>

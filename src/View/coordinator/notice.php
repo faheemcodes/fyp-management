@@ -1,9 +1,9 @@
 <style>
 #is_public:checked {
-                                background-color: #10b981 !important;
-                                border-color: #10b981 !important;
-                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
-                            }
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
                             #is_public {
                                 background-color: var(--pf-bg-alt);
                                 background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
@@ -48,7 +48,7 @@
 }
 .pf-group .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
 }
 
 .audience-chip-checkbox {
@@ -70,12 +70,12 @@
 }
 .audience-chip-label:hover {
     border-color: #93c5fd;
-    background: rgba(16,185,129,0.05);
+    background: rgba(37,99,235,0.05);
 }
 .audience-chip-checkbox:checked + .audience-chip-label {
-    background: rgba(16,185,129,0.1);
-    color: #10b981;
-    border-color: #10b981;
+    background: rgba(37,99,235,0.1);
+    color: #2563eb;
+    border-color: #2563eb;
 }
 
 .action-btn {
@@ -93,9 +93,9 @@
     text-decoration: none;
 }
 .action-btn:hover {
-    background: rgba(16,185,129,0.1);
-    color: #10b981;
-    border-color: rgba(16,185,129,0.2);
+    background: rgba(37,99,235,0.1);
+    color: #2563eb;
+    border-color: rgba(37,99,235,0.2);
 }
 .action-btn.delete:hover {
     background: rgba(239,68,68,0.1);
@@ -157,7 +157,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-4">
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
-                <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                     <i class="bi bi-pencil-square"></i>
                 </div>
                 <div>
@@ -219,7 +219,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="col-lg-8">
         <div class="page-section h-100 mb-0">
             <div class="page-section-header">
-                <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                     <i class="bi bi-clock-history"></i>
                 </div>
                 <div>
@@ -259,7 +259,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                             </td>
                             <td>
                                 <?php if ($isAll): ?>
-                                    <span class="badge rounded-pill px-2.5 py-1 text-nowrap" style="background: rgba(16, 185, 129, 0.1); color: #059669; font-size: 0.72rem; font-weight: 700;">
+                                    <span class="badge rounded-pill px-2.5 py-1 text-nowrap" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 0.72rem; font-weight: 700;">
                                         <i class="bi bi-people-fill me-1"></i>All Roles
                                     </span>
                                 <?php else: ?>

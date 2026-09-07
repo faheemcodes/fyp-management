@@ -17,7 +17,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 .hod-section-card:hover {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border-color: rgba(16, 185, 129, 0.2);
+    border-color: rgba(37, 99, 235, 0.25);
 }
 
 .hod-section-header {
@@ -158,7 +158,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 }
 .notice-minimal-item:hover {
     background: var(--card-bg, #ffffff);
-    border-color: rgba(16, 185, 129, 0.35);
+    border-color: rgba(37, 99, 235, 0.35);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
@@ -168,7 +168,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     top: 0;
     bottom: 0;
     width: 3.5px;
-    background: #10b981;
+    background: #2563eb;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -178,8 +178,8 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 .notice-date-badge {
     font-size: 0.68rem;
     font-weight: 600;
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
     padding: 2px 7px;
     border-radius: 5px;
     display: inline-flex;
@@ -204,9 +204,9 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
     line-height: 1;
 }
 .notice-minimal-item:hover .notice-view-btn {
-    background: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.3);
 }
 
 .notice-list {

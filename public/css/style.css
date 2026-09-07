@@ -801,9 +801,9 @@ html.dark-theme .alert-warning {
 }
 
 html.dark-theme .alert-info {
-    background-color: rgba(16, 185, 129, 0.1) !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
     color: #60a5fa !important;
-    border-color: rgba(16, 185, 129, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
 }
 
 /* ─── Accordion ─── */
@@ -1294,7 +1294,7 @@ html.dark-theme .offcanvas .btn-close:hover {
     letter-spacing: 0.01em;
 }
 .profile-quick-stat i {
-    color: #34d399;
+    color: #38bdf8;
     font-size: 0.95rem;
 }
 
@@ -1452,53 +1452,7 @@ html.dark-theme .offcanvas .btn-close:hover {
     display: inline-block;
 }
 
-/* ─── Shared Profile & Proposal Components ─── */
-.profile-avatar-ring {
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399);
-    padding: 3px;
-    flex-shrink: 0;
-}
-.profile-avatar-ring img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #1e352f;
-}
-.profile-completion {
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 99px;
-    overflow: hidden;
-    width: 140px;
-}
-.profile-completion-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: linear-gradient(90deg, #34d399, #10b981);
-    transition: width 0.6s ease;
-}
-.profile-quick-stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    color: #ffffff !important;
-    font-weight: 600;
-    font-size: 0.82rem;
-    white-space: nowrap;
-    letter-spacing: 0.01em;
-}
-.profile-quick-stat i {
-    color: #34d399;
-    font-size: 0.95rem;
-}
+
 
 .page-hero-chip {
     display: inline-flex;

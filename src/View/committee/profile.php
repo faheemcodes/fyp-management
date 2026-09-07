@@ -8,14 +8,14 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: #1e352f;
+    background: #172554;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     font-size: 2rem;
     font-weight: bold;
-    border: 3px solid #1e352f;
+    border: 3px solid #1e3a8a;
 }
 
 
@@ -244,8 +244,8 @@ if ($basePath === '/') {
 
 <!-- ═══════════════ Status Alert ═══════════════ -->
 <?php if ($isLocked): ?>
-<div class="profile-alert" style="background: rgba(16,185,129,0.06);color: #059669">
-    <div class="profile-alert-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+<div class="profile-alert" style="background: rgba(37,99,235,0.06);color: #1d4ed8">
+    <div class="profile-alert-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
         <i class="bi bi-shield-check"></i>
     </div>
     <div>
@@ -284,7 +284,7 @@ if (isset($_SESSION['flash']['error'])) {
         <div class="col-lg-6">
             <div class="page-section h-100">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>
@@ -354,7 +354,7 @@ if (isset($_SESSION['flash']['error'])) {
         <div class="col-lg-6">
             <div class="page-section h-100">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(13,148,136,0.1);color: #0d9488">
+                    <div class="page-section-icon" style="background: rgba(2,132,199,0.1);color: #0284c7">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
                     <div>
