@@ -92,13 +92,13 @@ html.dark-theme .ai-header-title { color: #fff !important; }
     height: 40px;
     border-radius: 50%;
     padding: 2px;
-    background: linear-gradient(135deg, #10b981, #059669, #34d399);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8, #38bdf8);
     animation: ringPulse 3s ease-in-out infinite;
     flex-shrink: 0;
 }
 @keyframes ringPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.3); }
-    50% { box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
 }
 .ai-avatar {
     width: 100%;
@@ -188,13 +188,13 @@ html.dark-theme .ai-header-btn:hover {
     margin: 0 auto 12px;
     border-radius: 50%;
     overflow: hidden;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.4rem;
-    box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.3);
 }
 .ai-welcome-title {
     font-size: 1rem;
@@ -216,7 +216,7 @@ html.dark-theme .ai-header-btn:hover {
     gap: 8px;
 }
 .ai-quick-btn {
-    border: 1px solid rgba(16,185,129,0.15);
+    border: 1px solid rgba(37,99,235,0.15);
     background: var(--card-bg);
     backdrop-filter: blur(8px);
     border-radius: 10px;
@@ -231,18 +231,18 @@ html.dark-theme .ai-header-btn:hover {
     transition: all 0.2s;
     text-align: left;
 }
-.ai-quick-btn i { color: #10b981; font-size: 0.85rem; flex-shrink: 0; }
+.ai-quick-btn i { color: #2563eb; font-size: 0.85rem; flex-shrink: 0; }
 html.dark-theme .ai-quick-btn i { color: var(--text-primary); }
 .ai-quick-btn:hover {
-    border-color: #10b981;
-    background: rgba(16,185,129,0.08);
-    color: #10b981;
+    border-color: #2563eb;
+    background: rgba(37,99,235,0.08);
+    color: #2563eb;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(16,185,129,0.12);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.15);
 }
 html.dark-theme .ai-quick-btn {
     background: var(--card-bg);
-    border-color: rgba(16,185,129,0.2);
+    border-color: rgba(37,99,235,0.25);
     color: var(--text-primary);
 }
 html.dark-theme .ai-quick-btn:hover {
@@ -278,14 +278,14 @@ html.dark-theme .ai-quick-btn:hover {
     font-size: 0.7rem;
 }
 .ai-msg-avatar.bot {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
-    box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
 }
 .ai-msg-avatar.user-av {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
-    box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
 }
 
 .ai-message {
@@ -298,10 +298,10 @@ html.dark-theme .ai-quick-btn:hover {
 
 /* User bubble (glass) */
 .ai-message.ai-user {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     border-radius: 16px 16px 4px 16px;
-    box-shadow: 0 2px 10px rgba(16,185,129,0.25);
+    box-shadow: 0 2px 10px rgba(37,99,235,0.25);
 }
 
 /* Bot bubble (glass) */
@@ -495,7 +495,7 @@ html.dark-theme .ai-input-wrapper:focus-within {
     height: 32px;
     border-radius: 50%;
     border: none;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     cursor: pointer;
     display: flex;
@@ -509,7 +509,7 @@ html.dark-theme .ai-input-wrapper:focus-within {
 #ai-send-btn:not(:disabled) { opacity: 1; }
 #ai-send-btn:not(:disabled):hover {
     transform: scale(1.06);
-    box-shadow: 0 2px 10px rgba(16,185,129,0.35);
+    box-shadow: 0 2px 10px rgba(37,99,235,0.35);
 }
 .ai-disclaimer {
     text-align: center;
@@ -591,7 +591,7 @@ html.dark-theme .ai-input-wrapper:focus-within {
     </div>
 
     <!-- Floating Action Button - inline styles prevent FOUC -->
-    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(16,185,129,0.45)">
+    <button id="ai-chat-fab" style="width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,99,235,0.45)">
         <i class="bi bi-robot ai-fab-icon-open"></i>
         <i class="bi bi-x-lg ai-fab-icon-close" style="display:none; font-size:1.3rem;"></i>
         <span class="ai-fab-pulse"></span>

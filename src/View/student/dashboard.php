@@ -81,7 +81,7 @@
 }
 .notice-minimal-item:hover {
     background: var(--card-bg);
-    border-color: rgba(16, 185, 129, 0.3);
+    border-color: rgba(37, 99, 235, 0.35);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
@@ -91,7 +91,7 @@
     top: 0;
     bottom: 0;
     width: 3.5px;
-    background: #10b981;
+    background: #2563eb;
     opacity: 0;
     transition: opacity 0.2s ease;
 }
@@ -101,8 +101,8 @@
 .notice-date-badge {
     font-size: 0.68rem;
     font-weight: 600;
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.1);
     padding: 2px 8px;
     border-radius: 6px;
     display: inline-flex;
@@ -127,9 +127,9 @@
     line-height: 1;
 }
 .notice-minimal-item:hover .notice-view-btn {
-    background: rgba(16, 185, 129, 0.12);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, 0.3);
 }
 
 .notice-list {

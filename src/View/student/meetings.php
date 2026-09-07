@@ -52,7 +52,7 @@
         <div class="col-lg-8">
             <div class="card border-0 p-4 h-100">
                 <div class="page-section-header mb-4">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                         <i class="bi bi-calendar-event-fill"></i>
                     </div>
                     <div>

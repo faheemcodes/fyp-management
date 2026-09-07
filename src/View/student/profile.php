@@ -288,7 +288,7 @@ $completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 10
             <!-- Personal Information -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                         <i class="bi bi-person-fill"></i>
                     </div>
                     <div>

@@ -201,11 +201,11 @@ foreach (($supervisors ?? []) as $s) {
         <span style="font-size: 0.85rem;color: #1e40af;line-height: 1.5">Your final year project term has concluded. You have <strong>view-only access</strong> to review your project details, abstract, supervisor information, and thesis. Further edits and submissions are closed.</span>
     </div>
     <?php else: ?>
-    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(16,185,129,0.06);border: 1px solid rgba(16,185,129,0.15)">
-        <div style="width: 32px;height: 32px;background: rgba(16,185,129,0.1);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #10b981;font-size: 0.9rem">
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(37,99,235,0.06);border: 1px solid rgba(37,99,235,0.15)">
+        <div style="width: 32px;height: 32px;background: rgba(37,99,235,0.1);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #2563eb;font-size: 0.9rem">
             <i class="bi bi-info-circle-fill"></i>
         </div>
-        <span style="font-size: 0.85rem;color: #059669;line-height: 1.5">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
+        <span style="font-size: 0.85rem;color: #1e40af;line-height: 1.5">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
     </div>
     <?php endif; ?>
 
@@ -214,7 +214,7 @@ foreach (($supervisors ?? []) as $s) {
             <!-- Abstract -->
             <div class="page-section">
                 <div class="page-section-header">
-                    <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                         <i class="bi bi-file-text-fill"></i>
                     </div>
                     <div>
@@ -247,7 +247,7 @@ foreach (($supervisors ?? []) as $s) {
                     </div>
                     <div>
                         <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Group Code</div>
-                        <div class="fw-bold font-monospace" style="color: #10b981"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
+                        <div class="fw-bold font-monospace" style="color: #2563eb"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
                     </div>
                     <?php if ($proposal && $proposal['file_path']): ?>
                     <div>
@@ -391,7 +391,7 @@ foreach (($supervisors ?? []) as $s) {
                 <!-- Abstract (read-only) -->
                 <div class="page-section">
                     <div class="page-section-header">
-                        <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                        <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                             <i class="bi bi-file-text-fill"></i>
                         </div>
                         <div>
@@ -420,7 +420,7 @@ foreach (($supervisors ?? []) as $s) {
                     <!-- Project Details -->
                     <div class="page-section">
                         <div class="page-section-header">
-                            <div class="page-section-icon" style="background: rgba(16,185,129,0.1);color: #10b981">
+                            <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
                                 <i class="bi bi-journal-text"></i>
                             </div>
                             <div>
@@ -449,7 +449,7 @@ foreach (($supervisors ?? []) as $s) {
                                     <?php if ($proposal && $proposal['file_path']): ?>
                                         <div class="mt-1" style="font-size: 0.75rem;color: var(--text-secondary)">
                                             <i class="bi bi-file-earmark-check text-primary me-1"></i>
-                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #10b981">Current file uploaded</a>
+                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #2563eb">Current file uploaded</a>
                                         </div>
                                     <?php endif; ?>
                                 </div>

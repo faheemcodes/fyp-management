@@ -1,0 +1,319 @@
+/* ================================================================
+   FYP Portal - Student Portal Royal Navy & Tech Cobalt Theme (Option 1)
+   Prestigious Academic Royal Navy with Modern Tech Cobalt Accents
+   Applied exclusively to Student Portal without affecting other roles.
+   ================================================================ */
+
+/* ── 1. Color Tokens Scoped to Student ── */
+:root body.portal-student,
+:root body[data-role="student"],
+body.portal-student,
+body[data-role="student"] {
+    --primary-color: #2563eb;         /* Royal Navy / Tech Cobalt */
+    --primary-rgb: 37, 99, 235;
+    --primary-hover: #1d4ed8;
+    --primary-deep: #1e40af;
+    --primary-light: rgba(37, 99, 235, 0.08);
+    --secondary-color: #0284c7;       /* Tech Cobalt Sky */
+    --secondary-rgb: 2, 132, 199;
+    --sidebar-link-hover: #2563eb;
+    --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+/* Dark Mode Tokens */
+html.dark-theme body.portal-student,
+html.dark-theme body[data-role="student"],
+[data-theme="dark"] body.portal-student,
+[data-theme="dark"] body[data-role="student"],
+body.portal-student.dark-theme,
+body[data-role="student"].dark-theme {
+    --primary-color: #3b82f6;
+    --primary-rgb: 59, 130, 246;
+    --primary-hover: #60a5fa;
+    --primary-deep: #2563eb;
+    --primary-light: rgba(59, 130, 246, 0.15);
+    --secondary-color: #38bdf8;
+    --secondary-rgb: 56, 189, 248;
+    --sidebar-link-hover: #3b82f6;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ── 2. Hero Banner (Academic Royal Navy Gradient) ── */
+body.portal-student .page-hero,
+body[data-role="student"] .page-hero {
+    background: linear-gradient(135deg, #0b1329 0%, #1e3a8a 50%, #172554 100%) !important;
+    box-shadow: 0 12px 35px rgba(30, 58, 138, 0.28) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+body.portal-student .page-hero::before,
+body[data-role="student"] .page-hero::before {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%) !important;
+}
+
+body.portal-student .page-hero::after,
+body[data-role="student"] .page-hero::after {
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.16) 0%, transparent 70%) !important;
+}
+
+body.portal-student .page-stat-pill,
+body[data-role="student"] .page-stat-pill {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ── 3. Sidebar Links & Badges ── */
+body.portal-student #sidebar .nav-link.active,
+body[data-role="student"] #sidebar .nav-link.active {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+}
+
+body.portal-student #sidebar .nav-link.active i,
+body[data-role="student"] #sidebar .nav-link.active i {
+    color: #ffffff !important;
+}
+
+body.portal-student #sidebar .nav-link:hover:not(.active),
+body[data-role="student"] #sidebar .nav-link:hover:not(.active) {
+    color: #2563eb !important;
+}
+
+body.portal-student #sidebar .nav-link:hover:not(.active) i,
+body[data-role="student"] #sidebar .nav-link:hover:not(.active) i {
+    color: #2563eb !important;
+}
+
+/* Chat unread badge in student sidebar */
+body.portal-student #sidebar a[href*="/student/chat"] .badge,
+body[data-role="student"] #sidebar a[href*="/student/chat"] .badge {
+    background: rgba(37, 99, 235, 0.15) !important;
+    color: #2563eb !important;
+    border: 1px solid rgba(37, 99, 235, 0.3) !important;
+}
+
+/* ── 4. Buttons & Form Elements ── */
+body.portal-student .btn-primary,
+body[data-role="student"] .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-color: #1d4ed8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.portal-student .btn-primary:hover,
+body[data-role="student"] .btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    border-color: #1e40af !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35) !important;
+}
+
+body.portal-student .btn-outline-primary,
+body[data-role="student"] .btn-outline-primary {
+    color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+body.portal-student .btn-outline-primary:hover,
+body[data-role="student"] .btn-outline-primary:hover {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+body.portal-student .form-control:focus,
+body.portal-student .form-select:focus,
+body[data-role="student"] .form-control:focus,
+body[data-role="student"] .form-select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.18) !important;
+}
+
+/* ── 5. Stepper Component (Student Dashboard) ── */
+body.portal-student .h-step.active .h-step-dot,
+body[data-role="student"] .h-step.active .h-step-dot {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.25) !important;
+}
+
+body.portal-student .h-step.active .h-step-label,
+body[data-role="student"] .h-step.active .h-step-label {
+    color: #2563eb !important;
+    font-weight: 700 !important;
+}
+
+body.portal-student .h-step.active:not(:last-child)::after,
+body[data-role="student"] .h-step.active:not(:last-child)::after {
+    background: linear-gradient(90deg, #2563eb 0%, var(--border-color) 100%) !important;
+}
+
+/* ── 6. Minimal Notices (Student Dashboard) ── */
+body.portal-student .notice-minimal-item:hover,
+body[data-role="student"] .notice-minimal-item:hover {
+    border-color: rgba(37, 99, 235, 0.35) !important;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08) !important;
+}
+
+body.portal-student .notice-minimal-item .notice-accent-bar,
+body[data-role="student"] .notice-minimal-item .notice-accent-bar {
+    background: #2563eb !important;
+}
+
+body.portal-student .notice-date-badge,
+body[data-role="student"] .notice-date-badge {
+    color: #2563eb !important;
+    background: rgba(37, 99, 235, 0.1) !important;
+}
+
+body.portal-student .notice-minimal-item:hover .notice-view-btn,
+body[data-role="student"] .notice-minimal-item:hover .notice-view-btn {
+    background: rgba(37, 99, 235, 0.12) !important;
+    color: #2563eb !important;
+    border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+/* ── 7. Page Section Panels & Cards ── */
+body.portal-student .page-section:hover,
+body[data-role="student"] .page-section:hover {
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.08) !important;
+}
+
+/* Primary section icons */
+body.portal-student .page-section-icon.theme-primary,
+body[data-role="student"] .page-section-icon.theme-primary,
+body.portal-student .page-section-icon[style*="#10b981"],
+body[data-role="student"] .page-section-icon[style*="#10b981"],
+body.portal-student .page-section-icon[style*="16,185,129"],
+body[data-role="student"] .page-section-icon[style*="16,185,129"] {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+}
+
+/* Group and Profile icons & Badges */
+body.portal-student .info-icon[style*="16,185,129"],
+body[data-role="student"] .info-icon[style*="16,185,129"] {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+}
+
+body.portal-student .info-value.font-monospace[style*="#10b981"],
+body[data-role="student"] .info-value.font-monospace[style*="#10b981"],
+body.portal-student .font-monospace[style*="#10b981"],
+body[data-role="student"] .font-monospace[style*="#10b981"] {
+    color: #2563eb !important;
+}
+
+body.portal-student .member-role-badge[style*="16,185,129"],
+body[data-role="student"] .member-role-badge[style*="16,185,129"] {
+    background: rgba(37, 99, 235, 0.12) !important;
+    color: #2563eb !important;
+}
+
+body.portal-student .member-row:hover,
+body[data-role="student"] .member-row:hover {
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08) !important;
+}
+
+body.portal-student .member-row .m-avatar,
+body[data-role="student"] .member-row .m-avatar {
+    border: 2px solid rgba(37, 99, 235, 0.2) !important;
+}
+
+body.portal-student .manage-member-input label .num,
+body[data-role="student"] .manage-member-input label .num {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #2563eb !important;
+}
+
+body.portal-student .manage-member-input:focus-within,
+body[data-role="student"] .manage-member-input:focus-within {
+    border-color: #2563eb !important;
+}
+
+/* ── 8. AI Chatbot Widget (Option 1 Navy/Cobalt) ── */
+body.portal-student #ai-chat-fab,
+body[data-role="student"] #ai-chat-fab {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 4px 24px rgba(37, 99, 235, 0.45) !important;
+}
+
+body.portal-student .ai-fab-pulse,
+body[data-role="student"] .ai-fab-pulse {
+    background: rgba(37, 99, 235, 0.5) !important;
+}
+
+body.portal-student .ai-chat-header,
+body[data-role="student"] .ai-chat-header {
+    background: linear-gradient(135deg, #0b1329 0%, #1e3a8a 100%) !important;
+    color: #ffffff !important;
+}
+
+body.portal-student .ai-avatar-ring,
+body[data-role="student"] .ai-avatar-ring {
+    background: linear-gradient(135deg, #2563eb, #38bdf8, #60a5fa) !important;
+}
+
+body.portal-student .ai-welcome-icon,
+body[data-role="student"] .ai-welcome-icon {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3) !important;
+}
+
+body.portal-student .ai-quick-btn i,
+body[data-role="student"] .ai-quick-btn i {
+    color: #2563eb !important;
+}
+
+body.portal-student .ai-quick-btn:hover,
+body[data-role="student"] .ai-quick-btn:hover {
+    border-color: #2563eb !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+    color: #2563eb !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
+}
+
+body.portal-student .ai-msg-avatar.bot,
+body[data-role="student"] .ai-msg-avatar.bot,
+body.portal-student .ai-msg-avatar.user-av,
+body[data-role="student"] .ai-msg-avatar.user-av {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+body.portal-student .ai-message.ai-user,
+body[data-role="student"] .ai-message.ai-user {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25) !important;
+}
+
+body.portal-student #ai-send-btn,
+body[data-role="student"] #ai-send-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+body.portal-student #ai-send-btn:not(:disabled):hover,
+body[data-role="student"] #ai-send-btn:not(:disabled):hover {
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* ── 9. Live Supervisor Chat (chat.php) ── */
+body.portal-student .chat-header-icon,
+body[data-role="student"] .chat-header-icon {
+    background: conic-gradient(from 0deg, #2563eb, #0284c7, #1d4ed8, #2563eb) !important;
+}
+
+body.portal-student .chat-input-row .btn-send,
+body[data-role="student"] .chat-input-row .btn-send {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
