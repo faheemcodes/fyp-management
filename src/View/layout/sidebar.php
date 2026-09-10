@@ -361,7 +361,7 @@ if ($role === 'supervisor') {
                     <a href="<?php echo $urlPrefix; ?>/student/chat" class="nav-link <?php echo isActive('/student/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-chat-dots-fill"></i> <span>Chat with Supervisor</span></div>
                         <?php if (isset($unreadStudentChat) && $unreadStudentChat > 0): ?>
-                            <span class="badge rounded-pill ms-auto" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);"><?php echo $unreadStudentChat; ?></span>
+                            <span class="badge rounded-pill ms-auto" style="background: rgba(37, 99, 235, 0.15); color: #2563eb; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(37, 99, 235, 0.3);"><?php echo $unreadStudentChat; ?></span>
                         <?php endif; ?>
                     </a>
                 </li>
@@ -395,7 +395,7 @@ if ($role === 'supervisor') {
                     <a href="<?php echo $urlPrefix; ?>/supervisor/chat" class="nav-link <?php echo isActive('/supervisor/chat', $currentUri); ?> d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center gap-2 text-truncate"><i class="bi bi-chat-dots-fill"></i> <span>Messages</span></div>
                         <?php if (isset($unreadSupChat) && $unreadSupChat > 0): ?>
-                            <span class="badge rounded-pill ms-auto" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(16, 185, 129, 0.3);"><?php echo $unreadSupChat; ?></span>
+                            <span class="badge rounded-pill ms-auto" style="background: rgba(37, 99, 235, 0.15); color: #2563eb; font-size: 0.7rem; padding: 0.35em 0.65em; border: 1px solid rgba(37, 99, 235, 0.3);"><?php echo $unreadSupChat; ?></span>
                         <?php endif; ?>
                     </a>
                 </li>

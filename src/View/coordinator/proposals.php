@@ -1,29 +1,6 @@
 <style>
 /* ─── Group Page Scoped Styles ─── */
 
-
-
-
-
-
-
-
-/* ─── Section Panel ─── */
-
-
-@media (min-width: 769px) {
-    .table-responsive {
-        overflow: visible;
-    }
-}
-
-
-/* ─── Modern Table Styles ─── */
-
-
-
-
-
 .group-code-badge {
     display: inline-flex;
     align-items: center;
@@ -41,7 +18,7 @@
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.4;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     max-width: 250px;
 }
 
@@ -50,12 +27,12 @@
     align-items: center;
 }
 .avatar-stack img {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     object-fit: cover;
     border: 2px solid var(--card-bg);
-    margin-left: -12px;
+    margin-left: -10px;
     transition: transform 0.2s ease;
 }
 .avatar-stack img:first-child {
@@ -67,8 +44,8 @@
 }
 
 .action-btn {
-    padding: 6px 16px;
-    height: 36px;
+    padding: 5px 12px;
+    height: 32px;
     border-radius: 50rem;
     display: inline-flex;
     align-items: center;
@@ -77,10 +54,11 @@
     border: 1px solid var(--border-color);
     background: var(--card-bg);
     color: var(--text-secondary);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     transition: all 0.2s ease;
     text-decoration: none;
+    white-space: nowrap;
 }
 .action-btn:hover {
     background: rgba(37, 99, 235, 0.1);
@@ -99,17 +77,24 @@
 }
 
 .modern-table th {
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     color: var(--text-secondary) !important;
-    padding: 14px 20px;
+    padding: 12px 16px;
+    white-space: nowrap;
+    background: var(--form-bg);
+    border-bottom: 1px solid var(--border-color);
 }
 .modern-table td {
-    padding: 16px 20px;
+    padding: 14px 16px;
     vertical-align: middle;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.modern-table tr:last-child td {
+    border-bottom: none;
 }
 </style>
 <!-- Coordinator Project Proposals View -->
@@ -152,8 +137,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
             }
             if ($approvedCount > 0):
             ?>
-            <div class="page-stat-pill" style="background: rgba(16,185,129,0.15)">
-                <span class="stat-num" style="color: #34d399"><?php echo htmlspecialchars((string)($approvedCount), ENT_QUOTES, 'UTF-8'); ?></span>
+            <div class="page-stat-pill" style="background: rgba(37,99,235,0.15)">
+                <span class="stat-num" style="color: #60a5fa"><?php echo htmlspecialchars((string)($approvedCount), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stat-label">Approved</span>
             </div>
             <?php endif; ?>
@@ -165,7 +150,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
     <div class="row justify-content-center mt-4">
         <div class="col-lg-6">
             <div class="card border-0 text-center p-5 shadow-sm" style="border-radius: var(--border-radius-lg)">
-                <div style="width: 72px;height: 72px;background: rgba(16,185,129,0.08);border-radius: 20px;display: flex;align-items: center;justify-content: center;margin: 0 auto 20px;font-size: 1.8rem;color: #10b981">
+                <div style="width: 72px;height: 72px;background: rgba(37,99,235,0.08);border-radius: 20px;display: flex;align-items: center;justify-content: center;margin: 0 auto 20px;font-size: 1.8rem;color: #2563eb">
                     <i class="bi bi-file-earmark-text"></i>
                 </div>
                 <h5 class="fw-bold mb-2">No Proposals Found</h5>
@@ -174,13 +159,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
         </div>
     </div>
 <?php else: ?>
-    <div class="card border-0 p-3 p-md-4 h-100 mb-4" style="border-radius: 16px;background: var(--card-bg);box-shadow: var(--card-shadow)">
-        <div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom d-md-none" style="border-color: var(--border-color) !important">
-            <i class="bi bi-file-earmark-text text-primary" style="font-size: 1.2rem;"></i>
-            <h6 class="fw-bold m-0" style="color: var(--text-primary);letter-spacing: -0.01em">Project Proposals</h6>
-        </div>
-        <div class="d-none d-md-block table-responsive">
-            <table class="table modern-table">
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;background: var(--card-bg);box-shadow: var(--card-shadow);overflow: hidden;">
+        <div class="d-none d-md-block table-responsive m-0">
+            <table class="table modern-table align-middle mb-0">
                 <thead>
                     <tr>
                         <th class="ps-4">Group Code</th>
