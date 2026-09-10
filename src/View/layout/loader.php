@@ -1,20 +1,20 @@
 <style>
-/* Loader Overlay - Dim light gray background */
+/* Loader Overlay */
     .global-loader {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.3);       /* Dim light gray overlay */
-        backdrop-filter: blur(2px);           /* Slighter blur effect */
-        -webkit-backdrop-filter: blur(2px);
-        z-index: 99999;                       /* Highest z-index to stay on top */
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 99999;
         display: flex;
         justify-content: center;
         align-items: center;
         opacity: 1;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
     }
 
     /* Hidden State */
@@ -32,8 +32,8 @@
 
     /* Custom Loader Animation */
     .loader {
-        --color-1: #fff;
-        --color-2: #10b981; 
+        --color-1: rgba(255, 255, 255, 0.3);
+        --color-2: #2563eb; 
         --size: 1.2px;      
 
         width: calc(48 * var(--size));
@@ -43,7 +43,8 @@
         display: inline-block;
         position: relative;
         box-sizing: border-box;
-        animation: rotation 1s linear infinite;
+        animation: rotation 0.9s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+        filter: drop-shadow(0 0 12px rgba(37, 99, 235, 0.45));
     }
     .loader::after {
         content: '';
@@ -57,6 +58,13 @@
         border-radius: 50%;
         border: calc(5 * var(--size)) solid;
         border-color: var(--color-2) transparent;
+    }
+
+    html.dark-theme .loader,
+    [data-theme="dark"] .loader {
+        --color-1: rgba(255, 255, 255, 0.15);
+        --color-2: #3b82f6;
+        filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.6));
     }
 
     @keyframes rotation {
