@@ -248,11 +248,11 @@ $sc = $statusColors[$st] ?? ['rgba(107,114,128,0.1)', '#6b7280'];
             $heroHasAvatar = !empty($heroAvatar) && file_exists($heroAvatarPath);
             $heroInitial = strtoupper(substr(trim($_SESSION['name'] ?? 'S'), 0, 1));
             ?>
-            <div class="page-hero-icon page-hero-avatar" style="padding: 0; overflow: hidden;">
+            <div class="page-hero-icon page-hero-avatar" style="padding: 0; overflow: hidden; background: #ffffff !important; border: 2.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); position: relative; z-index: 5;">
                 <?php if($heroHasAvatar): ?>
-                    <img src="<?php echo htmlspecialchars($heroBasePath, ENT_QUOTES, 'UTF-8'); ?>/uploads/avatars/<?php echo htmlspecialchars($heroAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+                    <img src="<?php echo htmlspecialchars($heroBasePath, ENT_QUOTES, 'UTF-8'); ?>/uploads/avatars/<?php echo htmlspecialchars($heroAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; filter: none !important; -webkit-filter: none !important; mix-blend-mode: normal !important; opacity: 1 !important;">
                 <?php else: ?>
-                    <span style="font-size: 1.6rem; font-weight: 700; font-style: normal;"><?php echo htmlspecialchars($heroInitial, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span style="font-size: 1.6rem; font-weight: 700; font-style: normal; color: #2563eb;"><?php echo htmlspecialchars($heroInitial, ENT_QUOTES, 'UTF-8'); ?></span>
                 <?php endif; ?>
             </div>
             <div>

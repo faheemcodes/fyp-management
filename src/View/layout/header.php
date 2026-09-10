@@ -20,10 +20,10 @@
     $isStudentPortal = ($role === 'student') || (strpos($_SERVER['REQUEST_URI'] ?? '', '/student') !== false);
     ?>
     <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
-    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.6" rel="stylesheet">
-    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.6" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.7" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.7" rel="stylesheet">
     <?php if ($isStudentPortal): ?>
-    <link href="<?php echo $basePath; ?>/css/student-theme.css?v=1.0.1" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/student-theme.css?v=1.0.2" rel="stylesheet">
     <?php endif; ?>
     <script>
         if (localStorage.getItem('theme') === 'dark') {
