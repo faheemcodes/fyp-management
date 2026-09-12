@@ -70,9 +70,15 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             background-repeat: no-repeat;
         }
 
-        /* Dark theme clean background */
+        /* Dark theme texture background with dark fade overlay */
         :root[data-theme="dark"] body {
-            background-image: none;
+            background-image: 
+                linear-gradient(180deg, rgba(9, 9, 11, 0.82) 0%, rgba(9, 9, 11, 0.90) 50%, rgba(9, 9, 11, 0.96) 100%),
+                url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             background-color: var(--lp-bg);
         }
 
