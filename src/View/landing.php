@@ -408,9 +408,34 @@
         }
 
         /* Styles */
-        .tl-style-green { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
-        .tl-style-green .card-pill { background: #064e3b; color: #fff; }
-        .tl-style-green .icon-circle { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .tl-style-blue, .tl-style-green { 
+            background: rgba(37, 99, 235, 0.06); 
+            border-color: rgba(37, 99, 235, 0.25); 
+        }
+        .tl-style-blue .card-pill, .tl-style-green .card-pill { 
+            background: #1d4ed8; 
+            color: #ffffff; 
+        }
+        .tl-style-blue .icon-circle, .tl-style-green .icon-circle { 
+            background: rgba(37, 99, 235, 0.15); 
+            color: #2563eb; 
+        }
+        
+        :root[data-theme="dark"] .tl-style-blue,
+        :root[data-theme="dark"] .tl-style-green {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.28);
+        }
+        :root[data-theme="dark"] .tl-style-blue .card-pill,
+        :root[data-theme="dark"] .tl-style-green .card-pill {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        :root[data-theme="dark"] .tl-style-blue .icon-circle,
+        :root[data-theme="dark"] .tl-style-green .icon-circle {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
 
         .tl-style-grey { background: var(--lp-card); }
         .tl-style-grey .card-pill { background: var(--lp-text); color: var(--lp-bg); }
@@ -821,7 +846,7 @@
         </div>
         
         <div class="timeline-grid">
-            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
@@ -848,7 +873,7 @@
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
-            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
+            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
                 <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>

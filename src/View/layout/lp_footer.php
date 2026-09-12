@@ -102,19 +102,21 @@
 .dev-badge {
     display: inline-block;
     padding: 8px 20px;
-    background: rgba(16, 185, 129, 0.08);
-    border: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
     border-radius: 50px;
     font-weight: normal;
     color: var(--lp-text);
     text-align: center;
 }
 :root[data-theme="dark"] .dev-badge {
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 .dev-link {
-    color: var(--lp-accent, #10b981);
+    color: var(--lp-accent, #2563eb);
     text-decoration: none;
     position: relative;
     font-weight: 600;
@@ -123,7 +125,7 @@
 .dev-link:hover {
     text-decoration: underline;
     text-underline-offset: 3px;
-    color: var(--lp-text);
+    color: var(--lp-accent, #3b82f6);
 }
 </style>
 
