@@ -38,7 +38,7 @@ if ($basePath === '\\' || $basePath === '/') {
         /* HERO SECTION */
         .lp-hero {
             position: relative;
-            background: transparent;
+            background: var(--lp-bg);
             padding: 180px 0 100px;
             overflow: hidden;
             min-height: 50vh;

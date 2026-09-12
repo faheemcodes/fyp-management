@@ -36,7 +36,7 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
 /* HERO SECTION */
         .lp-hero {
             position: relative;
-            background: transparent;
+            background: var(--lp-bg);
             padding: 160px 0 80px;
             overflow: hidden;
             min-height: 50vh;
