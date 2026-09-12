@@ -43,9 +43,9 @@
             --lp-mac-touchpad: #94a3b8;
         }
         :root[data-theme="dark"] {
-            --lp-mac-body: #27272a;
-            --lp-mac-face: #3f3f46;
-            --lp-mac-touchpad: #18181b;
+            --lp-mac-body: #475569;
+            --lp-mac-face: #64748b;
+            --lp-mac-touchpad: #334155;
         }
         
 /* HERO SECTION */
@@ -267,19 +267,19 @@
         .card-modern:hover { transform: translateY(-5px); border-color: var(--lp-text-muted); }
         
         .card-notice-board {
-            background: #18181d; /* Deep obsidian card */
+            background: #1f2937; /* Dark Charcoal */
             border-radius: 20px;
             padding: 30px;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
             --lp-text-muted: #9ca3af;
             --lp-text: #f3f4f6;
-            --lp-border: rgba(255,255,255,0.08);
-            --lp-bg-alt: rgba(255,255,255,0.03);
-            --lp-card-hover: rgba(255,255,255,0.06);
+            --lp-border: rgba(255,255,255,0.05);
+            --lp-bg-alt: rgba(255,255,255,0.02);
+            --lp-card-hover: rgba(255,255,255,0.05);
         }
         .card-notice-board::before {
             content: '';
@@ -389,25 +389,14 @@
             }
         }
 
-        .timeline-card { 
-            position: relative; 
-            border-radius: 24px; 
-            padding: 32px 28px 28px 52px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            z-index: 1; 
-            border: 1px solid var(--lp-border); 
-            min-height: 170px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
+        .timeline-card { position: relative; border-radius: 24px; padding: 30px 30px 30px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 1; border: 1px solid var(--lp-border); }
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
 
-        .timeline-card .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
-        .timeline-card .icon-circle { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
-        .timeline-card h4 { font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--lp-text); }
-        .timeline-card p { font-size: 0.85rem; line-height: 1.55; margin: 0; color: var(--lp-text-muted); }
+        .timeline-card .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
+        .timeline-card p { font-size: 0.95rem; line-height: 1.6; margin: 0; color: var(--lp-text-muted); }
 
         .section-separator {
             height: 1px;
@@ -419,34 +408,9 @@
         }
 
         /* Styles */
-        .tl-style-blue, .tl-style-green { 
-            background: rgba(37, 99, 235, 0.06); 
-            border-color: rgba(37, 99, 235, 0.25); 
-        }
-        .tl-style-blue .card-pill, .tl-style-green .card-pill { 
-            background: #1d4ed8; 
-            color: #ffffff; 
-        }
-        .tl-style-blue .icon-circle, .tl-style-green .icon-circle { 
-            background: rgba(37, 99, 235, 0.15); 
-            color: #2563eb; 
-        }
-        
-        :root[data-theme="dark"] .tl-style-blue,
-        :root[data-theme="dark"] .tl-style-green {
-            background: rgba(59, 130, 246, 0.08);
-            border-color: rgba(59, 130, 246, 0.28);
-        }
-        :root[data-theme="dark"] .tl-style-blue .card-pill,
-        :root[data-theme="dark"] .tl-style-green .card-pill {
-            background: #2563eb;
-            color: #ffffff;
-        }
-        :root[data-theme="dark"] .tl-style-blue .icon-circle,
-        :root[data-theme="dark"] .tl-style-green .icon-circle {
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-        }
+        .tl-style-green { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
+        .tl-style-green .card-pill { background: #064e3b; color: #fff; }
+        .tl-style-green .icon-circle { background: rgba(16, 185, 129, 0.15); color: #10b981; }
 
         .tl-style-grey { background: var(--lp-card); }
         .tl-style-grey .card-pill { background: var(--lp-text); color: var(--lp-bg); }
@@ -502,7 +466,7 @@
         .laptop-scene .screen .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-face); transform: translateZ(2px); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .screen .face-one .camera { width: 14px; height: 4px; border-radius: 4px; background: #000; position: absolute; left: 50%; top: 1px; margin-left: -7px; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.2); }
         .laptop-scene .screen .face-one .camera::after { content: ''; position: absolute; width: 1.5px; height: 1.5px; background: #10b981; border-radius: 50%; right: 2px; top: 1.2px; box-shadow: 0 0 2px 0.5px #10b981; }
-        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: linear-gradient(180deg, #111116, #18181d); border-radius: 2px; position: relative; box-shadow: inset 0 0 2px rgba(0,0,0,1); overflow: hidden; }
+        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: linear-gradient(180deg, #0f172a, #1e293b); border-radius: 2px; position: relative; box-shadow: inset 0 0 2px rgba(0,0,0,1); overflow: hidden; }
         .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 47%, rgba(255,255,255,0) 48%); background-size: 300px 200px; z-index: 5; }
         .laptop-scene .screen .face-one span { position: absolute; bottom: 3px; left: 0; width: 100%; text-align: center; font-size: 6px; color: #666; font-weight: bold; }
 
@@ -857,7 +821,7 @@
         </div>
         
         <div class="timeline-grid">
-            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
@@ -884,7 +848,7 @@
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
-            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
+            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
                 <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>

@@ -260,6 +260,49 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
             line-height: 1.6;
         }
 
+        /* ── SECTION BACKGROUNDS ── */
+
+        /* Coordinator section — deep indigo solid */
+        .section-coordinator {
+            background-color: #eef2ff;
+            border-top: 1px solid rgba(99, 102, 241, 0.15);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+        }
+        :root[data-theme="dark"] .section-coordinator {
+            background-color: #13131f;
+            border-top-color: rgba(99, 102, 241, 0.18);
+            border-bottom-color: rgba(99, 102, 241, 0.18);
+        }
+
+        /* Supervisor section — deep teal-slate solid */
+        .section-supervisor {
+            background-color: #f0f9ff;
+            border-top: 1px solid rgba(14, 165, 233, 0.15);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+        }
+        :root[data-theme="dark"] .section-supervisor {
+            background-color: #0d1a20;
+            border-top-color: rgba(14, 165, 233, 0.18);
+            border-bottom-color: rgba(14, 165, 233, 0.18);
+        }
+
+        /* Committee section — bg image with overlay */
+        .section-committee {
+            position: relative;
+            background-image:
+                linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(37,99,235,0.06) 100%),
+                url('<?php echo $basePath; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            border-top: 1px solid rgba(139,92,246,0.18);
+            border-bottom: 1px solid rgba(139,92,246,0.18);
+        }
+        :root[data-theme="dark"] .section-committee {
+            background-image:
+                linear-gradient(135deg, rgba(9,9,11,0.60) 0%, rgba(9,9,11,0.55) 100%),
+                url('<?php echo $basePath; ?>/images/bg-dark.jpg');
+        }
         </style>
 </head>
 <body>
@@ -317,9 +360,14 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
         </div>
         <?php endif; ?>
 
-        <!-- Coordinators -->
-        <?php if (!empty($coordinators)): ?>
-        <div class="faculty-group">
+    </div>
+</section>
+
+<!-- Coordinators -->
+<?php if (!empty($coordinators)): ?>
+<section class="section section-coordinator">
+    <div class="container">
+        <div class="faculty-group" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
         <h2 class="section-title"><i class="bi bi-diagram-3"></i> FYP Coordinators</h2>
         <div class="role-description">
             Coordinators are responsible for the day-to-day administration of the FYP portal. They verify student accounts, manage deadlines, organize defense schedules, and handle official notices.
@@ -345,13 +393,13 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
             <?php endforeach; ?>
         </div>
         </div>
-        <?php endif; ?>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Committee Members -->
 <?php if (!empty($committee)): ?>
-<section class="section" style="background-color: var(--lp-bg-alt); border-top: 1px solid var(--lp-border); border-bottom: 1px solid var(--lp-border);">
+<section class="section section-committee">
     <div class="container">
         <div class="faculty-group" style="margin-bottom: 0;">
         <h2 class="section-title"><i class="bi bi-clipboard-check"></i> Evaluation Committee</h2>
@@ -385,7 +433,7 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
 
 <!-- Supervisors -->
 <?php if (!empty($supervisors)): ?>
-<section class="section">
+<section class="section section-supervisor">
     <div class="container">
         <div class="faculty-group">
         <h2 class="section-title"><i class="bi bi-person-workspace"></i> Project Supervisors</h2>
