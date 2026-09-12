@@ -260,47 +260,35 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
             line-height: 1.6;
         }
 
-        /* ── SECTION BACKGROUNDS ── */
-
-        /* Coordinator section — deep indigo solid */
+        /* Coordinator section — neutral solid (matches page palette) */
         .section-coordinator {
-            background-color: #eef2ff;
-            border-top: 1px solid rgba(99, 102, 241, 0.15);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
-        }
-        :root[data-theme="dark"] .section-coordinator {
-            background-color: #13131f;
-            border-top-color: rgba(99, 102, 241, 0.18);
-            border-bottom-color: rgba(99, 102, 241, 0.18);
+            background-color: var(--lp-bg-alt);
+            border-top: 1px solid var(--lp-border);
+            border-bottom: 1px solid var(--lp-border);
         }
 
-        /* Supervisor section — deep teal-slate solid */
+        /* Supervisor section — neutral solid (matches page palette) */
         .section-supervisor {
-            background-color: #f0f9ff;
-            border-top: 1px solid rgba(14, 165, 233, 0.15);
-            border-bottom: 1px solid rgba(14, 165, 233, 0.15);
-        }
-        :root[data-theme="dark"] .section-supervisor {
-            background-color: #0d1a20;
-            border-top-color: rgba(14, 165, 233, 0.18);
-            border-bottom-color: rgba(14, 165, 233, 0.18);
+            background-color: var(--lp-bg-alt);
+            border-top: 1px solid var(--lp-border);
+            border-bottom: 1px solid var(--lp-border);
         }
 
-        /* Committee section — bg image with overlay */
+        /* Committee section — bg image with subtle overlay */
         .section-committee {
             position: relative;
             background-image:
-                linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(37,99,235,0.06) 100%),
+                linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.65) 100%),
                 url('<?php echo $basePath; ?>/images/bg-light.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            border-top: 1px solid rgba(139,92,246,0.18);
-            border-bottom: 1px solid rgba(139,92,246,0.18);
+            border-top: 1px solid var(--lp-border);
+            border-bottom: 1px solid var(--lp-border);
         }
         :root[data-theme="dark"] .section-committee {
             background-image:
-                linear-gradient(135deg, rgba(9,9,11,0.60) 0%, rgba(9,9,11,0.55) 100%),
+                linear-gradient(180deg, rgba(9,9,11,0.50) 0%, rgba(9,9,11,0.50) 100%),
                 url('<?php echo $basePath; ?>/images/bg-dark.jpg');
         }
         </style>
