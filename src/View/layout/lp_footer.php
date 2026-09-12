@@ -147,6 +147,7 @@
             <div class="col-lg-3 offset-lg-1">
                 <h6>Quick Links</h6>
                 <ul class="footer-links">
+                    <li><a href="<?php echo $basePath; ?>/"><i class="bi bi-arrow-right hover-arrow"></i>Home</a></li>
                     <li><a href="<?php echo $basePath; ?>/faculty"><i class="bi bi-arrow-right hover-arrow"></i>Faculty Directory</a></li>
                     <li><a href="<?php echo $basePath; ?>/contact"><i class="bi bi-arrow-right hover-arrow"></i>Contact Us</a></li>
                     <li><a href="<?php echo $basePath; ?>/login"><i class="bi bi-arrow-right hover-arrow"></i>Student Login</a></li>
