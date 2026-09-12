@@ -392,14 +392,14 @@
         .timeline-card { 
             position: relative; 
             border-radius: 24px; 
-            padding: 26px 28px 26px 48px; 
+            padding: 32px 28px 28px 52px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             z-index: 1; 
             border: 1px solid var(--lp-border); 
             min-height: 170px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
         }
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
