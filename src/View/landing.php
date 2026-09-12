@@ -54,7 +54,7 @@
             min-height: 100dvh;
             display: flex; align-items: center; justify-content: center;
             position: relative; padding: 100px 0 40px;
-            background: var(--lp-bg);
+            background: transparent;
             overflow: hidden;
         }
         .lp-hero::before, .lp-hero::after {

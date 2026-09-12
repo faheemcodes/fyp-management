@@ -74,6 +74,19 @@ body {
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
+:root[data-theme="dark"] body,
+html.dark-theme body,
+body.dark-theme {
+    background-image: 
+        linear-gradient(180deg, rgba(9, 9, 11, 0.72) 0%, rgba(9, 9, 11, 0.82) 50%, rgba(9, 9, 11, 0.90) 100%),
+        url('../images/bg-dark.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: var(--bg-color);
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
@@ -324,6 +337,11 @@ html.dark-theme #sidebar .nav-link .theme-switch i.switch-moon {
     transition: all var(--transition-speed) ease;
     padding-bottom: 50px;
     background-color: var(--bg-color);
+}
+
+:root[data-theme="dark"] #content,
+html.dark-theme #content {
+    background-color: transparent !important;
 }
 
 /* ─── Navbar ─── */

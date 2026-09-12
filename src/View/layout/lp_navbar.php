@@ -73,13 +73,13 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
         /* Dark theme texture background with dark fade overlay */
         :root[data-theme="dark"] body {
             background-image: 
-                linear-gradient(180deg, rgba(9, 9, 11, 0.82) 0%, rgba(9, 9, 11, 0.90) 50%, rgba(9, 9, 11, 0.96) 100%),
-                url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-color: var(--lp-bg);
+                linear-gradient(180deg, rgba(9, 9, 11, 0.62) 0%, rgba(9, 9, 11, 0.75) 50%, rgba(9, 9, 11, 0.86) 100%),
+                url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+            background-color: var(--lp-bg) !important;
         }
 
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
