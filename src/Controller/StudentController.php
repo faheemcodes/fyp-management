@@ -284,6 +284,7 @@ class StudentController extends BaseController {
                 $this->flash('success', 'Group members updated successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
+                error_log("updateMembers error for user {$userId}: " . $e->getMessage());
                 $this->flash('error', $e->getMessage());
             }
         }
@@ -748,7 +749,8 @@ class StudentController extends BaseController {
                 $this->flash('success', 'Project proposal submitted successfully!');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', $e->getMessage());
+                error_log("submitProposal error for user {$userId}: " . $e->getMessage());
+                $this->flash('error', 'Failed to submit proposal. Please check your inputs and try again.');
             }
         }
         redirect('/student/proposal');
@@ -871,7 +873,8 @@ class StudentController extends BaseController {
         $stmt->execute([$userId]);
         $student = $stmt->fetch();
         if (!$student) {
-            die("Student profile not found.");
+            error_log("Student profile not found for user_id: {$userId}");
+            redirect('/login');
         }
 
         // Get existing profile info

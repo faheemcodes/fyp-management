@@ -48,21 +48,21 @@
     --violet-color: #a78bfa;
     --rose-color: #fb7185;
 
-    --bg-color: #0b1120;
-    --bg-alt: #111827;
-    --card-bg: #1e293b;
-    --card-hover: #334155;
-    --card-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --bg-color: #09090b;
+    --bg-alt: #121215;
+    --card-bg: #18181d;
+    --card-hover: #222228;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.4);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --border-color: rgba(255,255,255,0.08);
-    --sidebar-bg: #111827;
+    --sidebar-bg: #101014;
     --sidebar-link: #94a3b8;
     --sidebar-link-hover: #3b82f6;
-    --navbar-bg: rgba(11, 17, 32, 0.85);
-    --table-header-bg: #111827;
-    --table-hover-bg: #1e293b;
-    --form-bg: #111827;
+    --navbar-bg: rgba(9, 9, 11, 0.85);
+    --table-header-bg: #121215;
+    --table-hover-bg: #1c1c22;
+    --form-bg: #121215;
 }
 
 /* ─── Base ─── */
@@ -539,23 +539,23 @@ html.dark-theme .table-light th {
 
 html.dark-theme .form-control:focus,
 html.dark-theme .form-select:focus {
-    background-color: #18181b !important;
+    background-color: #16161c !important;
     border-color: #3b82f6 !important;
-    color: #e2e8f0;
+    color: #ffffff;
 }
 
 html.dark-theme .form-control, 
 html.dark-theme .form-select {
-    border: 1px solid #3f3f46 !important; /* Visible soft grey border for dark theme */
-    background-color: #18181b !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    background-color: #121216 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35) !important;
 }
 
 html.dark-theme .input-group.border-light-subtle,
 html.dark-theme .form-select.border-light-subtle,
 html.dark-theme .form-control.border-light-subtle,
 html.dark-theme .input-group-text.border-light-subtle {
-    border-color: #3f3f46 !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .form-control:focus, .form-select:focus {
@@ -1119,6 +1119,12 @@ html.dark-theme .offcanvas .btn-close:hover {
     margin-bottom: 24px;
     box-shadow: 0 12px 35px rgba(30, 58, 138, 0.28);
     border: 1px solid rgba(255, 255, 255, 0.12);
+}
+:root[data-theme="dark"] .page-hero,
+html.dark-theme .page-hero {
+    background: linear-gradient(135deg, #111116 0%, #1a1a24 50%, #13131b 100%) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 .page-hero > * {
     position: relative;

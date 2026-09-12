@@ -4,3 +4,27 @@
     RewriteRule ^$ public/index.php [L]
     RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
 </IfModule>
+
+# -------------------------------------------------------
+# Security Headers
+# -------------------------------------------------------
+<IfModule mod_headers.c>
+    # Prevent clickjacking – only allow framing from same origin
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Enable XSS filter in older browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Control referrer information sent to other sites
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Restrict browser features not used by this app
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+    # Remove PHP version disclosure
+    Header always unset X-Powered-By
+</IfModule>
+

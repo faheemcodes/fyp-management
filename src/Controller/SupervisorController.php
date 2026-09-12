@@ -387,7 +387,8 @@ class SupervisorController extends BaseController {
                             : "Proposal status updated to '$status'.");
                     } catch (\Exception $e) {
                         $db->rollBack();
-                        $this->flash('error', $e->getMessage() ?: 'Failed to update proposal. Please try again.');
+                        error_log("proposalAction error for user {$_SESSION['user_id']}: " . $e->getMessage());
+                        $this->flash('error', 'Failed to update proposal. Please try again.');
                     }
                 }
             }
@@ -411,7 +412,8 @@ class SupervisorController extends BaseController {
         $stmt->execute([$userId]);
         $supervisor = $stmt->fetch();
         if (!$supervisor) {
-            die("Supervisor profile not found.");
+            error_log("Supervisor profile not found for user_id: {$userId}");
+            redirect('/login');
         }
 
         // Get existing profile info

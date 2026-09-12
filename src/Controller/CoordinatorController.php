@@ -338,7 +338,8 @@ class CoordinatorController extends BaseController {
                 $this->flash('success', 'Notice generated and broadcasted successfully.');
             } catch (\Exception $e) {
                 $db->rollBack();
-                $this->flash('error', 'Error generating notice: ' . $e->getMessage());
+                error_log("createNotice error: " . $e->getMessage());
+                $this->flash('error', 'Failed to generate notice. Please try again.');
             }
         }
         redirect('/coordinator/notice');
@@ -648,7 +649,8 @@ class CoordinatorController extends BaseController {
         $stmt->execute([$userId]);
         $coordinator = $stmt->fetch();
         if (!$coordinator) {
-            die("Coordinator profile not found.");
+            error_log("Coordinator profile not found for user_id: {$userId}");
+            redirect('/login');
         }
 
         // Get existing profile info
@@ -724,7 +726,8 @@ class CoordinatorController extends BaseController {
                     redirect('/coordinator/profile');
                 } catch (\Exception $e) {
                     $db->rollBack();
-                    $this->flash('error', 'Database error: ' . $e->getMessage());
+                    error_log("updateCoordinatorProfile error for user {$userId}: " . $e->getMessage());
+                    $this->flash('error', 'Failed to update profile. Please try again.');
                 }
             } else {
                 $this->flash('error', implode(" ", $errors));
@@ -1240,7 +1243,8 @@ class CoordinatorController extends BaseController {
                 if ($db->inTransaction()) {
                     $db->rollBack();
                 }
-                $this->flash('error', 'Failed to create batch: ' . $e->getMessage());
+                error_log("createBatch error: " . $e->getMessage());
+                $this->flash('error', 'Failed to create batch. Please try again.');
             }
         }
         redirect('/coordinator/batches');
@@ -1327,7 +1331,8 @@ class CoordinatorController extends BaseController {
                 if ($db->inTransaction()) {
                     $db->rollBack();
                 }
-                $this->flash('error', 'Operation failed: ' . $e->getMessage());
+                error_log("toggleBatch error: " . $e->getMessage());
+                $this->flash('error', 'Operation failed. Please try again.');
             }
         }
         redirect('/coordinator/batches');

@@ -23,9 +23,10 @@ include __DIR__ . '/../layout/auth_header.php';
 
             <?php if (isset($_SESSION['flash']['error'])): ?>
                 <div class="alert-register alert-danger" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo $_SESSION['flash']['error']; unset($_SESSION['flash']['error']); ?>
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['flash']['error'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['error']); ?>
                 </div>
             <?php endif; ?>
+
 
             <?php if (!empty($old)): ?>
                 <div class="alert-register alert-warning" role="alert">

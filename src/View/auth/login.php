@@ -17,13 +17,13 @@ include __DIR__ . '/../layout/auth_header.php';
 
             <?php if (isset($_SESSION['flash']['error'])): ?>
                 <div class="alert-login alert-danger" role="alert">
-                    <?php echo $_SESSION['flash']['error']; unset($_SESSION['flash']['error']); ?>
+                    <?php echo htmlspecialchars($_SESSION['flash']['error'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['error']); ?>
                 </div>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['flash']['success'])): ?>
                 <div class="alert-login alert-success" role="alert">
-                    <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
+                    <?php echo htmlspecialchars($_SESSION['flash']['success'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['success']); ?>
                 </div>
             <?php endif; ?>
 

@@ -398,7 +398,7 @@ html.dark-theme .ai-message.ai-bot code {
     color: var(--text-primary);
 }
 .ai-message.ai-bot pre {
-    background: #1e293b;
+    background: #18181d;
     color: #e2e8f0;
     padding: 10px 12px;
     border-radius: 8px;
@@ -406,7 +406,7 @@ html.dark-theme .ai-message.ai-bot code {
     margin: 0.4rem 0;
     font-size: 0.74rem;
 }
-html.dark-theme .ai-message.ai-bot pre { background: #0f172a; }
+html.dark-theme .ai-message.ai-bot pre { background: #121216; border: 1px solid rgba(255, 255, 255, 0.08); }
 
 /* ─── Typing Indicator ─── */
 .ai-typing-row {

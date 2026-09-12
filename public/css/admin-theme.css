@@ -33,11 +33,11 @@
 }
 
 [data-theme="dark"] {
-    --admin-bg: #0b1120;
-    --admin-card-bg: rgba(30, 41, 59, 0.75);
-    --admin-text-main: #f3f4f6;
-    --admin-text-muted: #9ca3af;
-    --admin-border: rgba(64, 64, 64, 0.8);
+    --admin-bg: #09090b;
+    --admin-card-bg: rgba(24, 24, 29, 0.85);
+    --admin-text-main: #f8fafc;
+    --admin-text-muted: #94a3b8;
+    --admin-border: rgba(255, 255, 255, 0.08);
 }
 
 /* Base Body Adjustment for Admin Theme */
@@ -67,6 +67,12 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .admin-hero {
+    background: linear-gradient(135deg, #111116 0%, #1a1a24 50%, #13131b 100%);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .admin-hero::before {

@@ -76,10 +76,11 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
 
 <?php if (isset($_SESSION['flash']['success'])): ?>
     <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px; background-color: #d1fae5; color: #065f46;">
-        <i class="bi bi-check-circle-fill me-2"></i> <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
+        <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['flash']['success'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['success']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
+
 
 <div class="profile-alert" style="background: rgba(59,130,246,0.06); color: #2563eb;">
     <div class="profile-alert-icon" style="background: rgba(59,130,246,0.1); color: #3b82f6;">

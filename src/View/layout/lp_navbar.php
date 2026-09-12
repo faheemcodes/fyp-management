@@ -33,15 +33,15 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             --lp-teal: #0284c7;
         }
         :root[data-theme="dark"] {
-            --lp-bg: #0b1120;
-            --lp-bg-alt: #111827;
-            --lp-card: #1e293b;
-            --lp-card-hover: #334155;
+            --lp-bg: #09090b;
+            --lp-bg-alt: #121215;
+            --lp-card: #18181d;
+            --lp-card-hover: #222228;
             --lp-border: rgba(255,255,255,0.08);
             --lp-text: #f8fafc;
             --lp-text-muted: #94a3b8;
             --lp-accent: #3b82f6;
-            --lp-nav-bg: rgba(11,17,32,0.9);
+            --lp-nav-bg: rgba(9, 9, 11, 0.9);
             --lp-violet: #a78bfa;
             --lp-rose: #fb7185;
             --lp-amber: #fbbf24;
@@ -70,13 +70,10 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             background-repeat: no-repeat;
         }
 
-        /* Dark theme texture background */
+        /* Dark theme clean background */
         :root[data-theme="dark"] body {
-            background-image: url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-image: none;
+            background-color: var(--lp-bg);
         }
 
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }

@@ -648,14 +648,14 @@ if ($role === 'supervisor') {
         <!-- Flash Alert Messages -->
         <?php if (isset($_SESSION['flash']['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo $_SESSION['flash']['error']; unset($_SESSION['flash']['error']); ?>
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['flash']['error'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['error']); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['flash']['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> <?php echo $_SESSION['flash']['success']; unset($_SESSION['flash']['success']); ?>
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['flash']['success'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash']['success']); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>

@@ -63,13 +63,14 @@ class BaseController {
                 $notifications = [];
                 $unreadCount = 0;
                 if ($userId) {
-                    $stmt = $db->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 6");
+                    // Single query: fetch recent notifications + unread count in one round-trip
+                    $stmt = $db->prepare(
+                        "SELECT *, SUM(CASE WHEN is_read = 0 THEN 1 ELSE 0 END) OVER() AS total_unread
+                         FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 6"
+                    );
                     $stmt->execute([$userId]);
                     $notifications = $stmt->fetchAll();
-
-                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
-                    $stmtCount->execute([$userId]);
-                    $unreadCount = $stmtCount->fetchColumn();
+                    $unreadCount = !empty($notifications) ? (int)$notifications[0]['total_unread'] : 0;
                 }
                 
                 require __DIR__ . '/../View/layout/header.php';
@@ -78,7 +79,10 @@ class BaseController {
                 require __DIR__ . '/../View/layout/footer.php';
             }
         } else {
-            die("View $viewName not found at $viewFile");
+            // Log the missing view internally; do not expose filesystem paths to the browser
+            error_log("View not found: $viewName at $viewFile");
+            http_response_code(500);
+            die("An error occurred. Please try again later.");
         }
     }
     

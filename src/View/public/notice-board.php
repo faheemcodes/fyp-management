@@ -1,9 +1,9 @@
 <style>
 .notice-header {
-        background: linear-gradient(135deg, #0f172a, #020617);
+        background: linear-gradient(135deg, #09090b, #121216);
         padding: 80px 0 40px;
         text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .notice-header h1 {
         font-family: 'Cormorant Garamond', serif;
@@ -23,8 +23,8 @@
         margin: 40px auto;
     }
     .notice-item {
-        background: #1e293b;
-        border: 1px solid rgba(255,255,255,0.05);
+        background: #18181d;
+        border: 1px solid rgba(255,255,255,0.08);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 20px;
@@ -32,7 +32,7 @@
     }
     .notice-item:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         border-color: rgba(37, 99, 235, 0.4);
     }
     .notice-meta {
@@ -56,7 +56,7 @@
         color: #60a5fa;
     }
     .notice-ref {
-        background: rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.08);
         padding: 3px 8px;
         border-radius: 4px;
         font-size: 0.75rem;
@@ -83,8 +83,8 @@
         margin-top: 40px;
     }
     .page-link {
-        background: #1e293b;
-        border: 1px solid rgba(255,255,255,0.1);
+        background: #18181d;
+        border: 1px solid rgba(255,255,255,0.08);
         color: white;
         padding: 8px 16px;
         border-radius: 8px;
@@ -92,7 +92,7 @@
         transition: background 0.2s;
     }
     .page-link:hover {
-        background: #334155;
+        background: #27272a;
     }
     .page-link.active {
         background: #2563eb;

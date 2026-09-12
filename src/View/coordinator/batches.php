@@ -4,7 +4,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 ?>
 
 <!-- ═══════════════ Top Hero Banner ═══════════════ -->
-<div class="coordinator-hero mb-4" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-radius: 16px; padding: 2rem; color: #fff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
+<div class="coordinator-hero mb-4" style="background: linear-gradient(135deg, #111116 0%, #1e1e27 100%); border-radius: 16px; padding: 2rem; color: #fff; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.08);">
     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
         <div class="d-flex align-items-center gap-3 text-center text-md-start">
             <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; border: 1px solid rgba(255, 255, 255, 0.15);">

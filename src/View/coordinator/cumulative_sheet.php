@@ -510,7 +510,7 @@ th.col-serial-num {
 <div class="modal fade" id="publishMarksModal" tabindex="-1" aria-labelledby="publishMarksModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: var(--card-bg, #ffffff);">
-            <div class="modal-header border-bottom py-3 px-4" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #ffffff;">
+            <div class="modal-header border-bottom py-3 px-4" style="background: linear-gradient(135deg, #111116 0%, #1e1e27 100%); color: #ffffff;">
                 <div class="d-flex align-items-center gap-2">
                     <i class="bi bi-shield-lock-fill text-warning fs-5"></i>
                     <h5 class="modal-title fw-bold m-0" id="publishMarksModalLabel" style="font-size: 1.05rem;">Manage Student Marks Visibility</h5>

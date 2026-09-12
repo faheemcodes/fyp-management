@@ -331,17 +331,21 @@ if (array_key_exists($uri, $routes)) {
         $availableRoles = $_SESSION['available_roles'] ?? [$role];
 
         if (strpos($uri, '/admin') === 0 && $role !== 'admin') {
-            die("Unauthorized access: Admin only.");
+            http_response_code(403);
+            redirect('/login');
         }
         if (strpos($uri, '/hod') === 0 && $role !== 'hod') {
-            die("Unauthorized access: HOD only.");
+            http_response_code(403);
+            redirect('/login');
         }
         if (strpos($uri, '/student') === 0 && $role !== 'student') {
-            die("Unauthorized access: Student only.");
+            http_response_code(403);
+            redirect('/login');
         }
         if (strpos($uri, '/supervisor') === 0) {
             if (!in_array('supervisor', $availableRoles)) {
-                die("Unauthorized access: Supervisor only.");
+                http_response_code(403);
+                redirect('/login');
             }
             if ($role !== 'supervisor') {
                 $_SESSION['role'] = 'supervisor';
@@ -349,7 +353,8 @@ if (array_key_exists($uri, $routes)) {
         }
         if (strpos($uri, '/committee') === 0) {
             if (!in_array('committee', $availableRoles)) {
-                die("Unauthorized access: Committee only.");
+                http_response_code(403);
+                redirect('/login');
             }
             if ($role !== 'committee') {
                 $_SESSION['role'] = 'committee';
@@ -357,7 +362,8 @@ if (array_key_exists($uri, $routes)) {
         }
         if (strpos($uri, '/coordinator') === 0) {
             if (!in_array('coordinator', $availableRoles)) {
-                die("Unauthorized access: Coordinator only.");
+                http_response_code(403);
+                redirect('/login');
             }
             if ($role !== 'coordinator') {
                 $_SESSION['role'] = 'coordinator';

@@ -35,7 +35,7 @@ body[data-role="student"].dark-theme {
     --secondary-color: #38bdf8;
     --secondary-rgb: 56, 189, 248;
     --sidebar-link-hover: #3b82f6;
-    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 /* ── 2. Hero Banner (Academic Royal Navy Gradient) ── */
@@ -46,6 +46,15 @@ body[data-role="student"] .page-hero {
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     position: relative;
     overflow: hidden;
+}
+
+html.dark-theme body.portal-student .page-hero,
+html.dark-theme body[data-role="student"] .page-hero,
+[data-theme="dark"] body.portal-student .page-hero,
+[data-theme="dark"] body[data-role="student"] .page-hero {
+    background: linear-gradient(135deg, #111116 0%, #1a1a24 50%, #13131b 100%) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 body.portal-student .page-hero > *,

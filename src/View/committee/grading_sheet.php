@@ -368,7 +368,7 @@ $bp = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME'
 
 // Determine hero icon and color scheme based on stage
 $heroIcon = 'bi-file-earmark-text';
-$heroGradient = 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)';
+$heroGradient = 'linear-gradient(135deg, #111116 0%, #1a1a24 50%, #13131b 100%)';
 $heroIconGradient = 'conic-gradient(from 0deg, #34d399, #10b981, #047857, #34d399)';
 $heroSubtitle = 'Assign and manage marks for all assigned groups.';
 $stageBadgeColor = '#10b981';
@@ -431,13 +431,13 @@ $groupCount = count($grouped ?? []);
 
 <?php if (isset($_SESSION['flash_success'])): ?>
     <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg);border: none">
-        <i class="bi bi-check-circle-fill me-2"></i><?php echo $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?>
+        <i class="bi bi-check-circle-fill me-2"></i><?php echo htmlspecialchars($_SESSION['flash_success'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash_success']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 <?php if (isset($_SESSION['flash_error'])): ?>
     <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: var(--border-radius-lg);border: none">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
+        <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo htmlspecialchars($_SESSION['flash_error'] ?? '', ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash_error']); ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>

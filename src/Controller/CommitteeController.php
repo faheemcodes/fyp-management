@@ -133,7 +133,8 @@ class CommitteeController extends BaseController {
         $stage = $_GET['stage'] ?? '';
         
         if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
-            die("Invalid stage.");
+            http_response_code(400);
+            redirect('/committee/evaluations');
         }
 
         $db = \Database::getInstance()->getConnection();
@@ -212,7 +213,8 @@ class CommitteeController extends BaseController {
         $view = $_GET['view'] ?? 'detailed';
         
         if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
-            die("Invalid stage.");
+            http_response_code(400);
+            redirect('/committee/evaluations');
         }
 
         $db = \Database::getInstance()->getConnection();
@@ -748,7 +750,8 @@ class CommitteeController extends BaseController {
         $stmt->execute([$userId]);
         $committee = $stmt->fetch();
         if (!$committee) {
-            die("Committee Member profile not found.");
+            error_log("Committee profile not found for user_id: {$userId}");
+            redirect('/login');
         }
 
         // Get existing profile info

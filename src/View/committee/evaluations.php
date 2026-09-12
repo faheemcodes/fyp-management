@@ -1,12 +1,13 @@
 <style>
 /* ─── Hero Section ─── */
 .eval-hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #111116 0%, #1a1a24 50%, #13131b 100%);
     border-radius: var(--border-radius-lg);
     padding: 32px;
     position: relative;
     overflow: hidden;
     margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .eval-hero::before {
     content: '';
