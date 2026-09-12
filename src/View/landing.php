@@ -389,14 +389,14 @@
             }
         }
 
-        .timeline-card { position: relative; border-radius: 24px; padding: 30px 30px 30px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 1; border: 1px solid var(--lp-border); }
+        .timeline-card { position: relative; border-radius: 24px; padding: 22px 28px 22px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 1; border: 1px solid var(--lp-border); }
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
 
         .timeline-card .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
-        .timeline-card p { font-size: 0.95rem; line-height: 1.6; margin: 0; color: var(--lp-text-muted); }
+        .timeline-card p { font-size: 0.82rem; line-height: 1.55; margin: 0; color: var(--lp-text-muted); }
 
         .section-separator {
             height: 1px;
@@ -408,9 +408,12 @@
         }
 
         /* Styles */
-        .tl-style-green { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2); }
-        .tl-style-green .card-pill { background: #064e3b; color: #fff; }
-        .tl-style-green .icon-circle { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .tl-style-blue { background: rgba(37, 99, 235, 0.05); border-color: rgba(37, 99, 235, 0.2); }
+        .tl-style-blue .card-pill { background: #1d4ed8; color: #fff; }
+        .tl-style-blue .icon-circle { background: rgba(37, 99, 235, 0.12); color: #2563eb; }
+        :root[data-theme="dark"] .tl-style-blue { background: rgba(59, 130, 246, 0.07); border-color: rgba(59, 130, 246, 0.25); }
+        :root[data-theme="dark"] .tl-style-blue .card-pill { background: #2563eb; }
+        :root[data-theme="dark"] .tl-style-blue .icon-circle { background: rgba(59, 130, 246, 0.18); color: #60a5fa; }
 
         .tl-style-grey { background: var(--lp-card); }
         .tl-style-grey .card-pill { background: var(--lp-text); color: var(--lp-bg); }
@@ -821,7 +824,7 @@
         </div>
         
         <div class="timeline-grid">
-            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
@@ -848,7 +851,7 @@
                 <p>Iterate through bi-weekly assessments, build your project, and refine the core functionality.</p>
             </div>
 
-            <div class="timeline-card tl-style-green" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
+            <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
                 <div class="card-pill">Phase 4</div>
                 <div class="card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
