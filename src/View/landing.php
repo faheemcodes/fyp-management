@@ -389,14 +389,25 @@
             }
         }
 
-        .timeline-card { position: relative; border-radius: 24px; padding: 30px 30px 30px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 1; border: 1px solid var(--lp-border); }
+        .timeline-card { 
+            position: relative; 
+            border-radius: 24px; 
+            padding: 26px 28px 26px 48px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            z-index: 1; 
+            border: 1px solid var(--lp-border); 
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
 
-        .timeline-card .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
-        .timeline-card p { font-size: 0.95rem; line-height: 1.6; margin: 0; color: var(--lp-text-muted); }
+        .timeline-card .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+        .timeline-card .icon-circle { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+        .timeline-card h4 { font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--lp-text); }
+        .timeline-card p { font-size: 0.85rem; line-height: 1.55; margin: 0; color: var(--lp-text-muted); }
 
         .section-separator {
             height: 1px;
