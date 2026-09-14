@@ -279,7 +279,6 @@ include __DIR__ . '/../layout/auth_header.php';
                                     <option value="Associate Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Associate Professor') ? 'selected' : ''; ?>>Associate Professor</option>
                                     <option value="Professor" <?php echo (isset($old['designation']) && $old['designation'] === 'Professor') ? 'selected' : ''; ?>>Professor</option>
                                     <option value="HOD" <?php echo (isset($old['designation']) && $old['designation'] === 'HOD') ? 'selected' : ''; ?>>HOD</option>
-                                    <option value="System Admin" <?php echo (isset($old['designation']) && $old['designation'] === 'System Admin') ? 'selected' : ''; ?>>System Admin</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
