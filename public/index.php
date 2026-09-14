@@ -108,6 +108,20 @@ if ($baseDir !== '/' && $baseDir !== '\\' && strpos($uri, $baseDir) === 0) {
 }
 $uri = '/' . ltrim($uri, '/');
 
+// Normalize profile paths containing shift info or spaces (e.g., /coordinator (morning shift)/profile)
+$decodedUri = rawurldecode($uri);
+if (preg_match('#^/coordinator\b.*profile$#i', $decodedUri)) {
+    $uri = '/coordinator/profile';
+} elseif (preg_match('#^/committee\b.*profile$#i', $decodedUri)) {
+    $uri = '/committee/profile';
+} elseif (preg_match('#^/supervisor\b.*profile$#i', $decodedUri)) {
+    $uri = '/supervisor/profile';
+} elseif (preg_match('#^/student\b.*profile$#i', $decodedUri)) {
+    $uri = '/student/profile';
+} elseif (preg_match('#^/hod\b.*profile$#i', $decodedUri)) {
+    $uri = '/hod/profile';
+}
+
 // Define routes
 $routes = [
     '/' => ['Controller\PublicController', 'landing'],
