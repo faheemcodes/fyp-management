@@ -184,10 +184,10 @@ class HodController extends BaseController {
                     $title = "Morning Slots Updated";
                     $msgSup = "Your Morning Shift supervision capacity has been updated to $maxMorningSlots.";
                     $msgStu = "Supervisor capacities for Morning Shift have been updated to $maxMorningSlots.";
-                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup); }
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup, '/supervisor/groups'); }
                     foreach ($students as $stu) {
                         if (($stu['shift'] ?? 'Morning') === 'Morning') {
-                            $this->addNotification($stu['user_id'], $title, $msgStu);
+                            $this->addNotification($stu['user_id'], $title, $msgStu, '/student/group');
                         }
                     }
                 }
@@ -196,10 +196,10 @@ class HodController extends BaseController {
                     $title = "Evening Slots Updated";
                     $msgSup = "Your Evening Shift supervision capacity has been updated to $maxEveningSlots.";
                     $msgStu = "Supervisor capacities for Evening Shift have been updated to $maxEveningSlots.";
-                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup); }
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msgSup, '/supervisor/groups'); }
                     foreach ($students as $stu) {
                         if (($stu['shift'] ?? '') === 'Evening') {
-                            $this->addNotification($stu['user_id'], $title, $msgStu);
+                            $this->addNotification($stu['user_id'], $title, $msgStu, '/student/group');
                         }
                     }
                 }
@@ -207,8 +207,8 @@ class HodController extends BaseController {
                 if ($changedGroup) {
                     $title = "Group Member Limit Updated";
                     $msg = "The maximum number of members allowed in a student project group has been updated to $maxGroupMembers.";
-                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msg); }
-                    foreach ($students as $stu) { $this->addNotification($stu['user_id'], $title, $msg); }
+                    foreach ($supervisors as $sup) { $this->addNotification($sup['user_id'], $title, $msg, '/supervisor/groups'); }
+                    foreach ($students as $stu) { $this->addNotification($stu['user_id'], $title, $msg, '/student/group'); }
                 }
             }
 
@@ -751,7 +751,7 @@ class HodController extends BaseController {
                 $user = $stmtUser->fetch();
 
                 if ($user) {
-                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.');
+                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.', '/login');
                     
                     $subject = "Your Account has been Approved";
                     $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
@@ -796,7 +796,7 @@ class HodController extends BaseController {
                 $stmtUpdate = $db->prepare("UPDATE users SET status = 'approved' WHERE id = ?");
                 foreach ($pendingStudents as $stu) {
                     $stmtUpdate->execute([$stu['user_id']]);
-                    $this->addNotification($stu['user_id'], 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.');
+                    $this->addNotification($stu['user_id'], 'Account Approved', 'Your registration has been approved by your HOD! You can now log in.', '/login');
                     
                     $subject = "Your Account has been Approved";
                     $identifierStr = "Roll Number: " . $stu['student_id'] . "\nPassword: (The password you chose during registration)";

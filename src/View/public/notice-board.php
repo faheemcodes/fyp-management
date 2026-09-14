@@ -124,7 +124,7 @@
             </div>
         <?php else: ?>
             <?php foreach ($notices as $notice): ?>
-                <div class="notice-item">
+                <div class="notice-item" id="notice-<?php echo $notice['id']; ?>">
                     <div class="notice-meta">
                         <span class="notice-badge">Public Notice</span>
                         <div class="d-flex align-items-center gap-3">

@@ -189,7 +189,7 @@ class CoordinatorController extends BaseController {
                 $user = $stmtUser->fetch();
 
                 if ($user) {
-                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.', '/login');
                     
                     $subject = "Your Account has been Approved";
                     $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
@@ -618,7 +618,7 @@ class CoordinatorController extends BaseController {
 
             $notifMsg = "Your project proposal has been reviewed by the Department Coordinator. Status: $status." . (!empty($remarks) ? " Remarks: $remarks" : "");
             foreach ($memberIds as $mId) {
-                $this->addNotification($mId, 'Proposal Reviewed by Coordinator', $notifMsg);
+                $this->addNotification($mId, 'Proposal Reviewed by Coordinator', $notifMsg, '/student/proposal');
             }
 
             // Notify supervisor
@@ -627,7 +627,7 @@ class CoordinatorController extends BaseController {
                 if ($newSupervisorId != $prop['current_supervisor_id']) {
                     $supNotifMsg = "Group ($displayCode) has been assigned to you as supervisor by the Coordinator.";
                 }
-                $this->addNotification($newSupervisorId, 'Coordinator Proposal Update', $supNotifMsg);
+                $this->addNotification($newSupervisorId, 'Coordinator Proposal Update', $supNotifMsg, '/supervisor/groups');
             }
 
             $db->commit();

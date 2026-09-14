@@ -723,7 +723,7 @@ class CommitteeController extends BaseController {
                     $members = $stmtM->fetchAll();
 
                     foreach ($members as $m) {
-                        $this->addNotification($m['student_id'], 'Marks Awarded', "Evaluation marks for $stage have been published.");
+                        $this->addNotification($m['student_id'], 'Marks Awarded', "Evaluation marks for $stage have been published.", '/student/grade');
                     }
 
                     $this->flash('success', "Marks and evaluation details for $stage saved successfully.");

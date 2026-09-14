@@ -310,7 +310,7 @@ function fetchNotifications() {
                             <i class="bi ${iconClass}"></i>
                         </div>
                         
-                        <a href="${href}" ${target} onclick="markNotificationSingle(${notif.id})" class="text-decoration-none flex-grow-1 pe-4" style="color: inherit; white-space: normal;">
+                        <a href="${href}" onclick="handleNotificationClick(event, ${notif.id}, '${notif.redirect_url ? escapeHtml(notif.redirect_url) : ''}')" class="text-decoration-none flex-grow-1 pe-4" style="color: inherit; white-space: normal;">
                             <div class="fw-bold mb-1" style="font-size: 0.78rem; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.2;">${escapeHtml(notif.title)}</div>
                             <div class="text-secondary mb-1" style="font-size: 0.7rem; line-height: 1.3;">${escapeHtml(notif.message)}</div>
                             <div class="d-flex align-items-center gap-1" style="font-size: 0.6rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
@@ -328,6 +328,37 @@ function fetchNotifications() {
         })
         .catch(err => console.log('Error fetching notifications:', err));
 }
+
+// Handle Notification Click Navigation
+window.handleNotificationClick = function(event, id, redirectUrl) {
+    if (redirectUrl && redirectUrl !== '#' && redirectUrl !== '') {
+        event.preventDefault();
+        const basePath = getBasePath();
+        const targetUrl = redirectUrl.startsWith('http') ? redirectUrl : `${basePath}${redirectUrl}`;
+        
+        // Optimistically mark notification as read
+        markNotificationSingle(id);
+        
+        // If pointing to a notice modal on current page, open it directly
+        try {
+            const urlObj = new URL(targetUrl, window.location.origin);
+            const noticeParam = urlObj.searchParams.get('notice_id');
+            if (noticeParam && (window.location.pathname === urlObj.pathname)) {
+                const modalEl = document.getElementById(`noticeModal${noticeParam}`);
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                    return;
+                }
+            }
+        } catch (e) {}
+        
+        // Navigate in the current window
+        window.location.href = targetUrl;
+    } else {
+        markNotificationSingle(id);
+    }
+};
 
 // Mark All Notifications as Read
 function markNotificationsRead() {
@@ -428,3 +459,56 @@ function formatDate(dateStr) {
     const date = new Date(dateStr);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
+
+// Auto-open modals or scroll to target elements when navigated via notification query params/hashes
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const noticeId = urlParams.get('notice_id');
+        const meetingId = urlParams.get('meeting_id');
+        
+        if (noticeId) {
+            const modalEl = document.getElementById(`noticeModal${noticeId}`);
+            if (modalEl && typeof bootstrap !== 'undefined') {
+                setTimeout(() => {
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                }, 150);
+            }
+        }
+        
+        if (meetingId) {
+            const meetingEl = document.getElementById(`meeting-${meetingId}`) || document.getElementById(`meetingModal${meetingId}`);
+            if (meetingEl) {
+                if (meetingEl.classList.contains('modal') && typeof bootstrap !== 'undefined') {
+                    setTimeout(() => {
+                        const modal = new bootstrap.Modal(meetingEl);
+                        modal.show();
+                    }, 150);
+                } else {
+                    meetingEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    meetingEl.style.transition = 'all 0.5s ease';
+                    meetingEl.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.4)';
+                    setTimeout(() => { meetingEl.style.boxShadow = ''; }, 3000);
+                }
+            }
+        }
+        
+        if (window.location.hash) {
+            const hashEl = document.querySelector(window.location.hash);
+            if (hashEl) {
+                if (hashEl.classList.contains('modal') && typeof bootstrap !== 'undefined') {
+                    setTimeout(() => {
+                        const modal = new bootstrap.Modal(hashEl);
+                        modal.show();
+                    }, 150);
+                } else {
+                    hashEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+    } catch (e) {
+        console.error('Error in notification navigation handler:', e);
+    }
+});
+

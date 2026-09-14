@@ -115,6 +115,7 @@ $routes = [
     '/contact-submit' => ['Controller\PublicController', 'contactSubmit'],
     '/faculty' => ['Controller\PublicController', 'faculty'],
     '/notice-board' => ['Controller\PublicController', 'noticeBoard'],
+    '/notice/view' => ['Controller\PublicController', 'viewNotice'],
     '/login' => ['Controller\AuthController', 'login'],
     '/logout' => ['Controller\AuthController', 'logout'],
     '/register' => ['Controller\AuthController', 'register'],

@@ -328,7 +328,7 @@ class AuthController extends BaseController {
                     
                     $db->commit();
                     
-                    $this->addNotification(1, 'New Student Registration', "Student {$name} ({$student_id}) registered and is pending approval.");
+                    $this->addNotification(1, 'New Student Registration', "Student {$name} ({$student_id}) registered and is pending approval.", '/admin/users');
                     
                     unset($_SESSION['old']); // success, clear old inputs
                     $this->flash('success', 'Registration successful! Your student account is pending review by Admin/HOD.');
@@ -428,7 +428,7 @@ class AuthController extends BaseController {
                     
                     $db->commit();
                     
-                    $this->addNotification(1, 'New Staff Registration', "A new staff member ($fullName) registered as $role and is pending approval.");
+                    $this->addNotification(1, 'New Staff Registration', "A new staff member ($fullName) registered as $role and is pending approval.", '/admin/users');
                     
                     unset($_SESSION['old']); // success, clear old inputs
                     $this->flash('success', 'Registration successful! Your staff account is pending review.');

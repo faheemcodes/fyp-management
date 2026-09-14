@@ -429,7 +429,7 @@ class StudentController extends BaseController {
                 $stmtG = $db->prepare("INSERT INTO grades (student_id, group_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE group_id = VALUES(group_id)");
                 $stmtG->execute([$targetId, $group['id']]);
 
-                $this->addNotification($targetId, 'Added to Group', "You have been added to the project group by {$_SESSION['name']}.");
+                $this->addNotification($targetId, 'Added to Group', "You have been added to the project group by {$_SESSION['name']}.", '/student/group');
                 $this->flash('success', "Student {$targetStudent['name']} added to group successfully.");
             } catch (\Exception $e) {
                 $this->flash('error', 'Failed to add member: . Please try again.');
@@ -741,10 +741,10 @@ class StudentController extends BaseController {
                 $groupLabel = !empty($group['group_code']) ? "Group {$group['group_code']}" : "A new project group";
 
                 // Notify assigned supervisor
-                $this->addNotification($supervisor_id, 'Proposal Submitted', "$groupLabel has submitted a project proposal selecting you as supervisor.");
+                $this->addNotification($supervisor_id, 'Proposal Submitted', "$groupLabel has submitted a project proposal selecting you as supervisor.", '/supervisor/reviews');
                 // Notify system admin and HOD
-                $this->addNotification(1, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
-                $this->addNotification(2, 'Proposal Submitted', "$groupLabel has submitted a project proposal.");
+                $this->addNotification(1, 'Proposal Submitted', "$groupLabel has submitted a project proposal.", '/admin/proposals');
+                $this->addNotification(2, 'Proposal Submitted', "$groupLabel has submitted a project proposal.", '/hod/projects');
 
                 $this->flash('success', 'Project proposal submitted successfully!');
             } catch (\Exception $e) {
@@ -1057,7 +1057,7 @@ class StudentController extends BaseController {
                 // Notify supervisor
                 $studentName = $_SESSION['name'] ?? 'A student';
                 $message = "Group ID {$group['id']} requested a meeting for " . date('M d, Y h:i A', strtotime($meetingDate));
-                $this->addNotification($group['supervisor_id'], "New Meeting Request", $message);
+                $this->addNotification($group['supervisor_id'], "New Meeting Request", $message, '/supervisor/meetings');
                 
                 $this->flash('success', 'Meeting requested successfully.');
             } catch (\Exception $e) {

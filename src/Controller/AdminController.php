@@ -276,7 +276,7 @@ class AdminController extends BaseController {
             $user = $stmtUser->fetch();
             
             if ($user) {
-                $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.');
+                $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.', '/login');
                 $subject = "Your Account has been Approved";
                 
                 $identifierStr = "";
@@ -526,11 +526,11 @@ class AdminController extends BaseController {
                 $members = $mStmt->fetchAll();
                 
                 foreach ($members as $m) {
-                    $this->addNotification($m['student_id'], 'Supervisor Assigned', "Dr. $supervisorName has been assigned as your supervisor.");
+                    $this->addNotification($m['student_id'], 'Supervisor Assigned', "Dr. $supervisorName has been assigned as your supervisor.", '/student/group');
                 }
                 
                 // Notify supervisor
-                $this->addNotification($supervisorId, 'New Group Assigned', "You have been assigned to supervise Group #$groupId.");
+                $this->addNotification($supervisorId, 'New Group Assigned', "You have been assigned to supervise Group #$groupId.", '/supervisor/groups');
 
                 $this->flash('success', 'Supervisor assigned successfully.');
             }
@@ -1188,7 +1188,8 @@ class AdminController extends BaseController {
                     $this->addNotification(
                         $m['student_id'],
                         "Proposal Status: $action",
-                        "Your FYP project proposal has been reviewed by Administrator: $action." . ($feedback ? " Feedback: $feedback" : "")
+                        "Your FYP project proposal has been reviewed by Administrator: $action." . ($feedback ? " Feedback: $feedback" : ""),
+                        '/student/proposal'
                     );
                 }
 

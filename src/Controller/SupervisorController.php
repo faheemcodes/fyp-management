@@ -281,7 +281,7 @@ class SupervisorController extends BaseController {
                     $stmtM->execute([$groupId]);
                     $members = $stmtM->fetchAll();
                     foreach ($members as $m) {
-                        $this->addNotification($m['student_id'], 'Supervisor Marks Updated', 'Your supervisor has updated your manual evaluation marks.');
+                        $this->addNotification($m['student_id'], 'Supervisor Marks Updated', 'Your supervisor has updated your manual evaluation marks.', '/student/grade');
                     }
                     
                     $this->flash('success', 'Marks updated successfully!');
@@ -369,7 +369,7 @@ class SupervisorController extends BaseController {
                             : "Your project proposal has been marked as '$status' by your supervisor." . (!empty($feedback) ? " Feedback: $feedback" : "");
 
                         foreach ($members as $m) {
-                            $this->addNotification($m['student_id'], 'Proposal Reviewed by Supervisor', $notifMsg);
+                            $this->addNotification($m['student_id'], 'Proposal Reviewed by Supervisor', $notifMsg, '/student/proposal');
                         }
 
                         // Notify Department Coordinator if endorsed
@@ -583,7 +583,13 @@ class SupervisorController extends BaseController {
                     $stmt = $db->prepare("UPDATE meetings SET status = 'Scheduled', location_link = ? WHERE id = ?");
                     $stmt->execute([$locationLink, $meetingId]);
                     
-                    $this->addNotification($meeting['group_id'], "Meeting Scheduled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been confirmed.");
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Scheduled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been confirmed.", '/student/meetings');
+                    }
                     $this->flash('success', 'Meeting scheduled successfully.');
                     
                 } elseif ($status === 'Rescheduled') {
@@ -594,14 +600,26 @@ class SupervisorController extends BaseController {
                     $stmt = $db->prepare("UPDATE meetings SET status = 'Rescheduled', meeting_date = ? WHERE id = ?");
                     $stmt->execute([$newDate, $meetingId]);
                     
-                    $this->addNotification($meeting['group_id'], "Meeting Rescheduled", "Your meeting has been rescheduled to " . date('M d, Y h:i A', strtotime($newDate)));
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Rescheduled", "Your meeting has been rescheduled to " . date('M d, Y h:i A', strtotime($newDate)), '/student/meetings');
+                    }
                     $this->flash('success', 'Meeting rescheduled successfully.');
                     
                 } elseif ($status === 'Cancelled') {
                     $stmt = $db->prepare("UPDATE meetings SET status = 'Cancelled' WHERE id = ?");
                     $stmt->execute([$meetingId]);
                     
-                    $this->addNotification($meeting['group_id'], "Meeting Cancelled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been cancelled.");
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Cancelled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been cancelled.", '/student/meetings');
+                    }
                     $this->flash('success', 'Meeting cancelled.');
                 }
             } catch (\Exception $e) {
@@ -624,12 +642,17 @@ class SupervisorController extends BaseController {
             $stmt->execute([$notes, $meetingId, $supervisorId]);
             
             if ($stmt->rowCount() > 0) {
-                // Find group to notify
+                // Find group members to notify
                 $stmt2 = $db->prepare("SELECT group_id FROM meetings WHERE id = ?");
                 $stmt2->execute([$meetingId]);
                 $gId = $stmt2->fetchColumn();
                 if ($gId) {
-                    $this->addNotification($gId, "Meeting Completed", "Supervisor has added notes for your recent meeting.");
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$gId]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Completed", "Supervisor has added notes for your recent meeting.", '/student/meetings');
+                    }
                 }
                 
                 $this->flash('success', 'Meeting marked as completed.');

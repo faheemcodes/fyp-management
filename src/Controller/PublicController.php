@@ -286,4 +286,19 @@ class PublicController extends BaseController {
             echo json_encode(['success' => false, 'error' => 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo]);
         }
     }
+
+    public function viewNotice() {
+        $noticeId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $role = $_SESSION['role'] ?? null;
+        
+        if ($role === 'student') {
+            redirect('/student/dashboard?notice_id=' . $noticeId);
+        } elseif ($role === 'supervisor') {
+            redirect('/supervisor/dashboard?notice_id=' . $noticeId);
+        } elseif ($role === 'coordinator') {
+            redirect('/coordinator/notice?notice_id=' . $noticeId);
+        } else {
+            redirect('/notice-board?notice_id=' . $noticeId);
+        }
+    }
 }
