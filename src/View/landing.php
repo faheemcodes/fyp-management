@@ -47,8 +47,25 @@
             --lp-mac-face: #64748b;
             --lp-mac-touchpad: #334155;
         }
-        
-/* HERO SECTION */
+
+        /* Landing Page Background Textures */
+        :root[data-theme="light"] body {
+            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        :root[data-theme="dark"] body {
+            background-image: 
+                linear-gradient(180deg, rgba(9, 9, 11, 0.25) 0%, rgba(9, 9, 11, 0.38) 50%, rgba(9, 9, 11, 0.50) 100%),
+                url('<?php echo $basePath; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
         .lp-hero {
             min-height: 100vh;
             min-height: 100dvh;

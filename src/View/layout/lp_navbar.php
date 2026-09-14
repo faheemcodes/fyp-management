@@ -61,26 +61,7 @@ $alwaysSolidAttr = $isSolidHeader ? 'data-always-solid="true"' : '';
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Light theme texture background */
-        :root[data-theme="light"] body {
-            background-image: url('<?php echo $basePath ?? ""; ?>/images/bg-light.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-        }
 
-        /* Dark theme texture background with light fade overlay */
-        :root[data-theme="dark"] body {
-            background-image: 
-                linear-gradient(180deg, rgba(9, 9, 11, 0.25) 0%, rgba(9, 9, 11, 0.38) 50%, rgba(9, 9, 11, 0.50) 100%),
-                url('<?php echo $basePath ?? ""; ?>/images/bg-dark.jpg') !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
-            background-color: var(--lp-bg) !important;
-        }
 
         .heading-main { font-family: var(--font-heading-main); text-transform: uppercase; letter-spacing: 1px; }
         .heading-alt { font-family: var(--font-heading-alt); text-transform: uppercase; letter-spacing: 0.5px; }

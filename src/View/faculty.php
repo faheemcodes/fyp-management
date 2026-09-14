@@ -274,6 +274,24 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
             border-bottom: 1px solid var(--lp-border);
         }
 
+        /* Faculty Page Body Background Textures */
+        :root[data-theme="light"] body {
+            background-image: url('<?php echo $basePath; ?>/images/bg-light.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        :root[data-theme="dark"] body {
+            background-image: 
+                linear-gradient(180deg, rgba(9, 9, 11, 0.25) 0%, rgba(9, 9, 11, 0.38) 50%, rgba(9, 9, 11, 0.50) 100%),
+                url('<?php echo $basePath; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
         /* Committee section — bg image with subtle overlay */
         .section-committee {
             position: relative;
@@ -288,8 +306,11 @@ $pageTitle = 'Faculty & Staff - FYP Management Portal';
         }
         :root[data-theme="dark"] .section-committee {
             background-image:
-                linear-gradient(180deg, rgba(9,9,11,0.50) 0%, rgba(9,9,11,0.50) 100%),
+                linear-gradient(180deg, rgba(9, 9, 11, 0.65) 0%, rgba(9, 9, 11, 0.65) 100%),
                 url('<?php echo $basePath; ?>/images/bg-dark.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         </style>
 </head>
