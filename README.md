@@ -39,6 +39,30 @@ The portal is designed with a **Premium, Modern UI/UX** aesthetic. It relies on 
 
 ---
 
+## 🚀 Quick Start Guide (Windows / XAMPP)
+
+Getting started is as simple as running our automated setup wizard:
+
+### 1. Prerequisites
+* [XAMPP](https://www.apachefriends.org/download.html) (or PHP 8.1+ & MySQL)
+* Start **Apache** and **MySQL** in your XAMPP Control Panel.
+
+### 2. Automated 1-Click Setup
+1. Double-click **`setup.bat`** in the project root folder.
+2. The setup wizard will automatically:
+   - Verify your PHP environment.
+   - Prepare all upload and session storage folders.
+   - Configure your local `config/database.php` and `config/mail.php`.
+   - Install PHP dependencies via Composer.
+   - Import the updated database from **`fyp_management.sql`** directly into MySQL.
+   - Offer to launch the application immediately in your browser!
+
+### 3. Daily Usage
+* To start the server at any time, just double-click **`start.bat`**. It will automatically boot the server and open your default browser to `http://localhost:8000`.
+* If you ever make database changes or need to back it up, run **`export_db.bat`** to instantly synchronize `fyp_management.sql`.
+
+---
+
 ## 👥 Role-Based Capabilities
 
 The ecosystem is built around 5 distinct roles, each receiving a fully customized dashboard tailored to their specific needs.

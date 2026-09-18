@@ -297,7 +297,14 @@ class PublicController extends BaseController {
             redirect('/supervisor/dashboard?notice_id=' . $noticeId);
         } elseif ($role === 'coordinator') {
             redirect('/coordinator/notice?notice_id=' . $noticeId);
+        } elseif ($role === 'hod') {
+            redirect('/hod/dashboard?notice_id=' . $noticeId);
+        } elseif ($role === 'committee') {
+            redirect('/committee/dashboard?notice_id=' . $noticeId);
+        } elseif ($role === 'admin') {
+            redirect('/admin/dashboard?notice_id=' . $noticeId);
         } else {
+            // Unauthenticated visitors go to public notice board
             redirect('/notice-board?notice_id=' . $noticeId);
         }
     }
