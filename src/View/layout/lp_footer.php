@@ -150,7 +150,8 @@
                     <li><a href="<?php echo $basePath; ?>/"><i class="bi bi-arrow-right hover-arrow"></i>Home</a></li>
                     <li><a href="<?php echo $basePath; ?>/faculty"><i class="bi bi-arrow-right hover-arrow"></i>Faculty Directory</a></li>
                     <li><a href="<?php echo $basePath; ?>/contact"><i class="bi bi-arrow-right hover-arrow"></i>Contact Us</a></li>
-                    <li><a href="<?php echo $basePath; ?>/login"><i class="bi bi-arrow-right hover-arrow"></i>Student Login</a></li>
+                    <li><a href="<?php echo $basePath; ?>/login?role=student"><i class="bi bi-arrow-right hover-arrow"></i>Student Login</a></li>
+                    <li><a href="<?php echo $basePath; ?>/login?role=faculty"><i class="bi bi-arrow-right hover-arrow"></i>Faculty Login</a></li>
                     <li><a href="<?php echo $basePath; ?>/register"><i class="bi bi-arrow-right hover-arrow"></i>Registration</a></li>
                 </ul>
             </div>

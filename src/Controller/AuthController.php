@@ -13,39 +13,88 @@ class AuthController extends BaseController {
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCsrf();
+            $loginRole = trim($_POST['login_role'] ?? 'student');
+            if (!in_array($loginRole, ['student', 'faculty'])) {
+                $loginRole = 'student';
+            }
+            $_SESSION['login_role_preference'] = $loginRole;
+
             $identifier = trim($_POST['identifier'] ?? '');
             $password = $_POST['password'] ?? '';
             
             if (empty($identifier)) {
-                $this->flash('error', 'Roll No. or CNIC is required.');
-                redirect('/login');
+                $errMsg = ($loginRole === 'student') ? 'Roll No. or CNIC is required.' : 'Email or CNIC is required.';
+                $this->flash('error', $errMsg);
+                redirect('/login?role=' . $loginRole);
             }
 
             if (empty($password)) {
                 $this->flash('error', 'Password is required.');
-                redirect('/login');
+                redirect('/login?role=' . $loginRole);
             }
             
             $db = \Database::getInstance()->getConnection();
             $user = null;
             
-            // Retrieve user matching student registration ID, CNIC, or email
-            $stmt = $db->prepare("
-                SELECT u.* 
-                FROM users u 
-                LEFT JOIN students s ON s.user_id = u.id 
-                WHERE u.cnic = ? OR u.email = ? OR s.student_id = ?
-            ");
-            $stmt->execute([$identifier, $identifier, $identifier]);
-            $user = $stmt->fetch();
+            if ($loginRole === 'student') {
+                // Retrieve student user matching roll number (student_id), CNIC, or email
+                $stmt = $db->prepare("
+                    SELECT u.* 
+                    FROM users u 
+                    INNER JOIN students s ON s.user_id = u.id 
+                    WHERE s.student_id = ? OR u.cnic = ? OR u.email = ?
+                ");
+                $stmt->execute([$identifier, $identifier, $identifier]);
+                $user = $stmt->fetch();
+
+                // If not found as student, check if this belongs to faculty/staff to provide clear guidance
+                if (!$user) {
+                    $chkFac = $db->prepare("
+                        SELECT role FROM users 
+                        WHERE (email = ? OR cnic = ?) AND role != 'student'
+                    ");
+                    $chkFac->execute([$identifier, $identifier]);
+                    if ($chkFac->fetch()) {
+                        $_SESSION['login_role_preference'] = 'faculty';
+                        $this->flash('error', 'This account belongs to Faculty / Staff. Please switch to the Faculty / Staff tab.');
+                        redirect('/login?role=faculty');
+                    }
+                }
+            } else {
+                // Retrieve faculty / staff user (supervisor, committee, coordinator, hod, admin)
+                $stmt = $db->prepare("
+                    SELECT u.* 
+                    FROM users u 
+                    WHERE (u.email = ? OR u.cnic = ?) AND u.role != 'student'
+                ");
+                $stmt->execute([$identifier, $identifier]);
+                $user = $stmt->fetch();
+
+                // If not found as faculty, check if this belongs to a student
+                if (!$user) {
+                    $chkStu = $db->prepare("
+                        SELECT u.id 
+                        FROM users u 
+                        LEFT JOIN students s ON s.user_id = u.id 
+                        WHERE s.student_id = ? OR (u.cnic = ? AND u.role = 'student') OR (u.email = ? AND u.role = 'student')
+                    ");
+                    $chkStu->execute([$identifier, $identifier, $identifier]);
+                    if ($chkStu->fetch()) {
+                        $_SESSION['login_role_preference'] = 'student';
+                        $this->flash('error', 'This account is a Student account. Please switch to the Student tab.');
+                        redirect('/login?role=student');
+                    }
+                }
+            }
             
             if ($user && password_verify($password, $user['password'])) {
+                unset($_SESSION['login_role_preference']);
                 if ($user['status'] === 'pending') {
                     $this->flash('error', 'Your account is pending approval.');
-                    redirect('/login');
+                    redirect('/login?role=' . $loginRole);
                 } else if ($user['status'] === 'rejected') {
                     $this->flash('error', 'Your account registration has been rejected.');
-                    redirect('/login');
+                    redirect('/login?role=' . $loginRole);
                 }
                 
                 // Set session details
@@ -142,7 +191,7 @@ class AuthController extends BaseController {
                 redirect('/' . $primaryRole . '/dashboard');
             } else {
                 $this->flash('error', 'Invalid login credentials or password.');
-                redirect('/login');
+                redirect('/login?role=' . $loginRole);
             }
         }
         
