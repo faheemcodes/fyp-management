@@ -70,9 +70,7 @@ unset($_SESSION['login_role_preference']);
                     <button class="pw-toggle" type="button" onclick="const el=document.getElementById('password');el.type=el.type==='password'?'text':'password';this.innerText=el.type==='password'?'Show':'Hide';">Show</button>
                 </div>
 
-                <button type="submit" class="btn-login" id="btn-submit-login">
-                    <?php echo $activeRole === 'student' ? 'Log In as Student' : 'Log In as Faculty / Staff'; ?>
-                </button>
+                <button type="submit" class="btn-login" id="btn-submit-login">Log In</button>
                 
                 <div class="divider">
                     <span>or</span>
@@ -121,7 +119,6 @@ function switchLoginRole(role) {
     const roleInput = document.getElementById('login_role');
     const idLabel = document.getElementById('identifier-label');
     const idInput = document.getElementById('identifier');
-    const submitBtn = document.getElementById('btn-submit-login');
 
     if (role === 'faculty') {
         tabFaculty.classList.add('active');
@@ -130,7 +127,6 @@ function switchLoginRole(role) {
         tabStudent.setAttribute('aria-selected', 'false');
         if (roleInput) roleInput.value = 'faculty';
         if (idLabel) idLabel.textContent = 'Email / CNIC';
-        if (submitBtn) submitBtn.textContent = 'Log In as Faculty / Staff';
     } else {
         tabStudent.classList.add('active');
         tabStudent.setAttribute('aria-selected', 'true');
@@ -138,7 +134,6 @@ function switchLoginRole(role) {
         tabFaculty.setAttribute('aria-selected', 'false');
         if (roleInput) roleInput.value = 'student';
         if (idLabel) idLabel.textContent = 'Roll No. / CNIC';
-        if (submitBtn) submitBtn.textContent = 'Log In as Student';
     }
 
     if (idInput) {

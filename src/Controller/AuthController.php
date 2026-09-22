@@ -46,20 +46,6 @@ class AuthController extends BaseController {
                 ");
                 $stmt->execute([$identifier, $identifier, $identifier]);
                 $user = $stmt->fetch();
-
-                // If not found as student, check if this belongs to faculty/staff to provide clear guidance
-                if (!$user) {
-                    $chkFac = $db->prepare("
-                        SELECT role FROM users 
-                        WHERE (email = ? OR cnic = ?) AND role != 'student'
-                    ");
-                    $chkFac->execute([$identifier, $identifier]);
-                    if ($chkFac->fetch()) {
-                        $_SESSION['login_role_preference'] = 'faculty';
-                        $this->flash('error', 'This account belongs to Faculty / Staff. Please switch to the Faculty / Staff tab.');
-                        redirect('/login?role=faculty');
-                    }
-                }
             } else {
                 // Retrieve faculty / staff user (supervisor, committee, coordinator, hod, admin)
                 $stmt = $db->prepare("
@@ -69,22 +55,6 @@ class AuthController extends BaseController {
                 ");
                 $stmt->execute([$identifier, $identifier]);
                 $user = $stmt->fetch();
-
-                // If not found as faculty, check if this belongs to a student
-                if (!$user) {
-                    $chkStu = $db->prepare("
-                        SELECT u.id 
-                        FROM users u 
-                        LEFT JOIN students s ON s.user_id = u.id 
-                        WHERE s.student_id = ? OR (u.cnic = ? AND u.role = 'student') OR (u.email = ? AND u.role = 'student')
-                    ");
-                    $chkStu->execute([$identifier, $identifier, $identifier]);
-                    if ($chkStu->fetch()) {
-                        $_SESSION['login_role_preference'] = 'student';
-                        $this->flash('error', 'This account is a Student account. Please switch to the Student tab.');
-                        redirect('/login?role=student');
-                    }
-                }
             }
             
             if ($user && password_verify($password, $user['password'])) {
