@@ -41,11 +41,15 @@
             --lp-mac-body: #e2e8f0;
             --lp-mac-face: #cbd5e1;
             --lp-mac-touchpad: #94a3b8;
+            --lp-mac-key: #262626;
+            --lp-mac-border: rgba(255,255,255,0.2);
         }
         :root[data-theme="dark"] {
-            --lp-mac-body: #475569;
-            --lp-mac-face: #64748b;
-            --lp-mac-touchpad: #334155;
+            --lp-mac-body: #1c1d24;
+            --lp-mac-face: #111218;
+            --lp-mac-touchpad: #181922;
+            --lp-mac-key: #090a0d;
+            --lp-mac-border: rgba(255,255,255,0.06);
         }
 
         /* Landing Page Background Textures */
@@ -479,14 +483,14 @@
         /* 3D LAPTOP */
         .laptop-scene { position: relative; inset: auto; pointer-events: none; display: flex; justify-content: center; align-items: center; overflow: visible; z-index: 10; }
         .laptop-scene .macbook { width: 150px; height: 96px; position: relative; perspective: 500px; transform: scale(2.2); margin-top: 10px; }
-        .laptop-scene .shadow { position: absolute; width: 60px; height: 0px; left: 40px; top: 160px; transform: rotateX(80deg); box-shadow: 0 0 60px 40px rgba(0,0,0,0.3); }
+        .laptop-scene .shadow { position: absolute; width: 110px; height: 20px; left: 50%; margin-left: -55px; top: 155px; transform: rotateX(80deg); background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 70%); filter: blur(6px); }
         .laptop-scene .inner { z-index: 20; position: absolute; width: 150px; height: 96px; left: 0; top: 0; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(0deg) rotateZ(0deg); transition: transform 0.1s ease-out; }
         .laptop-scene .screen { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; background-image: linear-gradient(45deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 3px 7px rgba(255,255,255,0.2); transition: background 0.3s; }
         .laptop-scene .screen::after { content: ''; position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(105deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.1) 100%); pointer-events: none; }
         .laptop-scene .screen .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-face); transform: translateZ(2px); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .screen .face-one .camera { width: 14px; height: 4px; border-radius: 4px; background: #000; position: absolute; left: 50%; top: 1px; margin-left: -7px; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.2); }
         .laptop-scene .screen .face-one .camera::after { content: ''; position: absolute; width: 1.5px; height: 1.5px; background: #10b981; border-radius: 50%; right: 2px; top: 1.2px; box-shadow: 0 0 2px 0.5px #10b981; }
-        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: linear-gradient(180deg, #0f172a, #1e293b); border-radius: 2px; position: relative; box-shadow: inset 0 0 2px rgba(0,0,0,1); overflow: hidden; }
+        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: linear-gradient(180deg, #0f172a, #1e293b); border-radius: 2px; position: relative; box-shadow: inset 0 0 2px rgba(0,0,0,1); overflow: hidden; border: 0.5px solid rgba(255,255,255,0.06); }
         .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 47%, rgba(255,255,255,0) 48%); background-size: 300px 200px; z-index: 5; }
         .laptop-scene .screen .face-one span { position: absolute; bottom: 3px; left: 0; width: 100%; text-align: center; font-size: 6px; color: #666; font-weight: bold; }
 
@@ -510,13 +514,14 @@
 
         /* Macbook body */
         .laptop-scene .macbody { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; transform: rotateX(-90deg); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
+        .laptop-scene .macbody::before { content: ''; position: absolute; width: 22px; height: 2px; left: 50%; transform: translateX(-50%); top: 0; background: rgba(0,0,0,0.28); border-radius: 0 0 2px 2px; z-index: 5; }
         .laptop-scene .macbody .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; transform-style: preserve-3d; background: var(--lp-mac-face); transform: translateZ(-2px); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .macbody .face-one::after { content: ''; position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 100%); pointer-events: none; }
-        .laptop-scene .macbody .touchpad { width: 40px; height: 31px; position: absolute; left: 50%; top: 50%; border-radius: 4px; margin: -44px 0 0 -18px; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0.5px 0 rgba(255,255,255,0.2); transition: background 0.3s; }
-        .laptop-scene .macbody .keyboard { width: 130px; height: 45px; position: absolute; left: 7px; top: 41px; border-radius: 4px; transform-style: preserve-3d; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 0.5px 0 rgba(255,255,255,0.2); padding: 2px; display: flex; flex-direction: column-reverse; gap: 1px; justify-content: space-between; transition: background 0.3s; }
+        .laptop-scene .macbody .touchpad { width: 40px; height: 31px; position: absolute; left: 50%; top: 50%; border-radius: 4px; margin: -44px 0 0 -20px; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.2)); transition: background 0.3s; }
+        .laptop-scene .macbody .keyboard { width: 130px; height: 45px; position: absolute; left: 10px; top: 41px; border-radius: 4px; transform-style: preserve-3d; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.2)); padding: 2px; display: flex; flex-direction: column-reverse; gap: 1px; justify-content: space-between; transition: background 0.3s; }
         .laptop-scene .k-row { display: flex; gap: 1px; justify-content: space-between; height: 6px; }
         .laptop-scene .k-row:first-child { height: 3.5px; }
-        .laptop-scene .key { background: #333; flex-grow: 1; transform: translateZ(-1px); border-radius: 1.5px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 -1px 0 rgba(0,0,0,0.8); position: relative; }
+        .laptop-scene .key { background: var(--lp-mac-key, #333); flex-grow: 1; transform: translateZ(-1px); border-radius: 1.5px; box-shadow: inset 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.1)), 0 -1px 0 rgba(0,0,0,0.8); position: relative; }
         .laptop-scene .key::after { content: attr(data-key); position: absolute; left: 0.5px; bottom: 0.5px; font-size: 8px; transform: scale(0.2); transform-origin: left bottom; color: rgba(255,255,255,0.4); font-family: -apple-system, sans-serif; white-space: nowrap; pointer-events: none; }
         .laptop-scene .key.delete { flex-grow: 1.5; }
         .laptop-scene .key.tab { flex-grow: 1.5; }
