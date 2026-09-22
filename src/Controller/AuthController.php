@@ -23,7 +23,7 @@ class AuthController extends BaseController {
             $password = $_POST['password'] ?? '';
             
             if (empty($identifier)) {
-                $errMsg = ($loginRole === 'student') ? 'Roll No. or CNIC is required.' : 'Email or CNIC is required.';
+                $errMsg = ($loginRole === 'student') ? 'Roll No. is required.' : 'CNIC is required.';
                 $this->flash('error', $errMsg);
                 redirect('/login?role=' . $loginRole);
             }

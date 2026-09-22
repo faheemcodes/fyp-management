@@ -61,7 +61,7 @@ unset($_SESSION['login_role_preference']);
                 
                 <div class="input-wrap">
                     <input type="text" id="identifier" name="identifier" placeholder=" " required autofocus autocomplete="username">
-                    <label for="identifier" id="identifier-label"><?php echo $activeRole === 'student' ? 'Roll No. / CNIC' : 'Email / CNIC'; ?></label>
+                    <label for="identifier" id="identifier-label"><?php echo $activeRole === 'student' ? 'Roll No.' : 'CNIC'; ?></label>
                 </div>
                 
                 <div class="input-wrap">
@@ -126,14 +126,14 @@ function switchLoginRole(role) {
         tabStudent.classList.remove('active');
         tabStudent.setAttribute('aria-selected', 'false');
         if (roleInput) roleInput.value = 'faculty';
-        if (idLabel) idLabel.textContent = 'Email / CNIC';
+        if (idLabel) idLabel.textContent = 'CNIC';
     } else {
         tabStudent.classList.add('active');
         tabStudent.setAttribute('aria-selected', 'true');
         tabFaculty.classList.remove('active');
         tabFaculty.setAttribute('aria-selected', 'false');
         if (roleInput) roleInput.value = 'student';
-        if (idLabel) idLabel.textContent = 'Roll No. / CNIC';
+        if (idLabel) idLabel.textContent = 'Roll No.';
     }
 
     if (idInput) {

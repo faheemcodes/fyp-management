@@ -1,4 +1,6 @@
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     background-color: var(--lp-bg);
@@ -13,7 +15,8 @@ body {
 
 
 /* ─── Page Background (Matches Landing Page Aesthetic) ─── */
-.login-page, .register-page {
+.login-page,
+.register-page {
     flex: 1;
     display: flex;
     align-items: center;
@@ -25,65 +28,79 @@ body {
 
 /* Distributed Line Grid Patches */
 .login-page::before {
-    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-    background-image: 
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
         linear-gradient(to right, var(--lp-border) 1px, transparent 1px),
         linear-gradient(to bottom, var(--lp-border) 1px, transparent 1px);
     background-size: 40px 40px;
     opacity: 0.7;
-    -webkit-mask-image: 
+    -webkit-mask-image:
         radial-gradient(circle at 12% 25%, black 2%, transparent 25%),
         radial-gradient(circle at 88% 75%, black 5%, transparent 30%),
         radial-gradient(circle at 45% 90%, black 1%, transparent 20%);
-    mask-image: 
+    mask-image:
         radial-gradient(circle at 12% 25%, black 2%, transparent 25%),
         radial-gradient(circle at 88% 75%, black 5%, transparent 30%),
         radial-gradient(circle at 45% 90%, black 1%, transparent 20%);
 }
+
 /* Distributed Dotted Grid Patches */
 .login-page::after {
-    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
     background-image: radial-gradient(var(--lp-text-muted) 1.5px, transparent 1.5px);
     background-size: 20px 20px;
     opacity: 0.45;
-    -webkit-mask-image: 
+    -webkit-mask-image:
         radial-gradient(circle at 82% 18%, black 4%, transparent 28%),
         radial-gradient(circle at 18% 80%, black 2%, transparent 25%),
         radial-gradient(circle at 65% 35%, black 1%, transparent 18%);
-    mask-image: 
+    mask-image:
         radial-gradient(circle at 82% 18%, black 4%, transparent 28%),
         radial-gradient(circle at 18% 80%, black 2%, transparent 25%),
         radial-gradient(circle at 65% 35%, black 1%, transparent 18%);
 }
 
-.login-wrapper, .register-wrapper {
+.login-wrapper,
+.register-wrapper {
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 400px;
 }
+
 .register-wrapper {
     max-width: 780px;
 }
 
 /* ─── Main Card ─── */
-.login-card, .register-card {
+.login-card,
+.register-card {
     background: var(--lp-card);
     border: 1px solid var(--lp-border);
     border-radius: 20px;
     padding: 44px 36px 32px;
     margin-bottom: 12px;
     backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 /* ─── Brand Title ─── */
-.login-brand, .register-brand {
+.login-brand,
+.register-brand {
     text-align: center;
     margin-bottom: 32px;
 }
 
-.login-brand h2, .register-brand h2 {
+.login-brand h2,
+.register-brand h2 {
     font-weight: 800;
     font-size: 1.75rem;
     letter-spacing: -0.03em;
@@ -91,7 +108,8 @@ body {
     color: var(--lp-text);
 }
 
-.login-brand p, .register-brand p {
+.login-brand p,
+.register-brand p {
     font-size: 0.85rem;
     color: var(--lp-text-muted);
     margin: 6px 0 0;
@@ -196,8 +214,8 @@ body {
     padding: 0 2px;
 }
 
-.input-wrap input:focus + label,
-.input-wrap input:not(:placeholder-shown) + label {
+.input-wrap input:focus+label,
+.input-wrap input:not(:placeholder-shown)+label {
     top: 7px;
     transform: translateY(0);
     font-size: 0.65rem;
@@ -224,7 +242,9 @@ body {
     transition: color 0.15s;
 }
 
-.pw-toggle:hover { color: var(--lp-text); }
+.pw-toggle:hover {
+    color: var(--lp-text);
+}
 
 /* ─── Standard Bootstrap Forms for Register ─── */
 .form-label-sm {
@@ -276,12 +296,16 @@ body {
     height: 2px;
     background: var(--lp-border);
 }
-.step-line.active { background: var(--lp-accent); }
+
+.step-line.active {
+    background: var(--lp-accent);
+}
 
 /* ─── Role Selector ─── */
 .role-select-wrap {
     margin-bottom: 28px;
 }
+
 .role-select-wrap label {
     font-size: 0.8rem;
     font-weight: 600;
@@ -291,9 +315,26 @@ body {
 }
 
 /* ─── Multi-step sections ─── */
-.step-section { display: none; animation: fadeIn 0.4s ease; }
-.step-section.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.step-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.step-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* ─── Section Cards ─── */
 .form-section-card {
@@ -318,7 +359,8 @@ body {
     letter-spacing: 0.05em;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
     border: 1.5px solid var(--lp-border) !important;
     border-radius: 10px;
     background-color: var(--lp-bg-alt) !important;
@@ -329,7 +371,8 @@ body {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: var(--lp-accent) !important;
     background-color: var(--lp-bg) !important;
     box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.18) !important;
@@ -341,7 +384,8 @@ body {
 }
 
 /* ─── Login/Register Button ─── */
-.btn-login, .btn-register {
+.btn-login,
+.btn-register {
     width: 100%;
     height: 46px;
     border: none;
@@ -358,13 +402,15 @@ body {
     overflow: hidden;
 }
 
-.btn-login:hover, .btn-register:hover {
+.btn-login:hover,
+.btn-register:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
 }
 
-.btn-login:active, .btn-register:active {
+.btn-login:active,
+.btn-register:active {
     transform: translateY(0);
     box-shadow: none;
 }
@@ -376,7 +422,8 @@ body {
     margin: 22px 0;
 }
 
-.divider::before, .divider::after {
+.divider::before,
+.divider::after {
     content: '';
     flex: 1;
     height: 1px;
@@ -404,7 +451,9 @@ body {
     transition: color 0.15s;
 }
 
-.forgot-link:hover { color: var(--lp-teal); }
+.forgot-link:hover {
+    color: var(--lp-teal);
+}
 
 /* ─── Secondary Bottom Card (Signup/Login Link) ─── */
 .login-card-bottom {
@@ -416,7 +465,7 @@ body {
     font-size: 0.875rem;
     color: var(--lp-text-muted);
     backdrop-filter: blur(10px);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .login-card-bottom a {
@@ -426,10 +475,13 @@ body {
     transition: color 0.15s;
 }
 
-.login-card-bottom a:hover { color: var(--lp-teal); }
+.login-card-bottom a:hover {
+    color: var(--lp-teal);
+}
 
 /* ─── Alerts ─── */
-.alert-login, .alert-register {
+.alert-login,
+.alert-register {
     padding: 10px 14px;
     border-radius: 10px;
     font-size: 0.8rem;
@@ -438,13 +490,17 @@ body {
     font-weight: 500;
 }
 
-.alert-login.alert-danger, .alert-register.alert-danger {
-    background: rgba(244, 63, 94, 0.1); /* Rose with opacity */
+.alert-login.alert-danger,
+.alert-register.alert-danger {
+    background: rgba(244, 63, 94, 0.1);
+    /* Rose with opacity */
     color: var(--lp-rose);
 }
 
-.alert-login.alert-success, .alert-register.alert-success {
-    background: rgba(16, 185, 129, 0.1); /* Emerald with opacity */
+.alert-login.alert-success,
+.alert-register.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    /* Emerald with opacity */
     color: var(--lp-accent);
 }
 
@@ -537,10 +593,13 @@ body {
     transition: color 0.15s;
 }
 
-.pw-toggle-btn:hover { color: var(--lp-accent); }
+.pw-toggle-btn:hover {
+    color: var(--lp-accent);
+}
 
 /* ─── Footer ─── */
-.login-footer, .register-footer {
+.login-footer,
+.register-footer {
     text-align: center;
     padding: 20px;
     font-size: 0.7rem;
@@ -549,9 +608,26 @@ body {
 
 /* ─── Responsive ─── */
 @media (max-width: 480px) {
-    .login-card { padding: 30px 20px 22px; }
-    .login-wrapper { max-width: 100%; }
-    .auth-role-switch { padding: 3px; margin-bottom: 18px; }
-    .role-switch-btn { padding: 9px 8px; font-size: 0.8rem; gap: 6px; }
-    .role-switch-btn i { font-size: 0.95rem; }
+    .login-card {
+        padding: 30px 20px 22px;
+    }
+
+    .login-wrapper {
+        max-width: 100%;
+    }
+
+    .auth-role-switch {
+        padding: 3px;
+        margin-bottom: 18px;
+    }
+
+    .role-switch-btn {
+        padding: 9px 8px;
+        font-size: 0.8rem;
+        gap: 6px;
+    }
+
+    .role-switch-btn i {
+        font-size: 0.95rem;
+    }
 }
