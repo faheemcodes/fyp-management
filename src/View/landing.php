@@ -495,22 +495,27 @@
         .laptop-scene .screen .face-one span { position: absolute; bottom: 3px; left: 0; width: 100%; text-align: center; font-size: 6px; color: #666; font-weight: bold; }
 
         /* Dashboard UI on screen */
-        .lb-dash { position: absolute; inset: 0; display: flex; font-family: sans-serif; }
-        .lb-sidebar { width: 18px; background: #0c1222; display: flex; flex-direction: column; align-items: center; padding-top: 4px; gap: 3px; }
-        .lb-sidebar .lb-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; opacity: 0.6; }
-        .lb-sidebar .lb-dot:first-child { opacity: 1; }
-        .lb-main { flex: 1; padding: 3px; }
-        .lb-header { height: 8px; background: #1a2744; border-radius: 1px; margin-bottom: 3px; display: flex; align-items: center; padding: 0 3px; }
-        .lb-header-text { width: 25px; height: 2px; background: #e2e8f0; border-radius: 1px; }
-        .lb-cards { display: flex; gap: 2px; margin-bottom: 3px; }
-        .lb-card { flex: 1; height: 14px; border-radius: 2px; padding: 2px; }
-        .lb-card-num { font-size: 5px; font-weight: bold; line-height: 1; }
-        .lb-card-label { font-size: 2.5px; opacity: 0.7; margin-top: 1px; }
-        .lb-table { background: rgba(0,0,0,0.2); border-radius: 1px; }
-        .lb-row { height: 5px; display: flex; align-items: center; gap: 3px; padding: 0 3px; border-bottom: 0.3px solid rgba(255,255,255,0.05); }
-        .lb-row:nth-child(odd) { background: rgba(26,39,68,0.4); }
-        .lb-bar { height: 2px; border-radius: 1px; background: #475569; }
-        .lb-status { width: 10px; height: 3px; border-radius: 1px; font-size: 2px; text-align: center; line-height: 3px; font-weight: bold; }
+        .lb-dash { position: absolute; inset: 0; display: flex; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .lb-sidebar { width: 18px; background: #0c1222; display: flex; flex-direction: column; align-items: center; padding-top: 5px; gap: 3px; border-right: 0.5px solid rgba(255,255,255,0.06); }
+        .lb-sidebar .lb-dot { width: 5px; height: 5px; border-radius: 50%; background: #10b981; opacity: 0.5; }
+        .lb-sidebar .lb-dot:first-child { opacity: 1; box-shadow: 0 0 3px #10b981; }
+        .lb-main { flex: 1; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
+        .lb-header { height: 10px; background: rgba(255,255,255,0.05); border-radius: 2px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px; border: 0.5px solid rgba(255,255,255,0.06); }
+        .lb-header-title { font-size: 3.5px; font-weight: 700; color: #cbd5e1; letter-spacing: 0.3px; }
+        .lb-live-pill { font-size: 2.6px; font-weight: 700; color: #10b981; background: rgba(16,185,129,0.18); border-radius: 1px; padding: 1px 2.5px; display: flex; align-items: center; gap: 1.5px; }
+        .lb-live-dot { width: 1.8px; height: 1.8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 1.5px #10b981; }
+        .lb-cards { display: flex; gap: 2.5px; }
+        .lb-card { flex: 1; height: 16px; border-radius: 2px; padding: 2px 3px; display: flex; flex-direction: column; justify-content: center; border: 0.5px solid rgba(255,255,255,0.05); }
+        .lb-card-num { font-size: 6px; font-weight: 800; line-height: 1; margin-bottom: 1px; }
+        .lb-card-label { font-size: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2px; opacity: 0.85; }
+        .lb-table { background: rgba(0,0,0,0.25); border-radius: 2px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.05); flex: 1; display: flex; flex-direction: column; }
+        .lb-row { height: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px; border-bottom: 0.3px solid rgba(255,255,255,0.05); }
+        .lb-row:nth-child(odd) { background: rgba(255,255,255,0.02); }
+        .lb-proj-name { font-size: 3.2px; font-weight: 500; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 82px; }
+        .lb-status { height: 5px; padding: 0 3px; border-radius: 1px; font-size: 2.6px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+        .lb-status-ok { background: rgba(16,185,129,0.25); color: #34d399; }
+        .lb-status-rev { background: rgba(139,92,246,0.25); color: #c084fc; }
+        .lb-status-wait { background: rgba(245,158,11,0.25); color: #fbbf24; }
 
         /* Macbook body */
         .laptop-scene .macbody { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; transform: rotateX(-90deg); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
@@ -521,8 +526,18 @@
         .laptop-scene .macbody .keyboard { width: 130px; height: 45px; position: absolute; left: 10px; top: 41px; border-radius: 4px; transform-style: preserve-3d; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.2)); padding: 2px; display: flex; flex-direction: column-reverse; gap: 1px; justify-content: space-between; transition: background 0.3s; }
         .laptop-scene .k-row { display: flex; gap: 1px; justify-content: space-between; height: 6px; }
         .laptop-scene .k-row:first-child { height: 3.5px; }
-        .laptop-scene .key { background: var(--lp-mac-key, #333); flex-grow: 1; transform: translateZ(-1px); border-radius: 1.5px; box-shadow: inset 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.1)), 0 -1px 0 rgba(0,0,0,0.8); position: relative; }
-        .laptop-scene .key::after { content: attr(data-key); position: absolute; left: 0.5px; bottom: 0.5px; font-size: 8px; transform: scale(0.2); transform-origin: left bottom; color: rgba(255,255,255,0.4); font-family: -apple-system, sans-serif; white-space: nowrap; pointer-events: none; }
+        .laptop-scene .key { background: var(--lp-mac-key, #090a0d); flex-grow: 1; transform: translateZ(-1px); border-radius: 1.5px; box-shadow: inset 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.1)), 0 -1px 0 rgba(0,0,0,0.8); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .laptop-scene .key::after { content: attr(data-key); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 3.6px; line-height: 1; transform: scaleY(-1); transform-origin: center center; color: rgba(255,255,255,0.78); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; font-weight: 600; white-space: nowrap; pointer-events: none; }
+        .laptop-scene .key.tab::after,
+        .laptop-scene .key.delete::after,
+        .laptop-scene .key.caps::after,
+        .laptop-scene .key.return::after,
+        .laptop-scene .key.shift::after,
+        .laptop-scene .key.shift-r::after,
+        .laptop-scene .key.ctrl::after,
+        .laptop-scene .key.opt::after,
+        .laptop-scene .key.cmd::after { font-size: 2.7px; font-weight: 500; }
+        .laptop-scene .arrows .key::after { font-size: 2.2px; }
         .laptop-scene .key.delete { flex-grow: 1.5; }
         .laptop-scene .key.tab { flex-grow: 1.5; }
         .laptop-scene .key.caps { flex-grow: 1.8; }
@@ -728,7 +743,10 @@
                                     <div class="display">
                                         <div class="lb-dash">
                                             <div class="lb-main">
-                                                <div class="lb-header"><div class="lb-header-text"></div></div>
+                                                <div class="lb-header">
+                                                    <div class="lb-header-title">FYP PORTAL</div>
+                                                    <div class="lb-live-pill"><span class="lb-live-dot"></span>LIVE</div>
+                                                </div>
                                                 <div class="lb-cards">
                                                     <div class="lb-card" style="background:rgba(16,185,129,0.15)"><div class="lb-card-num" style="color:#10b981">24</div><div class="lb-card-label" style="color:#94a3b8">Groups</div></div>
                                                     <div class="lb-card" style="background:rgba(139,92,246,0.15)"><div class="lb-card-num" style="color:#8b5cf6">52</div><div class="lb-card-label" style="color:#94a3b8">Projects</div></div>
@@ -736,12 +754,11 @@
                                                     <div class="lb-card" style="background:rgba(244,63,94,0.15)"><div class="lb-card-num" style="color:#f43f5e">31</div><div class="lb-card-label" style="color:#94a3b8">Done</div></div>
                                                 </div>
                                                 <div class="lb-table">
-                                                    <div class="lb-row"><div class="lb-bar" style="width:22px;background:#cbd5e1"></div><div class="lb-bar" style="width:12px"></div><div class="lb-bar" style="width:14px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:18px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:16px"></div><div class="lb-status" style="background:rgba(245,158,11,0.3);color:#f59e0b">...</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:25px;background:#cbd5e1"></div><div class="lb-bar" style="width:14px"></div><div class="lb-bar" style="width:12px"></div><div class="lb-status" style="background:rgba(139,92,246,0.3);color:#8b5cf6">Rev</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:20px;background:#cbd5e1"></div><div class="lb-bar" style="width:11px"></div><div class="lb-bar" style="width:15px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:16px;background:#cbd5e1"></div><div class="lb-bar" style="width:13px"></div><div class="lb-bar" style="width:11px"></div><div class="lb-status" style="background:rgba(244,63,94,0.3);color:#f43f5e">No</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:24px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:13px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
+                                                    <div class="lb-row"><span class="lb-proj-name">AI Autonomous Vision</span><span class="lb-status lb-status-ok">Approved</span></div>
+                                                    <div class="lb-row"><span class="lb-proj-name">Smart IoT Energy Grid</span><span class="lb-status lb-status-rev">Review</span></div>
+                                                    <div class="lb-row"><span class="lb-proj-name">Cloud Health Vault</span><span class="lb-status lb-status-ok">Approved</span></div>
+                                                    <div class="lb-row"><span class="lb-proj-name">Autonomous Drone</span><span class="lb-status lb-status-wait">Pending</span></div>
+                                                    <div class="lb-row"><span class="lb-proj-name">Cyber Security Guard</span><span class="lb-status lb-status-ok">Approved</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -754,11 +771,11 @@
                                     <div class="touchpad"></div>
                                     <div class="keyboard">
                                         <div class="k-row"><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div></div>
-                                        <div class="k-row"><div class="key" data-key="~"></div><div class="key" data-key="1"></div><div class="key" data-key="2"></div><div class="key" data-key="3"></div><div class="key" data-key="4"></div><div class="key" data-key="5"></div><div class="key" data-key="6"></div><div class="key" data-key="7"></div><div class="key" data-key="8"></div><div class="key" data-key="9"></div><div class="key" data-key="0"></div><div class="key" data-key="-"></div><div class="key" data-key="="></div><div class="key delete" data-key="delete"></div></div>
+                                        <div class="k-row"><div class="key" data-key="~"></div><div class="key" data-key="1"></div><div class="key" data-key="2"></div><div class="key" data-key="3"></div><div class="key" data-key="4"></div><div class="key" data-key="5"></div><div class="key" data-key="6"></div><div class="key" data-key="7"></div><div class="key" data-key="8"></div><div class="key" data-key="9"></div><div class="key" data-key="0"></div><div class="key" data-key="-"></div><div class="key" data-key="="></div><div class="key delete" data-key="del"></div></div>
                                         <div class="k-row"><div class="key tab" data-key="tab"></div><div class="key" data-key="Q"></div><div class="key" data-key="W"></div><div class="key" data-key="E"></div><div class="key" data-key="R"></div><div class="key" data-key="T"></div><div class="key" data-key="Y"></div><div class="key" data-key="U"></div><div class="key" data-key="I"></div><div class="key" data-key="O"></div><div class="key" data-key="P"></div><div class="key" data-key="["></div><div class="key" data-key="]"></div><div class="key" data-key="\"></div></div>
-                                        <div class="k-row"><div class="key caps" data-key="caps lock"></div><div class="key" data-key="A"></div><div class="key" data-key="S"></div><div class="key" data-key="D"></div><div class="key" data-key="F"></div><div class="key" data-key="G"></div><div class="key" data-key="H"></div><div class="key" data-key="J"></div><div class="key" data-key="K"></div><div class="key" data-key="L"></div><div class="key" data-key=";"></div><div class="key return" data-key="return"></div></div>
+                                        <div class="k-row"><div class="key caps" data-key="caps"></div><div class="key" data-key="A"></div><div class="key" data-key="S"></div><div class="key" data-key="D"></div><div class="key" data-key="F"></div><div class="key" data-key="G"></div><div class="key" data-key="H"></div><div class="key" data-key="J"></div><div class="key" data-key="K"></div><div class="key" data-key="L"></div><div class="key" data-key=";"></div><div class="key return" data-key="return"></div></div>
                                         <div class="k-row"><div class="key shift" data-key="shift"></div><div class="key" data-key="Z"></div><div class="key" data-key="X"></div><div class="key" data-key="C"></div><div class="key" data-key="V"></div><div class="key" data-key="B"></div><div class="key" data-key="N"></div><div class="key" data-key="M"></div><div class="key" data-key=","></div><div class="key" data-key="."></div><div class="key shift-r" data-key="shift"></div></div>
-                                        <div class="k-row"><div class="key ctrl" data-key="control"></div><div class="key opt" data-key="option"></div><div class="key cmd" data-key="command"></div><div class="key space"></div><div class="key cmd" data-key="command"></div><div class="key opt" data-key="option"></div><div class="arrows"><div class="key up"></div><div class="arrows-bottom"><div class="key left"></div><div class="key down"></div><div class="key right"></div></div></div></div>
+                                        <div class="k-row"><div class="key ctrl" data-key="ctrl"></div><div class="key opt" data-key="opt"></div><div class="key cmd" data-key="cmd"></div><div class="key space"></div><div class="key cmd" data-key="cmd"></div><div class="key opt" data-key="opt"></div><div class="arrows"><div class="key up" data-key="▲"></div><div class="arrows-bottom"><div class="key left" data-key="◀"></div><div class="key down" data-key="▼"></div><div class="key right" data-key="▶"></div></div></div></div>
                                     </div>
                                 </div>
                                 <div class="pad one"></div><div class="pad two"></div><div class="pad three"></div><div class="pad four"></div>
