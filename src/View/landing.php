@@ -523,32 +523,41 @@
         .laptop-scene .macbody .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; transform-style: preserve-3d; background: var(--lp-mac-face); transform: translateZ(-2px); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .macbody .face-one::after { content: ''; position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 100%); pointer-events: none; }
         .laptop-scene .macbody .touchpad { width: 40px; height: 31px; position: absolute; left: 50%; top: 50%; border-radius: 4px; margin: -44px 0 0 -20px; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.2)); transition: background 0.3s; }
-        .laptop-scene .macbody .keyboard { width: 130px; height: 45px; position: absolute; left: 10px; top: 41px; border-radius: 4px; transform-style: preserve-3d; background: var(--lp-mac-touchpad); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.2)); padding: 2px; display: flex; flex-direction: column-reverse; gap: 1px; justify-content: space-between; transition: background 0.3s; }
-        .laptop-scene .k-row { display: flex; gap: 1px; justify-content: space-between; height: 6px; }
-        .laptop-scene .k-row:first-child { height: 3.5px; }
-        .laptop-scene .key { background: var(--lp-mac-key, #090a0d); flex-grow: 1; transform: translateZ(-1px); border-radius: 1.5px; box-shadow: inset 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.1)), 0 -1px 0 rgba(0,0,0,0.8); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .laptop-scene .key::after { content: attr(data-key); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 3.6px; line-height: 1; transform: scaleY(-1); transform-origin: center center; color: rgba(255,255,255,0.78); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; font-weight: 600; white-space: nowrap; pointer-events: none; }
+        .laptop-scene .macbody .keyboard { width: 130px; height: 45px; position: absolute; left: 10px; top: 41px; border-radius: 3.5px; transform-style: preserve-3d; background: #0e0f13; box-shadow: inset 0 1px 3px rgba(0,0,0,0.8), 0 0.5px 0 var(--lp-mac-border, rgba(255,255,255,0.18)); padding: 1.8px; display: flex; flex-direction: column-reverse; gap: 0.8px; justify-content: space-between; transition: background 0.3s; }
+        .laptop-scene .k-row { display: flex; gap: 0.8px; justify-content: space-between; height: 6px; }
+        .laptop-scene .k-row.touchbar-row { height: 4px; gap: 1px; }
+        .laptop-scene .key { background: var(--lp-mac-key, #191a1f); flex-grow: 1; transform: translateZ(-1px); border-radius: 1px; box-shadow: inset 0 0.4px 0 rgba(255,255,255,0.14), 0 -0.5px 0 rgba(0,0,0,0.7); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .laptop-scene .key::after { content: attr(data-key); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.1px; line-height: 1; transform: scaleY(-1); transform-origin: center center; color: rgba(255,255,255,0.88); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; font-weight: 500; white-space: nowrap; pointer-events: none; }
         .laptop-scene .key.tab::after,
-        .laptop-scene .key.delete::after,
         .laptop-scene .key.caps::after,
-        .laptop-scene .key.return::after,
         .laptop-scene .key.shift::after,
-        .laptop-scene .key.shift-r::after,
+        .laptop-scene .key.fn::after { justify-content: flex-start; padding-left: 1.8px; font-size: 1.55px; font-weight: 400; color: rgba(255,255,255,0.75); }
+        .laptop-scene .key.delete::after,
+        .laptop-scene .key.return::after,
+        .laptop-scene .key.shift-r::after { justify-content: flex-end; padding-right: 1.8px; font-size: 1.55px; font-weight: 400; color: rgba(255,255,255,0.75); }
         .laptop-scene .key.ctrl::after,
         .laptop-scene .key.opt::after,
-        .laptop-scene .key.cmd::after { font-size: 2.7px; font-weight: 500; }
-        .laptop-scene .arrows .key::after { font-size: 2.2px; }
+        .laptop-scene .key.cmd::after { font-size: 1.35px; font-weight: 400; color: rgba(255,255,255,0.75); }
+        .laptop-scene .key.caps::before { content: ''; position: absolute; width: 0.8px; height: 0.8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 1px #10b981; left: 1px; top: 50%; transform: translateY(-50%); pointer-events: none; z-index: 2; }
+        .laptop-scene .key.esc { width: 11px; flex-grow: 0; }
+        .laptop-scene .key.esc::after { font-size: 1.5px; justify-content: center; }
+        .laptop-scene .touchbar { flex-grow: 1; height: 100%; background: #050608; border-radius: 0.8px; box-shadow: inset 0 0.5px 1px rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 0 3px; border: 0.3px solid rgba(255,255,255,0.06); transform: scaleY(-1); }
+        .laptop-scene .touchbar span { font-size: 1.6px; color: rgba(255,255,255,0.6); line-height: 1; font-family: -apple-system, sans-serif; }
+        .laptop-scene .touchbar .tb-siri { font-size: 1.4px; color: #38bdf8; font-weight: 600; }
+        .laptop-scene .key.touchid { width: 7.5px; flex-grow: 0; background: #040405; border: 0.4px solid rgba(255,255,255,0.1); box-shadow: inset 0 0.5px 1px rgba(0,0,0,0.9); }
         .laptop-scene .key.delete { flex-grow: 1.5; }
         .laptop-scene .key.tab { flex-grow: 1.5; }
         .laptop-scene .key.caps { flex-grow: 1.8; }
         .laptop-scene .key.return { flex-grow: 1.8; }
-        .laptop-scene .key.shift, .laptop-scene .key.shift-r { flex-grow: 2.2; }
-        .laptop-scene .key.ctrl, .laptop-scene .key.opt, .laptop-scene .key.cmd { flex-grow: 1.2; }
-        .laptop-scene .key.space { flex-grow: 6.5; }
-        .laptop-scene .arrows { display: flex; flex-direction: column-reverse; gap: 0.5px; width: 17.5px; margin-left: 1px; flex-shrink: 0; }
-        .laptop-scene .arrows-bottom { display: flex; gap: 1px; height: 2.5px; }
-        .laptop-scene .key.up { height: 2.5px; margin: 0 auto; width: 5.5px; flex-grow: 0; }
-        .laptop-scene .key.left, .laptop-scene .key.down, .laptop-scene .key.right { height: 2.5px; width: 5.5px; flex-grow: 1; }
+        .laptop-scene .key.shift, .laptop-scene .key.shift-r { flex-grow: 2.3; }
+        .laptop-scene .key.fn { flex-grow: 1; }
+        .laptop-scene .key.ctrl, .laptop-scene .key.opt { flex-grow: 1.1; }
+        .laptop-scene .key.cmd { flex-grow: 1.35; }
+        .laptop-scene .key.space { flex-grow: 5.6; }
+        .laptop-scene .arrows-cluster { display: flex; gap: 0.6px; width: 16.5px; height: 6px; align-items: flex-start; margin-left: 0.5px; flex-shrink: 0; }
+        .laptop-scene .arrows-stack { display: flex; flex-direction: column-reverse; gap: 0.6px; width: 5.1px; height: 6px; }
+        .laptop-scene .key.arrow { flex-grow: 0; width: 5.1px; height: 2.7px; }
+        .laptop-scene .key.arrow::after { font-size: 1.3px; color: rgba(255,255,255,0.75); }
         .laptop-scene .macbody .pad { width: 5px; height: 5px; background: #333; border-radius: 50%; position: absolute; }
         .laptop-scene .pad.one { left: 20px; top: 20px; }
         .laptop-scene .pad.two { right: 20px; top: 20px; }
@@ -770,12 +779,95 @@
                                 <div class="face-one">
                                     <div class="touchpad"></div>
                                     <div class="keyboard">
-                                        <div class="k-row"><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div></div>
-                                        <div class="k-row"><div class="key" data-key="~"></div><div class="key" data-key="1"></div><div class="key" data-key="2"></div><div class="key" data-key="3"></div><div class="key" data-key="4"></div><div class="key" data-key="5"></div><div class="key" data-key="6"></div><div class="key" data-key="7"></div><div class="key" data-key="8"></div><div class="key" data-key="9"></div><div class="key" data-key="0"></div><div class="key" data-key="-"></div><div class="key" data-key="="></div><div class="key delete" data-key="del"></div></div>
-                                        <div class="k-row"><div class="key tab" data-key="tab"></div><div class="key" data-key="Q"></div><div class="key" data-key="W"></div><div class="key" data-key="E"></div><div class="key" data-key="R"></div><div class="key" data-key="T"></div><div class="key" data-key="Y"></div><div class="key" data-key="U"></div><div class="key" data-key="I"></div><div class="key" data-key="O"></div><div class="key" data-key="P"></div><div class="key" data-key="["></div><div class="key" data-key="]"></div><div class="key" data-key="\"></div></div>
-                                        <div class="k-row"><div class="key caps" data-key="caps"></div><div class="key" data-key="A"></div><div class="key" data-key="S"></div><div class="key" data-key="D"></div><div class="key" data-key="F"></div><div class="key" data-key="G"></div><div class="key" data-key="H"></div><div class="key" data-key="J"></div><div class="key" data-key="K"></div><div class="key" data-key="L"></div><div class="key" data-key=";"></div><div class="key return" data-key="return"></div></div>
-                                        <div class="k-row"><div class="key shift" data-key="shift"></div><div class="key" data-key="Z"></div><div class="key" data-key="X"></div><div class="key" data-key="C"></div><div class="key" data-key="V"></div><div class="key" data-key="B"></div><div class="key" data-key="N"></div><div class="key" data-key="M"></div><div class="key" data-key=","></div><div class="key" data-key="."></div><div class="key shift-r" data-key="shift"></div></div>
-                                        <div class="k-row"><div class="key ctrl" data-key="ctrl"></div><div class="key opt" data-key="opt"></div><div class="key cmd" data-key="cmd"></div><div class="key space"></div><div class="key cmd" data-key="cmd"></div><div class="key opt" data-key="opt"></div><div class="arrows"><div class="key up" data-key="▲"></div><div class="arrows-bottom"><div class="key left" data-key="◀"></div><div class="key down" data-key="▼"></div><div class="key right" data-key="▶"></div></div></div></div>
+                                        <div class="k-row touchbar-row">
+                                            <div class="key esc" data-key="esc"></div>
+                                            <div class="touchbar">
+                                                <span>‹</span>
+                                                <span>☼</span>
+                                                <span>🔈</span>
+                                                <span>🔊</span>
+                                                <span class="tb-siri">Siri</span>
+                                            </div>
+                                            <div class="key touchid"></div>
+                                        </div>
+                                        <div class="k-row">
+                                            <div class="key" data-key="~"></div>
+                                            <div class="key" data-key="1"></div>
+                                            <div class="key" data-key="2"></div>
+                                            <div class="key" data-key="3"></div>
+                                            <div class="key" data-key="4"></div>
+                                            <div class="key" data-key="5"></div>
+                                            <div class="key" data-key="6"></div>
+                                            <div class="key" data-key="7"></div>
+                                            <div class="key" data-key="8"></div>
+                                            <div class="key" data-key="9"></div>
+                                            <div class="key" data-key="0"></div>
+                                            <div class="key" data-key="-"></div>
+                                            <div class="key" data-key="="></div>
+                                            <div class="key delete" data-key="delete"></div>
+                                        </div>
+                                        <div class="k-row">
+                                            <div class="key tab" data-key="tab"></div>
+                                            <div class="key" data-key="Q"></div>
+                                            <div class="key" data-key="W"></div>
+                                            <div class="key" data-key="E"></div>
+                                            <div class="key" data-key="R"></div>
+                                            <div class="key" data-key="T"></div>
+                                            <div class="key" data-key="Y"></div>
+                                            <div class="key" data-key="U"></div>
+                                            <div class="key" data-key="I"></div>
+                                            <div class="key" data-key="O"></div>
+                                            <div class="key" data-key="P"></div>
+                                            <div class="key" data-key="["></div>
+                                            <div class="key" data-key="]"></div>
+                                            <div class="key" data-key="\"></div>
+                                        </div>
+                                        <div class="k-row">
+                                            <div class="key caps" data-key="caps lock"></div>
+                                            <div class="key" data-key="A"></div>
+                                            <div class="key" data-key="S"></div>
+                                            <div class="key" data-key="D"></div>
+                                            <div class="key" data-key="F"></div>
+                                            <div class="key" data-key="G"></div>
+                                            <div class="key" data-key="H"></div>
+                                            <div class="key" data-key="J"></div>
+                                            <div class="key" data-key="K"></div>
+                                            <div class="key" data-key="L"></div>
+                                            <div class="key" data-key=";"></div>
+                                            <div class="key" data-key="'"></div>
+                                            <div class="key return" data-key="return"></div>
+                                        </div>
+                                        <div class="k-row">
+                                            <div class="key shift" data-key="shift"></div>
+                                            <div class="key" data-key="Z"></div>
+                                            <div class="key" data-key="X"></div>
+                                            <div class="key" data-key="C"></div>
+                                            <div class="key" data-key="V"></div>
+                                            <div class="key" data-key="B"></div>
+                                            <div class="key" data-key="N"></div>
+                                            <div class="key" data-key="M"></div>
+                                            <div class="key" data-key=","></div>
+                                            <div class="key" data-key="."></div>
+                                            <div class="key" data-key="/"></div>
+                                            <div class="key shift-r" data-key="shift"></div>
+                                        </div>
+                                        <div class="k-row">
+                                            <div class="key fn" data-key="fn"></div>
+                                            <div class="key ctrl" data-key="^ control"></div>
+                                            <div class="key opt" data-key="⌥ option"></div>
+                                            <div class="key cmd" data-key="⌘ command"></div>
+                                            <div class="key space"></div>
+                                            <div class="key cmd" data-key="⌘ command"></div>
+                                            <div class="key opt" data-key="⌥ option"></div>
+                                            <div class="arrows-cluster">
+                                                <div class="key arrow left" data-key="◀"></div>
+                                                <div class="arrows-stack">
+                                                    <div class="key arrow up" data-key="▲"></div>
+                                                    <div class="key arrow down" data-key="▼"></div>
+                                                </div>
+                                                <div class="key arrow right" data-key="▶"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="pad one"></div><div class="pad two"></div><div class="pad three"></div><div class="pad four"></div>
