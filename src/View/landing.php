@@ -505,6 +505,13 @@
             pointer-events: none;
             border-radius: 2px;
         }
+        :root[data-theme="light"] .lb-screen-dark,
+        :root:not([data-theme="dark"]) .lb-screen-dark {
+            display: none !important;
+        }
+        :root[data-theme="dark"] .lb-screen-light {
+            display: none !important;
+        }
 
         /* Laptop body */
         .laptop-scene .macbody { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; transform: rotateX(-90deg); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
@@ -739,7 +746,8 @@
                                 <div class="face-one">
                                     <div class="camera"></div>
                                     <div class="display">
-                                         <img src="<?php echo $basePath; ?>/images/laptop-screen.jpg" alt="Desktop Screen" class="lb-screen-img">
+                                        <img src="<?php echo $basePath; ?>/images/laptop-screen-light.jpg" alt="Desktop Screen" class="lb-screen-img lb-screen-light">
+                                        <img src="<?php echo $basePath; ?>/images/laptop-screen.jpg" alt="Desktop Screen" class="lb-screen-img lb-screen-dark">
                                         <div class="shade"></div>
                                     </div>
                                 </div>
