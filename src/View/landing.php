@@ -37,12 +37,13 @@
 <style>
         html { scroll-behavior: smooth; }
 /* LANDING SPECIFIC VARIABLES */
-        :root {
-            --lp-mac-body: #e2e8f0;
-            --lp-mac-face: #cbd5e1;
-            --lp-mac-touchpad: #94a3b8;
-            --lp-mac-key: #262626;
-            --lp-mac-border: rgba(255,255,255,0.2);
+        :root,
+        :root[data-theme="light"] {
+            --lp-mac-body: #e8edf2;
+            --lp-mac-face: #dce2e8;
+            --lp-mac-touchpad: #c9d2db;
+            --lp-mac-key: #1c1d21;
+            --lp-mac-border: rgba(255,255,255,0.7);
         }
         :root[data-theme="dark"] {
             --lp-mac-body: #2b2c31;
