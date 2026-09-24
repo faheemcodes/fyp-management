@@ -8,13 +8,7 @@
     
     <script>
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-        }
+        document.documentElement.setAttribute('data-theme', savedTheme || 'light');
     </script>
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">

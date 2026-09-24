@@ -18,13 +18,7 @@
     <link href="<?php echo $basePath; ?>/css/auth.css" rel="stylesheet">
     <script>
         const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-        }
+        document.documentElement.setAttribute('data-theme', savedTheme || 'light');
     </script>
 </head>
 <body>
