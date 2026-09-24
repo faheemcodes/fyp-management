@@ -45,11 +45,11 @@
             --lp-mac-border: rgba(255,255,255,0.2);
         }
         :root[data-theme="dark"] {
-            --lp-mac-body: #1c1d24;
-            --lp-mac-face: #111218;
-            --lp-mac-touchpad: #181922;
-            --lp-mac-key: #090a0d;
-            --lp-mac-border: rgba(255,255,255,0.06);
+            --lp-mac-body: #2b2c31;
+            --lp-mac-face: #202124;
+            --lp-mac-touchpad: #2d2e33;
+            --lp-mac-key: #141517;
+            --lp-mac-border: rgba(255,255,255,0.09);
         }
 
         /* Landing Page Background Textures */
