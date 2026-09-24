@@ -494,23 +494,66 @@
         .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 47%, rgba(255,255,255,0) 48%); background-size: 300px 200px; z-index: 5; }
         .laptop-scene .screen .face-one span { position: absolute; bottom: 3px; left: 0; width: 100%; text-align: center; font-size: 6px; color: #666; font-weight: bold; }
 
-        /* Dashboard UI on screen */
-        .lb-dash { position: absolute; inset: 0; display: flex; font-family: sans-serif; }
-        .lb-sidebar { width: 18px; background: #0c1222; display: flex; flex-direction: column; align-items: center; padding-top: 4px; gap: 3px; }
-        .lb-sidebar .lb-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; opacity: 0.6; }
-        .lb-sidebar .lb-dot:first-child { opacity: 1; }
-        .lb-main { flex: 1; padding: 3px; }
-        .lb-header { height: 8px; background: #1a2744; border-radius: 1px; margin-bottom: 3px; display: flex; align-items: center; padding: 0 3px; }
-        .lb-header-text { width: 25px; height: 2px; background: #e2e8f0; border-radius: 1px; }
-        .lb-cards { display: flex; gap: 2px; margin-bottom: 3px; }
-        .lb-card { flex: 1; height: 14px; border-radius: 2px; padding: 2px; }
-        .lb-card-num { font-size: 5px; font-weight: bold; line-height: 1; }
-        .lb-card-label { font-size: 2.5px; opacity: 0.7; margin-top: 1px; }
-        .lb-table { background: rgba(0,0,0,0.2); border-radius: 1px; }
-        .lb-row { height: 5px; display: flex; align-items: center; gap: 3px; padding: 0 3px; border-bottom: 0.3px solid rgba(255,255,255,0.05); }
-        .lb-row:nth-child(odd) { background: rgba(26,39,68,0.4); }
-        .lb-bar { height: 2px; border-radius: 1px; background: #475569; }
-        .lb-status { width: 10px; height: 3px; border-radius: 1px; font-size: 2px; text-align: center; line-height: 3px; font-weight: bold; }
+        /* Dashboard UI on screen — enhanced FYP Portal */
+        .lb-dash { position: absolute; inset: 0; display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0a0f1e; overflow: hidden; }
+
+        /* Top nav bar */
+        .lb-nav { height: 9px; background: #0d1526; border-bottom: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 5px; flex-shrink: 0; }
+        .lb-nav-brand { display: flex; align-items: center; gap: 2px; }
+        .lb-nav-logo { width: 5px; height: 5px; border-radius: 1px; background: linear-gradient(135deg, #10b981, #6d28d9); display: flex; align-items: center; justify-content: center; }
+        .lb-nav-logo-dot { width: 2px; height: 2px; border-radius: 50%; background: #fff; }
+        .lb-nav-title { font-size: 3.2px; font-weight: 800; color: #f1f5f9; letter-spacing: 0.2px; }
+        .lb-nav-right { display: flex; align-items: center; gap: 3px; }
+        .lb-live-pill { font-size: 2.4px; font-weight: 700; color: #10b981; background: rgba(16,185,129,0.15); border-radius: 1px; padding: 1px 2px; display: flex; align-items: center; gap: 1px; border: 0.3px solid rgba(16,185,129,0.3); }
+        .lb-live-dot { width: 1.5px; height: 1.5px; border-radius: 50%; background: #10b981; animation: lb-blink 1.4s ease-in-out infinite; }
+        @keyframes lb-blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+        .lb-avatar { width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(135deg, #6d28d9, #10b981); }
+
+        /* Body layout */
+        .lb-body { flex: 1; display: flex; gap: 3px; padding: 3px; overflow: hidden; }
+        .lb-sidebar { width: 16px; background: rgba(255,255,255,0.03); border-radius: 2px; border: 0.5px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; padding: 4px 0; gap: 3px; }
+        .lb-sidebar .lb-si { width: 8px; height: 8px; border-radius: 1.5px; display: flex; align-items: center; justify-content: center; }
+        .lb-sidebar .lb-si.active { background: rgba(16,185,129,0.25); box-shadow: 0 0 3px rgba(16,185,129,0.4); }
+        .lb-sidebar .lb-si-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+        .lb-sidebar .lb-si.active .lb-si-dot { background: #10b981; }
+
+        /* Main content */
+        .lb-main { flex: 1; display: flex; flex-direction: column; gap: 2.5px; overflow: hidden; }
+
+        /* Page heading */
+        .lb-page-head { display: flex; align-items: center; justify-content: space-between; }
+        .lb-page-title { font-size: 4px; font-weight: 800; color: #f1f5f9; }
+        .lb-page-sub { font-size: 2.8px; color: #64748b; margin-top: 0.5px; }
+        .lb-btn-sm { font-size: 2.5px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #6d28d9, #10b981); border-radius: 1px; padding: 1px 3px; }
+
+        /* Stat cards row */
+        .lb-cards { display: flex; gap: 2px; }
+        .lb-card { flex: 1; border-radius: 2px; padding: 2.5px 3px; display: flex; flex-direction: column; justify-content: space-between; border: 0.5px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.04); }
+        .lb-card-top { display: flex; align-items: center; justify-content: space-between; }
+        .lb-card-icon { width: 6px; height: 6px; border-radius: 1px; display: flex; align-items: center; justify-content: center; }
+        .lb-card-icon-dot { width: 3px; height: 3px; border-radius: 50%; }
+        .lb-card-num { font-size: 7px; font-weight: 900; line-height: 1; }
+        .lb-card-label { font-size: 2.6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2px; color: #64748b; margin-top: 0.5px; }
+        .lb-card-delta { font-size: 2.4px; font-weight: 700; color: #10b981; }
+
+        /* Table / project list */
+        .lb-section-label { font-size: 3px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 1px; }
+        .lb-table { background: rgba(0,0,0,0.2); border-radius: 2px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.06); flex: 1; display: flex; flex-direction: column; }
+        .lb-th { display: flex; align-items: center; justify-content: space-between; padding: 1.5px 3px; background: rgba(255,255,255,0.04); border-bottom: 0.3px solid rgba(255,255,255,0.06); }
+        .lb-th span { font-size: 2.4px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.2px; }
+        .lb-row { display: flex; align-items: center; justify-content: space-between; padding: 1.5px 3px; border-bottom: 0.3px solid rgba(255,255,255,0.04); }
+        .lb-row:nth-child(even) { background: rgba(255,255,255,0.015); }
+        .lb-row-left { display: flex; flex-direction: column; gap: 0.5px; }
+        .lb-proj-name { font-size: 3px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 68px; }
+        .lb-proj-meta { font-size: 2.2px; color: #475569; }
+        .lb-row-right { display: flex; align-items: center; gap: 2px; }
+        .lb-progress-wrap { width: 18px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 1px; overflow: hidden; }
+        .lb-progress-bar { height: 100%; border-radius: 1px; }
+        .lb-status { height: 5px; padding: 0 2.5px; border-radius: 1px; font-size: 2.4px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; line-height: 1; white-space: nowrap; }
+        .lb-status-ok  { background: rgba(16,185,129,0.2); color: #34d399; border: 0.3px solid rgba(16,185,129,0.3); }
+        .lb-status-rev { background: rgba(139,92,246,0.2); color: #c084fc; border: 0.3px solid rgba(139,92,246,0.3); }
+        .lb-status-wait{ background: rgba(245,158,11,0.2); color: #fbbf24; border: 0.3px solid rgba(245,158,11,0.3); }
+        .lb-status-rej { background: rgba(244,63,94,0.2);  color: #fb7185; border: 0.3px solid rgba(244,63,94,0.3);  }
 
         /* Macbook body */
         .laptop-scene .macbody { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; transform: rotateX(-90deg); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
@@ -745,31 +788,134 @@
                                 <div class="face-one">
                                     <div class="camera"></div>
                                     <div class="display">
-                                        <div class="lb-dash">
-                                            <div class="lb-sidebar">
-                                                <div class="lb-dot"></div>
-                                                <div class="lb-dot"></div>
-                                                <div class="lb-dot"></div>
-                                                <div class="lb-dot"></div>
-                                            </div>
-                                            <div class="lb-main">
-                                                <div class="lb-header"><div class="lb-header-text"></div></div>
-                                                <div class="lb-cards">
-                                                    <div class="lb-card" style="background:rgba(16,185,129,0.15)"><div class="lb-card-num" style="color:#10b981">24</div><div class="lb-card-label" style="color:#94a3b8">Groups</div></div>
-                                                    <div class="lb-card" style="background:rgba(139,92,246,0.15)"><div class="lb-card-num" style="color:#8b5cf6">52</div><div class="lb-card-label" style="color:#94a3b8">Projects</div></div>
-                                                    <div class="lb-card" style="background:rgba(245,158,11,0.15)"><div class="lb-card-num" style="color:#f59e0b">18</div><div class="lb-card-label" style="color:#94a3b8">Faculty</div></div>
-                                                    <div class="lb-card" style="background:rgba(244,63,94,0.15)"><div class="lb-card-num" style="color:#f43f5e">31</div><div class="lb-card-label" style="color:#94a3b8">Done</div></div>
-                                                </div>
-                                                <div class="lb-table">
-                                                    <div class="lb-row"><div class="lb-bar" style="width:22px;background:#cbd5e1"></div><div class="lb-bar" style="width:12px"></div><div class="lb-bar" style="width:14px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:18px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:16px"></div><div class="lb-status" style="background:rgba(245,158,11,0.3);color:#f59e0b">...</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:25px;background:#cbd5e1"></div><div class="lb-bar" style="width:14px"></div><div class="lb-bar" style="width:12px"></div><div class="lb-status" style="background:rgba(139,92,246,0.3);color:#8b5cf6">Rev</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:20px;background:#cbd5e1"></div><div class="lb-bar" style="width:11px"></div><div class="lb-bar" style="width:15px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:16px;background:#cbd5e1"></div><div class="lb-bar" style="width:13px"></div><div class="lb-bar" style="width:11px"></div><div class="lb-status" style="background:rgba(244,63,94,0.3);color:#f43f5e">No</div></div>
-                                                    <div class="lb-row"><div class="lb-bar" style="width:24px;background:#cbd5e1"></div><div class="lb-bar" style="width:10px"></div><div class="lb-bar" style="width:13px"></div><div class="lb-status" style="background:rgba(16,185,129,0.3);color:#10b981">OK</div></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                         <div class="lb-dash">
+                                             <!-- Top Navbar -->
+                                             <div class="lb-nav">
+                                                 <div class="lb-nav-brand">
+                                                     <div class="lb-nav-logo"><div class="lb-nav-logo-dot"></div></div>
+                                                     <span class="lb-nav-title">FYP Portal</span>
+                                                 </div>
+                                                 <div class="lb-nav-right">
+                                                     <div class="lb-live-pill"><div class="lb-live-dot"></div>LIVE</div>
+                                                     <div class="lb-avatar"></div>
+                                                 </div>
+                                             </div>
+                                             <!-- Body -->
+                                             <div class="lb-body">
+                                                 <!-- Sidebar -->
+                                                 <div class="lb-sidebar">
+                                                     <div class="lb-si active"><div class="lb-si-dot"></div></div>
+                                                     <div class="lb-si"><div class="lb-si-dot"></div></div>
+                                                     <div class="lb-si"><div class="lb-si-dot"></div></div>
+                                                     <div class="lb-si"><div class="lb-si-dot"></div></div>
+                                                     <div class="lb-si"><div class="lb-si-dot"></div></div>
+                                                 </div>
+                                                 <!-- Main Content -->
+                                                 <div class="lb-main">
+                                                     <!-- Page heading -->
+                                                     <div class="lb-page-head">
+                                                         <div>
+                                                             <div class="lb-page-title">Dashboard</div>
+                                                             <div class="lb-page-sub">University of Sindh · FET</div>
+                                                         </div>
+                                                         <div class="lb-btn-sm">+ New Group</div>
+                                                     </div>
+                                                     <!-- Stat Cards -->
+                                                     <div class="lb-cards">
+                                                         <div class="lb-card">
+                                                             <div class="lb-card-top">
+                                                                 <div class="lb-card-icon" style="background:rgba(16,185,129,0.15)"><div class="lb-card-icon-dot" style="background:#10b981"></div></div>
+                                                                 <div class="lb-card-delta">+4</div>
+                                                             </div>
+                                                             <div class="lb-card-num" style="color:#10b981">28</div>
+                                                             <div class="lb-card-label">Groups</div>
+                                                         </div>
+                                                         <div class="lb-card">
+                                                             <div class="lb-card-top">
+                                                                 <div class="lb-card-icon" style="background:rgba(139,92,246,0.15)"><div class="lb-card-icon-dot" style="background:#8b5cf6"></div></div>
+                                                                 <div class="lb-card-delta">+7</div>
+                                                             </div>
+                                                             <div class="lb-card-num" style="color:#8b5cf6">61</div>
+                                                             <div class="lb-card-label">Proposals</div>
+                                                         </div>
+                                                         <div class="lb-card">
+                                                             <div class="lb-card-top">
+                                                                 <div class="lb-card-icon" style="background:rgba(245,158,11,0.15)"><div class="lb-card-icon-dot" style="background:#f59e0b"></div></div>
+                                                                 <div class="lb-card-delta">22</div>
+                                                             </div>
+                                                             <div class="lb-card-num" style="color:#f59e0b">22</div>
+                                                             <div class="lb-card-label">Supervisors</div>
+                                                         </div>
+                                                         <div class="lb-card">
+                                                             <div class="lb-card-top">
+                                                                 <div class="lb-card-icon" style="background:rgba(244,63,94,0.15)"><div class="lb-card-icon-dot" style="background:#f43f5e"></div></div>
+                                                                 <div class="lb-card-delta">+3</div>
+                                                             </div>
+                                                             <div class="lb-card-num" style="color:#f43f5e">34</div>
+                                                             <div class="lb-card-label">Done</div>
+                                                         </div>
+                                                     </div>
+                                                     <!-- Projects Table -->
+                                                     <div class="lb-section-label">Active Projects</div>
+                                                     <div class="lb-table">
+                                                         <div class="lb-th">
+                                                             <span>Project / Supervisor</span>
+                                                             <span>Progress &nbsp;&nbsp; Status</span>
+                                                         </div>
+                                                         <div class="lb-row">
+                                                             <div class="lb-row-left">
+                                                                 <div class="lb-proj-name">AI-Based Disease Detection</div>
+                                                                 <div class="lb-proj-meta">Dr. Aisha Memon</div>
+                                                             </div>
+                                                             <div class="lb-row-right">
+                                                                 <div class="lb-progress-wrap"><div class="lb-progress-bar" style="width:82%;background:#10b981"></div></div>
+                                                                 <span class="lb-status lb-status-ok">Approved</span>
+                                                             </div>
+                                                         </div>
+                                                         <div class="lb-row">
+                                                             <div class="lb-row-left">
+                                                                 <div class="lb-proj-name">Smart Irrigation System</div>
+                                                                 <div class="lb-proj-meta">Prof. Khalid Shaikh</div>
+                                                             </div>
+                                                             <div class="lb-row-right">
+                                                                 <div class="lb-progress-wrap"><div class="lb-progress-bar" style="width:55%;background:#8b5cf6"></div></div>
+                                                                 <span class="lb-status lb-status-rev">Review</span>
+                                                             </div>
+                                                         </div>
+                                                         <div class="lb-row">
+                                                             <div class="lb-row-left">
+                                                                 <div class="lb-proj-name">Blockchain Voting App</div>
+                                                                 <div class="lb-proj-meta">Engr. Zara Hussain</div>
+                                                             </div>
+                                                             <div class="lb-row-right">
+                                                                 <div class="lb-progress-wrap"><div class="lb-progress-bar" style="width:30%;background:#f59e0b"></div></div>
+                                                                 <span class="lb-status lb-status-wait">Pending</span>
+                                                             </div>
+                                                         </div>
+                                                         <div class="lb-row">
+                                                             <div class="lb-row-left">
+                                                                 <div class="lb-proj-name">Cloud-Based ERP Portal</div>
+                                                                 <div class="lb-proj-meta">Dr. Imran Siddiqui</div>
+                                                             </div>
+                                                             <div class="lb-row-right">
+                                                                 <div class="lb-progress-wrap"><div class="lb-progress-bar" style="width:95%;background:#10b981"></div></div>
+                                                                 <span class="lb-status lb-status-ok">Approved</span>
+                                                             </div>
+                                                         </div>
+                                                         <div class="lb-row">
+                                                             <div class="lb-row-left">
+                                                                 <div class="lb-proj-name">Drone Navigation ML</div>
+                                                                 <div class="lb-proj-meta">Prof. Asif Laghari</div>
+                                                             </div>
+                                                             <div class="lb-row-right">
+                                                                 <div class="lb-progress-wrap"><div class="lb-progress-bar" style="width:10%;background:#f43f5e"></div></div>
+                                                                 <span class="lb-status lb-status-rej">Rejected</span>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
                                         <div class="shade"></div>
                                     </div>
                                 </div>
