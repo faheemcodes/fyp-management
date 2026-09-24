@@ -490,46 +490,21 @@
         .laptop-scene .screen .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-face); transform: translateZ(2px); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .screen .face-one .camera { width: 14px; height: 4px; border-radius: 4px; background: #000; position: absolute; left: 50%; top: 1px; margin-left: -7px; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.2); }
         .laptop-scene .screen .face-one .camera::after { content: ''; position: absolute; width: 1.5px; height: 1.5px; background: #10b981; border-radius: 50%; right: 2px; top: 1.2px; box-shadow: 0 0 2px 0.5px #10b981; }
-        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: #070c18; border-radius: 2px; position: relative; box-shadow: inset 0 0 2px rgba(0,0,0,1); overflow: hidden; border: 0.5px solid rgba(255,255,255,0.06); }
-        .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.07) 47%, rgba(255,255,255,0) 48%); background-size: 300px 200px; z-index: 5; pointer-events:none; }
+        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: #05091a; border-radius: 2px; position: relative; box-shadow: inset 0 0 4px rgba(0,0,0,1); overflow: hidden; border: 0.5px solid rgba(139,92,246,0.15); }
+        .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 47%, rgba(255,255,255,0) 48%); z-index: 10; pointer-events:none; }
 
-        /* ── Laptop Screen Dashboard ── */
-        .lb-dash { position: absolute; inset: 0; display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #070c18; overflow: hidden; z-index: 1; }
+        /* ── Screen: Laptop Desktop Image ── */
+        .lb-screen-img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            border-radius: 2px;
+        }
 
-        /* Nav */
-        .lb-nav { height: 10px; background: #0d1526; border-bottom: 0.4px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 4px; flex-shrink: 0; }
-        .lb-logo-wrap { display: flex; align-items: center; gap: 1.5px; }
-        .lb-logo-box { width: 5px; height: 5px; border-radius: 1px; background: linear-gradient(135deg, #10b981 0%, #6d28d9 100%); }
-        .lb-logo-text { font-size: 3.5px; font-weight: 800; color: #f1f5f9; letter-spacing: 0.1px; }
-        .lb-nav-right { display: flex; align-items: center; gap: 2.5px; }
-        .lb-pill { font-size: 2.2px; font-weight: 700; color: #10b981; background: rgba(16,185,129,0.14); border: 0.3px solid rgba(16,185,129,0.35); border-radius: 1px; padding: 0.8px 2px; display: flex; align-items: center; gap: 1px; }
-        .lb-dot-pulse { width: 1.5px; height: 1.5px; border-radius: 50%; background: #10b981; animation: lbpulse 1.5s ease-in-out infinite; }
-        @keyframes lbpulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
-        .lb-ava { width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(135deg, #6d28d9, #10b981); }
-
-        /* Body */
-        .lb-body { flex: 1; display: flex; gap: 2.5px; padding: 3px 3px 3px 3px; overflow: hidden; min-height: 0; }
-
-        /* Left col — stats */
-        .lb-left { width: 46px; display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
-        .lb-stat { background: rgba(255,255,255,0.04); border: 0.4px solid rgba(255,255,255,0.07); border-radius: 2px; padding: 2px 2.5px; display: flex; flex-direction: column; gap: 0.5px; }
-        .lb-stat-num { font-size: 8px; font-weight: 900; line-height: 1; }
-        .lb-stat-lbl { font-size: 2.5px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.15px; }
-        .lb-stat-bar { height: 1.5px; border-radius: 1px; margin-top: 1px; background: rgba(255,255,255,0.07); overflow: hidden; }
-        .lb-stat-bar-fill { height: 100%; border-radius: 1px; }
-
-        /* Right col — project list */
-        .lb-right { flex: 1; display: flex; flex-direction: column; gap: 1.5px; overflow: hidden; }
-        .lb-section-hd { font-size: 2.8px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.2px; margin-bottom: 0.5px; }
-        .lb-proj { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 0.4px solid rgba(255,255,255,0.06); border-radius: 1.5px; padding: 1.5px 2.5px; gap: 2px; }
-        .lb-proj-name { font-size: 3px; font-weight: 600; color: #e2e8f0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .lb-badge { font-size: 2.2px; font-weight: 700; border-radius: 1px; padding: 0.7px 2px; display: inline-flex; align-items: center; white-space: nowrap; }
-        .lb-badge-g { background: rgba(16,185,129,0.18); color: #34d399; border: 0.3px solid rgba(16,185,129,0.3); }
-        .lb-badge-v { background: rgba(139,92,246,0.18); color: #c084fc; border: 0.3px solid rgba(139,92,246,0.3); }
-        .lb-badge-y { background: rgba(245,158,11,0.18); color: #fbbf24; border: 0.3px solid rgba(245,158,11,0.3); }
-        .lb-badge-r { background: rgba(244,63,94,0.18); color: #fb7185; border: 0.3px solid rgba(244,63,94,0.3); }
-
-        /* Macbook body */
+        /* Laptop body */
         .laptop-scene .macbody { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; transform: rotateX(-90deg); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
         .laptop-scene .macbody::before { content: ''; position: absolute; width: 22px; height: 2px; left: 50%; transform: translateX(-50%); top: 0; background: rgba(0,0,0,0.28); border-radius: 0 0 2px 2px; z-index: 5; }
         .laptop-scene .macbody .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; transform-style: preserve-3d; background: var(--lp-mac-face); transform: translateZ(-2px); background-image: linear-gradient(30deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
@@ -762,73 +737,7 @@
                                 <div class="face-one">
                                     <div class="camera"></div>
                                     <div class="display">
-                                         <div class="lb-dash">
-                                             <!-- Nav -->
-                                             <div class="lb-nav">
-                                                 <div class="lb-logo-wrap">
-                                                     <div class="lb-logo-box"></div>
-                                                     <div class="lb-logo-text">FYP Portal</div>
-                                                 </div>
-                                                 <div class="lb-nav-right">
-                                                     <div class="lb-pill"><div class="lb-dot-pulse"></div>LIVE</div>
-                                                     <div class="lb-ava"></div>
-                                                 </div>
-                                             </div>
-                                             <!-- Body -->
-                                             <div class="lb-body">
-                                                 <!-- LEFT: Stats -->
-                                                 <div class="lb-left">
-                                                     <div class="lb-stat">
-                                                         <div class="lb-stat-num" style="color:#10b981">28</div>
-                                                         <div class="lb-stat-lbl">Groups</div>
-                                                         <div class="lb-stat-bar"><div class="lb-stat-bar-fill" style="width:70%;background:#10b981"></div></div>
-                                                     </div>
-                                                     <div class="lb-stat">
-                                                         <div class="lb-stat-num" style="color:#8b5cf6">61</div>
-                                                         <div class="lb-stat-lbl">Proposals</div>
-                                                         <div class="lb-stat-bar"><div class="lb-stat-bar-fill" style="width:85%;background:#8b5cf6"></div></div>
-                                                     </div>
-                                                     <div class="lb-stat">
-                                                         <div class="lb-stat-num" style="color:#f59e0b">22</div>
-                                                         <div class="lb-stat-lbl">Supervisors</div>
-                                                         <div class="lb-stat-bar"><div class="lb-stat-bar-fill" style="width:55%;background:#f59e0b"></div></div>
-                                                     </div>
-                                                     <div class="lb-stat">
-                                                         <div class="lb-stat-num" style="color:#f43f5e">34</div>
-                                                         <div class="lb-stat-lbl">Completed</div>
-                                                         <div class="lb-stat-bar"><div class="lb-stat-bar-fill" style="width:45%;background:#f43f5e"></div></div>
-                                                     </div>
-                                                 </div>
-                                                 <!-- RIGHT: Project List -->
-                                                 <div class="lb-right">
-                                                     <div class="lb-section-hd">Active FYP Projects</div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">AI-Based Disease Detection</div>
-                                                         <div class="lb-badge lb-badge-g">Approved</div>
-                                                     </div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">Smart Irrigation System</div>
-                                                         <div class="lb-badge lb-badge-v">Review</div>
-                                                     </div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">Blockchain Voting App</div>
-                                                         <div class="lb-badge lb-badge-y">Pending</div>
-                                                     </div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">Cloud-Based ERP Portal</div>
-                                                         <div class="lb-badge lb-badge-g">Approved</div>
-                                                     </div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">Drone Navigation ML</div>
-                                                         <div class="lb-badge lb-badge-r">Rejected</div>
-                                                     </div>
-                                                     <div class="lb-proj">
-                                                         <div class="lb-proj-name">Cybersecurity Dashboard</div>
-                                                         <div class="lb-badge lb-badge-g">Approved</div>
-                                                     </div>
-                                                 </div>
-                                             </div>
-                                         </div>
+                                         <img src="<?php echo $basePath; ?>/images/laptop-screen.png" alt="Desktop Screen" class="lb-screen-img">
                                         <div class="shade"></div>
                                     </div>
                                 </div>
