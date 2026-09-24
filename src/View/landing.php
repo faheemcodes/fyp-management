@@ -488,20 +488,20 @@
         .laptop-scene .screen { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; background-image: linear-gradient(45deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 3px 7px rgba(255,255,255,0.2); transition: background 0.3s; }
         .laptop-scene .screen::after { content: ''; position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(105deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.1) 100%); pointer-events: none; }
         .laptop-scene .screen .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-face); transform: translateZ(2px); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
-        .laptop-scene .screen .face-one .camera { width: 14px; height: 4px; border-radius: 4px; background: #000; position: absolute; left: 50%; top: 1px; margin-left: -7px; box-shadow: inset 0 -1px 1px rgba(255,255,255,0.2); }
-        .laptop-scene .screen .face-one .camera::after { content: ''; position: absolute; width: 1.5px; height: 1.5px; background: #10b981; border-radius: 50%; right: 2px; top: 1.2px; box-shadow: 0 0 2px 0.5px #10b981; }
-        .laptop-scene .screen .face-one .display { width: 142px; height: 86px; margin: 5px 4px; background: #05091a; border-radius: 2px; position: relative; box-shadow: inset 0 0 4px rgba(0,0,0,1); overflow: hidden; border: 0.5px solid rgba(139,92,246,0.15); }
-        .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 47%, rgba(255,255,255,0) 48%); z-index: 10; pointer-events:none; }
+        .laptop-scene .screen .face-one .camera { display: none; }
+        .laptop-scene .screen .face-one .display { width: 150px; height: 96px; margin: 0; background: #000; border-radius: 7px; position: relative; box-shadow: none; overflow: hidden; border: none; }
+        .laptop-scene .screen .face-one .display .shade { position: absolute; inset: 0; background: linear-gradient(-135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 47%, rgba(255,255,255,0) 48%); z-index: 10; pointer-events:none; border-radius: 7px; }
 
-        /* ── Screen: Laptop Desktop Image ── */
+        /* ── Screen: Laptop Desktop Image (Edge-to-Edge Borderless) ── */
         .lb-screen-img {
             width: 100%;
             height: 100%;
-            object-fit: fill;
+            object-fit: cover;
+            object-position: center;
             display: block;
             user-select: none;
             pointer-events: none;
-            border-radius: 2px;
+            border-radius: 7px;
         }
 
         /* Laptop body */
@@ -737,7 +737,7 @@
                                 <div class="face-one">
                                     <div class="camera"></div>
                                     <div class="display">
-                                         <img src="<?php echo $basePath; ?>/images/laptop-screen.png" alt="Desktop Screen" class="lb-screen-img">
+                                         <img src="<?php echo $basePath; ?>/images/laptop-screen.jpg" alt="Desktop Screen" class="lb-screen-img">
                                         <div class="shade"></div>
                                     </div>
                                 </div>
