@@ -662,6 +662,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT
                                         <option value="Associate Professor">Associate Professor</option>
                                         <option value="Professor">Professor</option>
                                         <option value="HOD">HOD</option>
+                                        <option value="System Admin">System Admin</option>
                                     </select>
                                 </div>
                             </div>

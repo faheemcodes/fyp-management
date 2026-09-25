@@ -5,7 +5,11 @@ class PublicController extends BaseController {
     
     public function landing() {
         try {
-            $cacheFile = __DIR__ . '/../../sessions/landing_cache.json';
+            $sessionsDir = __DIR__ . '/../../sessions';
+            if (!is_dir($sessionsDir)) {
+                @mkdir($sessionsDir, 0755, true);
+            }
+            $cacheFile = $sessionsDir . '/landing_cache.json';
             $cacheTtl = 300; // 5 minutes cache
             
             if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTtl)) {
