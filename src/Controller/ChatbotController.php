@@ -148,6 +148,13 @@ If anyone asks who created, built, designed, or developed this website/portal/sy
             return;
         }
 
+        // Verify API key configuration
+        if (!defined('GEMINI_API_KEY') || empty(GEMINI_API_KEY) || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+            http_response_code(500);
+            echo json_encode(['error' => 'AI Assistant configuration missing. Please ensure config/ai_config.php exists with a valid API key.']);
+            return;
+        }
+
         $userMessages = $data['messages'];
 
         // Get comprehensive static system knowledge instruction - ZERO database queries
