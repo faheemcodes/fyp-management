@@ -326,7 +326,9 @@
 
         /* BENTO DEPARTMENTS */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
-        @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { 
+            .bento-grid { grid-template-columns: repeat(2, 1fr); padding-left: 20px; gap: 60px 40px; }
+        }
         @media (min-width: 992px) {
             .bento-grid {
                 display: flex;
@@ -380,13 +382,16 @@
         }
 
         .card-header {
-            margin-left: 40px;
+            margin-left: 90px;
             margin-bottom: 16px;
             text-transform: uppercase;
             text-align: right;
-            height: 48px;
+            min-height: 48px;
+            height: auto;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
         }
         .card-header h4 {
             color: inherit;
@@ -402,6 +407,7 @@
             opacity: 0.9;
             letter-spacing: 0.5px;
             margin-top: 3px;
+            display: block;
         }
         
         .card-body {
@@ -562,10 +568,12 @@
             .card-notice-board::before { width: 100px; height: 100px; top: -30px; right: -30px; }
 
             /* Departments */
-            .bento-grid { padding-left: 10px; gap: 55px 25px; }
-            .card-number { width: 80px; height: 80px; font-size: 2.3rem; top: -15px; left: -15px; }
-            .bento-item { padding: 25px 20px 20px; border-radius: 20px; }
-            .bento-item .card-header { margin-left: 55px; margin-bottom: 10px; }
+            .bento-grid { padding-left: 0; gap: 45px 20px; }
+            .card-number { width: 70px; height: 70px; font-size: 2rem; top: -18px; left: 50%; transform: translateX(-50%); box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 0 0 3px rgba(255,255,255,0.9); }
+            :root[data-theme="dark"] .card-number { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.15); }
+            .bento-item { padding: 52px 20px 22px; border-radius: 20px; }
+            .bento-item .card-header { margin-left: 0; margin-bottom: 10px; text-align: center; align-items: center; }
+            .bento-item .card-body p { text-align: center; }
 
             /* Process */
             .timeline-grid { padding-left: 15px; gap: 30px; }
