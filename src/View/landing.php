@@ -476,10 +476,10 @@
 
 
         /* 3D LAPTOP */
-        .laptop-scene { position: relative; inset: auto; pointer-events: none; display: flex; justify-content: center; align-items: center; overflow: visible; z-index: 10; contain: layout style paint; }
-        .laptop-scene .macbook { width: 150px; height: 96px; position: relative; perspective: 500px; transform: scale(2.2); margin-top: 10px; will-change: transform, opacity; }
+        .laptop-scene { position: relative; inset: auto; pointer-events: none; display: flex; justify-content: center; align-items: center; overflow: visible; z-index: 10; }
+        .laptop-scene .macbook { width: 150px; height: 96px; position: relative; perspective: 500px; transform: scale(2.2); margin-top: 10px; }
         .laptop-scene .shadow { position: absolute; width: 110px; height: 20px; left: 50%; margin-left: -55px; top: 155px; transform: rotateX(80deg); background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 70%); filter: blur(6px); }
-        .laptop-scene .inner { z-index: 20; position: absolute; width: 150px; height: 96px; left: 0; top: 0; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(0deg) rotateZ(0deg); transition: transform 0.1s ease-out; will-change: transform; }
+        .laptop-scene .inner { z-index: 20; position: absolute; width: 150px; height: 96px; left: 0; top: 0; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(0deg) rotateZ(0deg); transition: transform 0.1s ease-out; }
         .laptop-scene .screen { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-body); transform-style: preserve-3d; transform-origin: 50% 93px; background-image: linear-gradient(45deg, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 100%); box-shadow: inset 0 3px 7px rgba(255,255,255,0.2); transition: background 0.3s; }
         .laptop-scene .screen::after { content: ''; position: absolute; inset: 0; border-radius: 7px; background: linear-gradient(105deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.1) 100%); pointer-events: none; }
         .laptop-scene .screen .face-one { width: 150px; height: 96px; position: absolute; left: 0; bottom: 0; border-radius: 7px; background: var(--lp-mac-face); transform: translateZ(2px); background-image: linear-gradient(45deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 100%); transition: background 0.3s; }
@@ -1103,61 +1103,44 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-    // Scroll parallax & Mouse tracking for 3D laptop with hardware acceleration and performance optimizations
+    // Scroll parallax & Mouse tracking for 3D laptop
     (function() {
         const scene = document.getElementById('laptopScene');
         const macbook = scene ? scene.querySelector('.macbook') : null;
         if (!scene || !macbook) return;
+        const hero = scene.closest('.lp-hero');
         const inner = macbook.querySelector('.inner');
 
-        let isTicking = false;
-        let lastScrollY = window.scrollY;
-
-        function updateLaptopScroll() {
-            // On mobile devices (<= 768px), disable heavy 3D scroll scaling/transforms to keep scrolling buttery smooth (60-120fps)
-            if (window.innerWidth <= 768) {
-                macbook.style.transform = '';
-                macbook.style.opacity = '';
-                isTicking = false;
-                return;
-            }
-
+        // Scroll logic (scale & vertical translation) based on viewport position
+        window.addEventListener('scroll', () => {
             const rect = scene.getBoundingClientRect();
+            // When rect.top drops below 200px (scrolling up), we start the fade out
             let progress = 0;
             if (rect.top < 200) {
                 progress = Math.min(Math.max((200 - rect.top) / 400, 0), 1);
             }
             
             const ty = progress * -60;
-            const baseScale = window.innerWidth <= 991 ? 1.6 : 2.2;
+            const baseScale = window.innerWidth <= 768 ? 1.4 : (window.innerWidth <= 991 ? 1.6 : 2.2);
             const scale = baseScale - (progress * baseScale * 0.25);
             
-            macbook.style.transform = `translate3d(0, ${ty}px, 0) scale(${scale})`;
+            macbook.style.transform = 'scale(' + scale + ') translateY(' + ty + 'px)';
             macbook.style.opacity = 1 - progress * 0.8;
-            isTicking = false;
-        }
+        });
 
-        window.addEventListener('scroll', () => {
-            if (!isTicking) {
-                window.requestAnimationFrame(updateLaptopScroll);
-                isTicking = true;
+        // Mouse tracking logic (rotation)
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+            
+            // Base rotation is rotateX(-20deg)
+            const rotX = -20 + (mouseY * -20); // Mouse up -> laptop tilts up
+            const rotY = mouseX * 40; // Mouse right -> laptop turns right
+            
+            if (inner) {
+                inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
             }
-        }, { passive: true });
-
-        // Mouse tracking logic (rotation) - only for devices with hover/pointer capability (desktops)
-        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            document.addEventListener('mousemove', (e) => {
-                const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-                
-                const rotX = -20 + (mouseY * -20);
-                const rotY = mouseX * 40;
-                
-                if (inner) {
-                    inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
-                }
-            }, { passive: true });
-        }
+        });
     })();
 </script>
 
