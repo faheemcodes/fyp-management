@@ -630,10 +630,19 @@
         }
         
         @media (max-width: 768px) { 
-            .laptop-scene .macbook { transform: scale(1.4); } 
-            .badge-1 { top: -5%; left: 10%; transform: scale(0.85); }
-            .badge-2 { bottom: 0%; left: 5%; transform: scale(0.85); }
-            .badge-3 { top: 30%; right: 0%; transform: scale(0.85); }
+            /* Stop heavy rotating 550px circle animations on mobile which cause GPU stalls and scroll lag */
+            .hero-bg-circle-1, .hero-bg-circle-2 { animation: none !important; }
+            .hero-bg-circle-2 { display: none; }
+            .hero-bg-circle-1 { width: 300px; height: 300px; }
+            .orbit-dot { display: none; }
+            
+            .laptop-scene { pointer-events: none; }
+            .laptop-scene .macbook { transform: scale(1.3) !important; will-change: auto !important; } 
+            .laptop-scene .inner { transform: rotateX(-15deg) rotateY(0deg) !important; transition: none !important; will-change: auto !important; }
+            
+            .badge-1 { top: -5%; left: 5%; transform: scale(0.8); }
+            .badge-2 { bottom: 0%; left: 0%; transform: scale(0.8); }
+            .badge-3 { top: 30%; right: -5%; transform: scale(0.8); }
             
             /* Force stats onto one line for mobile but keep them legible */
             .hero-stats { gap: 10px; flex-wrap: nowrap; justify-content: space-between; width: 100%; overflow-x: auto; padding-bottom: 5px; }
