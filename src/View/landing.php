@@ -329,28 +329,43 @@
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 992px) {
             .bento-grid {
-                grid-template-columns: repeat(6, 1fr);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 60px 50px;
             }
-            /* First 3 cards take 2 of 6 columns each (full 6-column top row) */
-            .bento-grid .bento-item:nth-child(1),
-            .bento-grid .bento-item:nth-child(2),
-            .bento-grid .bento-item:nth-child(3) {
-                grid-column: span 2;
-            }
-            /* 4th card starts at column 2 (leaving 1 column gap on left) and spans 2 columns */
-            .bento-grid .bento-item:nth-child(4) {
-                grid-column: 2 / span 2;
-            }
-            /* 5th card occupies columns 4-5, leaving 1 column gap on right -> perfectly centered 2 cards */
-            .bento-grid .bento-item:nth-child(5) {
-                grid-column: 4 / span 2;
+            .bento-grid .bento-item {
+                /* Exact identical width for every card (3 per row) */
+                flex: 0 0 calc((100% - 100px) / 3);
+                max-width: calc((100% - 100px) / 3);
+                width: calc((100% - 100px) / 3);
             }
         }
         
         .bento-item { position: relative; border-radius: 28px; padding: 30px 24px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; height: 100%; }
         .bento-item:hover { transform: translateY(-6px); }
         
-        .card-number { position: absolute; top: -20px; left: -25px; width: 105px; height: 105px; background: var(--lp-bg) !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.2rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2; }
+        .card-number {
+            position: absolute;
+            top: -20px;
+            left: -25px;
+            width: 105px;
+            height: 105px;
+            background: var(--lp-bg) !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            font-weight: 800;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.18), 0 0 0 1px var(--lp-border);
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        :root[data-theme="dark"] .card-number {
+            background: #141418 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255,255,255,0.12), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
         
         .card-header { margin-left: 65px; margin-bottom: 15px; text-transform: uppercase; text-align: right; }
         .card-header h4 { color: inherit; font-size: 1.05rem; font-weight: 800; margin: 0; letter-spacing: 1px; }
@@ -363,22 +378,27 @@
         .theme-orange { background: #f05a30; box-shadow: 0 15px 40px rgba(240, 90, 48, 0.35); }
         .theme-orange:hover { box-shadow: 0 25px 50px rgba(240, 90, 48, 0.45); }
         .theme-orange .card-number { color: #f05a30; }
+        :root[data-theme="dark"] .theme-orange .card-number { color: #ff6b42; border: 2px solid rgba(240, 90, 48, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(240, 90, 48, 0.25); }
         
         .theme-slate { background: #4a5568; box-shadow: 0 15px 40px rgba(74, 85, 104, 0.35); }
         .theme-slate:hover { box-shadow: 0 25px 50px rgba(74, 85, 104, 0.45); }
         .theme-slate .card-number { color: #4a5568; }
+        :root[data-theme="dark"] .theme-slate .card-number { color: #cbd5e1; border: 2px solid rgba(148, 163, 184, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(148, 163, 184, 0.2); }
         
         .theme-crimson { background: #e11d48; box-shadow: 0 15px 40px rgba(225, 29, 72, 0.35); }
         .theme-crimson:hover { box-shadow: 0 25px 50px rgba(225, 29, 72, 0.45); }
         .theme-crimson .card-number { color: #e11d48; }
+        :root[data-theme="dark"] .theme-crimson .card-number { color: #fb7185; border: 2px solid rgba(225, 29, 72, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(225, 29, 72, 0.25); }
         
         .theme-blue { background: #7dd3fc; box-shadow: 0 15px 40px rgba(125, 211, 252, 0.35); }
         .theme-blue:hover { box-shadow: 0 25px 50px rgba(125, 211, 252, 0.45); }
         .theme-blue .card-number { color: #0284c7; }
+        :root[data-theme="dark"] .theme-blue .card-number { color: #38bdf8; border: 2px solid rgba(56, 189, 248, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(56, 189, 248, 0.25); }
         
         .theme-emerald { background: #10b981; box-shadow: 0 15px 40px rgba(16, 185, 129, 0.35); }
         .theme-emerald:hover { box-shadow: 0 25px 50px rgba(16, 185, 129, 0.45); }
         .theme-emerald .card-number { color: #10b981; }
+        :root[data-theme="dark"] .theme-emerald .card-number { color: #34d399; border: 2px solid rgba(16, 185, 129, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(16, 185, 129, 0.25); }
 
         /* HOW IT WORKS PROCESS FLOW */
         .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 50px; max-width: 900px; margin-left: auto; margin-right: auto; }
