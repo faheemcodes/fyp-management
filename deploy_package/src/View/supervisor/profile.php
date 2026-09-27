@@ -1,0 +1,399 @@
+<style>
+/* ─── Profile Page Scoped Styles ─── */
+
+
+
+
+.profile-avatar-ring .avatar-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #172554;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 3px solid #1e3a8a;
+}
+
+
+
+
+
+/* ─── Section Panel ─── */
+
+
+
+
+
+
+
+
+/* ─── Modern Form Group ─── */
+.pf-group {
+    position: relative;
+}
+.pf-group .form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.pf-group .form-control,
+.pf-group .form-select {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+}
+.pf-group .form-control:disabled,
+.pf-group .form-control[readonly],
+.pf-group .form-select:disabled {
+    background-color: var(--form-bg);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+.pf-locked-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+.pf-locked-tag i {
+    font-size: 0.58rem;
+}
+
+/* ─── Floating Save Footer ─── */
+.profile-save-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+    backdrop-filter: blur(12px);
+}
+.profile-save-footer .btn {
+    padding: 10px 32px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+/* ─── Alert Banner ─── */
+.profile-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 20px;
+    border: none;
+}
+.profile-alert-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.profile-alert h6 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin: 0 0 3px 0;
+}
+.profile-alert p {
+    font-size: 0.78rem;
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+/* ─── Address card ─── */
+.address-card {
+    background: var(--form-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 16px;
+    transition: border-color 0.2s ease;
+}
+.address-card:focus-within {
+    border-color: var(--primary-color);
+}
+.address-card label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.address-card textarea {
+    border: none;
+    background: transparent;
+    padding: 0;
+    resize: vertical;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+.address-card textarea:focus {
+    box-shadow: none;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    
+    
+    
+    
+}
+</style>
+<!-- Supervisor Profile View -->
+<?php
+$prefixVal = $profile['prefix'] ?? '';
+$surnameVal = $profile['surname'] ?? '';
+$cnicVal = $supervisor['cnic'] ?? $profile['cnic'] ?? '';
+$mobileCodeVal = $profile['mobile_code'] ?? '';
+$mobileNoVal = $profile['mobile_no'] ?? '';
+$homeAddressVal = $profile['home_address'] ?? '';
+$designationVal = $supervisor['designation'] ?? '';
+$departmentVal = $supervisor['department'] ?? '';
+
+$isLocked = !empty($profile) && !empty($profile['home_address']) && $profile['home_address'] !== 'Not Provided Yet';
+
+$editableFields = [$prefixVal, $surnameVal, $cnicVal, $mobileNoVal, $homeAddressVal];
+$filledCount = 0;
+foreach ($editableFields as $f) { if (!empty($f) && $f !== 'Not Provided Yet') $filledCount++; }
+$totalEditable = count($editableFields);
+$completionPct = $totalEditable > 0 ? round(($filledCount / $totalEditable) * 100) : 0;
+
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+if ($basePath === '/') {
+    $basePath = '';
+}
+?>
+
+
+
+<!-- ═══════════════ Hero Banner ═══════════════ -->
+<div class="page-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+        <!-- Avatar -->
+        <div class="profile-avatar-ring">
+            <div class="avatar-inner">
+                <?php echo strtoupper(substr($supervisor['name'], 0, 1)); ?>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="flex-grow-1 text-center text-md-start">
+            <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+                <h4 class="text-white fw-bold m-0" style="font-size: 1.3rem;letter-spacing: -0.02em">
+                    <?php echo htmlspecialchars(formatPersonName($prefixVal, $supervisor['name'] ?? '', $surnameVal)); ?>
+                </h4>
+                <span class="badge bg-primary text-white border border-light border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.65rem;letter-spacing: 0.5px">Supervisor</span>
+            </div>
+            <p class="mb-2" style="color: rgba(255,255,255,0.7);font-size: 0.85rem">
+                <i class="bi bi-briefcase me-1"></i><?php echo htmlspecialchars($designationVal ?? 'Faculty Member'); ?>
+                <span class="d-none d-md-inline">
+                    &nbsp;·&nbsp;
+                    <i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($supervisor['email']); ?>
+                </span>
+            </p>
+
+            <div class="d-none d-md-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-3">
+                <span style="font-size: 0.75rem;color: rgba(255,255,255,0.6);font-weight: 600">PROFILE SETUP</span>
+                <div class="profile-completion">
+                    <div class="profile-completion-fill" style="width: <?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8');?>%"></div>
+                </div>
+                <span class="text-white fw-bold" style="font-size: 0.75rem"><?php echo htmlspecialchars((string)($completionPct), ENT_QUOTES, 'UTF-8'); ?>%</span>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="d-none d-lg-flex gap-2">
+            <div class="profile-quick-stat">
+                <i class="bi bi-building"></i>
+                <?php echo !empty($departmentVal) ? htmlspecialchars($departmentVal) : 'N/A'; ?>
+            </div>
+            <div class="profile-quick-stat">
+                <i class="bi bi-person-vcard"></i>
+                <?php echo !empty($cnicVal) ? substr($cnicVal, 0, 5) . '...' : 'Not set'; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ Status Alert ═══════════════ -->
+<?php if ($isLocked): ?>
+<div class="profile-alert" style="background: rgba(37,99,235,0.06);color: #1d4ed8">
+    <div class="profile-alert-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
+        <i class="bi bi-shield-check"></i>
+    </div>
+    <div>
+        <h6>Profile Submitted</h6>
+        <p>Your profile is up to date. Official registration details remain locked.</p>
+    </div>
+</div>
+<?php else: ?>
+<div class="profile-alert" style="background: rgba(239,68,68,0.06);color: #dc2626">
+    <div class="profile-alert-icon" style="background: rgba(239,68,68,0.1);color: #ef4444">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+    </div>
+    <div>
+        <h6>Action Required</h6>
+        <p>Please complete your profile details below. Official details are locked for integrity.</p>
+    </div>
+</div>
+<?php endif; ?>
+
+<form action="<?php echo $basePath; ?>/supervisor/profile" method="POST">
+    <div class="row g-4">
+
+        <!-- ═══════════════ COLUMN 1: Professional Identity ═══════════════ -->
+        <div class="col-lg-6">
+            <div class="page-section h-100">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Professional Identity</h6>
+                        <small>Your official academic identity details</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <div class="row g-3">
+                        <div class="col-4 pf-group">
+                            <label class="form-label">Prefix <span class="text-danger">*</span></label>
+                            <select class="form-select" name="prefix" required <?php echo $isLocked ? 'disabled' : ''; ?>>
+                                <option value="" disabled <?php echo empty($prefixVal) ? 'selected' : ''; ?>>Select</option>
+                                <option value="Mr."  <?php echo $prefixVal === 'Mr.'   ? 'selected' : ''; ?>>Mr.</option>
+                                <option value="Ms."  <?php echo $prefixVal === 'Ms.'   ? 'selected' : ''; ?>>Ms.</option>
+                                <option value="Mrs." <?php echo $prefixVal === 'Mrs.'  ? 'selected' : ''; ?>>Mrs.</option>
+                                <option value="Dr."  <?php echo $prefixVal === 'Dr.'   ? 'selected' : ''; ?>>Dr.</option>
+                                <option value="Prof."<?php echo $prefixVal === 'Prof.' ? 'selected' : ''; ?>>Prof.</option>
+                                <option value="Engr."<?php echo $prefixVal === 'Engr.' ? 'selected' : ''; ?>>Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-8 pf-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($supervisor['name']); ?>" disabled readonly>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                        </div>
+                        <div class="col-6 pf-group">
+                            <label class="form-label">Surname (Last Name)</label>
+                            <input type="text" class="form-control" name="surname" value="<?php echo htmlspecialchars($surnameVal); ?>" <?php echo !empty($surnameVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
+                            <?php if(!empty($surnameVal)): ?>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-6 pf-group">
+                            <label class="form-label">CNIC</label>
+                            <input type="text" class="form-control" name="cnic" value="<?php echo htmlspecialchars($cnicVal); ?>" <?php echo !empty($cnicVal) ? 'disabled readonly' : ($isLocked ? 'disabled readonly' : ''); ?>>
+                            <?php if(!empty($cnicVal)): ?>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-6 pf-group">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($departmentVal); ?>" disabled readonly>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                        </div>
+                        <div class="col-6 pf-group">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-control" value="<?php echo htmlspecialchars($designationVal); ?>" disabled readonly>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ COLUMN 2: Contact & Research ═══════════════ -->
+        <div class="col-lg-6">
+            <div class="page-section h-100">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(2,132,199,0.1);color: #0284c7">
+                        <i class="bi bi-telephone-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Contact &amp; Details</h6>
+                        <small>Email, phone, and research focus</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <div class="row g-3">
+                        <div class="col-12 pf-group">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="border-radius: 10px 0 0 10px;border: 1.5px solid var(--border-color);border-right: 0;background: var(--form-bg);color: var(--text-secondary);font-size: 0.85rem">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($supervisor['email']); ?>" disabled readonly style="border-radius: 0 10px 10px 0">
+                            </div>
+                            <span class="pf-locked-tag"><i class="bi bi-lock-fill"></i> Locked</span>
+                        </div>
+                        <div class="col-4 pf-group">
+                            <label class="form-label">Code <span class="text-danger">*</span></label>
+                            <select class="form-select" name="mobile_code" required <?php echo $isLocked ? 'disabled' : ''; ?>>
+                                <option value="+92" <?php echo $mobileCodeVal === '+92' || empty($mobileCodeVal) ? 'selected' : ''; ?>>+92</option>
+                                <option value="+1" <?php echo $mobileCodeVal === '+1' ? 'selected' : ''; ?>>+1</option>
+                                <option value="+44" <?php echo $mobileCodeVal === '+44' ? 'selected' : ''; ?>>+44</option>
+                                <option value="+971" <?php echo $mobileCodeVal === '+971' ? 'selected' : ''; ?>>+971</option>
+                            </select>
+                        </div>
+                        <div class="col-8 pf-group">
+                            <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="mobile_no" value="<?php echo htmlspecialchars($mobileNoVal); ?>" placeholder="e.g. 3001234567" required <?php echo $isLocked ? 'disabled readonly' : ''; ?>>
+                        </div>
+                        <hr style="border-color: var(--border-color);opacity: 0.5;margin: 12px 0">
+                        <div class="col-12">
+                            <div class="address-card">
+                                <label><i class="bi bi-house-door-fill"></i> Office / Home Address <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="home_address" name="home_address" rows="2" required placeholder="Enter your office or mailing address..." <?php echo $isLocked ? 'disabled readonly' : ''; ?>><?php echo htmlspecialchars($homeAddressVal !== 'Not Provided Yet' ? $homeAddressVal : ''); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Save Footer -->
+                <div class="profile-save-footer">
+                    <span style="font-size: 0.78rem;color: var(--text-secondary)">
+                        <i class="bi bi-info-circle me-1"></i>Review editable fields
+                    </span>
+                    <?php if ($isLocked): ?>
+                        <button type="button" class="btn btn-secondary" disabled>
+                            <i class="bi bi-lock-fill me-2"></i>Submitted
+                        </button>
+                    <?php else: ?>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check2-circle me-2"></i>Save Profile
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>

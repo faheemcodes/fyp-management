@@ -1,0 +1,857 @@
+<?php
+namespace Controller;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+class AuthController extends BaseController {
+    
+
+
+    
+
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $loginRole = trim($_POST['login_role'] ?? 'student');
+            if (!in_array($loginRole, ['student', 'faculty'])) {
+                $loginRole = 'student';
+            }
+            $_SESSION['login_role_preference'] = $loginRole;
+
+            $identifier = trim($_POST['identifier'] ?? '');
+            $password = $_POST['password'] ?? '';
+            
+            if (empty($identifier)) {
+                $errMsg = ($loginRole === 'student') ? 'Roll No. is required.' : 'CNIC is required.';
+                $this->flash('error', $errMsg);
+                redirect('/login?role=' . $loginRole);
+            }
+
+            if (empty($password)) {
+                $this->flash('error', 'Password is required.');
+                redirect('/login?role=' . $loginRole);
+            }
+            
+            $db = \Database::getInstance()->getConnection();
+            $user = null;
+            
+            if ($loginRole === 'student') {
+                // Retrieve student user matching roll number (student_id), CNIC, or email
+                $stmt = $db->prepare("
+                    SELECT u.* 
+                    FROM users u 
+                    INNER JOIN students s ON s.user_id = u.id 
+                    WHERE s.student_id = ? OR u.cnic = ? OR u.email = ?
+                ");
+                $stmt->execute([$identifier, $identifier, $identifier]);
+                $user = $stmt->fetch();
+            } else {
+                // Retrieve faculty / staff user (supervisor, committee, coordinator, hod, admin)
+                $stmt = $db->prepare("
+                    SELECT u.* 
+                    FROM users u 
+                    WHERE (u.email = ? OR u.cnic = ?) AND u.role != 'student'
+                ");
+                $stmt->execute([$identifier, $identifier]);
+                $user = $stmt->fetch();
+            }
+            
+            if ($user && password_verify($password, $user['password'])) {
+                unset($_SESSION['login_role_preference']);
+                if ($user['status'] === 'pending') {
+                    $this->flash('error', 'Your account is pending approval.');
+                    redirect('/login?role=' . $loginRole);
+                } else if ($user['status'] === 'rejected') {
+                    $this->flash('error', 'Your account registration has been rejected.');
+                    redirect('/login?role=' . $loginRole);
+                }
+                
+                // Set session details
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['last_activity'] = time();
+
+                // Detect all enrolled roles for this user
+                $availableRoles = [];
+                $chkSup = $db->prepare("SELECT user_id FROM supervisors WHERE user_id = ?");
+                $chkSup->execute([$user['id']]);
+                if ($chkSup->fetch()) $availableRoles[] = 'supervisor';
+
+                $chkComm = $db->prepare("SELECT user_id FROM committees WHERE user_id = ?");
+                $chkComm->execute([$user['id']]);
+                if ($chkComm->fetch()) $availableRoles[] = 'committee';
+
+                $chkHod = $db->prepare("SELECT user_id FROM hods WHERE user_id = ?");
+                $chkHod->execute([$user['id']]);
+                if ($chkHod->fetch()) $availableRoles[] = 'hod';
+
+                $chkCoord = $db->prepare("SELECT user_id FROM coordinators WHERE user_id = ?");
+                $chkCoord->execute([$user['id']]);
+                if ($chkCoord->fetch()) $availableRoles[] = 'coordinator';
+
+                $chkStudent = $db->prepare("SELECT user_id FROM students WHERE user_id = ?");
+                $chkStudent->execute([$user['id']]);
+                if ($chkStudent->fetch()) $availableRoles[] = 'student';
+
+                if (empty($availableRoles)) {
+                    $availableRoles[] = $user['role'];
+                }
+                $_SESSION['available_roles'] = $availableRoles;
+                
+                // Primary role default
+                $primaryRole = in_array($user['role'], $availableRoles) ? $user['role'] : $availableRoles[0];
+                $_SESSION['role'] = $primaryRole;
+                
+                // Fetch profile specific name and prefix/surname
+                $pStmt = $db->prepare("SELECT prefix, surname FROM profiles WHERE user_id = ?");
+                $pStmt->execute([$user['id']]);
+                $prof = $pStmt->fetch();
+                $prefix = $prof['prefix'] ?? '';
+                $surname = $prof['surname'] ?? '';
+                $_SESSION['prefix'] = $prefix;
+                $_SESSION['surname'] = $surname;
+
+                if ($primaryRole === 'student') {
+                    $sStmt = $db->prepare("SELECT name, student_id, avatar, department, shift FROM students WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $student = $sStmt->fetch();
+                    $_SESSION['name'] = $student['name'] ?? 'Student';
+                    $_SESSION['full_name'] = formatPersonName($prefix ?: 'Mr.', $student['name'] ?? 'Student', $surname);
+                    $_SESSION['student_id'] = $student['student_id'] ?? '';
+                    $_SESSION['avatar'] = $student['avatar'] ?? '';
+                    $_SESSION['department'] = $student['department'] ?? 'Software Engineering';
+                    $_SESSION['shift'] = $student['shift'] ?? 'Morning';
+                } else if ($primaryRole === 'supervisor') {
+                    $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $supervisor = $sStmt->fetch();
+                    $_SESSION['name'] = $supervisor['name'] ?? 'Supervisor';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $supervisor['name'] ?? 'Supervisor', $surname);
+                    $_SESSION['department'] = $supervisor['department'] ?? 'Software Engineering';
+                } else if ($primaryRole === 'committee') {
+                    $sStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $committee = $sStmt->fetch();
+                    $_SESSION['name'] = $committee['name'] ?? 'Committee Member';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $committee['name'] ?? 'Committee Member', $surname);
+                    $_SESSION['department'] = $committee['department'] ?? 'Software Engineering';
+                } else if ($primaryRole === 'hod') {
+                    $sStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $hod = $sStmt->fetch();
+                    $_SESSION['name'] = $hod['name'] ?? 'HOD';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $hod['name'] ?? 'HOD', $surname);
+                    $_SESSION['department'] = $hod['department'] ?? 'Software Engineering';
+                } else if ($primaryRole === 'coordinator') {
+                    $sStmt = $db->prepare("SELECT name, department, shift FROM coordinators WHERE user_id = ?");
+                    $sStmt->execute([$user['id']]);
+                    $coord = $sStmt->fetch();
+                    $_SESSION['name'] = $coord['name'] ?? 'Coordinator';
+                    $_SESSION['full_name'] = formatPersonName($prefix, $coord['name'] ?? 'Coordinator', $surname);
+                    $_SESSION['department'] = $coord['department'] ?? 'Software Engineering';
+                    $_SESSION['shift'] = $coord['shift'] ?? 'Morning';
+                } else {
+                    $_SESSION['name'] = 'System Admin';
+                    $_SESSION['full_name'] = 'System Admin';
+                    $_SESSION['department'] = 'All Departments';
+                }
+                
+                redirect('/' . $primaryRole . '/dashboard');
+            } else {
+                $this->flash('error', 'Invalid login credentials or password.');
+                redirect('/login?role=' . $loginRole);
+            }
+        }
+        
+        $this->render('auth/login');
+    }
+    
+    public function register() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            // Save old input values to preserve form state on validation failure
+            $_SESSION['old'] = $_POST;
+            $_SESSION['has_old_data'] = true;
+            unset($_SESSION['old']['password']);
+            unset($_SESSION['old']['confirm_password']);
+            unset($_SESSION['old']['staff_password']);
+            unset($_SESSION['old']['confirm_staff_password']);
+
+            $role = $_POST['role'] ?? 'student';
+            $db = \Database::getInstance()->getConnection();
+            
+            if ($role === 'student') {
+                $student_id = trim($_POST['student_id'] ?? ''); // Roll No
+                $cnic = trim($_POST['cnic'] ?? '');
+                $confirm_cnic = trim($_POST['confirm_cnic'] ?? '');
+                $email = trim($_POST['email'] ?? '');
+                $mobile_code = trim($_POST['mobile_code'] ?? '');
+                $mobile_no = trim($_POST['mobile_no'] ?? '');
+                $name = trim($_POST['name'] ?? '');
+                $father_name = trim($_POST['father_name'] ?? '');
+                $surname = trim($_POST['surname'] ?? '');
+                $gender = trim($_POST['gender'] ?? '');
+                $country = trim($_POST['country'] ?? '');
+                $province_state = trim($_POST['province_state'] ?? '');
+                $district = trim($_POST['district'] ?? '');
+                $department = trim($_POST['student_department'] ?? '');
+                $shift = trim($_POST['shift'] ?? '');
+                $password = $_POST['password'] ?? '';
+                $confirm_password = $_POST['confirm_password'] ?? '';
+                
+                // Detailed check for missing fields
+                $missingFields = [];
+                if (empty($student_id)) $missingFields[] = 'Roll No.';
+                if (empty($cnic)) $missingFields[] = 'CNIC No.';
+                if (empty($confirm_cnic)) $missingFields[] = 'Re-Type CNIC No.';
+                if (empty($email)) $missingFields[] = 'Email Address';
+                if (empty($mobile_code)) $missingFields[] = 'Mobile Code';
+                if (empty($mobile_no)) $missingFields[] = 'Mobile Number';
+                if (empty($name)) $missingFields[] = 'Full Name';
+                if (empty($father_name)) $missingFields[] = 'Father\'s Name';
+                if (empty($gender)) $missingFields[] = 'Gender';
+                if (empty($country)) $missingFields[] = 'Country';
+                if (empty($province_state)) $missingFields[] = 'Domicile Province';
+                if (empty($district)) $missingFields[] = 'Domicile District';
+                if (empty($department)) $missingFields[] = 'Department';
+                if (empty($shift)) $missingFields[] = 'Shift';
+                if (empty($password)) $missingFields[] = 'Password';
+
+                if (!empty($missingFields)) {
+                    $this->flash('error', 'The following mandatory fields are missing: ' . implode(', ', $missingFields));
+                    redirect('/register');
+                }
+
+                $allowedDepts = [
+                    'Information Technology',
+                    'Software Engineering',
+                    'Data Science',
+                    'Electronic Engineering',
+                    'Telecommunication Engineering'
+                ];
+                if (!in_array($department, $allowedDepts)) {
+                    $this->flash('error', 'Please select a valid department.');
+                    redirect('/register');
+                }
+                
+                $allowedShifts = ['Morning', 'Evening'];
+                if (!in_array($shift, $allowedShifts)) {
+                    $this->flash('error', 'Please select a valid shift.');
+                    redirect('/register');
+                }
+                
+                if (strpos($cnic, '-') !== false) {
+                    $this->flash('error', 'CNIC must be entered without dashes.');
+                    redirect('/register');
+                }
+                
+                if ($cnic !== $confirm_cnic) {
+                    $this->flash('error', 'CNIC / B-Form entries do not match.');
+                    redirect('/register');
+                }
+                
+                if (strlen($password) < 8) {
+                    $this->flash('error', 'Password must be at least 8 characters long.');
+                    redirect('/register');
+                }
+                
+                if ($password !== $confirm_password) {
+                    $this->flash('error', 'Passwords do not match.');
+                    redirect('/register');
+                }
+                
+                // Profile Image / Avatar File Validation
+                if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+                    $this->flash('error', 'Profile image is required.');
+                    redirect('/register');
+                }
+                
+                $file = $_FILES['avatar'];
+                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/x-png', 'image/pjpeg'];
+                $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                
+                if (!in_array($file['type'], $allowedTypes) || !in_array($extension, $allowedExtensions)) {
+                    $this->flash('error', 'Profile image must be in JPG, JPEG, or PNG format.');
+                    redirect('/register');
+                }
+                
+                if ($file['size'] > 500 * 1024) {
+                    $this->flash('error', 'Profile image size cannot exceed 500KB.');
+                    redirect('/register');
+                }
+                
+                // Check uniqueness of email
+                $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                if ($stmt->fetch()) {
+                    $this->flash('error', 'This email address is already registered.');
+                    redirect('/register');
+                }
+                
+                // Check uniqueness of CNIC
+                $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+                $stmt->execute([$cnic]);
+                if ($stmt->fetch()) {
+                    $this->flash('error', 'This CNIC / B-Form number is already registered.');
+                    redirect('/register');
+                }
+                
+                // Check uniqueness of Student ID (Roll No)
+                $stmt = $db->prepare("SELECT user_id FROM students WHERE student_id = ?");
+                $stmt->execute([$student_id]);
+                if ($stmt->fetch()) {
+                    $this->flash('error', 'This Roll Number is already registered.');
+                    redirect('/register');
+                }
+                
+                // Upload and save the profile image
+                $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                // Use extension extracted and validated above
+                $avatarName = 'avatar_' . time() . '_' . uniqid() . '.' . $extension;
+                $avatarPath = $uploadDir . $avatarName;
+                
+                if (!move_uploaded_file($file['tmp_name'], $avatarPath)) {
+                    $this->flash('error', 'Failed to save uploaded profile image.');
+                    redirect('/register');
+                }
+                
+                try {
+                    $db->beginTransaction();
+                    
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, 'student', 'pending')");
+                    $stmt->execute([$email, $cnic, $hashedPassword]);
+                    $userId = $db->lastInsertId();
+                    
+                    $phoneCombined = $mobile_code . $mobile_no;
+                    
+                    // Determine active registration batch for this student's department and shift
+                    $batchStmt = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_registration_open = 1 AND is_active = 1 ORDER BY id DESC LIMIT 1");
+                    $batchStmt->execute([$department, $shift]);
+                    $activeBatchId = $batchStmt->fetchColumn() ?: null;
+
+                    // Insert into students table
+                    $stmt = $db->prepare("INSERT INTO students (user_id, student_id, name, phone, department, shift, avatar, batch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$userId, $student_id, $name, $phoneCombined, $department, $shift, $avatarName, $activeBatchId]);
+                    
+                    // Seed profiles table with appropriate prefix based on gender
+                    $prefix = ($gender === 'Female') ? 'Ms.' : 'Mr.';
+                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, father_name, dob, mobile_code, mobile_no, country, province_state, district, home_address, gender) VALUES (?, ?, ?, ?, ?, '2000-01-01', ?, ?, ?, ?, ?, 'Not Provided Yet', ?)");
+                    $stmt->execute([$userId, $prefix, $surname, $cnic, $father_name, $mobile_code, $mobile_no, $country, $province_state, $district, $gender]);
+                    
+                    $db->commit();
+                    
+                    $this->addNotification(1, 'New Student Registration', "Student {$name} ({$student_id}) registered and is pending approval.", '/admin/users');
+                    
+                    unset($_SESSION['old']); // success, clear old inputs
+                    $this->flash('success', 'Registration successful! Your student account is pending review by Admin/HOD.');
+                    redirect('/login');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Student registration transaction failed. Please try again.');
+                    redirect('/register');
+                }
+            } else {
+                // Teacher / HOD / Admin Registration
+                $name = trim($_POST['staff_first_name'] ?? '');
+                $surname = trim($_POST['staff_last_name'] ?? '');
+                $email = trim($_POST['staff_email'] ?? '');
+                $cnic = trim($_POST['staff_cnic'] ?? '');
+                $department = trim($_POST['staff_department'] ?? '');
+                $designation = trim($_POST['designation'] ?? '');
+                $phone = trim($_POST['phone'] ?? '');
+                $password = $_POST['staff_password'] ?? '';
+                $confirm_password = $_POST['confirm_staff_password'] ?? '';
+                
+                // Detailed check for missing fields
+                $missingFields = [];
+                if (empty($name)) $missingFields[] = 'First Name';
+                if (empty($surname)) $missingFields[] = 'Last Name';
+                if (empty($email)) $missingFields[] = 'Email Address';
+                if (empty($cnic)) $missingFields[] = 'CNIC No.';
+                if (empty($department)) $missingFields[] = 'Department';
+                if (empty($designation)) $missingFields[] = 'Designation';
+                if (empty($phone)) $missingFields[] = 'Contact Number';
+                if (empty($password)) $missingFields[] = 'Password';
+
+                if (!empty($missingFields)) {
+                    $this->flash('error', 'The following mandatory fields are missing: ' . implode(', ', $missingFields));
+                    redirect('/register');
+                }
+                
+                if (strlen($password) < 8) {
+                    $this->flash('error', 'Password must be at least 8 characters long.');
+                    redirect('/register');
+                }
+                
+                if ($password !== $confirm_password) {
+                    $this->flash('error', 'Passwords do not match.');
+                    redirect('/register');
+                }
+                
+                // Validate CNIC no dashes
+                if (strpos($cnic, '-') !== false) {
+                    $this->flash('error', 'CNIC must be entered without dashes.');
+                    redirect('/register');
+                }
+                
+                // Check uniqueness of email
+                $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                if ($stmt->fetch()) {
+                    $this->flash('error', 'This email address is already registered.');
+                    redirect('/register');
+                }
+                
+                // Check uniqueness of CNIC
+                $stmt = $db->prepare("SELECT id FROM users WHERE cnic = ?");
+                $stmt->execute([$cnic]);
+                if ($stmt->fetch()) {
+                    $this->flash('error', 'This CNIC is already registered.');
+                    redirect('/register');
+                }
+                
+                try {
+                    $db->beginTransaction();
+                    
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $stmt = $db->prepare("INSERT INTO users (email, cnic, password, role, status) VALUES (?, ?, ?, ?, 'pending')");
+                    $stmt->execute([$email, $cnic, $hashedPassword, $role]);
+                    $userId = $db->lastInsertId();
+                    
+                    $fullName = $name . ' ' . $surname;
+                    
+                    if ($role === 'supervisor') {
+                        $stmt = $db->prepare("INSERT INTO supervisors (user_id, name, designation, department) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $designation, $department]);
+                    } else if ($role === 'hod') {
+                        $stmt = $db->prepare("INSERT INTO hods (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $department]);
+                    } else if ($role === 'coordinator') {
+                        $stmt = $db->prepare("INSERT INTO coordinators (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $department]);
+                    } else if ($role === 'committee') {
+                        $stmt = $db->prepare("INSERT INTO committees (user_id, name, department) VALUES (?, ?, ?)");
+                        $stmt->execute([$userId, $fullName, $department]);
+                    }
+                    
+                    // Seed profiles table
+                    $stmt = $db->prepare("INSERT INTO profiles (user_id, prefix, surname, cnic, dob, mobile_code, mobile_no, home_address, gender) VALUES (?, 'Dr.', ?, ?, '1980-01-01', '+92', ?, 'Not Provided Yet', 'Male')");
+                    $stmt->execute([$userId, $surname, $cnic, $phone]);
+                    
+                    $db->commit();
+                    
+                    $this->addNotification(1, 'New Staff Registration', "A new staff member ($fullName) registered as $role and is pending approval.", '/admin/users');
+                    
+                    unset($_SESSION['old']); // success, clear old inputs
+                    $this->flash('success', 'Registration successful! Your staff account is pending review.');
+                    redirect('/login');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Staff registration transaction failed. Please try again.');
+                    redirect('/register');
+                }
+            }
+        }
+        
+        $this->render('auth/register');
+    }
+    
+    public function forgotPassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $email = trim($_POST['email'] ?? '');
+            if (empty($email)) {
+                $this->flash('error', 'Please provide your email.');
+                redirect('/login');
+            }
+            
+            // Check time restriction (1 minute)
+            $sessionKey = 'last_reset_request_' . md5($email);
+            if (isset($_SESSION[$sessionKey])) {
+                $timeSinceLastRequest = time() - $_SESSION[$sessionKey];
+                if ($timeSinceLastRequest < 60) {
+                    $remaining = 60 - $timeSinceLastRequest;
+                    $this->flash('error', "Please wait $remaining seconds before requesting another reset link.");
+                    redirect('/login');
+                }
+            }
+            // Mark session
+            $_SESSION[$sessionKey] = time();
+            
+            $db = \Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+            
+            if ($user) {
+                $token = bin2hex(random_bytes(32));
+                $expiry = date('Y-m-d H:i:s', time() + 600); // 10 minutes validity
+                
+                $stmt = $db->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?");
+                $stmt->execute([$token, $expiry, $user['id']]);
+                
+                // Construct reset password link
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'];
+                $scriptName = $_SERVER['SCRIPT_NAME'];
+                $baseDir = dirname($scriptName);
+                if ($baseDir === '\\' || $baseDir === '/') {
+                    $baseDir = '';
+                }
+                $resetLink = $protocol . '://' . $host . $baseDir . '/reset-password?token=' . $token;
+                
+                // Log email to file
+                $logDir = __DIR__ . '/../../sessions';
+                if (!is_dir($logDir)) {
+                    mkdir($logDir, 0700, true);
+                }
+                $logFile = $logDir . '/reset_emails.log';
+                $logMessage = "[" . date('Y-m-d H:i:s') . "] Reset request for $email. Link: $resetLink\n";
+                file_put_contents($logFile, $logMessage, FILE_APPEND);
+                
+                $subject = "Password Reset Request - FYP Management Portal";
+                $message = "Hello,\n\n" .
+                           "We received a request to reset your password for your FYP Management Portal account.\n" .
+                           "Please click the link below to set a new password:\n\n" .
+                           $resetLink . "\n\n" .
+                           "This link is valid for 10 minutes. If you did not make this request, you can safely ignore this email.\n\n" .
+                           "Regards,\nUniversity of Sindh FYP Portal Support";
+                $headers = "From: noreply@usindh.edu.pk\r\n" .
+                           "Reply-To: noreply@usindh.edu.pk\r\n" .
+                           "X-Mailer: PHP/" . phpversion();
+
+                // Load SMTP mail config
+                $mailConfig = require __DIR__ . '/../../config/mail.php';
+                $emailSent = false;
+
+                // Try PHPMailer if SMTP credentials are configured (not default placeholders)
+                if (isset($mailConfig['smtp_username']) && $mailConfig['smtp_username'] !== 'your_email@gmail.com' && !empty($mailConfig['smtp_password'])) {
+                    $mail = new PHPMailer(true);
+                    try {
+                        // Server settings
+                        $mail->isSMTP();
+                        $mail->Host       = $mailConfig['smtp_host'];
+                        $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+                        $mail->Username   = $mailConfig['smtp_username'];
+                        $mail->Password   = $mailConfig['smtp_password'];
+                        $mail->SMTPSecure = ($mailConfig['smtp_secure'] === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port       = $mailConfig['smtp_port'];
+
+                        // Recipients
+                        $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                        $mail->addAddress($email);
+
+                        // Content
+                        $mail->isHTML(false);
+                        $mail->Subject = $subject;
+                        $mail->Body    = $message;
+
+                        $mail->send();
+                        $emailSent = true;
+                    } catch (\Exception $e) {
+                        // Log failure and let it fall back
+                        error_log("PHPMailer failed: " . $mail->ErrorInfo);
+                    }
+                }
+
+                // Fallback to PHP built-in mail()
+                if (!$emailSent) {
+                    @mail($email, $subject, $message, $headers);
+                }
+                
+                $this->flash('success', 'Password reset instructions have been sent to your email address.');
+            } else {
+                $this->flash('error', 'No account found with this email address.');
+            }
+            redirect('/login');
+        }
+        // Fallback for direct GET access if needed
+        $this->render('auth/forgot-password');
+    }
+    
+    public function resetPassword() {
+        $db = \Database::getInstance()->getConnection();
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $token = trim($_POST['token'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+            
+            if (empty($token)) {
+                $this->flash('error', 'Invalid token.');
+                redirect('/forgot-password');
+            }
+            
+            if (strlen($password) < 8) {
+                $this->flash('error', 'Password must be at least 8 characters long.');
+                redirect('/reset-password?token=' . urlencode($token));
+            }
+            
+            if ($password !== $confirmPassword) {
+                $this->flash('error', 'Passwords do not match.');
+                redirect('/reset-password?token=' . urlencode($token));
+            }
+            
+            // Check token validity (make sure token is valid and not expired)
+            $stmt = $db->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > ?");
+            $stmt->execute([$token, date('Y-m-d H:i:s')]);
+            $user = $stmt->fetch();
+            
+            if (!$user) {
+                $this->flash('error', 'The password reset token is invalid or has expired.');
+                redirect('/forgot-password');
+            }
+            
+            // Hash and update the new password, and clear the token columns
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $db->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?");
+            $stmt->execute([$hashedPassword, $user['id']]);
+            
+            $this->flash('success', 'Your password has been reset successfully. You can now log in.');
+            redirect('/login');
+        } else {
+            $token = trim($_GET['token'] ?? '');
+            if (empty($token)) {
+                $this->flash('error', 'No token provided.');
+                redirect('/forgot-password');
+            }
+            
+            $stmt = $db->prepare("SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > ?");
+            $stmt->execute([$token, date('Y-m-d H:i:s')]);
+            $user = $stmt->fetch();
+            
+            if (!$user) {
+                $this->flash('error', 'The password reset token is invalid or has expired.');
+                redirect('/forgot-password');
+            }
+            
+            $this->render('auth/reset-password', ['token' => $token]);
+        }
+    }
+    
+    public function logout() {
+        session_destroy();
+        redirect('/login');
+    }
+    
+    public function fetchNotifications() {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            $this->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        $db = \Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
+        $stmt->execute([$userId]);
+        $notifications = $stmt->fetchAll();
+        
+        $stmtCount = $db->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
+        $stmtCount->execute([$userId]);
+        $unreadCount = (int)$stmtCount->fetchColumn();
+        
+        $this->json([
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+    }
+    
+    public function markNotificationRead() {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            $this->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        $db = \Database::getInstance()->getConnection();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $data = json_decode(file_get_contents('php://input'), true);
+            $notifId = $data['id'] ?? null;
+            $senderUserId = $data['sender_user_id'] ?? null;
+            
+            if ($notifId) {
+                $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?");
+                $stmt->execute([$notifId, $userId]);
+            } else if ($senderUserId) {
+                $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND (redirect_url LIKE ? OR redirect_url LIKE ?)");
+                $stmt->execute([$userId, '%user=' . (int)$senderUserId, '%user_id=' . (int)$senderUserId]);
+            } else {
+                // Mark all as read
+                $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?");
+                $stmt->execute([$userId]);
+            }
+            $this->json(['success' => true]);
+        }
+    }
+    
+    public function deleteNotification() {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            $this->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        $db = \Database::getInstance()->getConnection();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $data = json_decode(file_get_contents('php://input'), true);
+            $notifId = $data['id'] ?? null;
+            
+            if ($notifId) {
+                $stmt = $db->prepare("DELETE FROM notifications WHERE id = ? AND user_id = ?");
+                $stmt->execute([$notifId, $userId]);
+                $this->json(['success' => true]);
+            } else {
+                $this->json(['error' => 'Invalid notification ID'], 400);
+            }
+        }
+    }
+    
+    public function changePassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $currentPassword = $_POST['current_password'] ?? '';
+            $password = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+            
+            if (empty($currentPassword) || empty($password) || empty($confirmPassword)) {
+                $this->flash('error', 'All fields are required.');
+                redirect('/change-password');
+            }
+            
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'];
+            
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch();
+            
+            if (!$user || !password_verify($currentPassword, $user['password'])) {
+                $this->flash('error', 'Incorrect current password.');
+                redirect('/change-password');
+            }
+            
+            if ($currentPassword === $password) {
+                $this->flash('error', 'New password cannot be the same as your current password.');
+                redirect('/change-password');
+            }
+            
+            $len = strlen($password);
+            if ($len < 8 || $len > 50) {
+                $this->flash('error', 'New password must be between 8 and 50 characters in length.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[0-9]/', $password)) {
+                $this->flash('error', 'New password must contain at least one digit.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[a-z]/', $password)) {
+                $this->flash('error', 'New password must contain at least one lowercase character.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[A-Z]/', $password)) {
+                $this->flash('error', 'New password must contain at least one uppercase character.');
+                redirect('/change-password');
+            }
+            if (!preg_match('/[!@#\$%\^&\*\(\)\.]/', $password)) {
+                $this->flash('error', 'New password must contain at least one special character [!,@,#,$,%,^,&,*,(,),.].');
+                redirect('/change-password');
+            }
+            
+            if ($password !== $confirmPassword) {
+                $this->flash('error', 'New password and confirm password do not match.');
+                redirect('/change-password');
+            }
+            
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->execute([$hashedPassword, $userId]);
+            
+            $this->flash('success', 'Your password has been changed successfully.');
+            redirect('/' . $_SESSION['role'] . '/dashboard');
+        } else {
+            $this->render('auth/change-password');
+        }
+    }
+
+    public function switchRole() {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('/login');
+        }
+        $targetRole = $_GET['role'] ?? '';
+        $availableRoles = $_SESSION['available_roles'] ?? [$_SESSION['role'] ?? ''];
+        
+        if (in_array($targetRole, $availableRoles)) {
+            $_SESSION['role'] = $targetRole;
+            $db = \Database::getInstance()->getConnection();
+            
+            $pStmt = $db->prepare("SELECT prefix, surname FROM profiles WHERE user_id = ?");
+            $pStmt->execute([$_SESSION['user_id']]);
+            $prof = $pStmt->fetch();
+            $prefix = $prof['prefix'] ?? '';
+            $surname = $prof['surname'] ?? '';
+            $_SESSION['prefix'] = $prefix;
+            $_SESSION['surname'] = $surname;
+
+            if ($targetRole === 'supervisor') {
+                $sStmt = $db->prepare("SELECT name, department FROM supervisors WHERE user_id = ?");
+                $sStmt->execute([$_SESSION['user_id']]);
+                $s = $sStmt->fetch();
+                if ($s) {
+                    $_SESSION['name'] = $s['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $s['name'], $surname);
+                    $_SESSION['department'] = $s['department'];
+                }
+            } else if ($targetRole === 'committee') {
+                $cStmt = $db->prepare("SELECT name, department FROM committees WHERE user_id = ?");
+                $cStmt->execute([$_SESSION['user_id']]);
+                $c = $cStmt->fetch();
+                if ($c) {
+                    $_SESSION['name'] = $c['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $c['name'], $surname);
+                    $_SESSION['department'] = $c['department'];
+                }
+            } else if ($targetRole === 'coordinator') {
+                $cdStmt = $db->prepare("SELECT name, department, shift FROM coordinators WHERE user_id = ?");
+                $cdStmt->execute([$_SESSION['user_id']]);
+                $cd = $cdStmt->fetch();
+                if ($cd) {
+                    $_SESSION['name'] = $cd['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $cd['name'], $surname);
+                    $_SESSION['department'] = $cd['department'];
+                    $_SESSION['shift'] = $cd['shift'] ?? 'Morning';
+                }
+            } else if ($targetRole === 'student') {
+                $stStmt = $db->prepare("SELECT name, department, shift, student_id, avatar FROM students WHERE user_id = ?");
+                $stStmt->execute([$_SESSION['user_id']]);
+                $st = $stStmt->fetch();
+                if ($st) {
+                    $_SESSION['name'] = $st['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix ?: 'Mr.', $st['name'], $surname);
+                    $_SESSION['department'] = $st['department'];
+                    $_SESSION['shift'] = $st['shift'] ?? 'Morning';
+                    $_SESSION['student_id'] = $st['student_id'] ?? '';
+                    $_SESSION['avatar'] = $st['avatar'] ?? '';
+                }
+            } else if ($targetRole === 'hod') {
+                $hStmt = $db->prepare("SELECT name, department FROM hods WHERE user_id = ?");
+                $hStmt->execute([$_SESSION['user_id']]);
+                $h = $hStmt->fetch();
+                if ($h) {
+                    $_SESSION['name'] = $h['name'];
+                    $_SESSION['full_name'] = formatPersonName($prefix, $h['name'], $surname);
+                    $_SESSION['department'] = $h['department'];
+                }
+            }
+            redirect('/' . $targetRole . '/dashboard');
+        } else {
+            redirect('/' . ($_SESSION['role'] ?? 'login') . '/dashboard');
+        }
+    }
+}

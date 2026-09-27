@@ -1,0 +1,16 @@
+/vendor/
+/sessions/
+/public/uploads/*
+!/public/uploads/avatars/default_avatar.svg
+!/public/uploads/avatars/default_avatar.png
+/scratch/
+/config/ai_config.php
+*.zip
+*.rar
+.replit
+replit.nix
+
+# Sensitive Files
+database.sqlite
+config/database.php
+config/mail.php

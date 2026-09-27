@@ -327,158 +327,40 @@
         /* BENTO DEPARTMENTS */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 992px) {
-            .bento-grid {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 60px 40px;
-            }
-            .bento-grid .bento-item {
-                flex: 0 0 calc((100% - 80px) / 3);
-                max-width: calc((100% - 80px) / 3);
-                width: calc((100% - 80px) / 3);
-            }
-        }
+        @media (min-width: 992px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
         
-        .bento-item {
-            position: relative;
-            border-radius: 28px;
-            padding: 26px 24px 26px 24px;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            color: #fff;
-            border: none;
-            z-index: 1;
-            box-sizing: border-box;
-        }
+        .bento-item { position: relative; border-radius: 28px; padding: 30px 24px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; height: 100%; }
         .bento-item:hover { transform: translateY(-6px); }
         
-        .card-number {
-            position: absolute;
-            top: -20px;
-            left: -25px;
-            width: 105px;
-            height: 105px;
-            background: var(--lp-bg) !important;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.2rem;
-            font-weight: 800;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12), 0 0 0 2px rgba(255,255,255,0.8);
-            z-index: 2;
-            transition: all 0.3s ease;
-        }
+        .card-number { position: absolute; top: -20px; left: -25px; width: 105px; height: 105px; background: var(--lp-bg) !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.2rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2; }
         
-        /* Dark mode circle enhancements for distinct visibility */
-        :root[data-theme="dark"] .card-number {
-            background: #18191f !important;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1), inset 0 2px 4px rgba(255,255,255,0.06);
-        }
+        .card-header { margin-left: 65px; margin-bottom: 15px; text-transform: uppercase; text-align: right; }
+        .card-header h4 { color: inherit; font-size: 1.05rem; font-weight: 800; margin: 0; letter-spacing: 1px; }
+        .card-header span { font-size: 0.8rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.5px; }
+        
+        .card-body { flex-grow: 1; margin-top: 5px; padding: 0; display: flex; flex-direction: column; }
+        .card-body p { color: #fff; font-size: 0.95rem; line-height: 1.6; margin: 0; text-align: left; opacity: 0.95; }
 
-        .card-header {
-            margin-left: 40px;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            text-align: right;
-            height: 48px;
-            display: flex;
-            flex-direction: row;
-        }
-        .card-header h4 {
-            color: inherit;
-            font-size: 1.05rem;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 0.8px;
-            line-height: 1.25;
-        }
-        .card-header span {
-            font-size: 0.78rem;
-            font-weight: 600;
-            opacity: 0.9;
-            letter-spacing: 0.5px;
-            margin-top: 3px;
-        }
+        /* Themes matching the image with 3D tinted shadows */
+        .theme-orange { background: #f05a30; box-shadow: 0 15px 40px rgba(240, 90, 48, 0.35); }
+        .theme-orange:hover { box-shadow: 0 25px 50px rgba(240, 90, 48, 0.45); }
+        .theme-orange .card-number { color: #f05a30; }
         
-        .card-body {
-            margin-top: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .card-body p {
-            color: #fff;
-            font-size: 0.92rem;
-            line-height: 1.6;
-            margin: 0;
-            text-align: left;
-            opacity: 0.95;
-        }
-
-        /* Themes with vibrant rich styling and 3D tinted glow in both light and dark themes */
-        .theme-orange {
-            background: linear-gradient(145deg, #f05a30, #e0441a);
-            box-shadow: 0 16px 36px rgba(240, 90, 48, 0.32);
-        }
-        .theme-orange:hover { box-shadow: 0 24px 48px rgba(240, 90, 48, 0.45); }
-        .theme-orange .card-number { color: #f05a30; border: 2px solid rgba(240, 90, 48, 0.25); }
-        :root[data-theme="dark"] .theme-orange .card-number {
-            color: #ff6e40;
-            border: 2px solid rgba(240, 90, 48, 0.45);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(240, 90, 48, 0.3);
-        }
+        .theme-slate { background: #4a5568; box-shadow: 0 15px 40px rgba(74, 85, 104, 0.35); }
+        .theme-slate:hover { box-shadow: 0 25px 50px rgba(74, 85, 104, 0.45); }
+        .theme-slate .card-number { color: #4a5568; }
         
-        .theme-slate {
-            background: linear-gradient(145deg, #475569, #334155);
-            box-shadow: 0 16px 36px rgba(71, 85, 105, 0.32);
-        }
-        .theme-slate:hover { box-shadow: 0 24px 48px rgba(71, 85, 105, 0.45); }
-        .theme-slate .card-number { color: #475569; border: 2px solid rgba(71, 85, 105, 0.25); }
-        :root[data-theme="dark"] .theme-slate .card-number {
-            color: #cbd5e1;
-            border: 2px solid rgba(148, 163, 184, 0.45);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(148, 163, 184, 0.25);
-        }
+        .theme-crimson { background: #e11d48; box-shadow: 0 15px 40px rgba(225, 29, 72, 0.35); }
+        .theme-crimson:hover { box-shadow: 0 25px 50px rgba(225, 29, 72, 0.45); }
+        .theme-crimson .card-number { color: #e11d48; }
         
-        .theme-crimson {
-            background: linear-gradient(145deg, #e11d48, #be123c);
-            box-shadow: 0 16px 36px rgba(225, 29, 72, 0.32);
-        }
-        .theme-crimson:hover { box-shadow: 0 24px 48px rgba(225, 29, 72, 0.45); }
-        .theme-crimson .card-number { color: #e11d48; border: 2px solid rgba(225, 29, 72, 0.25); }
-        :root[data-theme="dark"] .theme-crimson .card-number {
-            color: #fb7185;
-            border: 2px solid rgba(225, 29, 72, 0.45);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(225, 29, 72, 0.3);
-        }
+        .theme-blue { background: #7dd3fc; box-shadow: 0 15px 40px rgba(125, 211, 252, 0.35); }
+        .theme-blue:hover { box-shadow: 0 25px 50px rgba(125, 211, 252, 0.45); }
+        .theme-blue .card-number { color: #0284c7; }
         
-        .theme-blue {
-            background: linear-gradient(145deg, #0284c7, #0369a1);
-            box-shadow: 0 16px 36px rgba(2, 132, 199, 0.32);
-        }
-        .theme-blue:hover { box-shadow: 0 24px 48px rgba(2, 132, 199, 0.45); }
-        .theme-blue .card-number { color: #0284c7; border: 2px solid rgba(2, 132, 199, 0.25); }
-        :root[data-theme="dark"] .theme-blue .card-number {
-            color: #38bdf8;
-            border: 2px solid rgba(56, 189, 248, 0.45);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56, 189, 248, 0.3);
-        }
-        
-        .theme-emerald {
-            background: linear-gradient(145deg, #10b981, #059669);
-            box-shadow: 0 16px 36px rgba(16, 185, 129, 0.32);
-        }
-        .theme-emerald:hover { box-shadow: 0 24px 48px rgba(16, 185, 129, 0.45); }
-        .theme-emerald .card-number { color: #10b981; border: 2px solid rgba(16, 185, 129, 0.25); }
-        :root[data-theme="dark"] .theme-emerald .card-number {
-            color: #34d399;
-            border: 2px solid rgba(16, 185, 129, 0.45);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(16, 185, 129, 0.3);
-        }
+        .theme-emerald { background: #10b981; box-shadow: 0 15px 40px rgba(16, 185, 129, 0.35); }
+        .theme-emerald:hover { box-shadow: 0 25px 50px rgba(16, 185, 129, 0.45); }
+        .theme-emerald .card-number { color: #10b981; }
 
         /* HOW IT WORKS PROCESS FLOW */
         .timeline-grid { display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 50px; max-width: 900px; margin-left: auto; margin-right: auto; }
@@ -685,19 +567,10 @@
         }
         
         @media (max-width: 768px) { 
-            /* Stop heavy rotating 550px circle animations on mobile which cause GPU stalls and scroll lag */
-            .hero-bg-circle-1, .hero-bg-circle-2 { animation: none !important; }
-            .hero-bg-circle-2 { display: none; }
-            .hero-bg-circle-1 { width: 300px; height: 300px; }
-            .orbit-dot { display: none; }
-            
-            .laptop-scene { pointer-events: none; }
-            .laptop-scene .macbook { transform: scale(1.3) !important; will-change: auto !important; } 
-            .laptop-scene .inner { transform: rotateX(-15deg) rotateY(0deg) !important; transition: none !important; will-change: auto !important; }
-            
-            .badge-1 { top: -5%; left: 5%; transform: scale(0.8); }
-            .badge-2 { bottom: 0%; left: 0%; transform: scale(0.8); }
-            .badge-3 { top: 30%; right: -5%; transform: scale(0.8); }
+            .laptop-scene .macbook { transform: scale(1.4); } 
+            .badge-1 { top: -5%; left: 10%; transform: scale(0.85); }
+            .badge-2 { bottom: 0%; left: 5%; transform: scale(0.85); }
+            .badge-3 { top: 30%; right: 0%; transform: scale(0.85); }
             
             /* Force stats onto one line for mobile but keep them legible */
             .hero-stats { gap: 10px; flex-wrap: nowrap; justify-content: space-between; width: 100%; overflow-x: auto; padding-bottom: 5px; }
@@ -1235,42 +1108,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const scene = document.getElementById('laptopScene');
         const macbook = scene ? scene.querySelector('.macbook') : null;
         if (!scene || !macbook) return;
+        const hero = scene.closest('.lp-hero');
         const inner = macbook.querySelector('.inner');
 
-        // On desktop (>991px): scroll parallax + mouse tracking
-        // On mobile/tablet (<=991px): laptop is fully static — no JS transforms applied
-        if (window.innerWidth > 991) {
-            window.addEventListener('scroll', () => {
-                const rect = scene.getBoundingClientRect();
-                let progress = 0;
-                if (rect.top < 200) {
-                    progress = Math.min(Math.max((200 - rect.top) / 400, 0), 1);
-                }
-                const ty = progress * -60;
-                const scale = 2.2 - (progress * 2.2 * 0.25);
-                macbook.style.transform = 'scale(' + scale + ') translateY(' + ty + 'px)';
-                macbook.style.opacity = 1 - progress * 0.8;
-            }, { passive: true });
+        // Scroll logic (scale & vertical translation) based on viewport position
+        window.addEventListener('scroll', () => {
+            const rect = scene.getBoundingClientRect();
+            // When rect.top drops below 200px (scrolling up), we start the fade out
+            let progress = 0;
+            if (rect.top < 200) {
+                progress = Math.min(Math.max((200 - rect.top) / 400, 0), 1);
+            }
+            
+            const ty = progress * -60;
+            const baseScale = window.innerWidth <= 768 ? 1.4 : (window.innerWidth <= 991 ? 1.6 : 2.2);
+            const scale = baseScale - (progress * baseScale * 0.25);
+            
+            macbook.style.transform = 'scale(' + scale + ') translateY(' + ty + 'px)';
+            macbook.style.opacity = 1 - progress * 0.8;
+        });
 
-            // Mouse tracking logic (rotation) - desktop mice only
-            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                document.addEventListener('mousemove', (e) => {
-                    const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                    const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-                    const rotX = -20 + (mouseY * -20);
-                    const rotY = mouseX * 40;
-                    if (inner) {
-                        inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
-                    }
-                }, { passive: true });
-            }
-        } else {
-            // Mobile/tablet: keep laptop fully visible and static
-            macbook.style.opacity = '1';
+        // Mouse tracking logic (rotation)
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+            
+            // Base rotation is rotateX(-20deg)
+            const rotX = -20 + (mouseY * -20); // Mouse up -> laptop tilts up
+            const rotY = mouseX * 40; // Mouse right -> laptop turns right
+            
             if (inner) {
-                inner.style.transform = 'rotateX(-15deg) rotateY(0deg) rotateZ(0deg)';
+                inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
             }
-        }
+        });
     })();
 </script>
 

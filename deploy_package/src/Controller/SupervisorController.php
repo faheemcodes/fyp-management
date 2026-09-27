@@ -1,0 +1,667 @@
+<?php
+namespace Controller;
+
+class SupervisorController extends BaseController {
+
+    public function chat() {
+        $db = \Database::getInstance()->getConnection();
+        $supervisorId = $_SESSION['user_id'];
+
+        // If a specific user is targeted in query param, mark only that user's notifications as read
+        if (!empty($_GET['user']) && is_numeric($_GET['user'])) {
+            $targetUser = (int)$_GET['user'];
+            $db->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND (redirect_url LIKE ? OR redirect_url LIKE ?)")
+               ->execute([$supervisorId, '%user=' . $targetUser, '%user_id=' . $targetUser]);
+        }
+        
+        // Fetch all group leaders for approved projects assigned to this supervisor with unread notifications count (active batch only)
+        $stmt = $db->prepare("
+            SELECT g.created_by as leader_id, s.name as leader_name, u.email as leader_email, p.title as project_title, g.group_code, s.avatar as leader_avatar,
+                   (SELECT COUNT(*) FROM notifications n WHERE n.user_id = ? AND n.is_read = 0 AND (n.redirect_url LIKE CONCAT('%user=', g.created_by) OR n.redirect_url LIKE CONCAT('%user_id=', g.created_by))) as unread_count
+            FROM projects p
+            JOIN `groups` g ON p.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN students s ON g.created_by = s.user_id
+            JOIN users u ON s.user_id = u.id
+            WHERE p.supervisor_id = ? AND p.status = 'Approved' AND b.is_active = 1
+        ");
+        $stmt->execute([$supervisorId, $supervisorId]);
+        $leaders = $stmt->fetchAll();
+
+        $this->render('supervisor/chat', [
+            'leaders' => $leaders,
+            'supervisorId' => $supervisorId
+        ]);
+    }
+
+    public function dashboard() {
+        $supervisorId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Get count of assigned groups
+        $stmt = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id WHERE p.supervisor_id = ? AND b.is_active = 1");
+        $stmt->execute([$supervisorId]);
+        $groupCount = $stmt->fetchColumn();
+
+        // Get count of pending proposals under review (active batch only)
+        $stmt = $db->prepare("SELECT COUNT(*) FROM proposals pr
+            JOIN projects p ON pr.group_id = p.group_id
+            JOIN `groups` g ON p.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested') AND b.is_active = 1");
+        $stmt->execute([$supervisorId]);
+        $pendingProposals = $stmt->fetchColumn();
+
+        // Fetch only pending proposals for assigned projects (active batch only)
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.title as project_title 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE p.supervisor_id = ? AND pr.status IN ('Submitted', 'Revision Requested') AND b.is_active = 1
+            ORDER BY 
+                CASE 
+                    WHEN pr.status = 'Submitted' THEN 1 
+                    WHEN pr.status = 'Revision Requested' THEN 2 
+                    ELSE 3 
+                END, 
+                pr.submitted_at DESC");
+        $stmt->execute([$supervisorId]);
+        $proposals = $stmt->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($proposals as &$pr) {
+            $stmt = $db->prepare("SELECT s.*, u.email FROM group_members gm 
+                JOIN students s ON gm.student_id = s.user_id 
+                JOIN users u ON s.user_id = u.id 
+                WHERE gm.group_id = ?");
+            $stmt->execute([$pr['group_id']]);
+            $pr['members'] = $stmt->fetchAll();
+        }
+
+        // Fetch assigned groups with latest proposal status
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.status as project_status, pr.status as proposal_status, pr.feedback as proposal_feedback 
+            FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id 
+            JOIN academic_batches b ON g.batch_id = b.id 
+            LEFT JOIN (
+                SELECT pr1.* FROM proposals pr1
+                INNER JOIN (
+                    SELECT group_id, MAX(id) as max_id FROM proposals GROUP BY group_id
+                ) pr2 ON pr1.id = pr2.max_id
+            ) pr ON g.id = pr.group_id
+            WHERE p.supervisor_id = ? AND b.is_active = 1 
+            ORDER BY g.created_at DESC");
+        $stmt->execute([$supervisorId]);
+        $groups = $stmt->fetchAll();
+
+        // Fetch members for each assigned group for the dashboard
+        foreach ($groups as &$group) {
+            $stmt = $db->prepare("SELECT s.name, s.avatar FROM group_members gm 
+                JOIN students s ON gm.student_id = s.user_id 
+                WHERE gm.group_id = ? LIMIT 5");
+            $stmt->execute([$group['id']]);
+            $group['members'] = $stmt->fetchAll();
+        }
+
+        // Get system deadlines and notices
+        $department = $_SESSION['department'] ?? 'Software Engineering';
+
+        $stmtNotices = $db->prepare("SELECT * FROM notices WHERE is_hidden = 0 AND (target_audience = 'All' OR FIND_IN_SET('supervisors', target_audience) > 0) AND (department = ? OR department IS NULL OR department = '') ORDER BY created_at DESC LIMIT 5");
+        $stmtNotices->execute([$department]);
+        $recentNotices = $stmtNotices->fetchAll();
+
+        // Get count of scheduled and pending meetings
+        $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings WHERE supervisor_id = ? AND status IN ('Pending', 'Scheduled')");
+        $stmtMeetings->execute([$supervisorId]);
+        $meetingsCount = $stmtMeetings->fetchColumn();
+
+        $this->render('supervisor/dashboard', [
+            'groupCount' => $groupCount,
+            'pendingProposals' => $pendingProposals,
+            'meetingsCount' => $meetingsCount,
+            'proposals' => $proposals,
+            'groups' => $groups,
+            'recentNotices' => $recentNotices
+        ]);
+    }
+
+    public function groups() {
+        $supervisorId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch all supervised groups with grades and proposal info
+        $stmt = $db->prepare("SELECT g.*, p.title as project_title, p.description as project_description, p.status as project_status, p.thesis_file,
+            pr.id as proposal_id, pr.status as proposal_status, pr.file_path as proposal_file_path, pr.abstract as proposal_abstract, pr.feedback as proposal_feedback
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            LEFT JOIN (
+                SELECT pr1.* FROM proposals pr1
+                INNER JOIN (
+                    SELECT group_id, MAX(id) as max_id FROM proposals GROUP BY group_id
+                ) pr2 ON pr1.id = pr2.max_id
+            ) pr ON g.id = pr.group_id
+            WHERE p.supervisor_id = ? AND b.is_active = 1 
+            ORDER BY g.created_at DESC");
+        $stmt->execute([$supervisorId]);
+        $groups = $stmt->fetchAll();
+
+        // Fetch members for each group
+        foreach ($groups as &$group) {
+            $stmt = $db->prepare("SELECT s.*, u.email FROM group_members gm 
+                JOIN students s ON gm.student_id = s.user_id 
+                JOIN users u ON s.user_id = u.id 
+                WHERE gm.group_id = ?");
+            $stmt->execute([$group['id']]);
+            $members = $stmt->fetchAll();
+            
+            $groupSupervisionMarks = null;
+            $groupShowSupervision = 0;
+            
+            foreach ($members as &$m) {
+                $stmtG = $db->prepare("SELECT supervision_marks, show_supervision_to_student FROM grades WHERE student_id = ?");
+                $stmtG->execute([$m['user_id']]);
+                $grade = $stmtG->fetch();
+                if ($grade) {
+                    $m['supervision_marks'] = $grade['supervision_marks'];
+                    if ($groupSupervisionMarks === null && $grade['supervision_marks'] !== null) {
+                        $groupSupervisionMarks = true;
+                    }
+                    if ($grade['show_supervision_to_student'] == 1) {
+                        $groupShowSupervision = 1;
+                    }
+                } else {
+                    $m['supervision_marks'] = null;
+                }
+            }
+            
+            $group['members'] = $members;
+            $group['supervision_marks'] = $groupSupervisionMarks;
+            $group['show_supervision_to_student'] = $groupShowSupervision;
+        }
+
+        $this->render('supervisor/groups', [
+            'groups' => $groups
+        ]);
+    }
+
+    public function gradeGroup() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $supervisorId = $_SESSION['user_id'];
+            $groupId = $_POST['group_id'] ?? null;
+            
+            $marksArray = $_POST['marks'] ?? [];
+            
+            if ($groupId) {
+                $db = \Database::getInstance()->getConnection();
+                
+                // Inherit supervisor's global visibility status from other groups, defaulting to 0
+                $stmtVis = $db->prepare("SELECT show_supervision_to_student FROM grades g JOIN projects p ON g.group_id = p.group_id WHERE p.supervisor_id = ? ORDER BY g.calculated_at DESC LIMIT 1");
+                $stmtVis->execute([$supervisorId]);
+                $lastVis = $stmtVis->fetchColumn();
+                $show_supervision_to_student = ($lastVis !== false) ? (int)$lastVis : 0;
+                
+                // Verify supervisor owns this group
+                $stmt = $db->prepare("SELECT id FROM projects WHERE group_id = ? AND supervisor_id = ?");
+                $stmt->execute([$groupId, $supervisorId]);
+                if (!$stmt->fetch()) {
+                    $this->flash('error', 'Unauthorized access.');
+                    redirect('/supervisor/groups');
+                }
+                
+                try {
+                    $db->beginTransaction();
+                    
+                    // Update grades per student
+                    foreach ($marksArray as $studentId => $markData) {
+                        $supervisionMarks = isset($markData['supervision']) && $markData['supervision'] !== '' ? round((float)$markData['supervision']) : null;
+                        
+                        // Verify student belongs to this group
+                        $stmtCheckMember = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ? AND student_id = ?");
+                        $stmtCheckMember->execute([$groupId, $studentId]);
+                        if (!$stmtCheckMember->fetch()) {
+                            continue;
+                        }
+                        
+                        $stmtUpsert = $db->prepare("INSERT INTO grades (student_id, group_id, supervision_marks, show_supervision_to_student) 
+                            VALUES (?, ?, ?, ?) 
+                            ON DUPLICATE KEY UPDATE 
+                                supervision_marks = VALUES(supervision_marks), 
+                                show_supervision_to_student = VALUES(show_supervision_to_student),
+                                group_id = VALUES(group_id)");
+                        $stmtUpsert->execute([$studentId, $groupId, $supervisionMarks, $show_supervision_to_student]);
+                    }
+                    
+                    // Recalculate overall grades per student
+                    $stmtGrades = $db->prepare("SELECT * FROM grades WHERE group_id = ?");
+                    $stmtGrades->execute([$groupId]);
+                    $studentsGrades = $stmtGrades->fetchAll();
+                    
+                    foreach ($studentsGrades as $gData) {
+                        $total = round(
+                            (float)$gData['proposal_defense_marks'] + 
+                            (float)$gData['progress_presentation_marks'] + 
+                            (float)$gData['final_presentation_marks'] + 
+                            (float)$gData['supervision_marks']
+                        );
+                        
+                        $percentage = round(($total / 200.0) * 100.0);
+                        
+                        // Grade scale
+                        $grade = 'F';
+                        if ($percentage >= 85) $grade = 'A+';
+                        else if ($percentage >= 80) $grade = 'A';
+                        else if ($percentage >= 75) $grade = 'B+';
+                        else if ($percentage >= 70) $grade = 'B';
+                        else if ($percentage >= 65) $grade = 'C+';
+                        else if ($percentage >= 60) $grade = 'C';
+                        else if ($percentage >= 55) $grade = 'D+';
+                        else if ($percentage >= 50) $grade = 'D';
+                        
+                        $status = ($percentage >= 50) ? 'Pass' : 'Fail';
+                        
+                        $stmtUpdateGrades = $db->prepare("UPDATE grades SET total_marks = ?, percentage = ?, grade = ?, status = ? WHERE student_id = ?");
+                        $stmtUpdateGrades->execute([$total, $percentage, $grade, $status, $gData['student_id']]);
+                    }
+                    
+                    // Update progress stage to Final Grading Completed only if it is currently at Final Presentation Completed
+                    $stmtGroup = $db->prepare("SELECT progress_stage FROM `groups` WHERE id = ?");
+                    $stmtGroup->execute([$groupId]);
+                    $currentStage = $stmtGroup->fetchColumn();
+                    if ($currentStage === 'Final Presentation Completed') {
+                        $stmtStage = $db->prepare("UPDATE `groups` SET progress_stage = 'Final Grading Completed' WHERE id = ?");
+                        $stmtStage->execute([$groupId]);
+                    }
+                    
+                    $db->commit();
+                    
+                    // Notify students
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$groupId]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], 'Supervisor Marks Updated', 'Your supervisor has updated your manual evaluation marks.', '/student/grade');
+                    }
+                    
+                    $this->flash('success', 'Marks updated successfully!');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Error saving marks: . Please try again.');
+                }
+            }
+        }
+        redirect('/supervisor/groups');
+    }
+
+    public function reviews() {
+        redirect('/supervisor/dashboard#pending-proposals');
+    }
+
+    public function proposalAction() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $proposalId = $_POST['proposal_id'] ?? null;
+            $status = $_POST['status'] ?? ''; // Supervisor Approved, Revision Requested, Rejected
+            $feedback = trim($_POST['feedback'] ?? '');
+
+            if ($proposalId && $status) {
+                $db = \Database::getInstance()->getConnection();
+
+                // Get proposal details
+                $stmt = $db->prepare("SELECT * FROM proposals WHERE id = ?");
+                $stmt->execute([$proposalId]);
+                $proposal = $stmt->fetch();
+
+                if ($proposal) {
+                    try {
+                        $db->beginTransaction();
+
+                        // Normalize approval status to 'Supervisor Approved'
+                        if ($status === 'Approved' || $status === 'Supervisor Approved') {
+                            $status = 'Supervisor Approved';
+
+                            // Get the shift of the proposal's group creator and department
+                            $stmtGroupShift = $db->prepare("SELECT stu.shift, stu.department FROM `groups` g JOIN students stu ON g.created_by = stu.user_id WHERE g.id = ?");
+                            $stmtGroupShift->execute([$proposal['group_id']]);
+                            $studentData = $stmtGroupShift->fetch();
+                            $proposalShift = $studentData['shift'] ?? 'Morning';
+                            $proposalDept = $studentData['department'] ?? '';
+
+                            $stmtLimit = $db->prepare("SELECT max_morning_slots, max_evening_slots FROM department_settings WHERE department = ?");
+                            $stmtLimit->execute([$proposalDept]);
+                            $settings = $stmtLimit->fetch();
+                            
+                            $maxSlots = 5;
+                            if ($settings) {
+                                $maxSlots = $proposalShift === 'Evening' ? $settings['max_evening_slots'] : $settings['max_morning_slots'];
+                            }
+
+                            $stmtSlots = $db->prepare("SELECT COUNT(*) FROM projects p JOIN `groups` g ON p.group_id = g.id JOIN academic_batches b ON g.batch_id = b.id JOIN students stu ON g.created_by = stu.user_id WHERE p.supervisor_id = ? AND (p.status = 'Approved' OR p.status = 'Supervisor Approved') AND b.is_active = 1 AND stu.shift = ?");
+                            $stmtSlots->execute([$_SESSION['user_id'], $proposalShift]);
+                            $slotsUsed = (int)$stmtSlots->fetchColumn();
+                            if ($slotsUsed >= $maxSlots) {
+                                throw new \Exception("Approval failed: You have already reached the maximum limit of $maxSlots approved projects for the $proposalShift shift.");
+                            }
+                        }
+
+                        // Update proposal
+                        $stmt = $db->prepare("UPDATE proposals SET status = ?, feedback = ? WHERE id = ?");
+                        $stmt->execute([$status, $feedback, $proposalId]);
+
+                        // Update project status
+                        $stmt = $db->prepare("UPDATE projects SET status = ? WHERE group_id = ?");
+                        $stmt->execute([$status, $proposal['group_id']]);
+
+                        // Update group stage (must be a valid enum in groups table)
+                        $stage = ($status === 'Approved') ? 'Proposal Approved' : 'Proposal Submitted';
+                        $stmt = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
+                        $stmt->execute([$stage, $proposal['group_id']]);
+
+                        $db->commit();
+
+                        // Notify group members
+                        $mStmt = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                        $mStmt->execute([$proposal['group_id']]);
+                        $members = $mStmt->fetchAll();
+                        
+                        $notifMsg = ($status === 'Supervisor Approved')
+                            ? "Your project proposal has been endorsed as 'Supervisor Approved' by your supervisor and forwarded to the Department Coordinator."
+                            : "Your project proposal has been marked as '$status' by your supervisor." . (!empty($feedback) ? " Feedback: $feedback" : "");
+
+                        foreach ($members as $m) {
+                            $this->addNotification($m['student_id'], 'Proposal Reviewed by Supervisor', $notifMsg, '/student/proposal');
+                        }
+
+                        // Notify Department Coordinator if endorsed
+                        if ($status === 'Supervisor Approved' && !empty($proposalDept)) {
+                            $stmtCoord = $db->prepare("SELECT user_id FROM coordinators WHERE department = ?");
+                            $stmtCoord->execute([$proposalDept]);
+                            $coords = $stmtCoord->fetchAll();
+                            foreach ($coords as $c) {
+                                $this->addNotification($c['user_id'], 'Proposal Endorsed by Supervisor', "A student group proposal has been endorsed by the supervisor and is ready for Coordinator review.", '/coordinator/proposals');
+                            }
+                        }
+
+                        $this->flash('success', ($status === 'Supervisor Approved') 
+                            ? "Proposal endorsed as 'Supervisor Approved' successfully and forwarded to Coordinator."
+                            : "Proposal status updated to '$status'.");
+                    } catch (\Exception $e) {
+                        $db->rollBack();
+                        error_log("proposalAction error for user {$_SESSION['user_id']}: " . $e->getMessage());
+                        $this->flash('error', 'Failed to update proposal. Please try again.');
+                    }
+                }
+            }
+        }
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, 'groups') !== false) {
+            redirect('/supervisor/groups');
+        } else {
+            redirect('/supervisor/dashboard#pending-proposals');
+        }
+    }
+
+
+
+    public function profile() {
+        $userId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch supervisor details
+        $stmt = $db->prepare("SELECT s.name, s.designation, s.department, u.email, u.cnic FROM supervisors s JOIN users u ON s.user_id = u.id WHERE s.user_id = ?");
+        $stmt->execute([$userId]);
+        $supervisor = $stmt->fetch();
+        if (!$supervisor) {
+            error_log("Supervisor profile not found for user_id: {$userId}");
+            redirect('/login');
+        }
+
+        // Get existing profile info
+        $stmt = $db->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $prefix = trim($_POST['prefix'] ?? '');
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($supervisor['cnic']);
+            $cnicToSave = $supervisor['cnic'];
+
+            if (empty($prefix)) $errors[] = "Prefix is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
+
+            if (empty($errors)) {
+                try {
+                    $db->beginTransaction();
+
+                    // Update profiles table
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
+                    $this->flash('success', 'Profile updated successfully.');
+                    redirect('/supervisor/profile');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    $this->flash('error', 'Database error: . Please try again.');
+                }
+            } else {
+                $this->flash('error', implode(" ", $errors));
+            }
+        }
+
+        $this->render('supervisor/profile', [
+            'supervisor' => $supervisor,
+            'profile' => $profile
+        ]);
+    }
+
+    public function toggleVisibility() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $supervisorId = $_SESSION['user_id'];
+            $groupId = $_POST['group_id'] ?? null;
+            $show = isset($_POST['show']) ? (int)$_POST['show'] : 0;
+
+            if ($groupId) {
+                $db = \Database::getInstance()->getConnection();
+                
+                // Verify supervisor owns this group
+                $stmt = $db->prepare("SELECT id FROM projects WHERE group_id = ? AND supervisor_id = ?");
+                $stmt->execute([$groupId, $supervisorId]);
+                if (!$stmt->fetch()) {
+                    $this->flash('error', 'Unauthorized access.');
+                    redirect('/supervisor/groups');
+                }
+
+                $stmt = $db->prepare("UPDATE grades SET show_supervision_to_student = ? WHERE group_id = ?");
+                $stmt->execute([$show, $groupId]);
+
+                $this->flash('success', $show ? 'Supervision marks are now visible to students.' : 'Supervision marks are now hidden from students.');
+            } else {
+                $db = \Database::getInstance()->getConnection();
+                
+                // Global toggle for all groups supervised by this supervisor
+                $stmt = $db->prepare("UPDATE grades SET show_supervision_to_student = ? WHERE group_id IN (SELECT group_id FROM projects WHERE supervisor_id = ?)");
+                $stmt->execute([$show, $supervisorId]);
+
+                $this->flash('success', $show ? 'All supervision marks are now visible to students.' : 'All supervision marks are now hidden from students.');
+            }
+        }
+        redirect('/supervisor/groups');
+    }
+
+    public function meetings() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'];
+        
+        $stmt = $db->prepare("
+            SELECT m.*, p.title as project_title, g.group_code, s.name as group_leader_name
+            FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE m.supervisor_id = ? AND b.is_active = 1
+            ORDER BY m.meeting_date ASC
+        ");
+        $stmt->execute([$userId]);
+        $meetings = $stmt->fetchAll();
+        
+        $this->render('supervisor/meetings', [
+            'meetings' => $meetings
+        ]);
+    }
+
+    public function updateMeetingStatus() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $supervisorId = $_SESSION['user_id'];
+            
+            $meetingId = $_POST['meeting_id'] ?? 0;
+            $status = $_POST['status'] ?? '';
+            $locationLink = $_POST['location_link'] ?? '';
+            $newDate = $_POST['new_date'] ?? '';
+            
+            // Verify ownership
+            $stmt = $db->prepare("SELECT * FROM meetings WHERE id = ? AND supervisor_id = ?");
+            $stmt->execute([$meetingId, $supervisorId]);
+            $meeting = $stmt->fetch();
+            
+            if (!$meeting) {
+                $this->flash('error', 'Meeting not found.');
+                redirect('/supervisor/meetings');
+            }
+            
+            try {
+                if ($status === 'Scheduled') {
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Scheduled', location_link = ? WHERE id = ?");
+                    $stmt->execute([$locationLink, $meetingId]);
+                    
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Scheduled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been confirmed.", '/student/meetings');
+                    }
+                    $this->flash('success', 'Meeting scheduled successfully.');
+                    
+                } elseif ($status === 'Rescheduled') {
+                    if (empty($newDate)) {
+                        $this->flash('error', 'New date is required for rescheduling.');
+                        redirect('/supervisor/meetings');
+                    }
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Rescheduled', meeting_date = ? WHERE id = ?");
+                    $stmt->execute([$newDate, $meetingId]);
+                    
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Rescheduled", "Your meeting has been rescheduled to " . date('M d, Y h:i A', strtotime($newDate)), '/student/meetings');
+                    }
+                    $this->flash('success', 'Meeting rescheduled successfully.');
+                    
+                } elseif ($status === 'Cancelled') {
+                    $stmt = $db->prepare("UPDATE meetings SET status = 'Cancelled' WHERE id = ?");
+                    $stmt->execute([$meetingId]);
+                    
+                    // Notify student group members
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$meeting['group_id']]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Cancelled", "Your meeting on " . date('M d', strtotime($meeting['meeting_date'])) . " has been cancelled.", '/student/meetings');
+                    }
+                    $this->flash('success', 'Meeting cancelled.');
+                }
+            } catch (\Exception $e) {
+                $this->flash('error', 'Failed to update meeting.');
+            }
+            
+            redirect('/supervisor/meetings');
+        }
+    }
+
+    public function completeMeeting() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $db = \Database::getInstance()->getConnection();
+            $supervisorId = $_SESSION['user_id'];
+            
+            $meetingId = $_POST['meeting_id'] ?? 0;
+            $notes = trim($_POST['supervisor_notes'] ?? '');
+            
+            $stmt = $db->prepare("UPDATE meetings SET status = 'Completed', supervisor_notes = ? WHERE id = ? AND supervisor_id = ?");
+            $stmt->execute([$notes, $meetingId, $supervisorId]);
+            
+            if ($stmt->rowCount() > 0) {
+                // Find group members to notify
+                $stmt2 = $db->prepare("SELECT group_id FROM meetings WHERE id = ?");
+                $stmt2->execute([$meetingId]);
+                $gId = $stmt2->fetchColumn();
+                if ($gId) {
+                    $stmtM = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+                    $stmtM->execute([$gId]);
+                    $members = $stmtM->fetchAll();
+                    foreach ($members as $m) {
+                        $this->addNotification($m['student_id'], "Meeting Completed", "Supervisor has added notes for your recent meeting.", '/student/meetings');
+                    }
+                }
+                
+                $this->flash('success', 'Meeting marked as completed.');
+            } else {
+                $this->flash('error', 'Meeting not found or unauthorized.');
+            }
+            
+            redirect('/supervisor/meetings');
+        }
+    }
+}
+

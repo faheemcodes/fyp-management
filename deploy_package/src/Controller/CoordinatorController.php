@@ -1,0 +1,2231 @@
+<?php
+namespace Controller;
+
+class CoordinatorController extends BaseController {
+
+    private function getCoordinatorDept($db, $userId) {
+        $stmt = $db->prepare("SELECT department FROM coordinators WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn();
+    }
+
+    private function getCoordinatorShift($db, $userId) {
+        $stmt = $db->prepare("SELECT shift FROM coordinators WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn() ?: 'Morning';
+    }
+
+    private function getCoordinatorName($db, $userId) {
+        $stmt = $db->prepare("SELECT name FROM coordinators WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn();
+    }
+
+    private function getHodNameForDept($db, $dept) {
+        // Query the HOD for the department
+        $stmt = $db->prepare("SELECT name FROM hods WHERE department LIKE ? OR ? LIKE CONCAT('%', department, '%') LIMIT 1");
+        $stmt->execute(['%' . $dept . '%', $dept]);
+        return $stmt->fetchColumn() ?: 'HOD';
+    }
+
+    public function dashboard() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $shift = $this->getCoordinatorShift($db, $userId);
+        
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
+        
+        $stats = [];
+        // Pending student approvals in department & shift
+        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?$shiftFilter");
+        $stmt->execute([$dept]);
+        $stats['pending_approvals'] = $stmt->fetchColumn();
+        
+        // Active students in department & shift
+        $stmt = $db->prepare("SELECT COUNT(*) FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'approved' AND s.department = ?$shiftFilter");
+        $stmt->execute([$dept]);
+        $stats['total_students'] = $stmt->fetchColumn();
+
+        // Notices generated
+        $stmt = $db->prepare("SELECT COUNT(*) FROM notices WHERE sender_id = ?");
+        $stmt->execute([$userId]);
+        $stats['total_notices'] = $stmt->fetchColumn();
+
+        // Department meetings awaiting verification (Completed status, active batch only)
+        $stmtMeetings = $db->prepare("SELECT COUNT(*) FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE s.department = ? AND m.status = 'Completed' AND b.is_active = 1$shiftFilter");
+        $stmtMeetings->execute([$dept]);
+        $stats['pending_meetings'] = $stmtMeetings->fetchColumn();
+
+        // Unverified / Pending Proposals count (Active batch only)
+        $stmtPendingCount = $db->prepare("SELECT COUNT(*) FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested') AND b.is_active = 1$shiftFilter");
+        $stmtPendingCount->execute([$dept]);
+        $stats['pending_proposals'] = (int)$stmtPendingCount->fetchColumn();
+
+        // Approved groups in department & shift (Active batch only)
+        $stmtGroups = $db->prepare("SELECT COUNT(*) FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1$shiftFilter");
+        $stmtGroups->execute([$dept]);
+        $stats['total_groups'] = (int)$stmtGroups->fetchColumn();
+
+        // Groups assigned to a committee number
+        $stmtAlloc = $db->prepare("SELECT COUNT(DISTINCT g.id) FROM `groups` g 
+            JOIN projects p ON g.id = p.group_id
+            JOIN academic_batches b ON g.batch_id = b.id 
+            JOIN students s ON g.created_by = s.user_id 
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 AND g.committee_number IS NOT NULL AND g.committee_number > 0$shiftFilter");
+        $stmtAlloc->execute([$dept]);
+        $stats['allocated_groups'] = (int)$stmtAlloc->fetchColumn();
+
+        // Academic Batches in coordinator's department
+        $stmtBatches = $db->prepare("SELECT COUNT(*) FROM academic_batches WHERE department = ?");
+        $stmtBatches->execute([$dept]);
+        $stats['total_batches'] = (int)$stmtBatches->fetchColumn();
+
+        // Active Deadlines
+        $stmtDeadlines = $db->prepare("SELECT COUNT(*) FROM deadlines WHERE department = ? AND status = 'Active'");
+        $stmtDeadlines->execute([$dept]);
+        $stats['active_deadlines'] = (int)$stmtDeadlines->fetchColumn();
+
+        // Fetch unverified proposals for the department & shift (active batch only)
+        $stmtProposals = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? AND pr.status IN ('Supervisor Approved', 'Submitted', 'Under Review', 'Revision Requested') AND b.is_active = 1$shiftFilter
+            ORDER BY 
+                CASE 
+                    WHEN pr.status = 'Supervisor Approved' THEN 1 
+                    WHEN pr.status = 'Submitted' THEN 2 
+                    WHEN pr.status = 'Under Review' THEN 3
+                    WHEN pr.status = 'Revision Requested' THEN 4
+                    ELSE 5 
+                END, 
+                pr.submitted_at DESC");
+        $stmtProposals->execute([$dept]);
+        $pendingProposals = $stmtProposals->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($pendingProposals as &$pr) {
+            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                JOIN users u_m ON s_m.user_id = u_m.id 
+                WHERE gm.group_id = ?");
+            $stmtM->execute([$pr['group_id']]);
+            $pr['members'] = $stmtM->fetchAll();
+        }
+
+        // Fetch departmental supervisors for re-assignment inside review modal
+        $stmtSups = $db->prepare("SELECT s.user_id, s.name, s.designation 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE s.department = ? AND u.status = 'approved' 
+            ORDER BY s.name ASC");
+        $stmtSups->execute([$dept]);
+        $supervisors = $stmtSups->fetchAll();
+
+        $this->render('coordinator/dashboard', [
+            'stats' => $stats,
+            'pendingProposals' => $pendingProposals,
+            'supervisors' => $supervisors,
+            'department' => $dept,
+            'shift' => $shift
+        ]);
+    }
+
+    public function verifyStudents() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        $shift = $this->getCoordinatorShift($db, $_SESSION['user_id'] ?? 0);
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
+
+        $stmt = $db->prepare("SELECT s.*, u.email, u.status FROM students s JOIN users u ON s.user_id = u.id WHERE u.status = 'pending' AND s.department = ?$shiftFilter ORDER BY u.created_at DESC");
+        $stmt->execute([$dept]);
+        $students = $stmt->fetchAll();
+
+        $this->render('coordinator/verify_students', [
+            'students' => $students,
+            'shift' => $shift
+        ]);
+    }
+
+    public function approveStudent() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+            // Check student department
+            $stmtCheck = $db->prepare("SELECT department FROM students WHERE user_id = ?");
+            $stmtCheck->execute([$id]);
+            $studentDept = $stmtCheck->fetchColumn();
+
+            if ($studentDept === $dept) {
+                $stmt = $db->prepare("UPDATE users SET status = 'approved' WHERE id = ?");
+                $stmt->execute([$id]);
+
+                // Fetch student details for email
+                $stmtUser = $db->prepare("
+                    SELECT u.email, s.student_id 
+                    FROM users u 
+                    JOIN students s ON u.id = s.user_id 
+                    WHERE u.id = ?
+                ");
+                $stmtUser->execute([$id]);
+                $user = $stmtUser->fetch();
+
+                if ($user) {
+                    $this->addNotification($id, 'Account Approved', 'Your registration has been approved! You can now log in.', '/login');
+                    
+                    $subject = "Your Account has been Approved";
+                    $identifierStr = "Roll Number: " . $user['student_id'] . "\nPassword: (The password you chose during registration)";
+                    
+                    $message = "Hello,\n\nYour account on the FYP Management Portal has been approved by your Coordinator.\n\n"
+                             . "Your Login Credentials:\n"
+                             . $identifierStr . "\n\n"
+                             . "You can now log in to the portal.\n\nRegards,\nFYP Management Team";
+                             
+                    $this->sendEmail($user['email'], $subject, $message);
+                }
+
+                $this->flash('success', 'Student account approved successfully.');
+            } else {
+                $this->flash('error', 'Unauthorized: Student is not in your department.');
+            }
+        }
+        redirect('/coordinator/users');
+    }
+
+    public function rejectStudent() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $id = $_POST['id'] ?? null;
+            $reason = trim($_POST['reason'] ?? '');
+            
+            if ($id && $reason) {
+                $db = \Database::getInstance()->getConnection();
+                $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+    
+                // Check student department
+                $stmtCheck = $db->prepare("SELECT department, avatar FROM students WHERE user_id = ?");
+                $stmtCheck->execute([$id]);
+                $student = $stmtCheck->fetch();
+    
+                if ($student && $student['department'] === $dept) {
+                    $avatarFile = $student['avatar'];
+                    if ($avatarFile && $avatarFile !== 'default_avatar.svg' && $avatarFile !== 'default_avatar.png') {
+                        $filePath = __DIR__ . '/../../public/uploads/avatars/' . $avatarFile;
+                        if (file_exists($filePath)) {
+                            unlink($filePath);
+                        }
+                    }
+                    
+                    $stmtUser = $db->prepare("SELECT email FROM users WHERE id = ?");
+                    $stmtUser->execute([$id]);
+                    $userEmail = $stmtUser->fetchColumn();
+                    
+                    if ($userEmail) {
+                        $subject = "Your Registration has been Rejected";
+                        $message = "Hello,\n\nUnfortunately, your registration for the FYP Management Portal has been rejected by your Coordinator.\n\n"
+                                 . "Reason for rejection:\n$reason\n\n"
+                                 . "Please correct the issues mentioned above and create a new account, or contact your department if you believe this was a mistake.\n\n"
+                                 . "Regards,\nFYP Management Team";
+                        $this->sendEmail($userEmail, $subject, $message);
+                    }
+    
+                    $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
+                    $stmt->execute([$id]);
+                    $this->flash('success', 'Student registration rejected and deleted.');
+                } else {
+                    $this->flash('error', 'Unauthorized: Student is not in your department.');
+                }
+            } else {
+                $this->flash('error', 'Rejection reason is required.');
+            }
+        }
+        redirect('/coordinator/users');
+    }
+
+    public function notice() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        
+        $stmt = $db->prepare("SELECT * FROM notices WHERE sender_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$userId]);
+        $notices = $stmt->fetchAll();
+
+        $this->render('coordinator/notice', [
+            'notices' => $notices
+        ]);
+    }
+
+    public function createNotice() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $subject = trim($_POST['subject'] ?? '');
+            $body = trim($_POST['body'] ?? '');
+            $notice_date = $_POST['notice_date'] ?? date('Y-m-d');
+            $ref_no = trim($_POST['ref_no'] ?? '');
+            $target_audiences = $_POST['target_audiences'] ?? [];
+            $is_public = isset($_POST['is_public']) ? 1 : 0;
+
+            if (empty($subject) || empty($body) || empty($notice_date)) {
+                $this->flash('error', 'Subject, Date and Body are required.');
+                redirect('/coordinator/notice');
+            }
+
+            if (empty($target_audiences)) {
+                $this->flash('error', 'Please select at least one Target Audience group.');
+                redirect('/coordinator/notice');
+            }
+
+            $target_audience = implode(',', $target_audiences);
+
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId);
+
+            try {
+                $db->beginTransaction();
+
+                $stmt = $db->prepare("INSERT INTO notices (sender_id, subject, body, notice_date, ref_no, target_audience, department, is_public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$userId, $subject, $body, $notice_date, $ref_no ?: null, $target_audience, $dept, $is_public]);
+                $noticeId = $db->lastInsertId();
+
+                // Send notifications to target audience in the department
+                $recipients = [];
+                if (in_array('students', $target_audiences)) {
+                    $stmtStudents = $db->prepare("SELECT user_id FROM students WHERE department = ?");
+                    $stmtStudents->execute([$dept]);
+                    $recipients = array_merge($recipients, $stmtStudents->fetchAll(\PDO::FETCH_COLUMN));
+                }
+                if (in_array('supervisors', $target_audiences)) {
+                    $stmtSups = $db->prepare("SELECT user_id FROM supervisors WHERE department = ?");
+                    $stmtSups->execute([$dept]);
+                    $recipients = array_merge($recipients, $stmtSups->fetchAll(\PDO::FETCH_COLUMN));
+                }
+                if (in_array('committee', $target_audiences)) {
+                    $stmtComm = $db->prepare("SELECT user_id FROM committees WHERE department = ?");
+                    $stmtComm->execute([$dept]);
+                    $recipients = array_merge($recipients, $stmtComm->fetchAll(\PDO::FETCH_COLUMN));
+                }
+                if (in_array('hod', $target_audiences)) {
+                    $stmtHod = $db->prepare("SELECT user_id FROM hods WHERE department LIKE ? OR ? LIKE CONCAT('%', department, '%')");
+                    $stmtHod->execute(['%' . $dept . '%', $dept]);
+                    $recipients = array_merge($recipients, $stmtHod->fetchAll(\PDO::FETCH_COLUMN));
+                }
+
+                $recipients = array_unique($recipients);
+                
+                foreach ($recipients as $recId) {
+                    $this->addNotification($recId, 'New Department Notice', "Notice: $subject. Click to view.", '/notice/view?id=' . $noticeId);
+                }
+
+                $db->commit();
+                $this->flash('success', 'Notice generated and broadcasted successfully.');
+            } catch (\Exception $e) {
+                $db->rollBack();
+                error_log("createNotice error: " . $e->getMessage());
+                $this->flash('error', 'Failed to generate notice. Please try again.');
+            }
+        }
+        redirect('/coordinator/notice');
+    }
+    public function toggleNoticeVisibility() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            
+            $stmt = $db->prepare("SELECT is_hidden FROM notices WHERE id = ? AND sender_id = ?");
+            $stmt->execute([$id, $userId]);
+            $currentStatus = $stmt->fetchColumn();
+            
+            if ($currentStatus !== false) {
+                $newStatus = $currentStatus ? 0 : 1;
+                $updateStmt = $db->prepare("UPDATE notices SET is_hidden = ? WHERE id = ?");
+                $updateStmt->execute([$newStatus, $id]);
+                $this->flash('success', $newStatus ? 'Notice hidden successfully.' : 'Notice is now visible.');
+            }
+        }
+        redirect('/coordinator/notice');
+    }
+
+    public function deleteNotice() {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            
+            $stmt = $db->prepare("DELETE FROM notices WHERE id = ? AND sender_id = ?");
+            $stmt->execute([$id, $userId]);
+            $this->flash('success', 'Notice deleted successfully.');
+        }
+        redirect('/coordinator/notice');
+    }
+
+    public function externalAssessment() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        
+        $this->render('coordinator/external_assessment', [
+            'department' => $dept
+        ]);
+    }
+
+    public function generateExternalAssessment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $attrNames = $_POST['attr_names'] ?? [];
+            $attrMarks = $_POST['attr_marks'] ?? [];
+            
+            if (empty($attrNames) || count($attrNames) !== count($attrMarks)) {
+                $this->flash('error', 'Invalid attributes configuration.');
+                redirect('/coordinator/assessment');
+            }
+
+            $total = 0;
+            $attributes = [];
+            for ($i = 0; $i < count($attrNames); $i++) {
+                $name = trim($attrNames[$i]);
+                $marks = (int)$attrMarks[$i];
+                if (!empty($name) && $marks > 0) {
+                    $attributes[] = ['name' => $name, 'marks' => $marks];
+                    $total += $marks;
+                }
+            }
+
+            if ($total !== 50) {
+                $this->flash('error', "Total marks must exactly equal 50. Currently: $total");
+                redirect('/coordinator/assessment');
+            }
+
+            $shift = $_POST['shift'] ?? 'Combined';
+
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+            $query = "
+                SELECT g.id as group_id, g.group_code, p.title as project_title, 
+                       u_stu.name as student_name, u_stu.student_id as roll_no,
+                       sup.name as supervisor_name
+                FROM `groups` g
+                LEFT JOIN projects p ON p.group_id = g.id
+                LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+                JOIN group_members gm ON gm.group_id = g.id
+                JOIN students u_stu ON gm.student_id = u_stu.user_id
+                LEFT JOIN students s ON s.user_id = g.created_by
+                WHERE s.department = ? AND p.status = 'Approved'
+            ";
+
+            $params = [$dept];
+            if ($shift === 'Morning' || $shift === 'Evening') {
+                $query .= " AND u_stu.shift = ?";
+                $params[] = $shift;
+            }
+
+            $query .= " ORDER BY g.group_code ASC, u_stu.student_id ASC";
+
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            $students = $stmt->fetchAll();
+
+            // Group the students by group_id
+            $grouped = [];
+            foreach ($students as $s) {
+                $gid = $s['group_id'];
+                if (!isset($grouped[$gid])) {
+                    $grouped[$gid] = [];
+                }
+                $grouped[$gid][] = $s;
+            }
+
+            $this->render('coordinator/assessment_report', [
+                'attributes' => $attributes,
+                'grouped' => $grouped,
+                'shift' => $shift,
+                'department' => $dept
+            ]);
+            exit;
+        }
+        redirect('/coordinator/assessment');
+    }
+
+    public function proposals() {
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+        $shift = $this->getCoordinatorShift($db, $_SESSION['user_id'] ?? 0);
+        $shiftFilter = ($shift !== 'All') ? " AND s.shift = '$shift'" : "";
+
+        // Fetch proposals for groups where the group creator is a student in the coordinator's department & shift (active batch only)
+        $stmt = $db->prepare("SELECT pr.*, g.group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id, p.thesis_file, sup.name as supervisor_name 
+            FROM proposals pr
+            JOIN `groups` g ON pr.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? AND b.is_active = 1$shiftFilter 
+            ORDER BY pr.submitted_at DESC");
+        $stmt->execute([$dept]);
+        $proposals = $stmt->fetchAll();
+
+        // Fetch departmental supervisors for re-assignment
+        $stmtSups = $db->prepare("SELECT s.user_id, s.name, s.designation 
+            FROM supervisors s 
+            JOIN users u ON s.user_id = u.id 
+            WHERE s.department = ? AND u.status = 'approved' 
+            ORDER BY s.name ASC");
+        $stmtSups->execute([$dept]);
+        $supervisors = $stmtSups->fetchAll();
+
+        // Fetch members for each proposal group
+        foreach ($proposals as &$pr) {
+            $stmtM = $db->prepare("SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                JOIN users u_m ON s_m.user_id = u_m.id 
+                WHERE gm.group_id = ?");
+            $stmtM->execute([$pr['group_id']]);
+            $pr['members'] = $stmtM->fetchAll();
+        }
+
+        $this->render('coordinator/proposals', [
+            'proposals' => $proposals,
+            'supervisors' => $supervisors,
+            'shift' => $shift
+        ]);
+    }
+
+    public function reviewProposal() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('/coordinator/proposals');
+        }
+
+        // Validate CSRF token
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
+            $this->flash('error', 'Invalid security token.');
+            redirect('/coordinator/proposals');
+        }
+
+        $proposalId = (int)($_POST['proposal_id'] ?? 0);
+        $status = trim($_POST['status'] ?? '');
+        $supervisorId = !empty($_POST['supervisor_id']) ? (int)$_POST['supervisor_id'] : null;
+        $groupCode = trim($_POST['group_code'] ?? '');
+        $remarks = trim($_POST['remarks'] ?? '');
+
+        $allowedStatuses = ['Approved', 'Supervisor Approved', 'Revision Requested', 'Rejected', 'Submitted'];
+        if (!$proposalId || !in_array($status, $allowedStatuses)) {
+            $this->flash('error', 'Invalid proposal review data.');
+            redirect('/coordinator/proposals');
+        }
+
+        $db = \Database::getInstance()->getConnection();
+        $dept = $this->getCoordinatorDept($db, $_SESSION['user_id'] ?? 0);
+
+        try {
+            $db->beginTransaction();
+
+            // Fetch proposal & verify department
+            $stmt = $db->prepare("SELECT pr.*, g.id as group_id, g.group_code as current_group_code, g.created_by, p.id as project_id, p.title as project_title, p.supervisor_id as current_supervisor_id 
+                FROM proposals pr
+                JOIN `groups` g ON pr.group_id = g.id
+                JOIN projects p ON g.id = p.group_id
+                JOIN students s ON g.created_by = s.user_id
+                WHERE pr.id = ? AND s.department = ?");
+            $stmt->execute([$proposalId, $dept]);
+            $prop = $stmt->fetch();
+
+            if (!$prop) {
+                $db->rollBack();
+                $this->flash('error', 'Proposal not found or access denied.');
+                redirect('/coordinator/proposals');
+            }
+
+            $groupId = $prop['group_id'];
+            $projectId = $prop['project_id'];
+
+            // 1. Update proposals table
+            $stmtPr = $db->prepare("UPDATE proposals SET status = ?, feedback = ? WHERE id = ?");
+            $stmtPr->execute([$status, $remarks, $proposalId]);
+
+            // 2. Update projects table (status and supervisor)
+            $newSupervisorId = $supervisorId ?: $prop['current_supervisor_id'];
+            $stmtP = $db->prepare("UPDATE projects SET status = ?, supervisor_id = ? WHERE id = ?");
+            $stmtP->execute([$status, $newSupervisorId, $projectId]);
+
+            // 3. Update groups table & Auto-assign Group Code
+            if ($status === 'Approved') {
+                $stage = 'Proposal Approved';
+                // Auto-generate group code if not already assigned
+                if (empty($prop['current_group_code'])) {
+                    $stmtLeader = $db->prepare("SELECT student_id, department, shift FROM students WHERE user_id = ?");
+                    $stmtLeader->execute([$prop['created_by']]);
+                    $studentInfo = $stmtLeader->fetch();
+                    
+                    $rollNo = $studentInfo['student_id'] ?? '';
+                    $parts = explode('/', $rollNo);
+                    $year = !empty($parts[0]) ? trim($parts[0]) : '2k23';
+                    
+                    $deptMap = [
+                        'Software Engineering' => 'SWE',
+                        'Information Technology' => 'IT',
+                        'Data Science' => 'DS',
+                        'Electronic Engineering' => 'EL',
+                        'Telecommunication Engineering' => 'TL'
+                    ];
+                    $deptCode = $deptMap[$studentInfo['department'] ?? ''] ?? 'GEN';
+                    $shiftLetter = (($studentInfo['shift'] ?? '') === 'Evening') ? 'E' : 'M';
+                    
+                    $prefix = $year . '-' . $deptCode . $shiftLetter . '-';
+                    
+                    $stmtCount = $db->prepare("SELECT COUNT(*) FROM `groups` WHERE group_code LIKE ?");
+                    $stmtCount->execute([$prefix . '%']);
+                    $count = (int)$stmtCount->fetchColumn();
+                    $nextNumber = $count + 1;
+                    $autoGroupCode = $prefix . $nextNumber;
+                    
+                    $stmtUpdateCode = $db->prepare("UPDATE `groups` SET group_code = ? WHERE id = ?");
+                    $stmtUpdateCode->execute([$autoGroupCode, $groupId]);
+                    $groupCode = $autoGroupCode;
+                }
+                
+                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = ? WHERE id = ?");
+                $stmtProg->execute([$stage, $groupId]);
+            } else {
+                $stmtProg = $db->prepare("UPDATE `groups` SET progress_stage = 'Proposal Submitted' WHERE id = ?");
+                $stmtProg->execute([$groupId]);
+            }
+
+            // 4. Send Notifications
+            $displayCode = !empty($groupCode) ? $groupCode : (!empty($prop['current_group_code']) ? $prop['current_group_code'] : 'Proposal #' . $proposalId);
+            
+            // Notify student group members
+            $stmtMembers = $db->prepare("SELECT student_id FROM group_members WHERE group_id = ?");
+            $stmtMembers->execute([$groupId]);
+            $memberIds = $stmtMembers->fetchAll(\PDO::FETCH_COLUMN);
+
+            $notifMsg = "Your project proposal has been reviewed by the Department Coordinator. Status: $status." . (!empty($remarks) ? " Remarks: $remarks" : "");
+            foreach ($memberIds as $mId) {
+                $this->addNotification($mId, 'Proposal Reviewed by Coordinator', $notifMsg, '/student/proposal');
+            }
+
+            // Notify supervisor
+            if ($newSupervisorId) {
+                $supNotifMsg = "Group ($displayCode) proposal has been marked as '$status' by the Coordinator." . (!empty($remarks) ? " Remarks: $remarks" : "");
+                if ($newSupervisorId != $prop['current_supervisor_id']) {
+                    $supNotifMsg = "Group ($displayCode) has been assigned to you as supervisor by the Coordinator.";
+                }
+                $this->addNotification($newSupervisorId, 'Coordinator Proposal Update', $supNotifMsg, '/supervisor/groups');
+            }
+
+            $db->commit();
+            $this->flash('success', "Proposal successfully updated to '$status'.");
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->flash('error', 'Error updating proposal. Please try again.');
+        }
+
+        redirect('/coordinator/proposals');
+    }
+
+    public function profile() {
+        $userId = $_SESSION['user_id'];
+        $db = \Database::getInstance()->getConnection();
+
+        // Fetch coordinator details
+        $stmt = $db->prepare("SELECT c.name, c.department, u.email, u.cnic FROM coordinators c JOIN users u ON c.user_id = u.id WHERE c.user_id = ?");
+        $stmt->execute([$userId]);
+        $coordinator = $stmt->fetch();
+        if (!$coordinator) {
+            error_log("Coordinator profile not found for user_id: {$userId}");
+            redirect('/login');
+        }
+
+        // Get existing profile info
+        $stmt = $db->prepare("SELECT * FROM profiles WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $profile = $stmt->fetch();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $prefix = trim($_POST['prefix'] ?? '');
+            $mobile_code = trim($_POST['mobile_code'] ?? '');
+            $mobile_no = trim($_POST['mobile_no'] ?? '');
+            $home_address = trim($_POST['home_address'] ?? '');
+            
+            // Check if CNIC was missing and is now submitted
+            $cnic = trim($_POST['cnic'] ?? '');
+            $hasCnicInDb = !empty($coordinator['cnic']);
+            $cnicToSave = $coordinator['cnic'];
+
+            if (empty($prefix)) $errors[] = "Prefix is required.";
+            if (empty($mobile_code)) $errors[] = "Mobile Code is required.";
+            if (empty($mobile_no)) $errors[] = "Mobile Number is required.";
+            if (empty($home_address) || $home_address === 'Not Provided Yet') $errors[] = "Home/Office Address is required.";
+
+            if (!$hasCnicInDb) {
+                if (empty($cnic)) {
+                    $errors[] = "CNIC is required.";
+                } else {
+                    $cnic = str_replace('-', '', $cnic);
+                    if (!preg_match('/^[0-9]+$/', $cnic)) {
+                        $errors[] = "CNIC must contain numbers only.";
+                    } else {
+                        // Check uniqueness
+                        $stmtCheck = $db->prepare("SELECT id FROM users WHERE cnic = ? AND id != ?");
+                        $stmtCheck->execute([$cnic, $userId]);
+                        if ($stmtCheck->fetch()) {
+                            $errors[] = "This CNIC is already registered.";
+                        } else {
+                            $cnicToSave = $cnic;
+                        }
+                    }
+                }
+            }
+
+            // Check if Surname was missing and is now submitted
+            $surname = trim($_POST['surname'] ?? '');
+            $hasSurnameInDb = !empty($profile['surname']);
+            $surnameToSave = $profile['surname'] ?? '';
+            if (!$hasSurnameInDb) {
+                if (empty($surname)) {
+                    $errors[] = "Surname is required.";
+                } else {
+                    $surnameToSave = $surname;
+                }
+            }
+
+            if (empty($errors)) {
+                try {
+                    $db->beginTransaction();
+
+                    // Update profiles table
+                    $stmt = $db->prepare("UPDATE profiles SET prefix = ?, mobile_code = ?, mobile_no = ?, home_address = ?, cnic = ?, surname = ? WHERE user_id = ?");
+                    $stmt->execute([$prefix, $mobile_code, $mobile_no, $home_address, $cnicToSave, $surnameToSave, $userId]);
+
+                    // Update users table cnic if it was updated
+                    if (!$hasCnicInDb) {
+                        $stmt = $db->prepare("UPDATE users SET cnic = ? WHERE id = ?");
+                        $stmt->execute([$cnicToSave, $userId]);
+                    }
+
+                    $db->commit();
+                    $this->flash('success', 'Profile updated successfully.');
+                    redirect('/coordinator/profile');
+                } catch (\Exception $e) {
+                    $db->rollBack();
+                    error_log("updateCoordinatorProfile error for user {$userId}: " . $e->getMessage());
+                    $this->flash('error', 'Failed to update profile. Please try again.');
+                }
+            } else {
+                $this->flash('error', implode(" ", $errors));
+            }
+        }
+
+        $this->render('coordinator/profile', [
+            'coordinator' => $coordinator,
+            'profile' => $profile
+        ]);
+    }
+
+    private function sendEmail($toEmail, $subject, $message) {
+        $mailConfig = require __DIR__ . '/../../config/mail.php';
+
+        if (isset($mailConfig['smtp_username']) && $mailConfig['smtp_username'] !== 'your_email@gmail.com' && !empty($mailConfig['smtp_password'])) {
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = $mailConfig['smtp_host'];
+                $mail->SMTPAuth   = $mailConfig['smtp_auth'];
+                $mail->Username   = $mailConfig['smtp_username'];
+                $mail->Password   = $mailConfig['smtp_password'];
+                $mail->SMTPSecure = ($mailConfig['smtp_secure'] === 'ssl') ? \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS : \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = $mailConfig['smtp_port'];
+
+                $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
+                $mail->addAddress($toEmail);
+
+                $mail->isHTML(false);
+                $mail->Subject = $subject;
+                $mail->Body    = $message;
+
+                $mail->send();
+            } catch (\Exception $e) {
+                error_log("PHPMailer failed in CoordinatorController: " . $mail->ErrorInfo);
+            }
+        }
+    }
+
+    public function meetings() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+
+        $stmt = $db->prepare("
+            SELECT m.*, p.title as project_title, g.group_code, s.name as group_leader_name, sup.name as supervisor_name
+            FROM meetings m
+            JOIN `groups` g ON m.group_id = g.id
+            JOIN academic_batches b ON g.batch_id = b.id
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            JOIN supervisors sup ON m.supervisor_id = sup.user_id
+            WHERE s.department = ? AND m.status IN ('Completed', 'Verified') AND b.is_active = 1
+            ORDER BY m.meeting_date DESC
+        ");
+        $stmt->execute([$dept]);
+        $meetings = $stmt->fetchAll();
+
+        $this->render('coordinator/meetings', [
+            'meetings' => $meetings
+        ]);
+    }
+
+    public function verifyMeeting() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $meetingId = $_POST['meeting_id'] ?? null;
+            $status = $_POST['status'] ?? ''; 
+
+            if ($meetingId && $status === 'Verified') {
+                $db = \Database::getInstance()->getConnection();
+                
+                $userId = $_SESSION['user_id'];
+                $dept = $this->getCoordinatorDept($db, $userId);
+
+                $stmt = $db->prepare("
+                    SELECT m.id 
+                    FROM meetings m
+                    JOIN `groups` g ON m.group_id = g.id
+                    JOIN students s ON g.created_by = s.user_id
+                    WHERE m.id = ? AND s.department = ?
+                ");
+                $stmt->execute([$meetingId, $dept]);
+                $isValid = $stmt->fetchColumn();
+
+                if ($isValid) {
+                    $stmtUpdate = $db->prepare("UPDATE meetings SET status = 'Verified' WHERE id = ?");
+                    $stmtUpdate->execute([$meetingId]);
+                    $this->flash('success', 'Meeting successfully verified.');
+                } else {
+                    $this->flash('error', 'Unauthorized action.');
+                }
+            }
+        }
+        redirect('/coordinator/meetings');
+    }
+
+    public function committees() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $shift = $this->getCoordinatorShift($db, $userId);
+
+        // Fetch department settings for number of committees
+        $stmtDept = $db->prepare("SELECT num_committees FROM department_settings WHERE department = ?");
+        $stmtDept->execute([$dept]);
+        $numCommittees = (int)($stmtDept->fetchColumn() ?: 2);
+
+        // Fetch active committee evaluators
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommitteeMembers = $stmtComm->fetchAll();
+
+        $committeeMembers = [];
+        for ($i = 1; $i <= $numCommittees; $i++) {
+            $committeeMembers[$i] = array_values(array_filter($allCommitteeMembers, fn($m) => (int)($m['committee_number'] ?? 1) === $i));
+        }
+
+        // Fetch active approved groups in coordinator's shift & department
+        $shiftSql = ($shift !== 'All') ? " AND s.shift = ?" : "";
+        $params = [$dept];
+        if ($shift !== 'All') {
+            $params[] = $shift;
+        }
+
+        $stmtGroups = $db->prepare("
+            SELECT g.id, g.group_code, g.committee_number, g.progress_stage, g.created_at,
+                   p.id as project_id, p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name, sup.designation as supervisor_designation,
+                   s.shift as student_shift
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            JOIN academic_batches b ON g.batch_id = b.id
+            WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 $shiftSql
+            ORDER BY g.group_code ASC, g.id ASC
+        ");
+        $stmtGroups->execute($params);
+        $groups = $stmtGroups->fetchAll();
+
+        // Fetch members for each group
+        foreach ($groups as &$grp) {
+            $stmtM = $db->prepare("
+                SELECT s_m.student_id as roll_no, s_m.name as student_name, s_m.avatar 
+                FROM group_members gm 
+                JOIN students s_m ON gm.student_id = s_m.user_id 
+                WHERE gm.group_id = ?
+            ");
+            $stmtM->execute([$grp['id']]);
+            $grp['members'] = $stmtM->fetchAll();
+        }
+
+        // Calculate distribution stats
+        $committeeCounts = [];
+        for ($i = 1; $i <= $numCommittees; $i++) {
+            $committeeCounts[$i] = 0;
+        }
+        $unassignedCount = 0;
+
+        foreach ($groups as $g) {
+            $cNum = $g['committee_number'];
+            if ($cNum && isset($committeeCounts[(int)$cNum])) {
+                $committeeCounts[(int)$cNum]++;
+            } else {
+                $unassignedCount++;
+            }
+        }
+
+        $this->render('coordinator/committee_allocation', [
+            'department' => $dept,
+            'shift' => $shift,
+            'numCommittees' => $numCommittees,
+            'committeeMembers' => $committeeMembers,
+            'groups' => $groups,
+            'committeeCounts' => $committeeCounts,
+            'unassignedCount' => $unassignedCount,
+            'totalGroups' => count($groups)
+        ]);
+    }
+
+    public function distributeCommittees() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId);
+            $shift = $this->getCoordinatorShift($db, $userId);
+
+            $capacities = $_POST['capacity'] ?? [];
+
+            // Fetch active approved groups in coordinator's department & shift ordered sequentially
+            $shiftSql = ($shift !== 'All') ? " AND s.shift = ?" : "";
+            $params = [$dept];
+            if ($shift !== 'All') {
+                $params[] = $shift;
+            }
+
+            $stmtGroups = $db->prepare("
+                SELECT g.id, g.group_code
+                FROM `groups` g
+                JOIN projects p ON g.id = p.group_id
+                JOIN students s ON g.created_by = s.user_id
+                JOIN academic_batches b ON g.batch_id = b.id
+                WHERE s.department = ? AND p.status = 'Approved' AND b.is_active = 1 $shiftSql
+                ORDER BY g.group_code ASC, g.id ASC
+            ");
+            $stmtGroups->execute($params);
+            $groups = $stmtGroups->fetchAll();
+
+            $totalGroups = count($groups);
+            if ($totalGroups === 0) {
+                $this->flash('error', 'No approved project groups found to allocate.');
+                redirect('/coordinator/committees');
+            }
+
+            try {
+                $db->beginTransaction();
+
+                $assignedIndex = 0;
+                $summaryParts = [];
+
+                foreach ($capacities as $commNum => $cap) {
+                    $commNum = (int)$commNum;
+                    $cap = max(0, (int)$cap);
+                    $assignedToThis = 0;
+
+                    for ($i = 0; $i < $cap && $assignedIndex < $totalGroups; $i++) {
+                        $grpId = $groups[$assignedIndex]['id'];
+                        $stmtUp = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                        $stmtUp->execute([$commNum, $grpId]);
+                        $assignedIndex++;
+                        $assignedToThis++;
+                    }
+
+                    if ($assignedToThis > 0) {
+                        $summaryParts[] = "$assignedToThis groups to Committee $commNum";
+                    }
+                }
+
+                // Any remaining overflow groups go to the last committee
+                if ($assignedIndex < $totalGroups) {
+                    $lastComm = count($capacities) > 0 ? max(array_keys($capacities)) : 1;
+                    $overflowCount = 0;
+                    while ($assignedIndex < $totalGroups) {
+                        $grpId = $groups[$assignedIndex]['id'];
+                        $stmtUp = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                        $stmtUp->execute([$lastComm, $grpId]);
+                        $assignedIndex++;
+                        $overflowCount++;
+                    }
+                    if ($overflowCount > 0) {
+                        $summaryParts[] = "$overflowCount extra groups to Committee $lastComm";
+                    }
+                }
+
+                $db->commit();
+                $this->flash('success', "Sequential distribution complete: " . implode(', ', $summaryParts) . " ($totalGroups total groups).");
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error applying committee distribution. Please try again.');
+            }
+        }
+        redirect('/coordinator/committees');
+    }
+
+    public function reassignGroupCommittee() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $groupId = (int)($_POST['group_id'] ?? 0);
+            $committeeNumber = max(1, (int)($_POST['committee_number'] ?? 1));
+
+            if ($groupId > 0) {
+                $stmt = $db->prepare("UPDATE `groups` SET committee_number = ? WHERE id = ?");
+                $stmt->execute([$committeeNumber, $groupId]);
+                $this->flash('success', "Group successfully reallocated to Committee $committeeNumber.");
+            } else {
+                $this->flash('error', 'Invalid group selection.');
+            }
+        }
+        redirect('/coordinator/committees');
+    }
+
+    public function deadlines() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        if ($coordShift !== 'All') {
+            $selectedShift = $coordShift;
+            $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
+            $stmt->execute([$dept, $coordShift]);
+        } else {
+            $selectedShift = $_GET['shift'] ?? 'All';
+            if (!in_array($selectedShift, ['Morning', 'Evening', 'All'])) {
+                $selectedShift = 'All';
+            }
+            if ($selectedShift === 'All') {
+                $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? ORDER BY deadline_date ASC");
+                $stmt->execute([$dept]);
+            } else {
+                $stmt = $db->prepare("SELECT * FROM deadlines WHERE department = ? AND (shift = ? OR shift = 'All') ORDER BY deadline_date ASC");
+                $stmt->execute([$dept, $selectedShift]);
+            }
+        }
+        $deadlines = $stmt->fetchAll();
+
+        $stmtAll = $db->prepare("SELECT COUNT(*) FROM deadlines WHERE department = ? AND status = 'Active' AND deadline_date >= NOW()");
+        $stmtAll->execute([$dept]);
+        $upcomingCount = (int)$stmtAll->fetchColumn();
+
+        $this->render('coordinator/deadlines', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'selectedShift' => $selectedShift,
+            'deadlines' => $deadlines,
+            'upcomingCount' => $upcomingCount
+        ]);
+    }
+
+    public function saveDeadline() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $id = (int)($_POST['id'] ?? 0);
+            $stage = trim($_POST['stage'] ?? '');
+            
+            // If coordinator is assigned to Morning or Evening only, force to their shift
+            if ($coordShift !== 'All') {
+                $shift = $coordShift;
+            } else {
+                $shift = trim($_POST['shift'] ?? 'All');
+                if (!in_array($shift, ['Morning', 'Evening', 'All'])) {
+                    $shift = 'All';
+                }
+            }
+
+            $deadlineDate = trim($_POST['deadline_date'] ?? '');
+            $status = trim($_POST['status'] ?? 'Active');
+
+            $allowedStages = [
+                'Proposal Submission',
+                'Proposal Defence Presentation',
+                'FYP Progress Presentation',
+                'Final Presentation'
+            ];
+            $allowedStatuses = ['Active', 'Inactive'];
+
+            if (!in_array($stage, $allowedStages) || empty($deadlineDate)) {
+                $this->flash('error', 'Please select a valid stage and provide a valid deadline date & time.');
+                redirect('/coordinator/deadlines');
+            }
+
+            if (!in_array($status, $allowedStatuses)) {
+                $status = 'Active';
+            }
+
+            $formattedDate = date('Y-m-d H:i:s', strtotime($deadlineDate));
+
+            if ($id > 0) {
+                $stmt = $db->prepare("UPDATE deadlines SET stage = ?, shift = ?, deadline_date = ?, status = ? WHERE id = ? AND department = ?");
+                $stmt->execute([$stage, $shift, $formattedDate, $status, $id, $dept]);
+                $this->flash('success', "Deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") updated successfully.");
+            } else {
+                $stmtCheck = $db->prepare("SELECT id FROM deadlines WHERE stage = ? AND department = ? AND shift = ?");
+                $stmtCheck->execute([$stage, $dept, $shift]);
+                $existingId = $stmtCheck->fetchColumn();
+
+                if ($existingId) {
+                    $stmtUpdate = $db->prepare("UPDATE deadlines SET deadline_date = ?, status = ? WHERE id = ?");
+                    $stmtUpdate->execute([$formattedDate, $status, $existingId]);
+                    $this->flash('success', "Existing deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") updated with new schedule.");
+                } else {
+                    $stmtInsert = $db->prepare("INSERT INTO deadlines (stage, department, shift, deadline_date, status) VALUES (?, ?, ?, ?, ?)");
+                    $stmtInsert->execute([$stage, $dept, $shift, $formattedDate, $status]);
+                    $this->flash('success', "New deadline for '$stage' (" . ($shift === 'All' ? 'All Shifts' : "$shift Shift") . ") published successfully.");
+                }
+            }
+        }
+        redirect('/coordinator/deadlines');
+    }
+
+    public function deleteDeadline() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $id = (int)($_POST['id'] ?? 0);
+            if ($id > 0) {
+                if ($coordShift !== 'All') {
+                    $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ? AND (shift = ? OR shift = 'All')");
+                    $stmt->execute([$id, $dept, $coordShift]);
+                } else {
+                    $stmt = $db->prepare("DELETE FROM deadlines WHERE id = ? AND department = ?");
+                    $stmt->execute([$id, $dept]);
+                }
+                $this->flash('success', 'Deadline removed successfully.');
+            } else {
+                $this->flash('error', 'Invalid deadline ID.');
+            }
+        }
+        redirect('/coordinator/deadlines');
+    }
+
+    public function batches() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        if ($shift === 'All') {
+            $stmt = $db->prepare("
+                SELECT b.*, 
+                       COUNT(DISTINCT g.id) as group_count,
+                       COUNT(DISTINCT CASE WHEN p.status = 'Approved' THEN p.id END) as approved_projects_count
+                FROM academic_batches b
+                LEFT JOIN `groups` g ON b.id = g.batch_id
+                LEFT JOIN projects p ON g.id = p.group_id
+                WHERE b.department = ?
+                GROUP BY b.id
+                ORDER BY b.created_at DESC
+            ");
+            $stmt->execute([$dept]);
+        } else {
+            $stmt = $db->prepare("
+                SELECT b.*, 
+                       COUNT(DISTINCT g.id) as group_count,
+                       COUNT(DISTINCT CASE WHEN p.status = 'Approved' THEN p.id END) as approved_projects_count
+                FROM academic_batches b
+                LEFT JOIN `groups` g ON b.id = g.batch_id
+                LEFT JOIN projects p ON g.id = p.group_id
+                WHERE b.department = ? AND (b.shift = ? OR b.shift = 'All')
+                GROUP BY b.id
+                ORDER BY b.created_at DESC
+            ");
+            $stmt->execute([$dept, $shift]);
+        }
+        $batches = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $this->render('coordinator/batches', [
+            'batches' => $batches,
+            'department' => $dept,
+            'shift' => $shift
+        ]);
+    }
+
+    public function createBatch() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $name = trim($_POST['name'] ?? '');
+            $shift = ($coordShift === 'All') ? ($_POST['shift'] ?? 'Morning') : $coordShift;
+            $activateNow = !empty($_POST['activate_now']);
+
+            if (empty($name)) {
+                $this->flash('error', 'Batch name is required.');
+                redirect('/coordinator/batches');
+            }
+
+            try {
+                $db->beginTransaction();
+
+                if ($activateNow) {
+                    // Find currently active batch for this department & shift
+                    $stmtActive = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1");
+                    $stmtActive->execute([$dept, $shift]);
+                    $oldBatchIds = $stmtActive->fetchAll(\PDO::FETCH_COLUMN);
+
+                    // Deactivate and close registration for prior active batch
+                    $stmtDeact = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All')");
+                    $stmtDeact->execute([$dept, $shift]);
+
+                    // Insert new active batch
+                    $stmt = $db->prepare("INSERT INTO academic_batches (name, department, shift, is_active, is_registration_open) VALUES (?, ?, ?, 1, 1)");
+                    $stmt->execute([$name, $dept, $shift]);
+                    $newBatchId = $db->lastInsertId();
+
+                    $db->commit();
+
+                    // Cleanup chat attachments and notifications for archived batch(es)
+                    foreach ($oldBatchIds as $oldId) {
+                        $this->cleanupArchivedBatchChat($db, $oldId);
+                    }
+
+                    $this->flash('success', "Batch '$name' created and activated! Prior batch projects moved to Previous Projects and chat storage cleaned.");
+                } else {
+                    $stmt = $db->prepare("INSERT INTO academic_batches (name, department, shift, is_active, is_registration_open) VALUES (?, ?, ?, 0, 0)");
+                    $stmt->execute([$name, $dept, $shift]);
+                    $db->commit();
+                    $this->flash('success', "Batch '$name' created successfully (draft/inactive).");
+                }
+            } catch (\Exception $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                error_log("createBatch error: " . $e->getMessage());
+                $this->flash('error', 'Failed to create batch. Please try again.');
+            }
+        }
+        redirect('/coordinator/batches');
+    }
+
+    public function toggleBatch() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $db = \Database::getInstance()->getConnection();
+            $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+            $coordShift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+            $id = (int)($_POST['batch_id'] ?? 0);
+            $action = $_POST['action'] ?? '';
+
+            // Verify this batch belongs to coordinator's department & shift
+            if ($coordShift === 'All') {
+                $stmtCheck = $db->prepare("SELECT * FROM academic_batches WHERE id = ? AND department = ?");
+                $stmtCheck->execute([$id, $dept]);
+            } else {
+                $stmtCheck = $db->prepare("SELECT * FROM academic_batches WHERE id = ? AND department = ? AND (shift = ? OR shift = 'All')");
+                $stmtCheck->execute([$id, $dept, $coordShift]);
+            }
+            $targetBatch = $stmtCheck->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$targetBatch) {
+                $this->flash('error', 'Batch not found or access denied.');
+                redirect('/coordinator/batches');
+            }
+
+            $shift = $targetBatch['shift'];
+
+            try {
+                if ($action === 'set_registration') {
+                    // Only one batch can have registration open for this (department, shift)
+                    $db->beginTransaction();
+
+                    $stmtDeact = $db->prepare("UPDATE academic_batches SET is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All')");
+                    $stmtDeact->execute([$dept, $shift]);
+
+                    $stmt = $db->prepare("UPDATE academic_batches SET is_registration_open = 1, is_active = 1 WHERE id = ?");
+                    $stmt->execute([$id]);
+
+                    $db->commit();
+                    $this->flash('success', "Batch '{$targetBatch['name']}' is now open for new student registrations.");
+                } elseif ($action === 'toggle_active') {
+                    $newActive = $targetBatch['is_active'] ? 0 : 1;
+
+                    if ($newActive === 1) {
+                        // Activating this batch -> archive other batches for this department & shift
+                        $db->beginTransaction();
+
+                        $stmtActive = $db->prepare("SELECT id FROM academic_batches WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1 AND id != ?");
+                        $stmtActive->execute([$dept, $shift, $id]);
+                        $oldBatchIds = $stmtActive->fetchAll(\PDO::FETCH_COLUMN);
+
+                        $stmtDeact = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE department = ? AND (shift = ? OR shift = 'All') AND id != ?");
+                        $stmtDeact->execute([$dept, $shift, $id]);
+
+                        $stmt = $db->prepare("UPDATE academic_batches SET is_active = 1, is_registration_open = 1 WHERE id = ?");
+                        $stmt->execute([$id]);
+
+                        $db->commit();
+
+                        foreach ($oldBatchIds as $oldId) {
+                            $this->cleanupArchivedBatchChat($db, $oldId);
+                        }
+
+                        $this->flash('success', "Batch '{$targetBatch['name']}' activated. Prior batch moved to Previous Projects and chat storage cleaned.");
+                    } else {
+                        // Deactivating / Archiving this batch
+                        $db->beginTransaction();
+                        $stmt = $db->prepare("UPDATE academic_batches SET is_active = 0, is_registration_open = 0 WHERE id = ?");
+                        $stmt->execute([$id]);
+                        $db->commit();
+
+                        $this->cleanupArchivedBatchChat($db, $id);
+
+                        $this->flash('success', "Batch '{$targetBatch['name']}' concluded. Its projects moved to Previous Projects and chat storage cleaned.");
+                    }
+                }
+            } catch (\Exception $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+                error_log("toggleBatch error: " . $e->getMessage());
+                $this->flash('error', 'Operation failed. Please try again.');
+            }
+        }
+        redirect('/coordinator/batches');
+    }
+
+    private function cleanupArchivedBatchChat($db, $batchId) {
+        $batchId = (int)$batchId;
+        if ($batchId <= 0) return;
+
+        try {
+            // Find all groups in this archived batch
+            $stmt = $db->prepare("SELECT id, created_by FROM `groups` WHERE batch_id = ?");
+            $stmt->execute([$batchId]);
+            $groups = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            if (!empty($groups)) {
+                $groupIds = array_column($groups, 'id');
+                $leaderIds = array_filter(array_column($groups, 'created_by'));
+
+                // Find all student members
+                $inGroupIds = implode(',', array_map('intval', $groupIds));
+                $stmtM = $db->query("SELECT DISTINCT student_id FROM group_members WHERE group_id IN ($inGroupIds)");
+                $memberIds = $stmtM ? $stmtM->fetchAll(\PDO::FETCH_COLUMN) : [];
+
+                $allStudentUserIds = array_unique(array_merge($leaderIds, $memberIds));
+
+                // 1. Delete chat notifications for these groups/users
+                if (!empty($allStudentUserIds)) {
+                    $inUsers = implode(',', array_map('intval', $allStudentUserIds));
+                    $db->exec("DELETE FROM notifications WHERE redirect_url LIKE '%/chat%' AND user_id IN ($inUsers)");
+                    foreach ($allStudentUserIds as $sUid) {
+                        $db->prepare("DELETE FROM notifications WHERE redirect_url LIKE ? OR redirect_url LIKE ?")
+                           ->execute(["%/supervisor/chat?user=$sUid", "%/supervisor/chat?user_id=$sUid"]);
+                    }
+                }
+
+                // 2. Delete tracked files in chat_attachments for this batch or groups
+                $stmtFiles = $db->prepare("SELECT file_path FROM chat_attachments WHERE batch_id = ? OR group_id IN ($inGroupIds)");
+                $stmtFiles->execute([$batchId]);
+                $files = $stmtFiles->fetchAll(\PDO::FETCH_COLUMN);
+
+                $uploadDir = __DIR__ . '/../../public/uploads/chat_files/';
+                foreach ($files as $fPath) {
+                    $cleanName = basename($fPath);
+                    $fullPath = $uploadDir . $cleanName;
+                    if (file_exists($fullPath) && is_file($fullPath)) {
+                        @unlink($fullPath);
+                    }
+                }
+
+                // Delete records from chat_attachments
+                $db->prepare("DELETE FROM chat_attachments WHERE batch_id = ? OR group_id IN ($inGroupIds)")->execute([$batchId]);
+            }
+        } catch (\Exception $e) {
+            error_log("cleanupArchivedBatchChat error: " . $e->getMessage());
+        }
+    }
+
+    public function attendanceSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        // Fetch batches for this coordinator's dept & shift
+        $stmtBatches = $db->prepare("
+            SELECT id, name, shift, is_active 
+            FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All')
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $shift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        // Fetch committee count and details
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        $this->render('coordinator/attendance_sheet_config', [
+            'department' => $dept,
+            'shift' => $shift,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'committeesGrouped' => $committeesGrouped
+        ]);
+    }
+
+    public function printAttendanceSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+        $coordName = $this->getCoordinatorName($db, $userId);
+
+        $presentationName = trim($_GET['presentation_name'] ?? 'Proposal Defense');
+        if ($presentationName === '') {
+            $presentationName = 'Proposal Defense';
+        }
+
+        $selectedCommittee = trim($_GET['committee'] ?? 'all');
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : 0;
+        $sessionYear = trim($_GET['session_year'] ?? date('Y'));
+
+        // If no batch_id given, find the active batch
+        if ($batchId <= 0) {
+            $stmtAct = $db->prepare("
+                SELECT id, name, shift 
+                FROM academic_batches 
+                WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1 
+                LIMIT 1
+            ");
+            $stmtAct->execute([$dept, $shift]);
+            $actB = $stmtAct->fetch();
+            if ($actB) {
+                $batchId = (int)$actB['id'];
+                $batchName = $actB['name'];
+            } else {
+                $batchName = 'Batch ' . date('Y');
+            }
+        } else {
+            $stmtB = $db->prepare("SELECT name, shift FROM academic_batches WHERE id = ?");
+            $stmtB->execute([$batchId]);
+            $bRow = $stmtB->fetch();
+            $batchName = $bRow ? $bRow['name'] : 'Batch';
+        }
+
+        // Fetch committee members grouped
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        // Fetch groups
+        $shiftSql = ($shift !== 'All') ? " AND (s.shift = ? OR s.shift IS NULL)" : "";
+        $params = [$dept, 'Approved'];
+        if ($shift !== 'All') {
+            $params[] = $shift;
+        }
+
+        $batchSql = "";
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.committee_number, g.created_by,
+                   p.title as project_title,
+                   s.shift as student_shift, s.department as student_department
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            WHERE s.department = ? AND p.status = ? $shiftSql $batchSql
+            ORDER BY g.committee_number ASC, g.group_code ASC, g.id ASC
+        ";
+        $stmtGroups = $db->prepare($query);
+        $stmtGroups->execute($params);
+        $groups = $stmtGroups->fetchAll();
+
+        // Fetch all members for these groups
+        $groupIds = array_map(fn($g) => (int)$g['group_id'], $groups);
+        $membersByGroup = [];
+
+        if (!empty($groupIds)) {
+            $inIds = implode(',', $groupIds);
+            $stmtM = $db->query("
+                SELECT gm.group_id, s.user_id, s.student_id as roll_no, s.name as student_name
+                FROM group_members gm
+                JOIN students s ON gm.student_id = s.user_id
+                WHERE gm.group_id IN ($inIds)
+                ORDER BY gm.id ASC
+            ");
+            $memberRows = $stmtM->fetchAll();
+            foreach ($memberRows as $mr) {
+                $gid = (int)$mr['group_id'];
+                if (!isset($membersByGroup[$gid])) {
+                    $membersByGroup[$gid] = [];
+                }
+                $membersByGroup[$gid][] = [
+                    'roll_no' => $mr['roll_no'],
+                    'name' => $mr['student_name']
+                ];
+            }
+        }
+
+        // Ensure leader is included if members list is empty
+        foreach ($groups as &$grp) {
+            $gid = (int)$grp['group_id'];
+            if (empty($membersByGroup[$gid])) {
+                $stmtL = $db->prepare("SELECT student_id as roll_no, name as student_name FROM students WHERE user_id = ?");
+                $stmtL->execute([$grp['created_by']]);
+                if ($leader = $stmtL->fetch()) {
+                    $membersByGroup[$gid][] = [
+                        'roll_no' => $leader['roll_no'],
+                        'name' => $leader['student_name']
+                    ];
+                }
+            }
+            $grp['members'] = $membersByGroup[$gid] ?? [];
+        }
+        unset($grp);
+
+        // Group by committee number
+        $groupsByCommittee = [];
+        foreach ($groups as $grp) {
+            $cNum = !empty($grp['committee_number']) ? (int)$grp['committee_number'] : 0;
+            if (!isset($groupsByCommittee[$cNum])) {
+                $groupsByCommittee[$cNum] = [];
+            }
+            $groupsByCommittee[$cNum][] = $grp;
+        }
+
+        // Filter if specific committee requested
+        if ($selectedCommittee !== 'all') {
+            $targetCNum = (int)$selectedCommittee;
+            $filtered = [];
+            if (isset($groupsByCommittee[$targetCNum])) {
+                $filtered[$targetCNum] = $groupsByCommittee[$targetCNum];
+            } else {
+                $filtered[$targetCNum] = [];
+            }
+            $groupsByCommittee = $filtered;
+        }
+
+        $this->render('coordinator/attendance_sheet_print', [
+            'department' => $dept,
+            'shift' => $shift,
+            'coordinatorName' => $coordName,
+            'batchName' => $batchName,
+            'batchId' => $batchId,
+            'sessionYear' => $sessionYear,
+            'presentationName' => $presentationName,
+            'selectedCommittee' => $selectedCommittee,
+            'committeesGrouped' => $committeesGrouped,
+            'groupsByCommittee' => $groupsByCommittee
+        ]);
+    }
+
+    public function presentationSheets() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+
+        // Fetch batches for this coordinator's dept & shift
+        $stmtBatches = $db->prepare("
+            SELECT id, name, shift, is_active 
+            FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All')
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $shift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        // Fetch committee count and details
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        $totalCommittees = count($committeesGrouped);
+
+        $this->render('coordinator/presentation_sheet_config', [
+            'department' => $dept,
+            'shift' => $shift,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'committeesGrouped' => $committeesGrouped,
+            'totalCommittees' => $totalCommittees
+        ]);
+    }
+
+    public function printPresentationSheets() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId) ?: 'Software Engineering';
+        $shift = $this->getCoordinatorShift($db, $userId) ?: 'Morning';
+        $coordName = $this->getCoordinatorName($db, $userId);
+
+        $stage = trim($_GET['stage'] ?? 'Proposal Defence Presentation');
+        if (!in_array($stage, ['Proposal Defence Presentation', 'FYP Progress Presentation', 'Final Presentation'])) {
+            $stage = 'Proposal Defence Presentation';
+        }
+
+        $selectedCommittee = trim($_GET['committee'] ?? 'all');
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : 0;
+        $view = trim($_GET['view'] ?? 'minimized');
+        $dated = trim($_GET['dated'] ?? date('d-m-Y'));
+
+        // If no batch_id given, find the active batch
+        if ($batchId <= 0) {
+            $stmtAct = $db->prepare("
+                SELECT id, name, shift 
+                FROM academic_batches 
+                WHERE department = ? AND (shift = ? OR shift = 'All') AND is_active = 1 
+                LIMIT 1
+            ");
+            $stmtAct->execute([$dept, $shift]);
+            $actB = $stmtAct->fetch();
+            if ($actB) {
+                $batchId = (int)$actB['id'];
+                $batchName = $actB['name'];
+            } else {
+                $batchName = 'Batch ' . date('Y');
+            }
+        } else {
+            $stmtB = $db->prepare("SELECT name, shift FROM academic_batches WHERE id = ?");
+            $stmtB->execute([$batchId]);
+            $bRow = $stmtB->fetch();
+            $batchName = $bRow ? $bRow['name'] : 'Batch';
+        }
+
+        // Fetch all batches for toolbar filter
+        $stmtBatches = $db->prepare("
+            SELECT id, name, shift, is_active 
+            FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All')
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $shift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Fetch committee members grouped
+        $stmtComm = $db->prepare("
+            SELECT c.*, u.email 
+            FROM committees c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.department = ? 
+            ORDER BY c.committee_number ASC, c.name ASC
+        ");
+        $stmtComm->execute([$dept]);
+        $allCommittees = $stmtComm->fetchAll();
+
+        $committeesGrouped = [];
+        foreach ($allCommittees as $c) {
+            $cNum = (int)($c['committee_number'] ?? 1);
+            if (!isset($committeesGrouped[$cNum])) {
+                $committeesGrouped[$cNum] = [];
+            }
+            $committeesGrouped[$cNum][] = $c;
+        }
+
+        // Fetch groups
+        $shiftSql = ($shift !== 'All') ? " AND (s.shift = ? OR s.shift IS NULL)" : "";
+        $params = [$dept, 'Approved'];
+        if ($shift !== 'All') {
+            $params[] = $shift;
+        }
+
+        $batchSql = "";
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.committee_number, g.created_by,
+                   p.title as project_title, sup.name as supervisor_name,
+                   s.shift as student_shift, s.department as student_department
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN students s ON g.created_by = s.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            WHERE s.department = ? AND p.status = ? $shiftSql $batchSql
+            ORDER BY g.committee_number ASC, g.group_code ASC, g.id ASC
+        ";
+        $stmtGroups = $db->prepare($query);
+        $stmtGroups->execute($params);
+        $groups = $stmtGroups->fetchAll();
+
+        // Fetch members for these groups
+        $groupIds = array_map(fn($g) => (int)$g['group_id'], $groups);
+        $membersByGroup = [];
+
+        if (!empty($groupIds)) {
+            $inIds = implode(',', $groupIds);
+            $stmtM = $db->query("
+                SELECT gm.group_id, s.user_id, s.student_id as roll_no, s.name as student_name
+                FROM group_members gm
+                JOIN students s ON gm.student_id = s.user_id
+                WHERE gm.group_id IN ($inIds)
+                ORDER BY s.student_id ASC
+            ");
+            $memberRows = $stmtM->fetchAll();
+            foreach ($memberRows as $mr) {
+                $gid = (int)$mr['group_id'];
+                if (!isset($membersByGroup[$gid])) {
+                    $membersByGroup[$gid] = [];
+                }
+                $membersByGroup[$gid][] = [
+                    'roll_no' => $mr['roll_no'],
+                    'student_name' => $mr['student_name']
+                ];
+            }
+        }
+
+        // Previous comments for FYP Progress Presentation
+        $commentsByGroup = [];
+        if ($stage === 'FYP Progress Presentation' && !empty($groupIds)) {
+            $inIds = implode(',', $groupIds);
+            $stmtComments = $db->query("
+                SELECT e.group_id, e.remarks 
+                FROM evaluations e 
+                WHERE e.group_id IN ($inIds) AND e.stage = 'Proposal Defence Presentation' AND e.remarks IS NOT NULL AND e.remarks != ''
+            ");
+            $commentRows = $stmtComments->fetchAll();
+            foreach ($commentRows as $cr) {
+                $gid = (int)$cr['group_id'];
+                if (!isset($commentsByGroup[$gid])) {
+                    $commentsByGroup[$gid] = [];
+                }
+                $commentsByGroup[$gid][] = $cr['remarks'];
+            }
+        }
+
+        // Structure groups by committee
+        $groupsByCommittee = [];
+        foreach ($groups as $grp) {
+            $cNum = !empty($grp['committee_number']) ? (int)$grp['committee_number'] : 1;
+            $gid = (int)$grp['group_id'];
+            $members = $membersByGroup[$gid] ?? [];
+            if (empty($members)) {
+                $stmtL = $db->prepare("SELECT student_id as roll_no, name as student_name FROM students WHERE user_id = ?");
+                $stmtL->execute([$grp['created_by']]);
+                if ($leader = $stmtL->fetch()) {
+                    $members = [[
+                        'roll_no' => $leader['roll_no'],
+                        'student_name' => $leader['student_name']
+                    ]];
+                }
+            }
+
+            $grpMembersData = [];
+            $prevComments = isset($commentsByGroup[$gid]) ? implode(' ', $commentsByGroup[$gid]) : '';
+
+            foreach ($members as $m) {
+                $grpMembersData[] = [
+                    'group_id' => $gid,
+                    'group_code' => $grp['group_code'],
+                    'project_title' => $grp['project_title'],
+                    'supervisor_name' => $grp['supervisor_name'],
+                    'roll_no' => $m['roll_no'],
+                    'student_name' => $m['student_name'],
+                    'previous_comments' => $prevComments
+                ];
+            }
+
+            if (!isset($groupsByCommittee[$cNum])) {
+                $groupsByCommittee[$cNum] = [];
+            }
+            $groupsByCommittee[$cNum][$gid] = $grpMembersData;
+        }
+
+        // If specific committee is selected, filter
+        if ($selectedCommittee !== 'all') {
+            $targetCNum = (int)$selectedCommittee;
+            $filtered = [];
+            if (isset($groupsByCommittee[$targetCNum])) {
+                $filtered[$targetCNum] = $groupsByCommittee[$targetCNum];
+            } else {
+                $filtered[$targetCNum] = [];
+            }
+            $groupsByCommittee = $filtered;
+        } else {
+            foreach (array_keys($committeesGrouped) as $cNum) {
+                if (!isset($groupsByCommittee[$cNum])) {
+                    $groupsByCommittee[$cNum] = [];
+                }
+            }
+            ksort($groupsByCommittee);
+        }
+
+        $this->render('coordinator/presentation_sheet_print', [
+            'department' => $dept,
+            'shift' => $shift,
+            'coordinatorName' => $coordName,
+            'stage' => $stage,
+            'selectedCommittee' => $selectedCommittee,
+            'batchId' => $batchId,
+            'batchName' => $batchName,
+            'batches' => $batches,
+            'view' => $view,
+            'dated' => $dated,
+            'committeesGrouped' => $committeesGrouped,
+            'groupsByCommittee' => $groupsByCommittee
+        ]);
+    }
+
+    public function cumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $coordShift = $this->getCoordinatorShift($db, $userId);
+
+        // Fetch batches for this coordinator's dept & shift
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All') 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $coordShift]);
+        $batches = $stmtBatches->fetchAll();
+
+        // Active batch default
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
+        $effectiveShift = ($coordShift !== 'All') ? $coordShift : (isset($_GET['shift']) ? $_GET['shift'] : 'all');
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($effectiveShift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $effectiveShift;
+        }
+
+        // Query students, groups, projects, supervisors, and grades
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status,
+                   gr.show_supervision_to_student
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        // Also fetch evaluations visibility per group
+        $groupIds = array_unique(array_filter(array_column($studentsList, 'group_id')));
+        $evalVisibilities = [];
+        if (!empty($groupIds)) {
+            $inIds = implode(',', array_map('intval', $groupIds));
+            $stmtVis = $db->query("
+                SELECT group_id, stage, show_to_student, total_marks 
+                FROM evaluations 
+                WHERE group_id IN ($inIds)
+            ");
+            $visRows = $stmtVis->fetchAll();
+            foreach ($visRows as $vr) {
+                $gid = (int)$vr['group_id'];
+                if (!isset($evalVisibilities[$gid])) {
+                    $evalVisibilities[$gid] = [
+                        'total_count' => 0,
+                        'published_count' => 0,
+                        'stages' => []
+                    ];
+                }
+                $evalVisibilities[$gid]['total_count']++;
+                if ($vr['show_to_student'] == 1) {
+                    $evalVisibilities[$gid]['published_count']++;
+                }
+                $evalVisibilities[$gid]['stages'][$vr['stage']] = (int)$vr['show_to_student'];
+            }
+        }
+
+        // Stats calculation
+        $totalStudents = count($studentsList);
+        $passedCount = 0;
+        $totalScoreSum = 0;
+        $publishedCount = 0;
+        $totalEvalsOverall = 0;
+
+        foreach ($studentsList as &$s) {
+            $gid = (int)$s['group_id'];
+            $gVis = $evalVisibilities[$gid] ?? null;
+            $s['is_published'] = ($gVis && $gVis['published_count'] > 0 && $gVis['published_count'] >= $gVis['total_count']);
+            $s['vis_data'] = $gVis;
+
+            if ($gVis) {
+                $publishedCount += $gVis['published_count'];
+                $totalEvalsOverall += $gVis['total_count'];
+            }
+
+            $score = (float)($s['total_marks'] ?? 0);
+            $totalScoreSum += $score;
+            if (($s['pass_fail_status'] ?? '') === 'Pass' || ($s['percentage'] ?? 0) >= 50) {
+                $passedCount++;
+            }
+        }
+        unset($s);
+
+        $avgScore = $totalStudents > 0 ? (int)round($totalScoreSum / $totalStudents) : 0;
+        $allMarksPublished = ($totalEvalsOverall > 0 && $publishedCount >= $totalEvalsOverall);
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('coordinator/cumulative_sheet', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'batches' => $batches,
+            'activeBatch' => $activeBatch,
+            'selectedBatchId' => $batchId,
+            'selectedBatchName' => $batchName,
+            'selectedShift' => $effectiveShift,
+            'studentsList' => $studentsList,
+            'totalStudents' => $totalStudents,
+            'totalGroups' => count($groupIds),
+            'passedCount' => $passedCount,
+            'avgScore' => $avgScore,
+            'allMarksPublished' => $allMarksPublished,
+            'publishedEvalsCount' => $publishedCount,
+            'totalEvalsOverall' => $totalEvalsOverall
+        ]);
+    }
+
+    public function toggleMarksVisibility() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->validateCsrf();
+            $db = \Database::getInstance()->getConnection();
+            $userId = $_SESSION['user_id'] ?? 0;
+            $dept = $this->getCoordinatorDept($db, $userId);
+            $coordShift = $this->getCoordinatorShift($db, $userId);
+
+            $action = $_POST['action'] ?? 'publish';
+            $show = ($action === 'publish') ? 1 : 0;
+            $stage = $_POST['stage'] ?? 'all';
+            $batchId = !empty($_POST['batch_id']) ? (int)$_POST['batch_id'] : null;
+            $groupId = !empty($_POST['group_id']) ? (int)$_POST['group_id'] : null;
+
+            try {
+                $db->beginTransaction();
+
+                // Build conditions for evaluations
+                $whereClauses = ["s.department = ?"];
+                $params = [$show, $dept];
+
+                if ($coordShift !== 'All') {
+                    $whereClauses[] = "s.shift = ?";
+                    $params[] = $coordShift;
+                }
+                if ($groupId) {
+                    $whereClauses[] = "g.id = ?";
+                    $params[] = $groupId;
+                }
+                if ($batchId) {
+                    $whereClauses[] = "g.batch_id = ?";
+                    $params[] = $batchId;
+                }
+                if ($stage !== 'all' && $stage !== 'supervision') {
+                    $whereClauses[] = "e.stage = ?";
+                    $params[] = $stage;
+                }
+
+                if ($stage !== 'supervision') {
+                    $whereSql = implode(' AND ', $whereClauses);
+                    $stmtEvals = $db->prepare("
+                        UPDATE evaluations e
+                        JOIN `groups` g ON e.group_id = g.id
+                        JOIN students s ON g.created_by = s.user_id
+                        SET e.show_to_student = ?
+                        WHERE $whereSql
+                    ");
+                    $stmtEvals->execute($params);
+                }
+
+                // If 'all' or 'supervision', also update grades.show_supervision_to_student
+                if ($stage === 'all' || $stage === 'supervision') {
+                    $gradeClauses = ["s.department = ?"];
+                    $gradeParams = [$show, $dept];
+
+                    if ($coordShift !== 'All') {
+                        $gradeClauses[] = "s.shift = ?";
+                        $gradeParams[] = $coordShift;
+                    }
+                    if ($groupId) {
+                        $gradeClauses[] = "g.id = ?";
+                        $gradeParams[] = $groupId;
+                    }
+                    if ($batchId) {
+                        $gradeClauses[] = "g.batch_id = ?";
+                        $gradeParams[] = $batchId;
+                    }
+                    $gradeWhereSql = implode(' AND ', $gradeClauses);
+
+                    $stmtGrades = $db->prepare("
+                        UPDATE grades gr
+                        JOIN `groups` g ON gr.group_id = g.id
+                        JOIN students s ON g.created_by = s.user_id
+                        SET gr.show_supervision_to_student = ?
+                        WHERE $gradeWhereSql
+                    ");
+                    $stmtGrades->execute($gradeParams);
+                }
+
+                $db->commit();
+                $msg = $show ? 'Marks have been successfully published to students.' : 'Marks have been hidden from students.';
+                $this->flash('success', $msg);
+            } catch (\Exception $e) {
+                $db->rollBack();
+                $this->flash('error', 'Error updating marks visibility.');
+            }
+        }
+
+        $redirectUrl = '/coordinator/cumulative-sheet';
+        if (!empty($_POST['batch_id'])) {
+            $redirectUrl .= '?batch_id=' . (int)$_POST['batch_id'];
+        }
+        redirect($redirectUrl);
+    }
+
+    public function printCumulativeSheet() {
+        $db = \Database::getInstance()->getConnection();
+        $userId = $_SESSION['user_id'] ?? 0;
+        $dept = $this->getCoordinatorDept($db, $userId);
+        $coordShift = $this->getCoordinatorShift($db, $userId);
+        $coordName = $this->getCoordinatorName($db, $userId);
+        $hodName = $this->getHodNameForDept($db, $dept);
+
+        $stmtBatches = $db->prepare("
+            SELECT * FROM academic_batches 
+            WHERE department = ? AND (shift = ? OR shift = 'All') 
+            ORDER BY is_active DESC, id DESC
+        ");
+        $stmtBatches->execute([$dept, $coordShift]);
+        $batches = $stmtBatches->fetchAll();
+
+        $activeBatch = null;
+        foreach ($batches as $b) {
+            if ($b['is_active']) {
+                $activeBatch = $b;
+                break;
+            }
+        }
+        if (!$activeBatch && !empty($batches)) {
+            $activeBatch = $batches[0];
+        }
+
+        $batchId = isset($_GET['batch_id']) ? (int)$_GET['batch_id'] : ($activeBatch['id'] ?? 0);
+        $effectiveShift = ($coordShift !== 'All') ? $coordShift : (isset($_GET['shift']) ? $_GET['shift'] : 'all');
+        $dated = !empty($_GET['dated']) ? $_GET['dated'] : date('d-m-Y');
+
+        $batchSql = "";
+        $params = [$dept];
+        if ($batchId > 0) {
+            $batchSql = " AND g.batch_id = ?";
+            $params[] = $batchId;
+        }
+
+        $shiftSql = "";
+        if ($effectiveShift !== 'all') {
+            $shiftSql = " AND st.shift = ?";
+            $params[] = $effectiveShift;
+        }
+
+        $query = "
+            SELECT g.id as group_id, g.group_code, g.batch_id, g.committee_number,
+                   p.title as project_title, p.status as project_status,
+                   sup.name as supervisor_name,
+                   st.user_id as student_id, st.name as student_name, st.student_id as roll_no,
+                   st.department, st.shift,
+                   gr.proposal_defense_marks, gr.progress_presentation_marks,
+                   gr.supervision_marks, gr.final_presentation_marks,
+                   gr.total_marks, gr.percentage, gr.grade, gr.status as pass_fail_status
+            FROM `groups` g
+            JOIN projects p ON g.id = p.group_id
+            JOIN group_members gm ON g.id = gm.group_id
+            JOIN students st ON gm.student_id = st.user_id
+            LEFT JOIN supervisors sup ON p.supervisor_id = sup.user_id
+            LEFT JOIN grades gr ON st.user_id = gr.student_id
+            WHERE st.department = ? AND p.status = 'Approved' $batchSql $shiftSql
+            ORDER BY g.group_code ASC, st.student_id ASC
+        ";
+        $stmtStudents = $db->prepare($query);
+        $stmtStudents->execute($params);
+        $studentsList = $stmtStudents->fetchAll();
+
+        $batchName = 'All Batches';
+        if ($batchId > 0) {
+            foreach ($batches as $b) {
+                if ($b['id'] == $batchId) {
+                    $batchName = $b['name'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('coordinator/cumulative_sheet_print', [
+            'department' => $dept,
+            'coordinatorShift' => $coordShift,
+            'coordinatorName' => $coordName,
+            'hodName' => $hodName,
+            'batches' => $batches,
+            'batchId' => $batchId,
+            'batchName' => $batchName,
+            'shift' => $effectiveShift,
+            'dated' => $dated,
+            'studentsList' => $studentsList
+        ]);
+    }
+}
+
+

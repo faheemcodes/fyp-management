@@ -1,0 +1,422 @@
+<?php
+// Session configuration
+
+if (session_status() === PHP_SESSION_NONE) {
+    // Set session cookie security parameters
+    $cookieParams = session_get_cookie_params();
+    session_set_cookie_params([
+        'lifetime' => 0, // Until browser is closed
+        'path' => $cookieParams['path'] ?? '/',
+        'domain' => $cookieParams['domain'] ?? '',
+        'secure' => isset($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    session_start();
+}
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+// Load Composer Autoloader
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+
+// Load AI Config
+if (file_exists(__DIR__ . '/../config/ai_config.php')) {
+    require_once __DIR__ . '/../config/ai_config.php';
+}
+
+// Autoload config and src/ files
+spl_autoload_register(function ($class) {
+    // Replace namespaces with directory separator
+    $classPath = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+    
+    // Check in src folder
+    $file = __DIR__ . '/../src/' . $classPath . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+        return;
+    }
+    
+    // Check in config folder
+    $fileConfig = __DIR__ . '/../config/' . $classPath . '.php';
+    if (file_exists($fileConfig)) {
+        require_once $fileConfig;
+        return;
+    }
+
+    // Fallback to lowercase for Linux case-sensitivity (e.g. database.php)
+    $fileConfigLower = __DIR__ . '/../config/' . strtolower($classPath) . '.php';
+    if (file_exists($fileConfigLower)) {
+        require_once $fileConfigLower;
+        return;
+    }
+});
+
+// Helper function to redirect
+if (!function_exists('redirect')) {
+    function redirect($path) {
+        // Normalize URL
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $baseDir = dirname($scriptName);
+        if ($baseDir === '\\' || $baseDir === '/') {
+            $baseDir = '';
+        }
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+        header('Location: ' . $baseDir . $path);
+        exit;
+    }
+}
+
+// Global helper to extract real first name initial (ignoring academic/honorific prefixes)
+if (!function_exists('getNameInitial')) {
+    function getNameInitial($name) {
+        $clean = trim((string)$name);
+        // Strip common prefixes (Dr., Prof., Engr., Mr., Mrs., Ms., Sheikh, Syed, Sir, etc.)
+        $clean = preg_replace('/^(dr\.|dr|prof\.|prof|engr\.|engr|mr\.|mr|mrs\.|mrs|ms\.|ms|sir|madam|adv\.|adv)\s+/i', '', $clean);
+        $clean = trim($clean);
+        return strtoupper(substr($clean, 0, 1)) ?: 'U';
+    }
+}
+
+// Global helper to format a person's display name cleanly without duplication
+if (!function_exists('formatPersonName')) {
+    function formatPersonName($prefix, $firstName, $surname) {
+        $parts = [];
+        $cleanFirst = trim((string)$firstName);
+        $cleanSurname = trim((string)$surname);
+        $cleanPrefix = trim((string)$prefix);
+        
+        if (!empty($cleanPrefix)) $parts[] = $cleanPrefix;
+        if (!empty($cleanFirst)) $parts[] = $cleanFirst;
+        if (!empty($cleanSurname) && strcasecmp($cleanSurname, $cleanFirst) !== 0) $parts[] = $cleanSurname;
+        
+        return implode(' ', $parts);
+    }
+}
+
+// Simple router
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$scriptName = $_SERVER['SCRIPT_NAME'];
+$baseDir = dirname($scriptName);
+if ($baseDir !== '/' && $baseDir !== '\\' && strpos($uri, $baseDir) === 0) {
+    $uri = substr($uri, strlen($baseDir));
+}
+$uri = '/' . ltrim($uri, '/');
+
+// Normalize profile paths containing shift info or spaces (e.g., /coordinator (morning shift)/profile)
+$decodedUri = rawurldecode($uri);
+if (preg_match('#^/coordinator\b.*profile$#i', $decodedUri)) {
+    $uri = '/coordinator/profile';
+} elseif (preg_match('#^/committee\b.*profile$#i', $decodedUri)) {
+    $uri = '/committee/profile';
+} elseif (preg_match('#^/supervisor\b.*profile$#i', $decodedUri)) {
+    $uri = '/supervisor/profile';
+} elseif (preg_match('#^/student\b.*profile$#i', $decodedUri)) {
+    $uri = '/student/profile';
+} elseif (preg_match('#^/hod\b.*profile$#i', $decodedUri)) {
+    $uri = '/hod/profile';
+}
+
+// Define routes
+$routes = [
+    '/' => ['Controller\PublicController', 'landing'],
+    '/contact' => ['Controller\PublicController', 'contact'],
+    '/contact-submit' => ['Controller\PublicController', 'contactSubmit'],
+    '/faculty' => ['Controller\PublicController', 'faculty'],
+    '/notice-board' => ['Controller\PublicController', 'noticeBoard'],
+    '/notice/view' => ['Controller\PublicController', 'viewNotice'],
+    '/login' => ['Controller\AuthController', 'login'],
+    '/logout' => ['Controller\AuthController', 'logout'],
+    '/register' => ['Controller\AuthController', 'register'],
+    '/forgot-password' => ['Controller\AuthController', 'forgotPassword'],
+    '/reset-password' => ['Controller\AuthController', 'resetPassword'],
+    '/change-password' => ['Controller\AuthController', 'changePassword'],
+    
+    // Admin routes
+    '/admin/dashboard' => ['Controller\AdminController', 'dashboard'],
+    '/admin/users' => ['Controller\AdminController', 'users'],
+    '/admin/users/approve' => ['Controller\AdminController', 'approveUser'],
+    '/admin/users/reject' => ['Controller\AdminController', 'rejectUser'],
+    '/admin/users/create' => ['Controller\AdminController', 'createUser'],
+    '/admin/users/edit' => ['Controller\AdminController', 'editUser'],
+    '/admin/users/delete' => ['Controller\AdminController', 'deleteUser'],
+    '/admin/slots' => ['Controller\AdminController', 'supervisorSlots'],
+    '/admin/groups' => ['Controller\AdminController', 'groups'],
+    '/admin/groups/create' => ['Controller\AdminController', 'createGroup'],
+    '/admin/groups/edit' => ['Controller\AdminController', 'editGroup'],
+    '/admin/groups/delete' => ['Controller\AdminController', 'deleteGroup'],
+    '/admin/groups/members/update' => ['Controller\AdminController', 'updateGroupMembers'],
+    '/admin/projects/edit' => ['Controller\AdminController', 'editProject'],
+    '/admin/projects/delete' => ['Controller\AdminController', 'deleteProject'],
+    '/admin/grades/edit' => ['Controller\AdminController', 'editGrades'],
+    '/admin/assign-supervisor' => ['Controller\AdminController', 'assignSupervisor'],
+    '/admin/groups/assign' => ['Controller\AdminController', 'assignSupervisor'],
+    '/admin/proposals' => ['Controller\AdminController', 'proposals'],
+    '/admin/proposals/review' => ['Controller\AdminController', 'reviewProposal'],
+    '/admin/committees' => ['Controller\AdminController', 'committees'],
+    '/admin/committees/live' => ['Controller\AdminController', 'liveCommittees'],
+    '/admin/committees/distribute' => ['Controller\AdminController', 'distributeCommittees'],
+    '/admin/committees/reassign' => ['Controller\AdminController', 'reassignGroupCommittee'],
+    '/admin/cumulative-sheet' => ['Controller\AdminController', 'cumulativeSheet'],
+    '/admin/cumulative-sheet/print' => ['Controller\AdminController', 'printCumulativeSheet'],
+    '/admin/cumulative-sheet/toggle-visibility' => ['Controller\AdminController', 'toggleMarksVisibility'],
+    '/admin/attendance-sheet' => ['Controller\AdminController', 'attendanceSheet'],
+    '/admin/attendance-sheet/print' => ['Controller\AdminController', 'printAttendanceSheet'],
+    '/admin/presentation-sheets' => ['Controller\AdminController', 'presentationSheets'],
+    '/admin/presentation-sheets/print' => ['Controller\AdminController', 'printPresentationSheets'],
+    '/admin/meetings' => ['Controller\AdminController', 'meetings'],
+    '/admin/meetings/verify' => ['Controller\AdminController', 'verifyMeeting'],
+
+    // HOD routes
+    '/hod/dashboard' => ['Controller\HodController', 'dashboard'],
+    '/hod/settings' => ['Controller\HodController', 'settings'],
+    '/hod/settings/update' => ['Controller\HodController', 'updateSettings'],
+    '/hod/supervisors' => ['Controller\HodController', 'supervisors'],
+    '/hod/supervisors/create' => ['Controller\HodController', 'createSupervisor'],
+    '/hod/supervisors/edit' => ['Controller\HodController', 'editSupervisor'],
+    '/hod/supervisors/delete' => ['Controller\HodController', 'deleteSupervisor'],
+    '/hod/committee' => ['Controller\HodController', 'committee'],
+    '/hod/committee/create' => ['Controller\HodController', 'createCommittee'],
+    '/hod/committee/edit' => ['Controller\HodController', 'editCommittee'],
+    '/hod/committee/delete' => ['Controller\HodController', 'deleteCommittee'],
+    '/hod/coordinators' => ['Controller\HodController', 'coordinators'],
+    '/hod/coordinators/create' => ['Controller\HodController', 'createCoordinator'],
+    '/hod/coordinators/edit' => ['Controller\HodController', 'editCoordinator'],
+    '/hod/coordinators/delete' => ['Controller\HodController', 'deleteCoordinator'],
+    '/hod/students/verify' => ['Controller\HodController', 'verifyStudents'],
+    '/hod/students/approve' => ['Controller\HodController', 'approveStudent'],
+    '/hod/students/approve-all' => ['Controller\HodController', 'approveAllStudents'],
+    '/hod/students/reject' => ['Controller\HodController', 'rejectStudent'],
+    '/hod/projects' => ['Controller\HodController', 'projects'],
+    '/hod/projects/reassign-committee' => ['Controller\HodController', 'reassignGroupCommittee'],
+    '/hod/profile' => ['Controller\HodController', 'profile'],
+    '/hod/cumulative-sheet' => ['Controller\HodController', 'cumulativeSheet'],
+    '/hod/cumulative-sheet/print' => ['Controller\HodController', 'printCumulativeSheet'],
+    '/hod/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    
+    // Student routes
+    '/student/dashboard' => ['Controller\StudentController', 'dashboard'],
+    '/student/profile' => ['Controller\StudentController', 'profile'],
+    '/student/group' => ['Controller\StudentController', 'group'],
+    '/student/group/create' => ['Controller\StudentController', 'createGroup'],
+    '/student/group/add-member' => ['Controller\StudentController', 'addMember'],
+    '/student/group/update-members' => ['Controller\StudentController', 'updateMembers'],
+    '/student/proposal' => ['Controller\StudentController', 'proposal'],
+    '/student/proposal/submit' => ['Controller\StudentController', 'submitProposal'],
+    '/student/grade' => ['Controller\StudentController', 'grade'],
+    '/student/chat' => ['Controller\StudentController', 'chat'],
+    '/student/meetings' => ['Controller\StudentController', 'meetings'],
+    '/student/meetings/request' => ['Controller\StudentController', 'requestMeeting'],
+    '/student/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    '/student/thesis/upload' => ['Controller\StudentController', 'uploadThesis'],
+    
+    // Supervisor routes
+    '/supervisor/dashboard' => ['Controller\SupervisorController', 'dashboard'],
+    '/supervisor/profile' => ['Controller\SupervisorController', 'profile'],
+    '/supervisor/groups' => ['Controller\SupervisorController', 'groups'],
+    '/supervisor/groups/grade' => ['Controller\SupervisorController', 'gradeGroup'],
+    '/supervisor/groups/toggle-visibility' => ['Controller\SupervisorController', 'toggleVisibility'],
+    '/supervisor/reviews' => ['Controller\SupervisorController', 'reviews'],
+    '/supervisor/chat' => ['Controller\SupervisorController', 'chat'],
+    '/supervisor/proposal/action' => ['Controller\SupervisorController', 'proposalAction'],
+    '/supervisor/meetings' => ['Controller\SupervisorController', 'meetings'],
+    '/supervisor/meetings/update' => ['Controller\SupervisorController', 'updateMeetingStatus'],
+    '/supervisor/meetings/complete' => ['Controller\SupervisorController', 'completeMeeting'],
+    '/supervisor/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    
+    // Committee routes
+    '/committee/dashboard' => ['Controller\CommitteeController', 'dashboard'],
+    '/committee/evaluations' => ['Controller\CommitteeController', 'evaluations'],
+    '/committee/evaluations/print' => ['Controller\CommitteeController', 'printSheet'],
+    '/committee/grading-sheet' => ['Controller\CommitteeController', 'gradingSheet'],
+    '/committee/grading-sheet/save' => ['Controller\CommitteeController', 'bulkGradeEvaluation'],
+    '/committee/evaluations/grade' => ['Controller\CommitteeController', 'gradeEvaluation'],
+    '/committee/evaluations/toggle-visibility' => ['Controller\CommitteeController', 'toggleCommitteeVisibility'],
+    '/committee/profile' => ['Controller\CommitteeController', 'profile'],
+    
+    // Coordinator routes
+    '/coordinator/dashboard' => ['Controller\CoordinatorController', 'dashboard'],
+    '/coordinator/proposals' => ['Controller\CoordinatorController', 'proposals'],
+    '/coordinator/proposals/review' => ['Controller\CoordinatorController', 'reviewProposal'],
+    '/coordinator/profile' => ['Controller\CoordinatorController', 'profile'],
+    '/coordinator/users' => ['Controller\CoordinatorController', 'verifyStudents'],
+    '/coordinator/users/approve' => ['Controller\CoordinatorController', 'approveStudent'],
+    '/coordinator/users/reject' => ['Controller\CoordinatorController', 'rejectStudent'],
+    '/coordinator/notice' => ['Controller\CoordinatorController', 'notice'],
+    '/coordinator/notice/create' => ['Controller\CoordinatorController', 'createNotice'],
+    '/coordinator/notice/toggle' => ['Controller\CoordinatorController', 'toggleNoticeVisibility'],
+    '/coordinator/notice/delete' => ['Controller\CoordinatorController', 'deleteNotice'],
+    '/coordinator/assessment' => ['Controller\CoordinatorController', 'externalAssessment'],
+    '/coordinator/assessment/generate' => ['Controller\CoordinatorController', 'generateExternalAssessment'],
+    '/coordinator/committees' => ['Controller\CoordinatorController', 'committees'],
+    '/coordinator/committees/distribute' => ['Controller\CoordinatorController', 'distributeCommittees'],
+    '/coordinator/committees/reassign' => ['Controller\CoordinatorController', 'reassignGroupCommittee'],
+    '/coordinator/meetings' => ['Controller\CoordinatorController', 'meetings'],
+    '/coordinator/meetings/verify' => ['Controller\CoordinatorController', 'verifyMeeting'],
+    '/coordinator/deadlines' => ['Controller\CoordinatorController', 'deadlines'],
+    '/coordinator/deadlines/save' => ['Controller\CoordinatorController', 'saveDeadline'],
+    '/coordinator/deadlines/delete' => ['Controller\CoordinatorController', 'deleteDeadline'],
+    '/coordinator/batches' => ['Controller\CoordinatorController', 'batches'],
+    '/coordinator/batches/create' => ['Controller\CoordinatorController', 'createBatch'],
+    '/coordinator/batches/toggle' => ['Controller\CoordinatorController', 'toggleBatch'],
+    '/coordinator/attendance-sheet' => ['Controller\CoordinatorController', 'attendanceSheet'],
+    '/coordinator/attendance-sheet/print' => ['Controller\CoordinatorController', 'printAttendanceSheet'],
+    '/coordinator/presentation-sheets' => ['Controller\CoordinatorController', 'presentationSheets'],
+    '/coordinator/presentation-sheets/print' => ['Controller\CoordinatorController', 'printPresentationSheets'],
+    '/coordinator/cumulative-sheet' => ['Controller\CoordinatorController', 'cumulativeSheet'],
+    '/coordinator/cumulative-sheet/toggle-visibility' => ['Controller\CoordinatorController', 'toggleMarksVisibility'],
+    '/coordinator/cumulative-sheet/print' => ['Controller\CoordinatorController', 'printCumulativeSheet'],
+    '/coordinator/previous-projects' => ['Controller\PreviousProjectsController', 'index'],
+    
+    // Role switching
+    '/switch-role' => ['Controller\AuthController', 'switchRole'],
+    
+    // Notifications API
+    '/api/notifications' => ['Controller\AuthController', 'fetchNotifications'],
+    '/api/notifications/read' => ['Controller\AuthController', 'markNotificationRead'],
+    '/api/notifications/delete' => ['Controller\AuthController', 'deleteNotification'],
+    '/api/upload-chat-file' => ['Controller\ChatController', 'uploadFile'],
+    '/api/chat/notify' => ['Controller\ChatController', 'notifyRecipient'],
+    
+    
+    // Chatbot API
+    '/api/chatbot' => ['Controller\ChatbotController', 'handleChat']
+];
+
+// Dispatch route
+if (array_key_exists($uri, $routes)) {
+    list($controllerClass, $method) = $routes[$uri];
+    
+    // Inactivity timeout: 15 minutes (900 seconds)
+    $timeout = 900;
+    $isApiRoute = (strpos($uri, '/api/') === 0);
+    
+    if (isset($_SESSION['user_id'])) {
+        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout) {
+            // Clear and destroy session
+            $_SESSION = [];
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+            session_destroy();
+            
+            if ($isApiRoute) {
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode(['error' => 'Session expired due to inactivity']);
+                exit;
+            } else {
+                session_start();
+                $_SESSION['flash']['error'] = 'Your session has expired due to 15 minutes of inactivity. Please log in again.';
+                redirect('/login');
+            }
+        }
+        
+        // Refresh activity time only for non-API requests (so background polling doesn't keep it alive)
+        if (!$isApiRoute) {
+            $_SESSION['last_activity'] = time();
+        }
+    }
+
+    // Check login requirements (simple session validation)
+    $authRoutes = ['/', '/contact', '/contact-submit', '/login', '/register', '/forgot-password', '/reset-password', '/faculty', '/notice-board'];
+    if (!in_array($uri, $authRoutes)) {
+        if (!isset($_SESSION['user_id'])) {
+            if ($isApiRoute) {
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode(['error' => 'Unauthorized']);
+                exit;
+            } else {
+                redirect('/login');
+            }
+        }
+        
+        // Role based access check
+        $role = $_SESSION['role'] ?? '';
+        $availableRoles = $_SESSION['available_roles'] ?? [$role];
+
+        if (strpos($uri, '/admin') === 0 && $role !== 'admin') {
+            http_response_code(403);
+            redirect('/login');
+        }
+        if (strpos($uri, '/hod') === 0 && $role !== 'hod') {
+            http_response_code(403);
+            redirect('/login');
+        }
+        if (strpos($uri, '/student') === 0 && $role !== 'student') {
+            http_response_code(403);
+            redirect('/login');
+        }
+        if (strpos($uri, '/supervisor') === 0) {
+            if (!in_array('supervisor', $availableRoles)) {
+                http_response_code(403);
+                redirect('/login');
+            }
+            if ($role !== 'supervisor') {
+                $_SESSION['role'] = 'supervisor';
+            }
+        }
+        if (strpos($uri, '/committee') === 0) {
+            if (!in_array('committee', $availableRoles)) {
+                http_response_code(403);
+                redirect('/login');
+            }
+            if ($role !== 'committee') {
+                $_SESSION['role'] = 'committee';
+            }
+        }
+        if (strpos($uri, '/coordinator') === 0) {
+            if (!in_array('coordinator', $availableRoles)) {
+                http_response_code(403);
+                redirect('/login');
+            }
+            if ($role !== 'coordinator') {
+                $_SESSION['role'] = 'coordinator';
+            }
+        }
+    } else {
+        // Only redirect logged in users to their dashboard if they visit the root '/' URL.
+        // This allows them to access /login and /register directly to switch accounts.
+        if ($uri === '/' && isset($_SESSION['user_id'])) {
+            $dashboardPath = '/' . $_SESSION['role'] . '/dashboard';
+            redirect($dashboardPath);
+        }
+    }
+
+    // Instantiate and execute
+    $controller = new $controllerClass();
+    $controller->$method();
+} else {
+    // 404 page
+    http_response_code(404);
+    echo "<!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>404 Not Found - FYP Management System</title>
+        <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
+        <style>
+            body { background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', sans-serif; }
+            .card { border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class='card p-5 text-center' style='max-width: 480px;'>
+            <h1 class='display-1 text-primary fw-bold'>404</h1>
+            <h4 class='text-dark mb-3'>Page Not Found</h4>
+            <p class='text-muted mb-4'>The requested page could not be found on the server. Please verify the URL or return to the dashboard.</p>
+            <a href='" . (isset($_SESSION['role']) ? '/'.$_SESSION['role'].'/dashboard' : '/login') . "' class='btn btn-primary rounded-pill px-4'>Back to Home</a>
+        </div>
+    </body>
+    </html>";
+}

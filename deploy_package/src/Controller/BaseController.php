@@ -1,0 +1,114 @@
+<?php
+namespace Controller;
+
+class BaseController {
+    protected $db;
+
+    public function __construct() {
+        $this->db = \Database::getInstance()->getConnection();
+    }
+
+    protected function validateCsrf() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+            if (empty($token) || !hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    http_response_code(403);
+                    echo json_encode(['success' => false, 'error' => 'CSRF validation failed.']);
+                    exit;
+                }
+                die('CSRF token validation failed.');
+            }
+        }
+    }
+
+    // Render view
+    protected function render($viewName, $data = []) {
+        // Extract data to local variables
+        extract($data);
+        
+        // Setup view file path
+        $viewFile = __DIR__ . '/../View/' . $viewName . '.php';
+        
+        if (file_exists($viewFile)) {
+            // Some views (like login/register/forgot-password/reset-password) don't need header/sidebar/footer.
+            $noLayoutViews = [
+                'auth/login', 
+                'auth/register', 
+                'auth/forgot-password', 
+                'auth/reset-password',
+                'coordinator/view_notice',
+                'coordinator/assessment_report',
+                'coordinator/attendance_sheet_print',
+                'coordinator/presentation_sheet_print',
+                'coordinator/cumulative_sheet_print',
+                'hod/cumulative_sheet_print',
+                'committee/print_sheet',
+                'admin/attendance_sheet_print',
+                'admin/presentation_sheet_print',
+                'admin/cumulative_sheet_print',
+                'landing',
+                'about',
+                'contact',
+                'faculty',
+                'public/notice-board'
+            ];
+            
+            if (in_array($viewName, $noLayoutViews)) {
+                require $viewFile;
+            } else {
+                // Get page notifications
+                $db = $this->db;
+                $userId = $_SESSION['user_id'] ?? null;
+                $notifications = [];
+                $unreadCount = 0;
+                if ($userId) {
+                    // Single query: fetch recent notifications + unread count in one round-trip
+                    $stmt = $db->prepare(
+                        "SELECT *, SUM(CASE WHEN is_read = 0 THEN 1 ELSE 0 END) OVER() AS total_unread
+                         FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 6"
+                    );
+                    $stmt->execute([$userId]);
+                    $notifications = $stmt->fetchAll();
+                    $unreadCount = !empty($notifications) ? (int)$notifications[0]['total_unread'] : 0;
+                }
+                
+                require __DIR__ . '/../View/layout/header.php';
+                require __DIR__ . '/../View/layout/sidebar.php';
+                require $viewFile;
+                require __DIR__ . '/../View/layout/footer.php';
+            }
+        } else {
+            // Log the missing view internally; do not expose filesystem paths to the browser
+            error_log("View not found: $viewName at $viewFile");
+            http_response_code(500);
+            die("An error occurred. Please try again later.");
+        }
+    }
+    
+    // JSON response
+    protected function json($data, $statusCode = 200) {
+        header('Content-Type: application/json');
+        http_response_code($statusCode);
+        echo json_encode($data);
+        exit;
+    }
+    
+    // Flash message helper
+    protected function flash($key, $message = null) {
+        if ($message !== null) {
+            $_SESSION['flash'][$key] = $message;
+        } else {
+            $msg = $_SESSION['flash'][$key] ?? null;
+            unset($_SESSION['flash'][$key]);
+            return $msg;
+        }
+    }
+
+    // Add notification helper
+    protected function addNotification($userId, $title, $message, $redirectUrl = null) {
+        $db = $this->db;
+        $stmt = $db->prepare("INSERT INTO notifications (user_id, title, message, redirect_url) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$userId, $title, $message, $redirectUrl]);
+    }
+}

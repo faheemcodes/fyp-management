@@ -1,0 +1,602 @@
+<style>
+/* ─── Proposal Page Scoped Styles ─── */
+
+
+
+
+
+
+/* ─── Section Panel ─── */
+
+
+
+
+
+
+
+
+/* ─── Step Cards ─── */
+
+
+
+
+.prop-step.done 
+.prop-step.active 
+
+/* ─── Member Input Slots ─── */
+.prop-member-input {
+    background: var(--form-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: border-color 0.2s ease;
+    cursor: text;
+}
+.prop-member-input:focus-within {
+    border-color: var(--primary-color);
+}
+.prop-member-input label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.prop-member-input label .num {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    background: rgba(139,92,246,0.1);
+    color: #8b5cf6;
+    font-size: 0.6rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.prop-member-input input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    width: 100%;
+    outline: none;
+}
+.prop-member-input input::placeholder {
+    color: #9ca3af;
+    font-size: 0.82rem;
+}
+
+/* ─── Save Footer ─── */
+.prop-save-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    background: var(--form-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.prop-save-footer .btn {
+    padding: 10px 32px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+/* ─── Feedback Bubble ─── */
+.prop-feedback-bubble {
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 16px;
+}
+
+/* ─── Form Group ─── */
+.prop-field label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+/* ─── Approved Banner ─── */
+.prop-approved-card {
+    text-align: center;
+    padding: 40px 24px;
+}
+.prop-approved-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(5,150,105,0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.8rem;
+    color: #059669;
+}
+
+@media (max-width: 768px) {
+    
+    
+}
+</style>
+<!-- Student Proposal Submission View -->
+<?php
+$titleVal       = $project['title'] ?? '';
+$abstractVal    = $proposal['abstract'] ?? $project['description'] ?? '';
+$supervisorIdVal = $project['supervisor_id'] ?? '';
+$isLeader = isset($group) && $group && $group['created_by'] == ($_SESSION['user_id'] ?? 0);
+$basePath       = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+
+$statusMap = [
+    'Draft'               => ['rgba(107,114,128,0.1)', '#6b7280',  'bi-pencil-fill'],
+    'Submitted'           => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
+    'Pending'             => ['rgba(245,158,11,0.1)',  '#d97706',  'bi-hourglass-split'],
+    'Supervisor Approved' => ['rgba(13,148,136,0.12)', '#0d9488',  'bi-person-check-fill'],
+    'Approved'            => ['rgba(16,185,129,0.1)',  '#059669',  'bi-patch-check-fill'],
+    'Revision Requested'  => ['rgba(139,92,246,0.1)',  '#8b5cf6',  'bi-arrow-repeat'],
+    'Rejected'            => ['rgba(239,68,68,0.1)',   '#dc2626',  'bi-x-circle-fill'],
+];
+$st  = $proposal['status'] ?? 'Draft';
+$sc  = $statusMap[$st] ?? $statusMap['Draft'];
+
+$supName = 'Unassigned';
+foreach (($supervisors ?? []) as $s) {
+    if ($s['user_id'] == $supervisorIdVal) { $supName = $s['name']; break; }
+}
+?>
+
+
+
+<?php if ($group && (!$isLeader || (isset($isBatchActive) && !$isBatchActive))): ?>
+<!-- ─── GROUP MEMBER OR ARCHIVED BATCH READ-ONLY VIEW ─── -->
+
+    <!-- Hero Banner -->
+    <div class="page-hero">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+            <div class="page-hero-icon">
+                <i class="bi bi-file-earmark-text-fill"></i>
+            </div>
+            <div class="flex-grow-1 text-center text-md-start">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
+                    Your Group Project
+                </p>
+                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem;letter-spacing: -0.02em;line-height: 1.35">
+                    <?php echo htmlspecialchars($project['title'] ?? 'FYP Project'); ?>
+                </h4>
+                <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8');?>;color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8');?>">
+                        <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                    <span class="page-hero-chip" style="background: rgba(255,255,255,0.1);color: rgba(255,255,255,0.7);font-family: monospace">
+                        <?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?>
+                    </span>
+                </div>
+            </div>
+            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06)">
+                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem;color: #34d399"></i>
+                <div>
+                    <div style="font-size: 0.65rem;color: rgba(255,255,255,0.4);text-transform: uppercase;letter-spacing: 0.04em">Supervisor</div>
+                    <div class="text-white fw-semibold" style="font-size: 0.88rem"><?php echo htmlspecialchars($supName); ?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Alert -->
+    <?php if (isset($isBatchActive) && !$isBatchActive): ?>
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(59,130,246,0.08);border: 1px solid rgba(59,130,246,0.25)">
+        <div style="width: 32px;height: 32px;background: rgba(59,130,246,0.15);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #2563eb;font-size: 0.9rem">
+            <i class="bi bi-eye-fill"></i>
+        </div>
+        <span style="font-size: 0.85rem;color: #1e40af;line-height: 1.5">Your final year project term has concluded. You have <strong>view-only access</strong> to review your project details, abstract, supervisor information, and thesis. Further edits and submissions are closed.</span>
+    </div>
+    <?php else: ?>
+    <div class="d-flex align-items-start gap-3 p-3 rounded-3 mb-4" style="background: rgba(37,99,235,0.06);border: 1px solid rgba(37,99,235,0.15)">
+        <div style="width: 32px;height: 32px;background: rgba(37,99,235,0.1);border-radius: 10px;display: flex;align-items: center;justify-content: center;flex-shrink: 0;color: #2563eb;font-size: 0.9rem">
+            <i class="bi bi-info-circle-fill"></i>
+        </div>
+        <span style="font-size: 0.85rem;color: #1e40af;line-height: 1.5">You are a group member. Only the <strong>group leader</strong> can edit the proposal, change the supervisor, or update team members.</span>
+    </div>
+    <?php endif; ?>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <!-- Abstract -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
+                        <i class="bi bi-file-text-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Project Abstract</h6>
+                        <small>Research summary and objectives</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.8;text-align: justify">
+                        <?php echo $abstractVal ? nl2br(htmlspecialchars($abstractVal)) : '<em>No abstract added yet.</em>'; ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(99,102,241,0.1);color: #6366f1">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Project Details</h6>
+                        <small>Key information and status</small>
+                    </div>
+                </div>
+                <div class="page-section-body d-flex flex-wrap gap-5 align-items-start">
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Supervisor</div>
+                        <div class="fw-semibold" style="font-size: 0.875rem"><?php echo htmlspecialchars($supName); ?></div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 4px">Group Code</div>
+                        <div class="fw-bold font-monospace" style="color: #2563eb"><?php echo htmlspecialchars($group['group_code'] ?? 'Pending'); ?></div>
+                    </div>
+                    <?php if ($proposal && $proposal['file_path']): ?>
+                    <div>
+                        <div style="font-size: 0.65rem;font-weight: 700;text-transform: uppercase;letter-spacing: 0.05em;color: var(--text-secondary);margin-bottom: 6px">Proposal File</div>
+                        <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="btn btn-sm btn-outline-primary rounded-3 px-3">
+                            <i class="bi bi-download me-1"></i>Download
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <?php if ($project && $project['status'] === 'Approved'): ?>
+            <!-- Final Thesis Upload -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1);color: #3b82f6">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div>
+                        <h6>Final Thesis</h6>
+                        <small>Upload your final thesis document</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <?php if ($project['thesis_file']): ?>
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(37,99,235,0.05), rgba(37,99,235,0.1)); border: 1px dashed rgba(37,99,235,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(37,99,235,0.15); border-radius: 50%; color: #2563eb;">
+                                <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
+                            </div>
+                            <h6 class="fw-bold mb-1" style="color: #2563eb;">Thesis Submitted</h6>
+                            <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
+                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                                <i class="bi bi-eye-fill me-2"></i>Open Document
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center p-4 rounded-4 mt-3" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-3 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.8rem;">Only the group leader can upload the final thesis document.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Feedback -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1);color: #f59e0b">
+                        <i class="bi bi-chat-left-text-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Review Feedback</h6>
+                        <small>Comments and remarks from reviewers</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <?php if ($proposal && $proposal['feedback']): ?>
+                        <div class="prop-feedback-bubble">
+                            <p class="mb-2" style="font-size: 0.82rem;line-height: 1.65;color: var(--text-primary)"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
+                            <div class="text-end"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'] ?? 'now')); ?></small></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-5">
+                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2.2rem;opacity: 0.2"></i>
+                            <p class="text-muted mt-3 mb-0" style="font-size: 0.82rem">No feedback recorded yet.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php else: ?>
+<!-- ─── LEADER SUBMISSION FORM VIEW ─── -->
+
+    <!-- Hero Banner -->
+    <div class="page-hero">
+        <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+            <div class="page-hero-icon">
+                <i class="bi bi-file-earmark-plus-fill"></i>
+            </div>
+            <div class="flex-grow-1 text-center text-md-start">
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.35)">
+                    Phase 1 — Proposal Submission
+                </p>
+                <h4 class="text-white fw-bold mb-2" style="font-size: 1.25rem;letter-spacing: -0.02em">
+                    <?php echo $proposal ? htmlspecialchars($project['title'] ?? 'Project Proposal') : 'New Project Proposal'; ?>
+                </h4>
+                <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start flex-wrap">
+                    <span class="page-hero-chip" style="background: <?php echo htmlspecialchars((string)($sc[0]), ENT_QUOTES, 'UTF-8');?>;color: <?php echo htmlspecialchars((string)($sc[1]), ENT_QUOTES, 'UTF-8');?>">
+                        <i class="bi <?php echo htmlspecialchars((string)($sc[2]), ENT_QUOTES, 'UTF-8'); ?>"></i> <?php echo htmlspecialchars((string)($st), ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                </div>
+            </div>
+            <?php if ($proposal): ?>
+            <div class="d-none d-md-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(255,255,255,0.06)">
+                <i class="bi bi-person-badge-fill" style="font-size: 1.4rem;color: #34d399"></i>
+                <div>
+                    <div style="font-size: 0.65rem;color: rgba(255,255,255,0.4);text-transform: uppercase;letter-spacing: 0.04em">Supervisor</div>
+                    <div class="text-white fw-semibold" style="font-size: 0.88rem"><?php echo htmlspecialchars($supName); ?></div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <?php if ($proposal && in_array($proposal['status'], ['Approved', 'Supervisor Approved'])): ?>
+                <!-- Approved or Supervisor Approved State -->
+                <div class="page-section">
+                    <div class="page-section-body prop-approved-card">
+                        <?php if ($proposal['status'] === 'Supervisor Approved'): ?>
+                            <div class="prop-approved-icon" style="background: rgba(13,148,136,0.1); color: #0d9488;">
+                                <i class="bi bi-person-check-fill fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #0d9488">Endorsed by Supervisor!</h5>
+                            <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 440px;margin: 0 auto 16px">Your supervisor has accepted and endorsed your proposal. It is now awaiting final departmental review and official Group Code assignment by the Department Coordinator.</p>
+                            <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(13,148,136,0.08);border: 1px solid rgba(13,148,136,0.2)">
+                                <i class="bi bi-person-badge-fill" style="color: #0d9488"></i>
+                                <span class="fw-semibold" style="font-size: 0.875rem;color: #0d9488"><?php echo htmlspecialchars($supName); ?></span>
+                            </div>
+                        <?php else: ?>
+                            <div class="prop-approved-icon">
+                                <i class="bi bi-patch-check-fill"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #059669">Proposal Approved &amp; Registered!</h5>
+                            <p class="text-muted mb-3" style="font-size: 0.875rem;max-width: 440px;margin: 0 auto 16px">Your FYP proposal has been formally approved by the Department Coordinator. You may now proceed with your project development.</p>
+                            <div class="d-inline-flex align-items-center gap-2 px-4 py-2 rounded-3" style="background: rgba(5,150,105,0.08);border: 1px solid rgba(5,150,105,0.2)">
+                                <i class="bi bi-patch-check-fill" style="color: #059669"></i>
+                                <span class="fw-semibold font-monospace" style="font-size: 0.875rem;color: #059669"><?php echo htmlspecialchars($group['group_code'] ?? 'Approved'); ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Abstract (read-only) -->
+                <div class="page-section">
+                    <div class="page-section-header">
+                        <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
+                            <i class="bi bi-file-text-fill"></i>
+                        </div>
+                        <div>
+                            <h6>Project Abstract</h6>
+                            <small>Submitted research summary</small>
+                        </div>
+                    </div>
+                    <div class="page-section-body">
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;line-height: 1.8;text-align: justify">
+                            <?php echo $abstractVal ? nl2br(htmlspecialchars($abstractVal)) : '<em>No abstract added yet.</em>'; ?>
+                        </p>
+                        <?php if ($proposal['file_path']): ?>
+                            <div class="mt-4 pt-3 border-top">
+                                <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="btn btn-outline-primary btn-sm rounded-3 px-4">
+                                    <i class="bi bi-file-earmark-arrow-down-fill me-2"></i>Download Proposal Document
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+            <?php else: ?>
+                <!-- Submission Form -->
+                <form action="<?php echo $basePath; ?>/student/proposal/submit" method="POST" enctype="multipart/form-data">
+
+                    <!-- Project Details -->
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(37,99,235,0.1);color: #2563eb">
+                                <i class="bi bi-journal-text"></i>
+                            </div>
+                            <div>
+                                <h6>Project Details</h6>
+                                <small>Title, supervisor, and abstract</small>
+                            </div>
+                        </div>
+                        <div class="page-section-body">
+                            <div class="row g-3">
+                                <div class="col-12 prop-field">
+                                    <label class="form-label">Project Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($titleVal); ?>" required placeholder="e.g. AI-Powered Smart Grid Analytics">
+                                </div>
+                                <div class="col-md-6 prop-field">
+                                    <label class="form-label">Choose Supervisor <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="supervisor_id" name="supervisor_id" required>
+                                        <option value="" disabled <?php echo empty($supervisorIdVal) ? 'selected' : ''; ?>>Select Faculty Member</option>
+                                        <?php foreach ($supervisors as $s): ?>
+                                            <option value="<?php echo htmlspecialchars((string)($s['user_id']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo $s['user_id'] == $supervisorIdVal ? 'selected' : ''; ?>><?php echo htmlspecialchars($s['name']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 prop-field">
+                                    <label class="form-label">Upload Proposal (PDF/DOC) <?php echo $proposal ? '' : '<span class="text-danger">*</span>'; ?></label>
+                                    <input type="file" class="form-control" id="proposal_file" name="proposal_file" <?php echo $proposal ? '' : 'required'; ?>>
+                                    <?php if ($proposal && $proposal['file_path']): ?>
+                                        <div class="mt-1" style="font-size: 0.75rem;color: var(--text-secondary)">
+                                            <i class="bi bi-file-earmark-check text-primary me-1"></i>
+                                            <a href="<?php echo $basePath . htmlspecialchars($proposal['file_path']); ?>" target="_blank" class="text-decoration-none fw-semibold" style="color: #2563eb">Current file uploaded</a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-12 prop-field">
+                                    <label class="form-label">Project Abstract / Summary <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="abstract" name="abstract" rows="7" required placeholder="Describe your project scope, objectives, methodology, and expected outcomes..."><?php echo htmlspecialchars($abstractVal); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Members -->
+                    <div class="page-section">
+                        <div class="page-section-header">
+                            <div class="page-section-icon" style="background: rgba(139,92,246,0.1);color: #8b5cf6">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div>
+                                <h6>Team Members</h6>
+                                <small>Optional — add up to 2 members</small>
+                            </div>
+                        </div>
+                        <div class="page-section-body">
+                            <div class="row g-3 mb-3">
+                                <?php 
+                                    $slots = max(1, ($maxGroupMembers ?? 3) - 1); 
+                                    for ($i = 0; $i < $slots; $i++): 
+                                        $val = isset($groupMembers[$i]) ? $groupMembers[$i]['student_id'] : '';
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="prop-member-input" onclick="document.getElementById('prop_member_slot_<?php echo $i; ?>').focus()">
+                                            <label for="prop_member_slot_<?php echo $i; ?>"><span class="num"><?php echo $i + 1; ?></span> Member Slot</label>
+                                            <input type="text" id="prop_member_slot_<?php echo $i; ?>" name="members[]" value="<?php echo htmlspecialchars($val); ?>" placeholder="Enter Roll No" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <?php endfor; ?>
+                            </div>
+                        </div>
+                        <div class="prop-save-footer">
+                            <span style="font-size: 0.75rem;color: var(--text-secondary)">
+                                <i class="bi bi-info-circle me-1"></i>Members receive view access to the proposal
+                            </span>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send-fill me-2"></i><?php echo $proposal ? 'Resubmit Proposal' : 'Submit Proposal'; ?>
+                            </button>
+                        </div>
+                    </div>
+                
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
+            <?php endif; ?>
+        </div>
+
+        <!-- Right sidebar -->
+        <div class="col-lg-5">
+            <?php if ($project && $project['status'] === 'Approved'): ?>
+            <!-- Final Thesis Upload -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(59,130,246,0.1);color: #3b82f6">
+                        <i class="bi bi-book-half"></i>
+                    </div>
+                    <div>
+                        <h6>Final Thesis</h6>
+                        <small>Upload your final thesis document</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <?php if ($project['thesis_file']): ?>
+                        <div class="p-4 mb-4 rounded-4 text-center" style="background: linear-gradient(145deg, rgba(37,99,235,0.05), rgba(37,99,235,0.1)); border: 1px dashed rgba(37,99,235,0.3);">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px; background: rgba(37,99,235,0.15); border-radius: 50%; color: #2563eb;">
+                                <i class="bi bi-file-earmark-pdf-fill fs-3"></i>
+                            </div>
+                            <h6 class="fw-bold mb-1" style="color: #2563eb;">Thesis Submitted</h6>
+                            <p class="text-muted mb-3" style="font-size: 0.8rem;">Your final document is uploaded and ready for review.</p>
+                            <button type="button" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold shadow-sm" onclick="viewThesisOffcanvas('<?php echo htmlspecialchars($project['thesis_file']); ?>')">
+                                <i class="bi bi-eye-fill me-2"></i>Open Document
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($isLeader && (!isset($isBatchActive) || $isBatchActive)): ?>
+                    <form action="<?php echo $basePath; ?>/student/thesis/upload" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                        
+                        <div class="p-3 rounded-4 mb-3" style="background: var(--body-bg); border: 1px solid var(--border-color);">
+                            <label class="form-label fw-bold d-flex align-items-center" style="font-size: 0.85rem; color: var(--text-primary);">
+                                <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i><?php echo $project['thesis_file'] ? 'Update Document' : 'Upload Document'; ?>
+                            </label>
+                            <p class="text-muted" style="font-size: 0.75rem; margin-bottom: 12px; line-height: 1.4;">Please select a PDF file. Uploading a new file will replace the current one.</p>
+                            <input class="form-control form-control-sm shadow-none" type="file" name="thesis_document" accept="application/pdf" required style="border-radius: 6px;">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold shadow-sm" style="padding: 0.6rem;">
+                            <?php echo $project['thesis_file'] ? 'Submit Replacement' : 'Submit Thesis'; ?>
+                        </button>
+                    </form>
+                    <?php elseif (isset($isBatchActive) && !$isBatchActive): ?>
+                        <div class="text-center p-3 rounded-4 mt-2" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-4 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.82rem;">Thesis submissions are closed because your project term has concluded. You can review and download your document above.</p>
+                        </div>
+                    <?php else: ?>
+                        <?php if (!$project['thesis_file']): ?>
+                        <div class="text-center p-4 rounded-4 mt-3" style="background: var(--body-bg); border: 1px dashed var(--border-color);">
+                            <i class="bi bi-lock-fill text-muted fs-3 mb-2 d-block"></i>
+                            <p class="text-muted mb-0" style="font-size: 0.8rem;">Only the group leader can upload the final thesis document.</p>
+                        </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Feedback -->
+            <div class="page-section">
+                <div class="page-section-header">
+                    <div class="page-section-icon" style="background: rgba(245,158,11,0.1);color: #f59e0b">
+                        <i class="bi bi-chat-left-text-fill"></i>
+                    </div>
+                    <div>
+                        <h6>Supervisor Feedback</h6>
+                        <small>Review comments and remarks</small>
+                    </div>
+                </div>
+                <div class="page-section-body">
+                    <?php if ($proposal && $proposal['feedback']): ?>
+                        <div class="prop-feedback-bubble">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-person-badge-fill" style="color: #0d9488"></i>
+                                <span class="fw-semibold" style="font-size: 0.82rem">Review Comments</span>
+                            </div>
+                            <p class="mb-1" style="font-size: 0.82rem;line-height: 1.65;color: var(--text-primary)"><?php echo nl2br(htmlspecialchars($proposal['feedback'])); ?></p>
+                            <div class="text-end mt-2"><small class="text-muted" style="font-size: 0.7rem">Updated: <?php echo date('M d, Y', strtotime($proposal['updated_at'])); ?></small></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-left-dots text-muted" style="font-size: 2rem;opacity: 0.2"></i>
+                            <p class="text-muted mt-2 mb-0" style="font-size: 0.82rem">No feedback yet.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+<?php endif; ?>
+<?php include __DIR__ . '/../shared/thesis_offcanvas.php'; ?>

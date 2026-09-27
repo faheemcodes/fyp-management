@@ -23,8 +23,6 @@
 -- Table structure for table `academic_batches`
 --
 
-
-
 DROP TABLE IF EXISTS `academic_batches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

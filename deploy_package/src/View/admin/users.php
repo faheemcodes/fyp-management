@@ -1,0 +1,1485 @@
+<style>
+@media (min-width: 769px) {
+    .table-responsive {
+        overflow: visible !important;
+    }
+}
+@media (max-width: 768px) {
+    .table-responsive {
+        padding-bottom: 120px; /* Space for dropdowns on mobile */
+    }
+}
+
+/* ─── Modern Table Styles ─── */
+.action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+.action-btn:hover {
+    background: rgba(16,185,129,0.1);
+    color: #10b981;
+    border-color: rgba(16,185,129,0.2);
+}
+.action-btn.btn-view-user:hover { background: rgba(59,130,246,0.1); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+.action-btn.btn-edit-user:hover { background: rgba(139,92,246,0.1); color: #8b5cf6; border-color: rgba(139,92,246,0.2); }
+.action-btn.btn-delete-user:hover { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+.action-btn.btn-approve:hover { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
+.action-btn.btn-reject:hover { background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
+
+/* Modern Modals */
+.modal { z-index: 99999 !important; }
+.modal-backdrop { z-index: 99998 !important; }
+.admin-modal .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+</style>
+<!-- Admin User Management View -->
+<?php
+$basePath = dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+?>
+
+
+<!-- ═══════════════ Top Hero Banner ═══════════════ -->
+<div class="admin-hero">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+        <div class="d-flex align-items-center gap-4 text-center text-md-start">
+            <!-- Icon -->
+            <div class="admin-hero-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <!-- Info -->
+            <div>
+                <p class="mb-1" style="font-size: 0.68rem;font-weight: 600;text-transform: uppercase;letter-spacing: 0.08em;color: rgba(255,255,255,0.6)">
+                    System Administration
+                </p>
+                <h4 class="fw-bold m-0" style="font-size: 1.35rem;letter-spacing: -0.02em;line-height: 1.2">
+                    User Accounts
+                </h4>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn-hero-glass rounded-pill px-3.5 shadow-sm" data-bs-toggle="modal" data-bs-target="#liveCommitteesModal">
+                <i class="bi bi-diagram-3-fill me-2"></i>Live Committees
+            </button>
+            <button class="btn-hero-glass rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="bi bi-person-plus-fill me-2"></i>Add New User
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ Metric KPI Cards ═══════════════ -->
+<div class="row g-3 mb-4">
+    <!-- Total Users -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Total Users</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo (int)($stats['total_users'] ?? count($users)); ?></h4>
+        </div>
+    </div>
+    <!-- Students -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(6, 182, 212, 0.12); color: #0891b2;">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Students</span>
+            </div>
+            <h4 class="fw-bold m-0 text-dark"><?php echo (int)($stats['total_students'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Supervisors -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Supervisors</span>
+            </div>
+            <h4 class="fw-bold m-0 text-success"><?php echo (int)($stats['total_supervisors'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Coordinators -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Coordinators</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #7c3aed;"><?php echo (int)($stats['total_coordinators'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Committee Members -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(99, 102, 241, 0.12); color: #4f46e5;">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Committees</span>
+            </div>
+            <h4 class="fw-bold m-0" style="color: #4f46e5;"><?php echo (int)($stats['total_committees'] ?? 0); ?></h4>
+        </div>
+    </div>
+    <!-- Pending Approvals -->
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 14px; background: var(--card-bg);">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="p-2 rounded-3" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <span class="text-muted small fw-medium" style="font-size: 0.75rem;">Pending</span>
+            </div>
+            <h4 class="fw-bold m-0 <?php echo (!empty($stats['pending_users'])) ? 'text-warning animate-pulse' : 'text-dark'; ?>">
+                <?php echo (int)($stats['pending_users'] ?? 0); ?>
+            </h4>
+        </div>
+    </div>
+</div>
+
+<div class="page-section">
+    <!-- Filters and Search Controls -->
+    <div class="page-section-header">
+        <div class="premium-filter-group w-100">
+            <!-- Search Input -->
+            <div class="flex-grow-1 d-flex align-items-center px-3">
+                <i class="bi bi-search text-muted me-2"></i>
+                <input type="text" class="form-control premium-filter-input table-search w-100" placeholder="Search users by name, email, department, roll number..." data-target="users-table">
+            </div>
+            
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
+            <!-- Role Filter -->
+            <div class="d-flex align-items-center px-2" style="min-width: 150px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="role" data-target="users-table">
+                    <option value="all">All Roles</option>
+                    <option value="student">Student</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="coordinator">Coordinator</option>
+                    <option value="committee">Committee Member</option>
+                    <option value="hod">HOD</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
+            <!-- Department Filter -->
+            <div class="d-flex align-items-center px-2" style="min-width: 200px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="department" data-target="users-table">
+                    <option value="all">All Departments</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Electronic Engineering">Electronic Engineering</option>
+                    <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                </select>
+            </div>
+
+            <!-- Divider -->
+            <div class="premium-filter-divider"></div>
+            
+            <!-- Status Filter -->
+            <div class="d-flex align-items-center px-2 pe-3" style="min-width: 150px;">
+                <select class="form-select premium-filter-input table-filter w-100" data-column="status" data-target="users-table">
+                    <option value="all">All Statuses</option>
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table premium-table m-0" id="users-table">
+            <thead>
+                <tr>
+                    <th class="ps-4">User Details</th>
+                    <th>Role(s)</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($users as $u): ?>
+                <?php
+                    $uPrefix = $u['prefix'] ?? '';
+                    $uFirstName = $u['name'] ?? '';
+                    $uSurname = $u['surname'] ?? '';
+                    $uFullName = formatPersonName($uPrefix, $uFirstName, $uSurname);
+
+                    // Build multi-role list and badges
+                    $rolesList = [];
+                    $roleBadges = [];
+                    if ($u['role'] === 'admin') {
+                        $rolesList[] = 'admin';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(239, 68, 68, 0.12); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-shield-lock-fill me-1"></i>Admin</span>';
+                    }
+                    if (!empty($u['is_student']) || $u['role'] === 'student') {
+                        $rolesList[] = 'student';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(59, 130, 246, 0.12); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-mortarboard-fill me-1"></i>Student</span>';
+                    }
+                    if (!empty($u['is_hod']) || $u['role'] === 'hod') {
+                        $rolesList[] = 'hod';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-award-fill me-1"></i>HOD</span>';
+                    }
+                    if (!empty($u['is_supervisor']) || $u['role'] === 'supervisor') {
+                        $rolesList[] = 'supervisor';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-person-workspace me-1"></i>Supervisor</span>';
+                    }
+                    if (!empty($u['is_coordinator']) || $u['role'] === 'coordinator') {
+                        $rolesList[] = 'coordinator';
+                        $shiftLabel = !empty($u['coord_shift']) ? ' (' . htmlspecialchars($u['coord_shift'], ENT_QUOTES, 'UTF-8') . ')' : '';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed; border: 1px solid rgba(139, 92, 246, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-person-badge-fill me-1"></i>Coord' . $shiftLabel . '</span>';
+                    }
+                    if (!empty($u['is_committee']) || $u['role'] === 'committee') {
+                        $rolesList[] = 'committee';
+                        $commNum = !empty($u['committee_number']) ? ' #' . htmlspecialchars((string)$u['committee_number'], ENT_QUOTES, 'UTF-8') : '';
+                        $roleBadges[] = '<span class="badge rounded-pill" style="background: rgba(6, 182, 212, 0.12); color: #0891b2; border: 1px solid rgba(6, 182, 212, 0.25); font-size: 0.76rem; font-weight: 600;"><i class="bi bi-diagram-3-fill me-1"></i>Committee' . $commNum . '</span>';
+                    }
+                    if (empty($roleBadges)) {
+                        $roleBadges[] = '<span class="badge rounded-pill bg-light text-secondary border">' . htmlspecialchars($u['role']) . '</span>';
+                        $rolesList[] = $u['role'];
+                    }
+                    $rolesAttr = implode(' ', array_unique($rolesList));
+                    $isSup = (!empty($u['is_supervisor']) || $u['role'] === 'supervisor') ? '1' : '0';
+                    $isCoord = (!empty($u['is_coordinator']) || $u['role'] === 'coordinator') ? '1' : '0';
+                    $isComm = (!empty($u['is_committee']) || $u['role'] === 'committee') ? '1' : '0';
+                ?>
+                <tr data-role="<?php echo htmlspecialchars($rolesAttr); ?>" data-department="<?php echo htmlspecialchars($u['department']); ?>" data-status="<?php echo htmlspecialchars($u['status']); ?>">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <?php if ($u['role'] === 'student'): ?>
+                                <?php $avatarFile = !empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg'; ?>
+                                <img src="<?php echo $basePath; ?>/uploads/avatars/<?php echo htmlspecialchars($avatarFile); ?>" class="rounded-circle shadow-sm" style="width: 42px;height: 42px;object-fit: cover;border: 2px solid var(--card-bg)" alt="Avatar">
+                            <?php else: ?>
+                                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px;height: 42px;font-weight: bold;background: rgba(37,99,235,0.1);color: #2563eb;border: 2px solid var(--card-bg)">
+                                    <?php echo getNameInitial($uFirstName); ?>
+                                </div>
+                            <?php endif; ?>
+                            <div>
+                                <div class="fw-semibold" style="font-size: 0.9rem"><?php echo htmlspecialchars($uFullName); ?></div>
+                                <div class="text-muted" style="font-size: 0.75rem"><i class="bi bi-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></div>
+                                <?php if(!empty($u['student_id'])): ?>
+                                    <div class="mt-1 fw-bold" style="color: var(--primary-color);font-size: 0.75rem"><?php echo htmlspecialchars($u['student_id']); ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <?php echo implode(' ', $roleBadges); ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-medium" style="font-size: 0.85rem"><?php echo htmlspecialchars($u['department']); ?></div>
+                        <?php if(!empty($u['designation'])): ?>
+                            <small class="text-muted" style="font-size: 0.75rem"><?php echo htmlspecialchars($u['designation']); ?></small>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if($u['status'] === 'approved'): ?>
+                            <span class="status-pill" style="background: rgba(37,99,235,0.15);color: #2563eb">Approved</span>
+                        <?php elseif($u['status'] === 'pending'): ?>
+                            <span class="status-pill animate-pulse" style="background: rgba(245,158,11,0.15);color: #d97706">Pending</span>
+                        <?php else: ?>
+                            <span class="status-pill" style="background: rgba(239,68,68,0.15);color: #dc2626">Rejected</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="action-btn btn-view-user" title="View Details"
+                                data-bs-toggle="modal" data-bs-target="#viewUserModal"
+                                data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
+                                data-name="<?php echo htmlspecialchars($uFullName); ?>"
+                                data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
+                                data-roles="<?php echo htmlspecialchars(implode(', ', array_map('ucfirst', $rolesList))); ?>"
+                                data-is-supervisor="<?php echo $isSup; ?>"
+                                data-is-coordinator="<?php echo $isCoord; ?>"
+                                data-coord-shift="<?php echo htmlspecialchars($u['coord_shift'] ?? 'Morning'); ?>"
+                                data-is-committee="<?php echo $isComm; ?>"
+                                data-committee-number="<?php echo htmlspecialchars((string)($u['committee_number'] ?? '1')); ?>"
+                                data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
+                                data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? 'N/A'); ?>"
+                                data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? 'N/A'); ?>"
+                                data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
+                                data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'N/A'); ?>"
+                                data-father="<?php echo htmlspecialchars($u['father_name'] ?? 'N/A'); ?>"
+                                data-phone="<?php echo htmlspecialchars(($u['mobile_code'] ?? '') . ($u['mobile_no'] ?? 'N/A')); ?>"
+                                data-gender="<?php echo htmlspecialchars($u['gender'] ?? 'N/A'); ?>"
+                                data-dob="<?php echo htmlspecialchars($u['dob'] ?? 'N/A'); ?>"
+                                data-domicile="<?php echo htmlspecialchars(($u['province_state'] ?? '') . ' / ' . ($u['district'] ?? 'N/A')); ?>"
+                                data-address="<?php echo htmlspecialchars($u['home_address'] ?? 'Not Provided Yet'); ?>"
+                                data-designation="<?php echo htmlspecialchars($u['designation'] ?? 'N/A'); ?>"
+                                data-status="<?php echo htmlspecialchars($u['status'] ?? ''); ?>"
+                                data-avatar="<?php echo htmlspecialchars($u['role'] === 'student' ? (!empty($u['avatar']) ? $u['avatar'] : 'default_avatar.svg') : ''); ?>">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <?php if($u['status'] === 'pending'): ?>
+                                <a href="<?php echo $basePath; ?>/admin/users/approve?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="action-btn btn-approve" title="Approve"><i class="bi bi-check-lg"></i></a>
+                                <button type="button" onclick="openRejectModal('<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>')" class="action-btn btn-reject" title="Reject"><i class="bi bi-x-lg"></i></button>
+                            <?php else: ?>
+                                <button type="button" class="action-btn btn-edit-user" title="Edit User"
+                                    data-bs-toggle="modal" data-bs-target="#editUserModal"
+                                    data-id="<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>"
+                                    data-name="<?php echo htmlspecialchars($u['name'] ?? ''); ?>"
+                                    data-role="<?php echo htmlspecialchars($u['role'] ?? ''); ?>"
+                                    data-is-supervisor="<?php echo $isSup; ?>"
+                                    data-is-coordinator="<?php echo $isCoord; ?>"
+                                    data-coord-shift="<?php echo htmlspecialchars($u['coord_shift'] ?? 'Morning'); ?>"
+                                    data-is-committee="<?php echo $isComm; ?>"
+                                    data-committee-number="<?php echo htmlspecialchars((string)($u['committee_number'] ?? '1')); ?>"
+                                    data-email="<?php echo htmlspecialchars($u['email'] ?? ''); ?>"
+                                    data-cnic="<?php echo htmlspecialchars($u['cnic'] ?? ''); ?>"
+                                    data-student-id="<?php echo htmlspecialchars($u['student_id'] ?? ''); ?>"
+                                    data-dept="<?php echo htmlspecialchars($u['department'] ?? ''); ?>"
+                                    data-shift="<?php echo htmlspecialchars($u['shift'] ?? 'Morning'); ?>"
+                                    data-designation="<?php echo htmlspecialchars($u['designation'] ?? ''); ?>"
+                                    data-prefix="<?php echo htmlspecialchars($u['prefix'] ?? 'Mr.'); ?>"
+                                    data-surname="<?php echo htmlspecialchars($u['surname'] ?? ''); ?>"
+                                    data-father="<?php echo htmlspecialchars($u['father_name'] ?? ''); ?>"
+                                    data-dob="<?php echo htmlspecialchars($u['dob'] ?? ''); ?>"
+                                    data-mobile-no="<?php echo htmlspecialchars($u['mobile_no'] ?? ''); ?>"
+                                    data-province="<?php echo htmlspecialchars($u['province_state'] ?? ''); ?>"
+                                    data-district="<?php echo htmlspecialchars($u['district'] ?? ''); ?>"
+                                    data-address="<?php echo htmlspecialchars($u['home_address'] ?? ''); ?>"
+                                    data-gender="<?php echo htmlspecialchars(!empty($u['gender']) ? ucfirst(strtolower(trim($u['gender']))) : 'Male'); ?>">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <?php if($u['role'] !== 'admin'): ?>
+                                    <a href="<?php echo $basePath; ?>/admin/users/delete?id=<?php echo htmlspecialchars((string)($u['id']), ENT_QUOTES, 'UTF-8'); ?>" class="action-btn btn-delete-user" title="Delete User" onclick="return confirm('Are you sure you want to permanently delete this user account? This cannot be undone.');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="createUserModalLabel" style="color: var(--text-primary)">Add Academic / Student User</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/create" method="POST">
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalRole" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Account Role</label>
+                            <select class="form-select" id="modalRole" name="role" required>
+                                <option value="student">Student</option>
+                                <option value="supervisor">Supervisor</option>
+                                <option value="committee">Committee</option>
+                                <option value="hod">HOD</option>
+                                <option value="coordinator">Coordinator</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modalDepartment" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Department</label>
+                            <select class="form-select" id="modalDepartment" name="department" required>
+                                <option value="N/A">Not Applicable</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Electronic Engineering">Electronic Engineering</option>
+                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2" id="prefixGroup">
+                            <label for="modalPrefix" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Prefix</label>
+                            <select class="form-select" id="modalPrefix" name="prefix">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Prof.">Prof.</option>
+                                <option value="Engr.">Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md" id="nameGroup">
+                            <label for="modalName" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">First Name</label>
+                            <input type="text" class="form-control" id="modalName" name="name" required placeholder="e.g. Faheem">
+                        </div>
+                        <div class="col-md-5" id="surnameGroup">
+                            <label for="modalSurname" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Surname / Last Name</label>
+                            <input type="text" class="form-control" id="modalSurname" name="surname" placeholder="e.g. Soomro">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalEmail" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Email Address</label>
+                            <input type="email" class="form-control" id="modalEmail" name="email" required placeholder="ali.khan@university.edu">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modalCnic" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">CNIC (Without dashes)</label>
+                            <input type="text" class="form-control" id="modalCnic" name="cnic" required placeholder="4220112345671">
+                        </div>
+                    </div>
+
+                    <!-- Student Specific -->
+                    <div id="modalStudentFields" class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modalStudentId" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Registration ID</label>
+                            <input type="text" class="form-control" id="modalStudentId" name="student_id" placeholder="2023-CS-100" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modalShift" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Shift</label>
+                            <select class="form-select" id="modalShift" name="shift">
+                                <option value="Morning">Morning</option>
+                                <option value="Evening">Evening</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Supervisor / Staff Specific -->
+                    <div id="modalSupervisorFields" class="row g-2 mb-3 d-none">
+                        <div class="col-md-12">
+                            <label for="modalDesignation" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Designation</label>
+                            <select class="form-select" id="modalDesignation" name="designation">
+                                <option value="Lecturer">Lecturer</option>
+                                <option value="Assistant Professor">Assistant Professor</option>
+                                <option value="Associate Professor">Associate Professor</option>
+                                <option value="Professor">Professor</option>
+                                <option value="Lab Engineer">Lab Engineer</option>
+                                <option value="Teaching Assistant">Teaching Assistant</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-2" id="createFacultyRolesWrap">
+                            <div class="p-3 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                <label class="form-label text-dark fw-bold mb-2 d-flex align-items-center gap-2" style="font-size: 0.84rem">
+                                    <i class="bi bi-person-gear text-primary"></i> Faculty Appointments &amp; Roles
+                                </label>
+                                <div class="d-flex flex-column gap-2.5">
+                                    <!-- Supervisor Toggle -->
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="createIsSupervisor" name="is_supervisor" value="1" checked>
+                                        <label class="form-check-label fw-medium text-secondary" for="createIsSupervisor" style="font-size: 0.82rem;">
+                                            Appoint as <strong>Supervisor</strong> (Project supervision &amp; mentoring)
+                                        </label>
+                                    </div>
+                                    <!-- Coordinator Toggle -->
+                                    <div class="border-top pt-2">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="createIsCoordinator" name="is_coordinator" value="1" onchange="document.getElementById('createCoordShiftWrap').style.display = this.checked ? 'block' : 'none';">
+                                            <label class="form-check-label fw-medium text-secondary" for="createIsCoordinator" style="font-size: 0.82rem;">
+                                                Appoint as <strong>Coordinator</strong> (Departmental schedules &amp; sheets)
+                                            </label>
+                                        </div>
+                                        <div id="createCoordShiftWrap" class="mt-2 ps-4" style="display: none;">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-muted small">Shift:</span>
+                                                <select class="form-select form-select-sm w-auto" name="coord_shift" id="createCoordShift" style="font-size: 0.8rem;">
+                                                    <option value="Morning">Morning Shift</option>
+                                                    <option value="Evening">Evening Shift</option>
+                                                    <option value="All">All Shifts</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Committee Member Toggle -->
+                                    <div class="border-top pt-2">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="createIsCommittee" name="is_committee" value="1" onchange="document.getElementById('createCommitteeNumWrap').style.display = this.checked ? 'block' : 'none';">
+                                            <label class="form-check-label fw-medium text-secondary" for="createIsCommittee" style="font-size: 0.82rem;">
+                                                Appoint as <strong>Committee Member</strong> (Evaluator for defenses)
+                                            </label>
+                                        </div>
+                                        <div id="createCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="text-muted small">Committee:</span>
+                                                    <select class="form-select form-select-sm w-auto" name="committee_number" id="createCommitteeNumber" style="font-size: 0.8rem;">
+                                                        <option value="1">Committee 1</option>
+                                                        <option value="2">Committee 2</option>
+                                                    </select>
+                                                </div>
+                                                <div id="createCommitteeLiveHint" class="text-muted" style="font-size: 0.72rem;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modalPassword" class="form-label text-secondary fw-medium" style="font-size: 0.85rem">Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="modalPassword" name="password" required placeholder="••••••••" style="padding-right: 56px">
+                            <button type="button" style="position: absolute;right: 14px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.8rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('modalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold">Create Account</button>
+                </div>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 70%;">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="editUserModalLabel" style="color: var(--text-primary)">Edit User Account</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/edit" method="POST">
+                <div class="modal-body p-4">
+                    <input type="hidden" id="editModalId" name="id">
+                    <input type="hidden" id="editModalRole" name="role">
+                    
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Basic Information</h6>
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-2 d-none" id="editModalPrefixCol">
+                            <label for="editModalPrefix" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Prefix</label>
+                            <select class="form-select form-select-sm" id="editModalPrefix" name="prefix">
+                                <option value="">Select</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Prof.">Prof.</option>
+                                <option value="Engr.">Engr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md" id="editModalNameCol">
+                            <label for="editModalName" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">First Name</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalName" name="name" required>
+                        </div>
+                        <div class="col-md" id="editModalSurnameCol">
+                            <label for="editModalSurname" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Surname</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalSurname" name="surname">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label for="editModalEmail" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Email</label>
+                            <input type="email" class="form-control form-control-sm" id="editModalEmail" name="email" required>
+                        </div>
+                        <div class="col-md-4" id="editModalCnicCol">
+                            <label for="editModalCnic" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">CNIC</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalCnic" name="cnic">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editModalPassword" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">New Password (leave blank to keep)</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control form-control-sm" id="editModalPassword" name="password" placeholder="••••••••" style="padding-right: 56px">
+                                <button type="button" style="position: absolute;right: 10px;top: 50%;transform: translateY(-50%);background: none;border: none;font-size: 0.7rem;font-weight: 600;color: #6b7280;cursor: pointer;padding: 0;z-index: 5" onclick="const el = document.getElementById('editModalPassword'); el.type = el.type === 'password' ? 'text' : 'password'; this.innerText = el.type === 'password' ? 'Show' : 'Hide';">Show</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Academic Details</h6>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Role</label>
+                            <input type="text" class="form-control form-control-sm" id="editModalRoleDisplay" readonly style="font-weight: bold;text-transform: capitalize;background-color:#f8f9fa;">
+                        </div>
+                        <div class="col-md-4" id="editModalDeptGroup">
+                            <label for="editModalDepartment" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Department</label>
+                            <select class="form-select form-select-sm" id="editModalDepartment" name="department">
+                                <option value="N/A">Not Applicable</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Electronic Engineering">Electronic Engineering</option>
+                                <option value="Telecommunication Engineering">Telecommunication Engineering</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Student Specific -->
+                        <div class="col-md-5 d-none" id="editModalStudentFields">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label for="editModalStudentId" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Reg. ID</label>
+                                    <input type="text" class="form-control form-control-sm" id="editModalStudentId" name="student_id">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="editModalShift" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Shift</label>
+                                    <select class="form-select form-select-sm" id="editModalShift" name="shift">
+                                        <option value="Morning">Morning</option>
+                                        <option value="Evening">Evening</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Staff Specific Fields -->
+                        <div class="col-md-5 d-none" id="editModalStaffFields">
+                            <div class="row g-2">
+                                <div class="col-md-12">
+                                    <label for="editModalDesignation" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Designation</label>
+                                    <select class="form-select form-select-sm" id="editModalDesignation" name="designation">
+                                        <option value="Lecturer">Lecturer</option>
+                                        <option value="Assistant Professor">Assistant Professor</option>
+                                        <option value="Associate Professor">Associate Professor</option>
+                                        <option value="Professor">Professor</option>
+                                        <option value="HOD">HOD</option>
+                                        <option value="System Admin">System Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Faculty Multi-Role Appointments Section -->
+                    <div class="col-12 d-none mb-3" id="editModalMultiRoleFields">
+                        <div class="p-3 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                            <label class="form-label text-dark fw-bold mb-2 d-flex align-items-center gap-2" style="font-size: 0.82rem">
+                                <i class="bi bi-person-gear text-primary"></i> Faculty Appointments &amp; Roles
+                            </label>
+                            <div class="d-flex flex-column gap-2">
+                                <!-- Supervisor Switch -->
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="editIsSupervisor" name="is_supervisor" value="1">
+                                    <label class="form-check-label fw-medium text-secondary" for="editIsSupervisor" style="font-size: 0.8rem;">
+                                        Appointed as <strong>Supervisor</strong> (Project supervision &amp; mentoring)
+                                    </label>
+                                </div>
+                                <!-- Coordinator Switch -->
+                                <div class="border-top pt-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="editIsCoordinator" name="is_coordinator" value="1" onchange="document.getElementById('editCoordShiftWrap').style.display = this.checked ? 'block' : 'none';">
+                                        <label class="form-check-label fw-medium text-secondary" for="editIsCoordinator" style="font-size: 0.8rem;">
+                                            Appointed as <strong>Coordinator</strong> (Departmental schedules &amp; sheets)
+                                        </label>
+                                    </div>
+                                    <div id="editCoordShiftWrap" class="mt-2 ps-4" style="display: none;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="text-muted small">Shift:</span>
+                                            <select class="form-select form-select-sm w-auto" name="coord_shift" id="editCoordShift" style="font-size: 0.78rem;">
+                                                <option value="Morning">Morning Shift</option>
+                                                <option value="Evening">Evening Shift</option>
+                                                <option value="All">All Shifts</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Committee Member Switch -->
+                                <div class="border-top pt-2">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="editIsCommittee" name="is_committee" value="1" onchange="document.getElementById('editCommitteeNumWrap').style.display = this.checked ? 'block' : 'none';">
+                                        <label class="form-check-label fw-medium text-secondary" for="editIsCommittee" style="font-size: 0.8rem;">
+                                            Appointed as <strong>Committee Member</strong> (Defense &amp; evaluation panel)
+                                        </label>
+                                    </div>
+                                    <div id="editCommitteeNumWrap" class="mt-2 ps-4" style="display: none;">
+                                        <div class="d-flex flex-column gap-1">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-muted small">Committee:</span>
+                                                <select class="form-select form-select-sm w-auto" name="committee_number" id="editCommitteeNumber" style="font-size: 0.78rem;">
+                                                    <option value="1">Committee 1</option>
+                                                    <option value="2">Committee 2</option>
+                                                </select>
+                                            </div>
+                                            <div id="editCommitteeLiveHint" class="text-muted" style="font-size: 0.72rem;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="roleSpecificSection">
+                        <h6 class="text-success fw-bold mb-2 border-bottom pb-1" style="font-size: 0.9rem;">Personal Details</h6>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-3" id="editModalFatherCol">
+                                <label for="editModalFather" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Father's Name</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalFather" name="father_name">
+                            </div>
+                            <div class="col-md-2" id="editModalGenderCol">
+                                <label for="editModalGender" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Gender</label>
+                                <select class="form-select form-select-sm" id="editModalGender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3" id="editModalDobCol">
+                                <label for="editModalDob" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Date of Birth</label>
+                                <input type="date" class="form-control form-control-sm" id="editModalDob" name="dob">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editModalMobileNo" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Mobile Number</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light border-end-0">+92</span>
+                                    <input type="text" class="form-control form-control-sm border-start-0 ps-0" id="editModalMobileNo" name="mobile_no" placeholder="3001234567">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-3" id="editModalProvinceCol">
+                                <label for="editModalProvince" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Province</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalProvince" name="province_state">
+                            </div>
+                            <div class="col-md-3" id="editModalDistrictCol">
+                                <label for="editModalDistrict" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">District</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalDistrict" name="district">
+                            </div>
+                            <div class="col-md-6" id="editModalAddressCol">
+                                <label for="editModalAddress" class="form-label text-secondary fw-medium mb-0" style="font-size: 0.75rem">Home Address</label>
+                                <input type="text" class="form-control form-control-sm" id="editModalAddress" name="home_address">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold">Save Changes</button>
+                </div>
+            
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+</form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject User Modal -->
+<div class="modal fade" id="rejectUserModal" tabindex="-1" aria-labelledby="rejectUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold text-danger" id="rejectUserModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Reject User Registration</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>/admin/users/reject" method="POST">
+                <div class="modal-body p-4">
+                    <input type="hidden" id="rejectModalId" name="id">
+                    <p class="text-secondary mb-3" style="font-size: 0.9rem;">Please provide a reason for rejecting this user. They will receive an email notification detailing the reason.</p>
+                    <div class="mb-3">
+                        <label for="rejectReason" class="form-label fw-medium text-secondary" style="font-size: 0.85rem">Reason for Rejection <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="rejectReason" name="reason" rows="4" required placeholder="e.g. Invalid document uploaded, wrong department specified..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                    <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 btn-sm fw-bold">Reject & Notify User</button>
+                </div>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View User Details Modal -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <h6 class="modal-title fw-semibold" id="viewUserModalLabel" style="color: var(--text-primary)"><i class="bi bi-person-lines-fill me-2"></i>User Account Details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <!-- Left column: Avatar and status -->
+                    <div class="col-md-4 text-center border-end">
+                        <div class="mb-3 position-relative d-inline-block">
+                            <img id="detailAvatar" src="#" class="rounded-circle border border-primary border-opacity-25 shadow" style="width: 140px;height: 140px;object-fit: cover" alt="Profile Picture">
+                            <div id="detailInitials" class="rounded-circle bg-light text-primary d-none align-items-center justify-content-center shadow mx-auto" style="width: 140px;height: 140px;font-size: 4rem;font-weight: bold">
+                                X
+                            </div>
+
+                        </div>
+                        <h5 id="detailName" class="fw-bold mb-1">Full Name</h5>
+                        <p id="detailRoleBadge" class="mb-2"><span class="badge bg-secondary text-uppercase">Role</span></p>
+                        <span id="detailStatusBadge" class="badge rounded-pill px-3 py-1.5 small mb-3">Status</span>
+                        
+                        <div id="modalActionButtonsDesktop" class="mt-4 pt-3 border-top d-none d-md-block">
+                            <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
+                            <a id="modalApproveBtnDesktop" href="#" class="btn btn-primary w-100 rounded-pill mb-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                            <button id="modalRejectBtnDesktop" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Right column: Detailed fields -->
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless align-middle m-0">
+                                <tbody>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="width: 35%;font-size: 0.85rem">Email Address:</td><td id="detailEmail" class="py-2">email@domain.com</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">CNIC / B-Form No:</td><td id="detailCnic" class="py-2">3520112345671</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Department:</td><td id="detailDept" class="py-2">Software Engineering</td></tr>
+                                    
+                                    <!-- Student details -->
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Roll Number:</td><td id="detailStudentId" class="py-2">2k23/SWE/001</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Shift:</td><td id="detailShift" class="py-2">Morning</td></tr>
+                                    <tr class="border-bottom student-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Father's Name:</td><td id="detailFather" class="py-2">Father Name</td></tr>
+                                    
+                                    <!-- Staff details -->
+                                    <tr class="border-bottom staff-detail-row"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Designation:</td><td id="detailDesignation" class="py-2">Assistant Professor</td></tr>
+                                    <tr class="border-bottom coord-detail-row d-none"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Coordinator Shift:</td><td id="detailCoordShift" class="py-2">Morning Shift</td></tr>
+                                    <tr class="border-bottom committee-detail-row d-none"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Committee Allocation:</td><td id="detailCommitteeNum" class="py-2">Committee #1</td></tr>
+                                    
+                                    <!-- Common details -->
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Contact Number:</td><td id="detailPhone" class="py-2">+923001234567</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Gender:</td><td id="detailGender" class="py-2">Male</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Date of Birth:</td><td id="detailDob" class="py-2">2000-01-01</td></tr>
+                                    <tr class="border-bottom"><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Domicile Location:</td><td id="detailDomicile" class="py-2">Sindh / Jamshoro</td></tr>
+                                    <tr><td class="text-secondary py-2 fw-medium" style="font-size: 0.85rem">Home Address:</td><td id="detailAddress" class="text-wrap py-2">Not Provided Yet</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="modalActionButtonsMobile" class="mt-4 pt-3 border-top d-block d-md-none d-none">
+                            <h6 class="text-muted small fw-bold mb-3">Pending Registration Action</h6>
+                            <div class="d-flex flex-column gap-2">
+                                <a id="modalApproveBtnMobile" href="#" class="btn btn-primary w-100 rounded-pill shadow-sm"><i class="bi bi-check-circle-fill me-2"></i>Approve Account</a>
+                                <button id="modalRejectBtnMobile" type="button" class="btn btn-danger w-100 rounded-pill shadow-sm" onclick="bootstrap.Modal.getInstance(document.getElementById('viewUserModal')).hide(); openRejectModal(this.dataset.id);"><i class="bi bi-trash-fill me-2"></i>Reject & Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end gap-2" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary);border: 1px solid var(--border-color)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ Live Committees Roster Modal ═══════════════ -->
+<div class="modal fade admin-modal" id="liveCommitteesModal" tabindex="-1" aria-labelledby="liveCommitteesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4 shadow-lg" style="background: var(--card-bg)">
+            <div class="modal-header border-bottom py-3 rounded-top-4" style="border-color: var(--border-color) !important">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="p-2 rounded-3" style="background: rgba(139, 92, 246, 0.12); color: #7c3aed;">
+                        <i class="bi bi-diagram-3-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="modal-title fw-bold m-0" id="liveCommitteesModalLabel" style="color: var(--text-primary)">Live Evaluation Committees &amp; Panels</h6>
+                        <small class="text-muted" style="font-size: 0.76rem">Live active rosters and evaluator assignments across all university departments</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Department Selection Tabs -->
+                <ul class="nav nav-pills gap-2 mb-4 p-1.5 rounded-pill" style="background: var(--form-bg); width: fit-content;" id="liveCommDeptTabs">
+                    <?php 
+                    $firstDept = true;
+                    foreach (($departmentCommittees ?? []) as $dName => $dInfo): 
+                    ?>
+                        <li class="nav-item">
+                            <button class="nav-link rounded-pill py-1.5 px-3 small fw-semibold <?php echo $firstDept ? 'active' : ''; ?>" 
+                                    data-bs-toggle="pill" 
+                                    data-bs-target="#live-pane-<?php echo preg_replace('/[^a-zA-Z0-9]/', '', $dName); ?>" 
+                                    type="button" style="font-size: 0.8rem;">
+                                <?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?>
+                                <span class="badge rounded-pill ms-1" style="background: rgba(0,0,0,0.1); font-size: 0.7rem;"><?php echo (int)($dInfo['total_members'] ?? 0); ?></span>
+                            </button>
+                        </li>
+                    <?php 
+                        $firstDept = false;
+                    endforeach; 
+                    ?>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="liveCommTabContent">
+                    <?php 
+                    $firstPane = true;
+                    foreach (($departmentCommittees ?? []) as $dName => $dInfo): 
+                        $slug = preg_replace('/[^a-zA-Z0-9]/', '', $dName);
+                    ?>
+                        <div class="tab-pane fade <?php echo $firstPane ? 'show active' : ''; ?>" id="live-pane-<?php echo $slug; ?>">
+                            <div class="d-flex align-items-center justify-content-between mb-3 p-2.5 rounded-3 border" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge rounded-pill bg-primary px-3 py-1.5 fw-bold" style="font-size: 0.78rem;">
+                                        <?php echo (int)($dInfo['num_committees'] ?? 2); ?> Configured Committees
+                                    </span>
+                                    <span class="badge rounded-pill bg-secondary px-3 py-1.5 fw-bold" style="font-size: 0.78rem;">
+                                        <?php echo (int)($dInfo['total_members'] ?? 0); ?> Total Appointed Evaluators
+                                    </span>
+                                </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">Department: <strong><?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?></strong></small>
+                            </div>
+
+                            <div class="row g-3">
+                                <?php if (empty($dInfo['committees'])): ?>
+                                    <div class="col-12">
+                                        <div class="text-center py-4 text-muted">No committee data available for this department.</div>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($dInfo['committees'] as $cNum => $cData): ?>
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="card border h-100 shadow-xs rounded-3 overflow-hidden" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+                                                <div class="card-header py-2.5 px-3 d-flex align-items-center justify-content-between border-bottom" style="background: var(--form-bg); border-color: var(--border-color) !important;">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="badge rounded-pill px-2.5 py-1 fw-bold" style="background: rgba(6, 182, 212, 0.15); color: #0891b2; border: 1px solid rgba(6, 182, 212, 0.3); font-size: 0.78rem;">
+                                                            Committee <?php echo (int)$cNum; ?>
+                                                        </span>
+                                                    </div>
+                                                    <span class="badge rounded-pill px-2 py-0.5" style="background: rgba(0,0,0,0.06); color: var(--text-secondary); font-size: 0.72rem;">
+                                                        <?php echo (int)$cData['member_count']; ?> member<?php echo $cData['member_count'] === 1 ? '' : 's'; ?>
+                                                    </span>
+                                                </div>
+                                                <div class="card-body p-3">
+                                                    <?php if (empty($cData['members'])): ?>
+                                                        <div class="text-center py-3 text-muted" style="font-size: 0.8rem;">
+                                                            <i class="bi bi-person-x fs-4 d-block mb-1 opacity-50"></i>
+                                                            No evaluators assigned yet.
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <div class="d-flex flex-column gap-2">
+                                                            <?php foreach ($cData['members'] as $mem): ?>
+                                                                <div class="d-flex align-items-center gap-2.5 p-2 rounded-2" style="background: var(--form-bg);">
+                                                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0" style="width: 32px; height: 32px; background: linear-gradient(135deg, #0284c7, #0369a1); font-size: 0.75rem;">
+                                                                        <?php 
+                                                                        $parts = explode(' ', trim($mem['name']));
+                                                                        $initials = strtoupper(substr($parts[0] ?? '', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                                                                        echo htmlspecialchars($initials ?: 'CM', ENT_QUOTES, 'UTF-8');
+                                                                        ?>
+                                                                    </div>
+                                                                    <div class="min-w-0 flex-grow-1">
+                                                                        <div class="fw-semibold text-dark text-truncate" style="font-size: 0.82rem;">
+                                                                            <?php echo htmlspecialchars($mem['name'], ENT_QUOTES, 'UTF-8'); ?>
+                                                                        </div>
+                                                                        <div class="text-muted text-truncate" style="font-size: 0.72rem;">
+                                                                            <?php echo htmlspecialchars($mem['designation'] ?: 'Committee Evaluator', ENT_QUOTES, 'UTF-8'); ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="card-footer py-2 px-3 border-top text-end" style="background: var(--card-bg); border-color: var(--border-color) !important;">
+                                                    <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 fw-semibold text-primary" style="font-size: 0.75rem;" 
+                                                            onclick="filterByCommittee(<?php echo (int)$cNum; ?>, '<?php echo htmlspecialchars($dName, ENT_QUOTES, 'UTF-8'); ?>')">
+                                                        Filter in Users Table &rarr;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php 
+                        $firstPane = false;
+                    endforeach; 
+                    ?>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3 rounded-bottom-4 d-flex justify-content-end" style="background: var(--card-bg)">
+                <button type="button" class="btn btn-light rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal" style="color: var(--text-secondary); border: 1px solid var(--border-color)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.departmentCommittees = <?php echo json_encode($departmentCommittees ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
+        window.updateCommitteeOptions = function(deptSelectId, commSelectId, selectedVal, hintId) {
+            const deptSelect = document.getElementById(deptSelectId);
+            const commSelect = document.getElementById(commSelectId);
+            if (!deptSelect || !commSelect) return;
+            
+            const dept = deptSelect.value;
+            const data = (window.departmentCommittees && window.departmentCommittees[dept]) ? window.departmentCommittees[dept] : null;
+            
+            commSelect.innerHTML = '';
+            
+            if (data && data.committees) {
+                const commList = Object.values(data.committees);
+                commList.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.number;
+                    const count = c.member_count;
+                    let label = `Committee ${c.number}`;
+                    if (count > 0) {
+                        const names = c.members.map(m => m.name).slice(0, 2).join(', ');
+                        const extra = count > 2 ? ` +${count - 2} more` : '';
+                        label += ` (${count} member${count > 1 ? 's' : ''}: ${names}${extra})`;
+                    } else {
+                        label += ` (0 members - Empty)`;
+                    }
+                    opt.textContent = label;
+                    if (selectedVal && parseInt(selectedVal, 10) === parseInt(c.number, 10)) {
+                        opt.selected = true;
+                    }
+                    commSelect.appendChild(opt);
+                });
+                
+                // Add option to create next committee if desired
+                const nextNum = commList.length + 1;
+                const nextOpt = document.createElement('option');
+                nextOpt.value = nextNum;
+                nextOpt.textContent = `+ New Committee (#${nextNum})`;
+                if (selectedVal && parseInt(selectedVal, 10) === nextNum) {
+                    nextOpt.selected = true;
+                }
+                commSelect.appendChild(nextOpt);
+                
+                if (hintId) {
+                    const hintEl = document.getElementById(hintId);
+                    if (hintEl) {
+                        hintEl.innerHTML = `<i class="bi bi-info-circle me-1 text-primary"></i>Live: <strong>${dept}</strong> has <strong>${data.num_committees}</strong> active committees (${data.total_members} evaluators assigned).`;
+                    }
+                }
+            } else {
+                for (let i = 1; i <= 4; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = `Committee ${i}`;
+                    if (selectedVal && parseInt(selectedVal, 10) === i) opt.selected = true;
+                    commSelect.appendChild(opt);
+                }
+                if (hintId) {
+                    const hintEl = document.getElementById(hintId);
+                    if (hintEl) hintEl.textContent = '';
+                }
+            }
+        };
+
+        // Initialize Live Committees for Create Modal
+        window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
+
+        const modalDeptSelect = document.getElementById('modalDepartment');
+        if (modalDeptSelect) {
+            modalDeptSelect.addEventListener('change', function() {
+                window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
+            });
+        }
+
+        const editDeptSelect = document.getElementById('editModalDepartment');
+        if (editDeptSelect) {
+            editDeptSelect.addEventListener('change', function() {
+                window.updateCommitteeOptions('editModalDepartment', 'editCommitteeNumber', null, 'editCommitteeLiveHint');
+            });
+        }
+
+        const roleSelect = document.getElementById('modalRole');
+        const studentFields = document.getElementById('modalStudentFields');
+        const supervisorFields = document.getElementById('modalSupervisorFields');
+        const departmentGroup = document.getElementById('modalDepartment').closest('.col-md-6');
+        const surnameGroup = document.getElementById('surnameGroup');
+        const prefixGroup = document.getElementById('prefixGroup');
+
+        roleSelect.addEventListener('change', function() {
+            const role = this.value;
+            const facultyRolesWrap = document.getElementById('createFacultyRolesWrap');
+            const supCheck = document.getElementById('createIsSupervisor');
+            const coordCheck = document.getElementById('createIsCoordinator');
+            const commCheck = document.getElementById('createIsCommittee');
+
+            if (role === 'student') {
+                studentFields.classList.remove('d-none');
+                supervisorFields.classList.add('d-none');
+                departmentGroup.classList.remove('d-none');
+                surnameGroup.classList.remove('d-none');
+                prefixGroup.classList.remove('d-none');
+                document.getElementById('modalStudentId').required = true;
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
+            } else if (role === 'hod') {
+                // HOD is the super role - strictly cannot be supervisor, coordinator, or committee
+                studentFields.classList.add('d-none');
+                supervisorFields.classList.remove('d-none');
+                prefixGroup.classList.remove('d-none');
+                document.getElementById('modalStudentId').required = false;
+                departmentGroup.classList.remove('d-none');
+                surnameGroup.classList.remove('d-none');
+                
+                // Do NOT show faculty appointments & roles for HOD
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
+                if (supCheck) { supCheck.checked = false; supCheck.disabled = true; }
+                if (coordCheck) { coordCheck.checked = false; coordCheck.disabled = true; }
+                if (commCheck) { commCheck.checked = false; commCheck.disabled = true; }
+                document.getElementById('createCoordShiftWrap').style.display = 'none';
+                document.getElementById('createCommitteeNumWrap').style.display = 'none';
+            } else if (role === 'supervisor' || role === 'coordinator' || role === 'committee') {
+                studentFields.classList.add('d-none');
+                supervisorFields.classList.remove('d-none');
+                prefixGroup.classList.remove('d-none');
+                document.getElementById('modalStudentId').required = false;
+                departmentGroup.classList.remove('d-none');
+                surnameGroup.classList.remove('d-none');
+                
+                // Show faculty appointments & roles
+                if (facultyRolesWrap) facultyRolesWrap.classList.remove('d-none');
+                if (supCheck) { supCheck.disabled = false; supCheck.checked = (role === 'supervisor'); }
+                if (coordCheck) { coordCheck.disabled = false; coordCheck.checked = (role === 'coordinator'); }
+                if (commCheck) { commCheck.disabled = false; commCheck.checked = (role === 'committee'); }
+                
+                document.getElementById('createCoordShiftWrap').style.display = (role === 'coordinator') ? 'block' : 'none';
+                document.getElementById('createCommitteeNumWrap').style.display = (role === 'committee') ? 'block' : 'none';
+
+                // Refresh live committee numbers for the current department
+                window.updateCommitteeOptions('modalDepartment', 'createCommitteeNumber', null, 'createCommitteeLiveHint');
+            } else {
+                studentFields.classList.add('d-none');
+                supervisorFields.classList.add('d-none');
+                prefixGroup.classList.add('d-none');
+                document.getElementById('modalStudentId').required = false;
+                if (facultyRolesWrap) facultyRolesWrap.classList.add('d-none');
+            }
+        });
+
+        // View User Details logic
+        const viewButtons = document.querySelectorAll('.btn-view-user');
+        viewButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const role = this.getAttribute('data-role');
+                const roles = this.getAttribute('data-roles') || role;
+                const isCoordinator = this.getAttribute('data-is-coordinator') === '1';
+                const coordShift = this.getAttribute('data-coord-shift') || 'Morning';
+                const isCommittee = this.getAttribute('data-is-committee') === '1';
+                const committeeNumber = this.getAttribute('data-committee-number') || '1';
+                const email = this.getAttribute('data-email');
+                const cnic = this.getAttribute('data-cnic');
+                const studentId = this.getAttribute('data-student-id');
+                const dept = this.getAttribute('data-dept');
+                const shift = this.getAttribute('data-shift');
+                const father = this.getAttribute('data-father');
+                const phone = this.getAttribute('data-phone');
+                const gender = this.getAttribute('data-gender');
+                const dob = this.getAttribute('data-dob');
+                const domicile = this.getAttribute('data-domicile');
+                const address = this.getAttribute('data-address');
+                const designation = this.getAttribute('data-designation');
+                const status = this.getAttribute('data-status');
+                const avatar = this.getAttribute('data-avatar');
+                
+                // Populate text fields
+                document.getElementById('detailName').textContent = name;
+                document.getElementById('detailEmail').textContent = email;
+                document.getElementById('detailCnic').textContent = cnic;
+                document.getElementById('detailDept').textContent = dept;
+                document.getElementById('detailPhone').textContent = phone;
+                document.getElementById('detailGender').textContent = gender;
+                document.getElementById('detailDob').textContent = dob;
+                document.getElementById('detailDomicile').textContent = domicile;
+                document.getElementById('detailAddress').textContent = address;
+                
+                // Role Badges in View Modal
+                const roleBadgeContainer = document.getElementById('detailRoleBadge');
+                if (roleBadgeContainer) {
+                    roleBadgeContainer.innerHTML = '';
+                    const rList = roles.split(',').map(r => r.trim()).filter(Boolean);
+                    rList.forEach(r => {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge rounded-pill me-1 px-3 py-1.5 shadow-xs';
+                        if (r.toLowerCase() === 'supervisor') {
+                            badge.style.background = 'rgba(16, 185, 129, 0.15)';
+                            badge.style.color = '#059669';
+                            badge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                        } else if (r.toLowerCase() === 'coordinator') {
+                            badge.style.background = 'rgba(139, 92, 246, 0.15)';
+                            badge.style.color = '#7c3aed';
+                            badge.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+                        } else if (r.toLowerCase().includes('committee')) {
+                            badge.style.background = 'rgba(6, 182, 212, 0.15)';
+                            badge.style.color = '#0891b2';
+                            badge.style.border = '1px solid rgba(6, 182, 212, 0.3)';
+                        } else if (r.toLowerCase() === 'hod') {
+                            badge.style.background = 'rgba(99, 102, 241, 0.15)';
+                            badge.style.color = '#4f46e5';
+                            badge.style.border = '1px solid rgba(99, 102, 241, 0.3)';
+                        } else if (r.toLowerCase() === 'admin') {
+                            badge.style.background = 'rgba(239, 68, 68, 0.15)';
+                            badge.style.color = '#dc2626';
+                            badge.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                        } else {
+                            badge.style.background = 'rgba(59, 130, 246, 0.15)';
+                            badge.style.color = '#2563eb';
+                            badge.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                        }
+                        badge.textContent = r;
+                        roleBadgeContainer.appendChild(badge);
+                    });
+                }
+                
+                // Status Badge
+                const statusBadge = document.getElementById('detailStatusBadge');
+                statusBadge.className = 'badge rounded-pill px-3 py-1.5 small mb-3';
+                if (status === 'approved') {
+                    statusBadge.textContent = 'Approved';
+                    statusBadge.classList.add('bg-success-subtle', 'text-success', 'border', 'border-success-subtle');
+                } else if (status === 'pending') {
+                    statusBadge.textContent = 'Pending';
+                    statusBadge.classList.add('bg-warning-subtle', 'text-warning', 'border', 'border-warning-subtle');
+                } else {
+                    statusBadge.textContent = 'Rejected';
+                    statusBadge.classList.add('bg-danger-subtle', 'text-danger', 'border', 'border-danger-subtle');
+                }
+                
+                // Avatar handling
+                const imgEl = document.getElementById('detailAvatar');
+                const initialsEl = document.getElementById('detailInitials');
+                
+                if (role === 'student' && avatar && avatar !== 'default_avatar.svg') {
+                    imgEl.src = `<?php echo $basePath; ?>/uploads/avatars/${avatar}`;
+                    imgEl.classList.remove('d-none');
+                    initialsEl.classList.add('d-none');
+                    initialsEl.style.display = 'none';
+                } else {
+                    imgEl.classList.add('d-none');
+                    imgEl.src = '#';
+                    initialsEl.textContent = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                    initialsEl.classList.remove('d-none');
+                    initialsEl.style.display = 'flex';
+                }
+                
+                // Conditional Student/Staff rows display
+                const studentRows = document.querySelectorAll('.student-detail-row');
+                const staffRows = document.querySelectorAll('.staff-detail-row');
+                const coordRow = document.querySelector('.coord-detail-row');
+                const committeeRow = document.querySelector('.committee-detail-row');
+                
+                if (role === 'student') {
+                    studentRows.forEach(row => row.classList.remove('d-none'));
+                    staffRows.forEach(row => row.classList.add('d-none'));
+                    if (coordRow) coordRow.classList.add('d-none');
+                    if (committeeRow) committeeRow.classList.add('d-none');
+                    document.getElementById('detailStudentId').textContent = studentId;
+                    document.getElementById('detailShift').textContent = shift;
+                    document.getElementById('detailFather').textContent = father;
+                } else {
+                    studentRows.forEach(row => row.classList.add('d-none'));
+                    staffRows.forEach(row => row.classList.remove('d-none'));
+                    document.getElementById('detailDesignation').textContent = designation;
+
+                    if (coordRow) {
+                        if (isCoordinator) {
+                            coordRow.classList.remove('d-none');
+                            document.getElementById('detailCoordShift').textContent = coordShift + ' Shift';
+                        } else {
+                            coordRow.classList.add('d-none');
+                        }
+                    }
+                    if (committeeRow) {
+                        if (isCommittee) {
+                            committeeRow.classList.remove('d-none');
+                            document.getElementById('detailCommitteeNum').textContent = 'Committee #' + committeeNumber;
+                        } else {
+                            committeeRow.classList.add('d-none');
+                        }
+                    }
+                }
+                
+                // Pending modal action buttons
+                const actionDesktop = document.getElementById('modalActionButtonsDesktop');
+                const actionMobile = document.getElementById('modalActionButtonsMobile');
+                
+                // Reset display classes
+                actionDesktop.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
+                actionMobile.classList.remove('d-none', 'd-block', 'd-md-none', 'd-md-block');
+                
+                if (status === 'pending') {
+                    actionDesktop.classList.add('d-none', 'd-md-block');
+                    actionMobile.classList.add('d-block', 'd-md-none');
+                    
+                    const basePathClean = "<?php echo dirname($_SERVER['SCRIPT_NAME']) === '/' || dirname($_SERVER['SCRIPT_NAME']) === '\\' ? '' : dirname($_SERVER['SCRIPT_NAME']); ?>";
+                    document.getElementById('modalApproveBtnDesktop').href = `${basePathClean}/admin/users/approve?id=${userId}`;
+                    document.getElementById('modalRejectBtnDesktop').dataset.id = userId;
+                    document.getElementById('modalApproveBtnMobile').href = `${basePathClean}/admin/users/approve?id=${userId}`;
+                    document.getElementById('modalRejectBtnMobile').dataset.id = userId;
+                } else {
+                    actionDesktop.classList.add('d-none');
+                    actionMobile.classList.add('d-none');
+                }
+            });
+        });
+
+        // Edit User Details logic
+        const editButtons = document.querySelectorAll('.btn-edit-user');
+        editButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const role = this.getAttribute('data-role');
+                const email = this.getAttribute('data-email');
+                const cnic = this.getAttribute('data-cnic');
+                const studentId = this.getAttribute('data-student-id');
+                const dept = this.getAttribute('data-dept');
+                const shift = this.getAttribute('data-shift');
+                const designation = this.getAttribute('data-designation');
+                
+                const prefix = this.getAttribute('data-prefix');
+                const surname = this.getAttribute('data-surname');
+                const mobileNo = this.getAttribute('data-mobile-no');
+                const gender = this.getAttribute('data-gender');
+                const dob = this.getAttribute('data-dob');
+                const province = this.getAttribute('data-province');
+                const district = this.getAttribute('data-district');
+                const address = this.getAttribute('data-address');
+                const father = this.getAttribute('data-father');
+                
+                const isSupervisor = this.getAttribute('data-is-supervisor') === '1';
+                const isCoordinator = this.getAttribute('data-is-coordinator') === '1';
+                const coordShift = this.getAttribute('data-coord-shift') || 'Morning';
+                const isCommittee = this.getAttribute('data-is-committee') === '1';
+                const committeeNumber = this.getAttribute('data-committee-number') || '1';
+                
+                document.getElementById('editModalId').value = userId;
+                document.getElementById('editModalRole').value = role;
+                document.getElementById('editModalRoleDisplay').value = role;
+                if(document.getElementById('editModalPrefix')) document.getElementById('editModalPrefix').value = prefix || 'Mr.';
+                document.getElementById('editModalName').value = name;
+                if(document.getElementById('editModalSurname')) document.getElementById('editModalSurname').value = surname;
+                document.getElementById('editModalEmail').value = email;
+                document.getElementById('editModalCnic').value = cnic;
+                document.getElementById('editModalPassword').value = '';
+                
+                if(document.getElementById('editModalFather')) document.getElementById('editModalFather').value = father === 'N/A' ? '' : father;
+                if(document.getElementById('editModalMobileNo')) document.getElementById('editModalMobileNo').value = mobileNo;
+                if(document.getElementById('editModalGender')) document.getElementById('editModalGender').value = gender;
+                if(document.getElementById('editModalDob')) document.getElementById('editModalDob').value = dob;
+                if(document.getElementById('editModalProvince')) document.getElementById('editModalProvince').value = province;
+                if(document.getElementById('editModalDistrict')) document.getElementById('editModalDistrict').value = district;
+                if(document.getElementById('editModalAddress')) document.getElementById('editModalAddress').value = address;
+                
+                const deptSelect = document.getElementById('editModalDepartment');
+                if (dept) {
+                    deptSelect.value = dept;
+                }
+                
+                const stdFields = document.getElementById('editModalStudentFields');
+                const staffFields = document.getElementById('editModalStaffFields');
+                const multiRoleFields = document.getElementById('editModalMultiRoleFields');
+                const prefixCol = document.getElementById('editModalPrefixCol');
+                const deptGroup = document.getElementById('editModalDeptGroup');
+                
+                const roleSection = document.getElementById('roleSpecificSection');
+                const normalizedRole = (role || '').trim().toLowerCase();
+                
+                if (stdFields) stdFields.classList.add('d-none');
+                if (staffFields) staffFields.classList.add('d-none');
+                if (multiRoleFields) multiRoleFields.classList.add('d-none');
+                if (prefixCol) prefixCol.classList.add('d-none');
+                if (deptGroup) deptGroup.classList.remove('d-none');
+                if (roleSection) roleSection.classList.add('d-none');
+                
+                if (normalizedRole === 'admin') {
+                    if (deptGroup) deptGroup.classList.add('d-none');
+                }
+                
+                if (normalizedRole === 'student') {
+                    if (roleSection) roleSection.classList.remove('d-none');
+                    if (stdFields) stdFields.classList.remove('d-none');
+                    document.getElementById('editModalStudentId').value = studentId;
+                    document.getElementById('editModalShift').value = shift;
+                } else if (normalizedRole === 'hod') {
+                    if (staffFields) staffFields.classList.remove('d-none');
+                    if (prefixCol) prefixCol.classList.remove('d-none');
+                    document.getElementById('editModalDesignation').value = designation;
+
+                    // HOD is the super role - strictly DO NOT show faculty appointments & roles
+                    if (multiRoleFields) multiRoleFields.classList.add('d-none');
+                    const editSup = document.getElementById('editIsSupervisor');
+                    const editCoord = document.getElementById('editIsCoordinator');
+                    const editComm = document.getElementById('editIsCommittee');
+                    if (editSup) { editSup.checked = false; editSup.disabled = true; }
+                    if (editCoord) { editCoord.checked = false; editCoord.disabled = true; }
+                    if (editComm) { editComm.checked = false; editComm.disabled = true; }
+                    document.getElementById('editCoordShiftWrap').style.display = 'none';
+                    document.getElementById('editCommitteeNumWrap').style.display = 'none';
+                } else if (normalizedRole === 'supervisor' || normalizedRole === 'coordinator' || normalizedRole === 'committee') {
+                    if (staffFields) staffFields.classList.remove('d-none');
+                    if (prefixCol) prefixCol.classList.remove('d-none');
+                    document.getElementById('editModalDesignation').value = designation;
+
+                    // Configure faculty multi-role switches
+                    if (multiRoleFields) {
+                        multiRoleFields.classList.remove('d-none');
+                        const editSup = document.getElementById('editIsSupervisor');
+                        const editCoord = document.getElementById('editIsCoordinator');
+                        const editComm = document.getElementById('editIsCommittee');
+                        if (editSup) { editSup.disabled = false; editSup.checked = isSupervisor; }
+                        if (editCoord) { editCoord.disabled = false; editCoord.checked = isCoordinator; }
+                        if (editComm) { editComm.disabled = false; editComm.checked = isCommittee; }
+                        document.getElementById('editCoordShift').value = coordShift;
+                        document.getElementById('editCoordShiftWrap').style.display = isCoordinator ? 'block' : 'none';
+                        document.getElementById('editIsCommittee').checked = isCommittee;
+                        
+                        // Populate live committee options for this department
+                        window.updateCommitteeOptions('editModalDepartment', 'editCommitteeNumber', committeeNumber, 'editCommitteeLiveHint');
+                        document.getElementById('editCommitteeNumWrap').style.display = isCommittee ? 'block' : 'none';
+                    }
+                }
+            });
+        });
+
+        window.openRejectModal = function(userId) {
+            document.getElementById('rejectModalId').value = userId;
+            const modal = new bootstrap.Modal(document.getElementById('rejectUserModal'));
+            modal.show();
+        };
+
+        window.filterByCommittee = function(commNum, deptName) {
+            const modalEl = document.getElementById('liveCommitteesModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+            // Set role filter to committee
+            const roleFilter = document.querySelector('select[data-column="role"]');
+            if (roleFilter) {
+                roleFilter.value = 'committee';
+            }
+            // Set department filter
+            const deptFilter = document.querySelector('select[data-column="department"]');
+            if (deptFilter && deptName) {
+                deptFilter.value = deptName;
+            }
+            // Trigger table filtering
+            const event = new Event('change');
+            if (roleFilter) roleFilter.dispatchEvent(event);
+            if (deptFilter) deptFilter.dispatchEvent(event);
+        };
+    });
+</script>
+</body>
+</html>
