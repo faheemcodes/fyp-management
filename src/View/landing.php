@@ -327,7 +327,19 @@
         /* BENTO DEPARTMENTS */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 992px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 992px) {
+            .bento-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 60px 40px;
+            }
+            .bento-grid .bento-item {
+                flex: 0 0 calc((100% - 80px) / 3);
+                max-width: calc((100% - 80px) / 3);
+                width: calc((100% - 80px) / 3);
+            }
+        }
         
         .bento-item { position: relative; border-radius: 28px; padding: 30px 24px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; height: 100%; }
         .bento-item:hover { transform: translateY(-6px); }
