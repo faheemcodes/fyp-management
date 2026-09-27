@@ -327,7 +327,25 @@
         /* BENTO DEPARTMENTS */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
         @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 992px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 992px) {
+            .bento-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            /* First 3 cards take 2 of 6 columns each (full 6-column top row) */
+            .bento-grid .bento-item:nth-child(1),
+            .bento-grid .bento-item:nth-child(2),
+            .bento-grid .bento-item:nth-child(3) {
+                grid-column: span 2;
+            }
+            /* 4th card starts at column 2 (leaving 1 column gap on left) and spans 2 columns */
+            .bento-grid .bento-item:nth-child(4) {
+                grid-column: 2 / span 2;
+            }
+            /* 5th card occupies columns 4-5, leaving 1 column gap on right -> perfectly centered 2 cards */
+            .bento-grid .bento-item:nth-child(5) {
+                grid-column: 4 / span 2;
+            }
+        }
         
         .bento-item { position: relative; border-radius: 28px; padding: 30px 24px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); color: #fff; border: none; z-index: 1; height: 100%; }
         .bento-item:hover { transform: translateY(-6px); }
