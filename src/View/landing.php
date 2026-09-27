@@ -421,10 +421,6 @@
             margin: 0;
             text-align: left;
             opacity: 0.95;
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
         /* Themes with vibrant rich styling and 3D tinted glow in both light and dark themes */
@@ -1005,7 +1001,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>Established in 1998, the IT department provides an NCEAC-accredited program emphasizing critical thinking. Students learn to provide practical IT solutions for the nation's administrative challenges using state-of-the-art facilities.</p>
+                    <p>Established in 1998, this NCEAC-accredited program emphasizes critical thinking and delivers practical IT solutions for administrative challenges using modern computing facilities.</p>
                 </div>
             </div>
             <div class="bento-item theme-slate" data-aos="fade-up" data-aos-delay="200">
