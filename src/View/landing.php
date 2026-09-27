@@ -368,9 +368,18 @@
             box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1), inset 0 2px 4px rgba(255,255,255,0.06);
         }
 
-        .card-header { margin-left: 65px; margin-bottom: 15px; text-transform: uppercase; text-align: right; }
-        .card-header h4 { color: inherit; font-size: 1.05rem; font-weight: 800; margin: 0; letter-spacing: 1px; }
-        .card-header span { font-size: 0.8rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.5px; }
+        .card-header {
+            margin-left: 65px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-align: right;
+            min-height: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .card-header h4 { color: inherit; font-size: 1.05rem; font-weight: 800; margin: 0; letter-spacing: 1px; line-height: 1.25; }
+        .card-header span { font-size: 0.8rem; font-weight: 600; opacity: 0.9; letter-spacing: 0.5px; margin-top: 3px; }
         
         .card-body { flex-grow: 1; margin-top: 5px; padding: 0; display: flex; flex-direction: column; }
         .card-body p { color: #fff; font-size: 0.95rem; line-height: 1.6; margin: 0; text-align: left; opacity: 0.95; }
@@ -1162,39 +1171,40 @@ document.addEventListener('DOMContentLoaded', function() {
         const scene = document.getElementById('laptopScene');
         const macbook = scene ? scene.querySelector('.macbook') : null;
         if (!scene || !macbook) return;
-        const hero = scene.closest('.lp-hero');
         const inner = macbook.querySelector('.inner');
 
-        // Scroll logic (scale & vertical translation) based on viewport position
+        // Only run 3D scroll scaling on desktop screens (> 768px) to prevent mobile touch scroll hanging
         window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 768) return;
+
             const rect = scene.getBoundingClientRect();
-            // When rect.top drops below 200px (scrolling up), we start the fade out
             let progress = 0;
             if (rect.top < 200) {
                 progress = Math.min(Math.max((200 - rect.top) / 400, 0), 1);
             }
             
             const ty = progress * -60;
-            const baseScale = window.innerWidth <= 768 ? 1.4 : (window.innerWidth <= 991 ? 1.6 : 2.2);
+            const baseScale = window.innerWidth <= 991 ? 1.6 : 2.2;
             const scale = baseScale - (progress * baseScale * 0.25);
             
             macbook.style.transform = 'scale(' + scale + ') translateY(' + ty + 'px)';
             macbook.style.opacity = 1 - progress * 0.8;
-        });
+        }, { passive: true });
 
-        // Mouse tracking logic (rotation)
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
-            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
-            
-            // Base rotation is rotateX(-20deg)
-            const rotX = -20 + (mouseY * -20); // Mouse up -> laptop tilts up
-            const rotY = mouseX * 40; // Mouse right -> laptop turns right
-            
-            if (inner) {
-                inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
-            }
-        });
+        // Mouse tracking logic (rotation) - only for devices with hover/pointer capability (desktop mice)
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+                const mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+                
+                const rotX = -20 + (mouseY * -20); // Mouse up -> laptop tilts up
+                const rotY = mouseX * 40; // Mouse right -> laptop turns right
+                
+                if (inner) {
+                    inner.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(0deg)`;
+                }
+            }, { passive: true });
+        }
     })();
 </script>
 
