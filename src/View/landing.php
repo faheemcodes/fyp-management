@@ -351,7 +351,8 @@
             color: #fff;
             border: none;
             z-index: 1;
-            min-height: 275px;
+            min-height: 290px;
+            height: 100%;
             box-sizing: border-box;
         }
         .bento-item:hover { transform: translateY(-6px); }
@@ -1001,7 +1002,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>Established in 1998, this NCEAC-accredited program emphasizes critical thinking and delivers practical IT solutions for administrative challenges using modern computing facilities.</p>
+                    <p>Established in 1998, the IT department provides an NCEAC-accredited program emphasizing critical thinking. Students learn to provide practical IT solutions for the nation's administrative challenges using state-of-the-art facilities.</p>
                 </div>
             </div>
             <div class="bento-item theme-slate" data-aos="fade-up" data-aos-delay="200">
