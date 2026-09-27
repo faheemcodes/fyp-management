@@ -344,15 +344,13 @@
         .bento-item {
             position: relative;
             border-radius: 28px;
-            padding: 30px 24px;
+            padding: 26px 24px 26px 24px;
             display: flex;
             flex-direction: column;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             color: #fff;
             border: none;
             z-index: 1;
-            min-height: 290px;
-            height: 100%;
             box-sizing: border-box;
         }
         .bento-item:hover { transform: translateY(-6px); }
@@ -383,7 +381,7 @@
 
         .card-header {
             margin-left: 65px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             text-transform: uppercase;
             text-align: right;
             height: 48px;
@@ -408,12 +406,10 @@
         }
         
         .card-body {
-            flex-grow: 1;
             margin-top: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
         }
         .card-body p {
             color: #fff;
@@ -1002,7 +998,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>Established in 1998, this NCEAC-accredited program emphasizes critical thinking and innovation. Students develop practical computing solutions for complex organizational challenges using modern departmental laboratory facilities.</p>
+                    <p>Established in 1998, the IT department provides an NCEAC-accredited program emphasizing critical thinking. Students learn to provide practical IT solutions for the nation's administrative challenges using state-of-the-art facilities.</p>
                 </div>
             </div>
             <div class="bento-item theme-slate" data-aos="fade-up" data-aos-delay="200">
@@ -1012,7 +1008,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>One of Pakistan's first programs of its kind, offering accredited education. The curriculum focuses on engineering complex systems through research, design, and rigorous testing methodologies to build robust architectures.</p>
+                    <p>One of Pakistan's first programs of its kind, offering NCEAC-accredited education. The curriculum focuses on engineering complex systems through research, design, and testing to build robust software architectures.</p>
                 </div>
             </div>
             <div class="bento-item theme-crimson" data-aos="fade-up" data-aos-delay="300">
@@ -1022,7 +1018,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>Operating under an Outcome-Based Education framework, this PEC-accredited program prepares forward-thinking graduates. Students master next-generation wireless communications, advanced network infrastructure, and modern signal systems.</p>
+                    <p>Operating under an Outcome-Based Education framework, this PEC-accredited program produces graduates equipped with a vision for modern telecommunications. Students master next-generation networks and technologies.</p>
                 </div>
             </div>
             <div class="bento-item theme-blue" data-aos="fade-up" data-aos-delay="400">
@@ -1032,7 +1028,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>With roots dating back to 1979, this PEC-accredited department bridges theory with practice. Students engage in hands-on experimental learning using advanced electronic hardware to solve real-world industrial challenges.</p>
+                    <p>With roots dating back to 1979, this PEC-accredited department bridges theoretical concepts with practical application. Students engage in experimental learning using modern hardware to meet socio-economic needs.</p>
                 </div>
             </div>
             <div class="bento-item theme-emerald" data-aos="fade-up" data-aos-delay="500">
@@ -1042,7 +1038,7 @@
                     <span>Department</span>
                 </div>
                 <div class="card-body">
-                    <p>Harnessing the power of big data, machine learning, and artificial intelligence. Students learn to extract actionable insights from complex datasets, develop predictive models, and implement intelligent automated solutions.</p>
+                    <p>Harnessing the immense power of big data, machine learning, and artificial intelligence. Students learn to extract actionable insights from complex datasets, build predictive models, and implement AI-driven automation.</p>
                 </div>
             </div>
         </div>
