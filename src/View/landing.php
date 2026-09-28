@@ -568,41 +568,40 @@
             .card-notice-board::before { width: 100px; height: 100px; top: -30px; right: -30px; }
 
             /* Departments */
-            .bento-grid { padding-left: 0; gap: 50px 16px; }
+            .bento-grid { padding-left: 30px; gap: 50px 16px; }
             .bento-item {
-                padding: 58px 18px 22px;
+                padding: 22px 18px 20px 20px;
                 border-radius: 22px;
-                margin-left: 0 !important;
             }
             .card-number {
-                width: 72px;
-                height: 72px;
-                font-size: 2rem;
-                top: -22px;
-                left: 50%;
-                transform: translateX(-50%);
+                width: 68px;
+                height: 68px;
+                font-size: 1.8rem;
+                top: -16px;
+                left: -16px;
+                transform: none;
                 box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9);
             }
             :root[data-theme="dark"] .card-number {
                 box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.15);
             }
             .dept-card-header {
-                margin-left: 0;
-                text-align: center;
-                align-items: center;
+                margin-left: 58px;
+                text-align: right;
+                align-items: flex-end;
                 margin-bottom: 10px;
                 min-height: auto;
             }
             .dept-card-header h4 {
-                font-size: 1rem;
-                letter-spacing: 0.5px;
+                font-size: 0.95rem;
+                letter-spacing: 0.4px;
             }
             .dept-card-header span {
-                font-size: 0.68rem;
-                letter-spacing: 1.2px;
+                font-size: 0.66rem;
+                letter-spacing: 1px;
             }
             .card-body p {
-                text-align: center;
+            .card-body p {
                 font-size: 0.88rem;
             }
 

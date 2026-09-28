@@ -457,13 +457,13 @@
 
             /* Departments */
             /* Departments */
-            .bento-grid { padding-left: 0; gap: 50px 16px; }
-            .card-number { width: 72px; height: 72px; font-size: 2rem; top: -22px; left: 50%; transform: translateX(-50%); box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9); }
-            .bento-item { padding: 58px 18px 22px; border-radius: 22px; margin-left: 0 !important; }
-            .dept-card-header { margin-left: 0; text-align: center; align-items: center; margin-bottom: 10px; min-height: auto; }
-            .dept-card-header h4 { font-size: 1rem; letter-spacing: 0.5px; }
-            .dept-card-header span { font-size: 0.68rem; letter-spacing: 1.2px; }
-            .card-body p { text-align: center; font-size: 0.88rem; }
+            .bento-grid { padding-left: 30px; gap: 50px 16px; }
+            .card-number { width: 68px; height: 68px; font-size: 1.8rem; top: -16px; left: -16px; transform: none; box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9); }
+            .bento-item { padding: 22px 18px 20px 20px; border-radius: 22px; }
+            .dept-card-header { margin-left: 58px; text-align: right; align-items: flex-end; margin-bottom: 10px; min-height: auto; }
+            .dept-card-header h4 { font-size: 0.95rem; letter-spacing: 0.4px; }
+            .dept-card-header span { font-size: 0.66rem; letter-spacing: 1px; }
+            .card-body p { font-size: 0.88rem; }
 
             /* Process */
             .timeline-grid { padding-left: 15px; gap: 30px; }
