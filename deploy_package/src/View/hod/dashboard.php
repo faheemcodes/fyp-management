@@ -280,7 +280,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 </div>
 
 <!-- ── Stat Cards Grid (8 Action Cards in 2 Rows of 4) ── -->
-<div class="mb-4">
+<div class="mb-4 hod-action-grid-wrap">
     <!-- Row 1: Academic & Faculty Cohort (4 Cards) -->
     <div class="row g-3 mb-3">
         <!-- 1. FYP Groups Card -->
