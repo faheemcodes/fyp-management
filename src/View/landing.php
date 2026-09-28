@@ -326,9 +326,7 @@
 
         /* BENTO DEPARTMENTS */
         .bento-grid { display: grid; grid-template-columns: 1fr; gap: 60px 50px; padding-top: 40px; padding-left: 20px; }
-        @media (min-width: 768px) { 
-            .bento-grid { grid-template-columns: repeat(2, 1fr); padding-left: 20px; gap: 60px 40px; }
-        }
+        @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 992px) {
             .bento-grid {
                 display: flex;
@@ -381,33 +379,35 @@
             box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1), inset 0 2px 4px rgba(255,255,255,0.06);
         }
 
-        .card-header {
-            margin-left: 90px;
-            margin-bottom: 16px;
+        /* Department card header — isolated from process section */
+        .dept-card-header {
+            margin-left: 88px;
+            margin-bottom: 14px;
             text-transform: uppercase;
             text-align: right;
-            min-height: 48px;
-            height: auto;
+            min-height: 52px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-end;
+            gap: 3px;
         }
-        .card-header h4 {
-            color: inherit;
+        .dept-card-header h4 {
+            color: #fff;
             font-size: 1.05rem;
             font-weight: 800;
             margin: 0;
             letter-spacing: 0.8px;
-            line-height: 1.25;
+            line-height: 1.2;
         }
-        .card-header span {
-            font-size: 0.78rem;
-            font-weight: 600;
-            opacity: 0.9;
-            letter-spacing: 0.5px;
-            margin-top: 3px;
+        .dept-card-header span {
+            font-size: 0.72rem;
+            font-weight: 700;
+            opacity: 0.85;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
             display: block;
+            color: #fff;
         }
         
         .card-body {
@@ -533,7 +533,7 @@
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
 
-        .timeline-card .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .timeline-card .process-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
         .timeline-card p { font-size: 0.82rem; line-height: 1.55; margin: 0; color: var(--lp-text-muted); }
@@ -568,12 +568,43 @@
             .card-notice-board::before { width: 100px; height: 100px; top: -30px; right: -30px; }
 
             /* Departments */
-            .bento-grid { padding-left: 0; gap: 45px 20px; }
-            .card-number { width: 70px; height: 70px; font-size: 2rem; top: -18px; left: 50%; transform: translateX(-50%); box-shadow: 0 8px 20px rgba(0,0,0,0.15), 0 0 0 3px rgba(255,255,255,0.9); }
-            :root[data-theme="dark"] .card-number { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.15); }
-            .bento-item { padding: 52px 20px 22px; border-radius: 20px; }
-            .bento-item .card-header { margin-left: 0; margin-bottom: 10px; text-align: center; align-items: center; }
-            .bento-item .card-body p { text-align: center; }
+            .bento-grid { padding-left: 0; gap: 50px 16px; }
+            .bento-item {
+                padding: 58px 18px 22px;
+                border-radius: 22px;
+                margin-left: 0 !important;
+            }
+            .card-number {
+                width: 72px;
+                height: 72px;
+                font-size: 2rem;
+                top: -22px;
+                left: 50%;
+                transform: translateX(-50%);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9);
+            }
+            :root[data-theme="dark"] .card-number {
+                box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.15);
+            }
+            .dept-card-header {
+                margin-left: 0;
+                text-align: center;
+                align-items: center;
+                margin-bottom: 10px;
+                min-height: auto;
+            }
+            .dept-card-header h4 {
+                font-size: 1rem;
+                letter-spacing: 0.5px;
+            }
+            .dept-card-header span {
+                font-size: 0.68rem;
+                letter-spacing: 1.2px;
+            }
+            .card-body p {
+                text-align: center;
+                font-size: 0.88rem;
+            }
 
             /* Process */
             .timeline-grid { padding-left: 15px; gap: 30px; }
@@ -1000,7 +1031,7 @@
         <div class="bento-grid">
             <div class="bento-item theme-orange" data-aos="fade-up" data-aos-delay="100">
                 <div class="card-number"><i class="bi bi-pc-display"></i></div>
-                <div class="card-header">
+                <div class="dept-card-header">
                     <h4>Information Technology</h4>
                     <span>Department</span>
                 </div>
@@ -1010,7 +1041,7 @@
             </div>
             <div class="bento-item theme-slate" data-aos="fade-up" data-aos-delay="200">
                 <div class="card-number"><i class="bi bi-code-square"></i></div>
-                <div class="card-header">
+                <div class="dept-card-header">
                     <h4>Software Engineering</h4>
                     <span>Department</span>
                 </div>
@@ -1020,7 +1051,7 @@
             </div>
             <div class="bento-item theme-crimson" data-aos="fade-up" data-aos-delay="300">
                 <div class="card-number"><i class="bi bi-broadcast-pin"></i></div>
-                <div class="card-header">
+                <div class="dept-card-header">
                     <h4>Telecommunication</h4>
                     <span>Department</span>
                 </div>
@@ -1030,7 +1061,7 @@
             </div>
             <div class="bento-item theme-blue" data-aos="fade-up" data-aos-delay="400">
                 <div class="card-number"><i class="bi bi-cpu"></i></div>
-                <div class="card-header">
+                <div class="dept-card-header">
                     <h4>Electronic Engineering</h4>
                     <span>Department</span>
                 </div>
@@ -1040,7 +1071,7 @@
             </div>
             <div class="bento-item theme-emerald" data-aos="fade-up" data-aos-delay="500">
                 <div class="card-number"><i class="bi bi-bar-chart-line"></i></div>
-                <div class="card-header">
+                <div class="dept-card-header">
                     <h4>Data Science</h4>
                     <span>Department</span>
                 </div>
@@ -1063,7 +1094,7 @@
         <div class="timeline-grid">
             <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="card-pill">Phase 1</div>
-                <div class="card-header">
+                <div class="process-card-header">
                     <div class="icon-circle"><i class="bi bi-search"></i></div>
                     <h4>Propose</h4>
                 </div>
@@ -1072,7 +1103,7 @@
             
             <div class="timeline-card tl-style-grey" data-aos="fade-up" data-aos-duration="800" data-aos-delay="250">
                 <div class="card-pill">Phase 2</div>
-                <div class="card-header">
+                <div class="process-card-header">
                     <div class="icon-circle"><i class="bi bi-person-badge"></i></div>
                     <h4>Supervision</h4>
                 </div>
@@ -1081,7 +1112,7 @@
 
             <div class="timeline-card tl-style-grey" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
                 <div class="card-pill">Phase 3</div>
-                <div class="card-header">
+                <div class="process-card-header">
                     <div class="icon-circle"><i class="bi bi-code-slash"></i></div>
                     <h4>Development</h4>
                 </div>
@@ -1090,7 +1121,7 @@
 
             <div class="timeline-card tl-style-blue" data-aos="fade-up" data-aos-duration="800" data-aos-delay="550">
                 <div class="card-pill">Phase 4</div>
-                <div class="card-header">
+                <div class="process-card-header">
                     <div class="icon-circle"><i class="bi bi-box-arrow-up"></i></div>
                     <h4>Defense</h4>
                 </div>
