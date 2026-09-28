@@ -458,11 +458,11 @@
             /* Departments */
             /* Departments */
             .bento-grid { padding-left: 0; gap: 28px 0; }
-            .card-number { position: relative; top: auto; left: auto; transform: none; width: 56px; height: 56px; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9); }
-            .bento-item { padding: 18px 18px 20px 18px; border-radius: 20px; overflow: visible; }
-            .dept-card-header { display: flex; flex-direction: row; align-items: center; gap: 12px; margin-left: 0; margin-bottom: 12px; text-align: left; min-height: auto; }
-            .dept-card-header h4 { font-size: 1rem; letter-spacing: 0.3px; text-align: left; flex: 1; }
-            .dept-card-header span { font-size: 0.65rem; letter-spacing: 1px; text-align: left; }
+            .card-number { position: absolute; top: 14px; left: 14px; transform: none; width: 60px; height: 60px; font-size: 1.6rem; box-shadow: none; border: 2px solid rgba(255,255,255,0.35) !important; background: rgba(0,0,0,0.18) !important; }
+            .bento-item { padding: 18px 18px 20px 18px; border-radius: 20px; overflow: hidden; }
+            .dept-card-header { margin-left: 80px; text-align: right; align-items: flex-end; flex-direction: column; margin-bottom: 12px; min-height: 60px; justify-content: center; }
+            .dept-card-header h4 { font-size: 0.95rem; letter-spacing: 0.4px; text-align: right; flex: unset; }
+            .dept-card-header span { font-size: 0.65rem; letter-spacing: 1px; text-align: right; }
             .card-body p { font-size: 0.88rem; text-align: left; }
 
             /* Process */

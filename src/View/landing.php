@@ -572,45 +572,45 @@
             .bento-item {
                 padding: 18px 18px 20px 18px;
                 border-radius: 20px;
-                overflow: visible;
+                overflow: hidden;
             }
-            /* Circle moves inside the card — top-left corner, no overflow */
+            /* Circle: absolute, top-left corner INSIDE the card */
             .card-number {
-                position: relative;
-                top: auto;
-                left: auto;
+                position: absolute;
+                top: 14px;
+                left: 14px;
                 transform: none;
-                width: 56px;
-                height: 56px;
-                font-size: 1.5rem;
-                flex-shrink: 0;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.9);
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+                box-shadow: none;
+                border: 2px solid rgba(255,255,255,0.35) !important;
+                background: rgba(0,0,0,0.18) !important;
             }
             :root[data-theme="dark"] .card-number {
-                box-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.12);
+                border: 2px solid rgba(255,255,255,0.2) !important;
+                background: rgba(0,0,0,0.3) !important;
             }
-            /* Header becomes a flex row: circle left, text right */
+            /* Text stays right-aligned, shifted right of the circle */
             .dept-card-header {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 12px;
-                margin-left: 0;
+                margin-left: 80px;
+                text-align: right;
+                align-items: flex-end;
+                flex-direction: column;
                 margin-bottom: 12px;
-                text-align: left;
-                align-items: center;
-                min-height: auto;
+                min-height: 60px;
+                justify-content: center;
             }
             .dept-card-header h4 {
-                font-size: 1rem;
-                letter-spacing: 0.3px;
-                text-align: left;
-                flex: 1;
+                font-size: 0.95rem;
+                letter-spacing: 0.4px;
+                text-align: right;
+                flex: unset;
             }
             .dept-card-header span {
                 font-size: 0.65rem;
                 letter-spacing: 1px;
-                text-align: left;
+                text-align: right;
             }
             .card-body p {
                 font-size: 0.88rem;
