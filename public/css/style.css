@@ -1822,12 +1822,9 @@ html.dark-theme .page-hero {
         display: none !important;
     }
 
-    /* Pending badge — keep it */
+    /* Pending badge — hidden in icon tile view */
     .hod-action-grid-wrap .badge {
-        display: inline-flex !important;
-        font-size: 0.55rem !important;
-        padding: 2px 5px !important;
-        margin-top: 2px !important;
+        display: none !important;
     }
 
     /* Label — smaller, muted, tight */
@@ -1981,12 +1978,9 @@ html.dark-theme .page-hero {
         display: none !important;
     }
 
-    /* Keep any pending/review badges */
+    /* Hide all status badges (Review, Pending, Audit, Active, New) in icon tile view */
     .portal-action-grid-wrap .badge {
-        display: inline-flex !important;
-        font-size: 0.55rem !important;
-        padding: 2px 5px !important;
-        margin-top: 2px !important;
+        display: none !important;
     }
 
     /* Arrow — hidden */
