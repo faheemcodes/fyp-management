@@ -214,7 +214,7 @@ $shiftVal = !empty($shift) ? $shift : 'Morning';
 </div>
 
 <!-- ── Premium Stat Cards Grid (12 Action Cards in 3 Rows of 4) ── -->
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 portal-action-grid-wrap">
 
     <!-- Row 1: Submissions, Verification & Committee Distribution -->
     <!-- 1. Pending Proposals Card -->

@@ -196,7 +196,7 @@ $totalProjectsInFunnel = array_sum($stages ?? []);
 </div>
 
 <!-- ═══════════════ 9 Core Action Cards Grid (3 Rows of 3) ═══════════════ -->
-<div class="mb-4">
+<div class="mb-4 portal-action-grid-wrap">
     <!-- Row 1: Users, Groups & Proposals -->
     <div class="row g-3 mb-3">
         <!-- 1. Manage Users Card -->

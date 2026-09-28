@@ -202,7 +202,7 @@ $firstName = explode(' ', $fullName)[0];
 </div>
 
 <!-- -- Premium Stat Cards Row -- -->
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 portal-action-grid-wrap">
     <!-- Assigned Groups Card -->
     <div class="col-xl-4 col-md-6">
         <a href="<?php echo $basePath; ?>/supervisor/groups" class="text-decoration-none">

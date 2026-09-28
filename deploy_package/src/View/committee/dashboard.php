@@ -132,7 +132,7 @@ $commNum = (int)($committee['committee_number'] ?? 1);
 </div>
 
 <!-- -- Premium Stat Cards Row -- -->
-<div class="row g-3 mb-4 mt-2">
+<div class="row g-3 mb-4 mt-2 portal-action-grid-wrap">
     <!-- Proposal Presentation Card -->
     <div class="col-xl-4 col-sm-6">
         <a href="<?php echo $bp; ?>/committee/grading-sheet?stage=Proposal Defence Presentation" class="text-decoration-none">
