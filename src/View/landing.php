@@ -533,7 +533,7 @@
         
         .card-pill { position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(180deg); padding: 15px 8px; border-radius: 30px; writing-mode: vertical-rl; text-orientation: mixed; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; min-height: 100px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 2; white-space: nowrap; }
 
-        .timeline-card .process-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .timeline-card .process-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; margin-left: 30px; }
         .timeline-card .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .timeline-card h4 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--lp-text); }
         .timeline-card p { font-size: 0.82rem; line-height: 1.55; margin: 0; color: var(--lp-text-muted); }
