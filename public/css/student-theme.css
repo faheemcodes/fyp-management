@@ -295,6 +295,29 @@ body[data-role="student"] .ai-chat-header {
     color: #ffffff !important;
 }
 
+body.portal-student .ai-chat-header .ai-header-title,
+body[data-role="student"] .ai-chat-header .ai-header-title,
+body.portal-student .ai-header-title,
+body[data-role="student"] .ai-header-title {
+    color: #ffffff !important;
+}
+
+body.portal-student .ai-chat-header .ai-status-text,
+body[data-role="student"] .ai-chat-header .ai-status-text {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+body.portal-student .ai-chat-header .ai-header-btn,
+body[data-role="student"] .ai-chat-header .ai-header-btn {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+body.portal-student .ai-chat-header .ai-header-btn:hover,
+body[data-role="student"] .ai-chat-header .ai-header-btn:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
 body.portal-student .ai-avatar-ring,
 body[data-role="student"] .ai-avatar-ring {
     background: linear-gradient(135deg, #2563eb, #38bdf8, #60a5fa) !important;

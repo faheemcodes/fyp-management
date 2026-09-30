@@ -86,7 +86,8 @@ html.dark-theme .ai-chat-header {
     border-bottom-color: var(--border-color);
     box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
-html.dark-theme .ai-header-title { color: #fff !important; }
+.ai-header-title { color: #ffffff !important; }
+html.dark-theme .ai-header-title { color: #ffffff !important; }
 .ai-avatar-ring {
     width: 40px;
     height: 40px;
@@ -545,7 +546,7 @@ html.dark-theme .ai-input-wrapper:focus-within {
                     </div>
                 </div>
                 <div>
-                    <h6 class="mb-0 fw-bold ai-header-title" style="font-size:0.95rem;letter-spacing:-0.01em;color:#1a1a1a">FYP Buddy</h6>
+                    <h6 class="mb-0 fw-bold ai-header-title" style="font-size:0.95rem;letter-spacing:-0.01em;">FYP Buddy</h6>
                     <span class="ai-status-text"><span class="ai-status-dot"></span>Always here to help</span>
                 </div>
             </div>
