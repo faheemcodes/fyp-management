@@ -20,8 +20,11 @@
     $isStudentPortal = ($role === 'student') || (strpos($_SERVER['REQUEST_URI'] ?? '', '/student') !== false);
     ?>
     <link rel="icon" href="<?php echo $basePath; ?>/images/logo.png" type="image/png">
-    <link href="<?php echo $basePath; ?>/css/style.css?v=1.2.7" rel="stylesheet">
-    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=1.2.7" rel="stylesheet">
+    <?php 
+    $cssVer = file_exists(__DIR__ . '/../../../public/css/style.css') ? filemtime(__DIR__ . '/../../../public/css/style.css') : '1.3.0'; 
+    ?>
+    <link href="<?php echo $basePath; ?>/css/style.css?v=<?php echo $cssVer; ?>" rel="stylesheet">
+    <link href="<?php echo $basePath; ?>/css/admin-theme.css?v=<?php echo $cssVer; ?>" rel="stylesheet">
     <?php if ($isStudentPortal): ?>
     <link href="<?php echo $basePath; ?>/css/student-theme.css?v=1.0.2" rel="stylesheet">
     <?php endif; ?>
